@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import { CustomFont } from '../helpers/fonts/fonts';
 import LayoutConstants from '../LayoutConstants';
 import { MenuListSection } from './helpers';
@@ -17,7 +17,10 @@ const MenuListViewSectionHeader = (() => {
     });
 
     return function (props: { section: MenuListSection, sideInsets: number }) {
-        return <CustomizedText style={[styles.root, {marginLeft: props.sideInsets, marginRight: props.sideInsets}]}>
+        return <CustomizedText style={[styles.root, {
+            marginLeft: props.sideInsets,
+            marginRight: props.sideInsets
+        }]}>
             {props.section.title}
         </CustomizedText>
     }

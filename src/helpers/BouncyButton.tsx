@@ -19,8 +19,7 @@ const BouncyButton: React.FC<ViewProps & BouncyButtonProps> = (props) => {
     useUpdateEffect(() => {
         
         Animated.timing(transformAnimation, {
-            toValue: isPressed ? (props.bounceScaleValue ?? 1.3) : 1,
-            // toValue: isPressed ? 0.5 : 1,
+            toValue: isPressed ? (props.bounceScaleValue ?? 0.7) : 1,
             duration: 250,
             easing: Easing.elastic(1),
         }).start();

@@ -11,7 +11,8 @@ export enum TabBarSelection {
     menu,
     cart,
     tips,
-    contactRequests
+    contactRequests,
+    settings
 }
 
 export const tabBarItemsData: {
@@ -34,6 +35,10 @@ export const tabBarItemsData: {
         selection: TabBarSelection.contactRequests,
         url: require('./icons/contact-requests.png'),
     },
+    {
+        selection: TabBarSelection.settings,
+        url: require('./icons/settings.png'),
+    }
 ]
 
 
@@ -55,7 +60,7 @@ export default function TabBar(props: ViewProps){
                 const onPress = () => setCurrentSelection(obj.selection);
                 const imageTintColor = (isSelected ? CustomColors.themeGreen : Color.gray(0.75)).stringValue;
 
-                return <BouncyButton key={index} style={tabBarStyles.tabBarButton} onPress={onPress}>
+                return <BouncyButton key={index} style={tabBarStyles.tabBarButton} onPress={onPress} bounceScaleValue={1.3}>
                     <Image source={obj.url} style={[tabBarStyles.tabBarButtonImage, {tintColor: imageTintColor}]}/>
                 </BouncyButton>
             })}

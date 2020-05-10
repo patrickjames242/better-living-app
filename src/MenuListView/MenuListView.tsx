@@ -125,12 +125,6 @@ export default MenuListView;
 
 
 
-
-
-
-
-
-
 interface MenuListSectionItemRowProps {
     numberOfColumns: number,
     rowIndex: number,
@@ -151,7 +145,10 @@ const MenuListSectionItemRow = (() => {
 
         const startingIndex = props.numberOfColumns * props.rowIndex;
 
-        return <View style={[styles.root, { marginLeft: props.sideInsets, marginRight: props.sideInsets }]}>
+        return <View style={[styles.root, { 
+            marginLeft: props.sideInsets, 
+            marginRight: props.sideInsets 
+        }]}>
             {(() => {
                 if (props.numberOfColumns < 1) { return undefined; }
 
