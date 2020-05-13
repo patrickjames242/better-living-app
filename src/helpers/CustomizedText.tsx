@@ -19,3 +19,4 @@ const styles = StyleSheet.create({
         color: CustomColors.offBlackTitle.stringValue,
     }
 });
+

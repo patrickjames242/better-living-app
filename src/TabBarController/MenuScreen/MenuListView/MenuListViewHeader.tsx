@@ -1,12 +1,12 @@
 
 
 import React, { useState } from 'react';
-import LayoutConstants from '../LayoutConstants';
-import { CustomFont } from '../helpers/fonts/fonts';
+import LayoutConstants from '../../../LayoutConstants';
+import { CustomFont } from '../../../helpers/fonts/fonts';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
-import CustomizedText from '../helpers/CustomizedText';
-import BouncyButton from '../helpers/BouncyButton';
-import { CustomColors, Color } from '../helpers/colors';
+import CustomizedText from '../../../helpers/CustomizedText';
+import BouncyButton from '../../../helpers/BouncyButton';
+import { CustomColors, Color } from '../../../helpers/colors';
 import { menuListSections } from './helpers';
 
 const MenuListViewHeader = (() => {
@@ -17,8 +17,8 @@ const MenuListViewHeader = (() => {
         },
         topTitlesHolder: {
             marginTop: 30,
-            marginLeft: LayoutConstants.menuPageSideInsets,
-            marginRight: LayoutConstants.menuPageSideInsets,
+            marginLeft: LayoutConstants.menuPage.pageSideInsets,
+            marginRight: LayoutConstants.menuPage.pageSideInsets,
         },
         topTitles_topBoldTitle: {
             fontFamily: CustomFont.bold,
@@ -65,8 +65,8 @@ const MenuCategoriesListView = (() => {
             
         },
         listViewContainer: {
-            paddingLeft: LayoutConstants.menuPageSideInsets,
-            paddingRight: LayoutConstants.menuPageSideInsets,
+            paddingLeft: LayoutConstants.menuPage.pageSideInsets,
+            paddingRight: LayoutConstants.menuPage.pageSideInsets,
         }
     })
 

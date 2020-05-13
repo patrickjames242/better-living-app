@@ -1,5 +1,4 @@
 
-
 import React, { useState, useRef } from 'react';
 import { ViewProps, Animated, Easing } from 'react-native';
 import { useUpdateEffect } from './general';
@@ -17,7 +16,6 @@ const BouncyButton: React.FC<ViewProps & BouncyButtonProps> = (props) => {
     const transformAnimation = useRef(new Animated.Value(1)).current;
 
     useUpdateEffect(() => {
-        
         Animated.timing(transformAnimation, {
             toValue: isPressed ? (props.bounceScaleValue ?? 0.7) : 1,
             duration: 250,

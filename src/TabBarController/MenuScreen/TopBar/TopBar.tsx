@@ -1,12 +1,11 @@
 
 
 import React from 'react';
-import { View, StyleSheet, Text, Image, ViewStyle, ViewProps } from 'react-native';
+import { View, StyleSheet, Image, ViewStyle, ViewProps } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
-import { CustomFont } from '../helpers/fonts/fonts';
-import LayoutConstants from '../LayoutConstants';
-import { CustomColors } from '../helpers/colors';
-import CustomizedText from '../helpers/CustomizedText';
+import { CustomFont } from '../../../helpers/fonts/fonts';
+import LayoutConstants from '../../../LayoutConstants';
+import CustomizedText from '../../../helpers/CustomizedText';
 
 
 export default function TopBar(props: ViewProps) {
@@ -15,8 +14,6 @@ export default function TopBar(props: ViewProps) {
 
     return <View {...props} style={[topBarStyles.topBar, {
         paddingTop: safeAreaInsets.top,
-        marginLeft: safeAreaInsets.left,
-        marginRight: safeAreaInsets.right,
     }]}>
         <View style={topBarStyles.contentView}>
             <CustomizedText style={topBarStyles.titleText}>Today's Menu</CustomizedText>
@@ -27,12 +24,12 @@ export default function TopBar(props: ViewProps) {
 
 const topBarStyles = StyleSheet.create({
     topBar: (() => {
-        const borderRadius = LayoutConstants.topAndBottomBarCornerRadius;
+        const borderRadius = LayoutConstants.menuPage.topAndBottomBarCornerRadius;
         return {
             backgroundColor: 'white',
             borderBottomLeftRadius: borderRadius, 
             borderBottomRightRadius: borderRadius,
-            ...LayoutConstants.topAndBottomBarShadowConfig,
+            ...LayoutConstants.menuPage.topAndBottomBarShadowConfig,
         } as ViewStyle
     })(),
     contentView: (() => {

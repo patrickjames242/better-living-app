@@ -2,10 +2,10 @@
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { MenuListItem } from './helpers';
-import BouncyButton from '../helpers/BouncyButton';
-import CustomizedText from '../helpers/CustomizedText';
-import { CustomFont } from '../helpers/fonts/fonts';
-import { CustomColors } from '../helpers/colors';
+import BouncyButton from '../../../helpers/BouncyButton';
+import CustomizedText from '../../../helpers/CustomizedText';
+import { CustomFont } from '../../../helpers/fonts/fonts';
+import { CustomColors } from '../../../helpers/colors';
 
 const MenuListItemView = (() => {
 

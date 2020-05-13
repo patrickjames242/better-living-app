@@ -1,63 +1,29 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, Image, ViewStyle, ViewProps } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
-import BouncyButton from '../helpers/BouncyButton';
-import { CustomColors, Color } from '../helpers/colors';
-import LayoutConstants from '../LayoutConstants';
+import BouncyButton from '../../helpers/BouncyButton';
+import { CustomColors, Color } from '../../helpers/colors';
+import LayoutConstants from '../../LayoutConstants';
+import { tabBarItemsData} from './helpers';
+import { useTabBarControllerContext } from '../helpers';
 
 
-export enum TabBarSelection {
-    menu,
-    cart,
-    tips,
-    contactRequests,
-    settings
-}
 
-export const tabBarItemsData: {
-    url: any,
-    selection: TabBarSelection,
-}[] = [
-    {
-        selection: TabBarSelection.menu,
-        url: require('./icons/food.png'),
-    },
-    {
-        selection: TabBarSelection.cart,
-        url: require('./icons/shopping-cart.png'),
-    },
-    {
-        selection: TabBarSelection.tips,
-        url: require('./icons/tips.png'),
-    },
-    {
-        selection: TabBarSelection.contactRequests,
-        url: require('./icons/contact-requests.png'),
-    },
-    {
-        selection: TabBarSelection.settings,
-        url: require('./icons/settings.png'),
-    }
-]
-
-
-export default function TabBar(props: ViewProps){
+export default function BottomTabBar(props: ViewProps){
 
     const safeAreaInsets = useSafeArea();
 
-    const [currentSelection, setCurrentSelection] = useState(TabBarSelection.menu);
+    const tabBarControllerContext = useTabBarControllerContext();
 
     return <View {...props} style={[tabBarStyles.tabBar, {
-        paddingBottom: safeAreaInsets.bottom, 
-        marginLeft: safeAreaInsets.left, 
-        marginRight: safeAreaInsets.right
+        paddingBottom: safeAreaInsets.bottom,
      }]}>
         <View style={tabBarStyles.contentView}>
             {tabBarItemsData.map((obj, index) => {
 
-                const isSelected = obj.selection === currentSelection;
-                const onPress = () => setCurrentSelection(obj.selection);
+                const isSelected = obj.selection === tabBarControllerContext.currentSelection;
+                const onPress = () => tabBarControllerContext.setCurrentSelection(obj.selection);
                 const imageTintColor = (isSelected ? CustomColors.themeGreen : Color.gray(0.75)).stringValue;
 
                 return <BouncyButton key={index} style={tabBarStyles.tabBarButton} onPress={onPress} bounceScaleValue={1.3}>
@@ -71,12 +37,12 @@ export default function TabBar(props: ViewProps){
 
 const tabBarStyles = StyleSheet.create({
     tabBar: (() => {
-        const borderRadius = LayoutConstants.topAndBottomBarCornerRadius;
+        const borderRadius = LayoutConstants.menuPage.topAndBottomBarCornerRadius;
         return {
             backgroundColor: 'white',
             borderTopLeftRadius: borderRadius, 
             borderTopRightRadius: borderRadius,
-            ...LayoutConstants.topAndBottomBarShadowConfig,
+            ...LayoutConstants.menuPage.topAndBottomBarShadowConfig,
         } as ViewStyle;
     })(),
     contentView: {
