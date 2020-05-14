@@ -1,13 +1,15 @@
 
-import React, { useEffect, useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { View, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
 import { tabBarItemsData } from './helpers';
 import BouncyButton from '../../helpers/BouncyButton';
 import { CustomColors } from '../../helpers/colors';
 import LayoutConstants from '../../LayoutConstants';
-import { useTabBarControllerContext, windowDimensionsDidChangeNotification, WindowDimensions } from '../helpers';
+import { windowDimensionsDidChangeNotification, WindowDimensions } from '../helpers';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNotificationListener } from '../../helpers/Notification';
+import { useSelector, useDispatch } from '../../redux/store';
+import { changeCurrentSelection } from '../../redux/tabBarController';
 
 
 const SideTabBar = (() => {
@@ -50,7 +52,8 @@ const SideTabBar = (() => {
 
 	return function () {
 		const safeAreaInsets = useSafeArea();
-		const tabBarControllerContext = useTabBarControllerContext();
+		const currentSelection = useSelector(state => state.tabBarController.currentSelection);
+		const dispatch = useDispatch();
 
 		const itemMarginSize = useItemMarginSize();
 
@@ -64,8 +67,8 @@ const SideTabBar = (() => {
 					return tabBarItemsData.map((item, index) => {
 						return <SideBarItem
 							marginSize={itemMarginSize}
-							isSelected={tabBarControllerContext.currentSelection === item.selection}
-							onPress={() => tabBarControllerContext.setCurrentSelection(item.selection)}
+							isSelected={currentSelection === item.selection}
+							onPress={() => dispatch(changeCurrentSelection(item.selection))}
 							key={index}
 							imageSource={item.url}
 							isFirstInList={index === 0} />

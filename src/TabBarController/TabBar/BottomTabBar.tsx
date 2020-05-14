@@ -6,7 +6,8 @@ import BouncyButton from '../../helpers/BouncyButton';
 import { CustomColors, Color } from '../../helpers/colors';
 import LayoutConstants from '../../LayoutConstants';
 import { tabBarItemsData} from './helpers';
-import { useTabBarControllerContext } from '../helpers';
+import { useSelector, useDispatch } from '../../redux/store';
+import { changeCurrentSelection } from '../../redux/tabBarController';
 
 
 
@@ -14,7 +15,8 @@ export default function BottomTabBar(props: ViewProps){
 
     const safeAreaInsets = useSafeArea();
 
-    const tabBarControllerContext = useTabBarControllerContext();
+    const currentSelection = useSelector(state => state.tabBarController.currentSelection);
+    const dispatch = useDispatch();
 
     return <View {...props} style={[tabBarStyles.tabBar, {
         paddingBottom: safeAreaInsets.bottom,
@@ -22,8 +24,8 @@ export default function BottomTabBar(props: ViewProps){
         <View style={tabBarStyles.contentView}>
             {tabBarItemsData.map((obj, index) => {
 
-                const isSelected = obj.selection === tabBarControllerContext.currentSelection;
-                const onPress = () => tabBarControllerContext.setCurrentSelection(obj.selection);
+                const isSelected = obj.selection === currentSelection;
+                const onPress = () => dispatch(changeCurrentSelection(obj.selection));
                 const imageTintColor = (isSelected ? CustomColors.themeGreen : Color.gray(0.75)).stringValue;
 
                 return <BouncyButton key={index} style={tabBarStyles.tabBarButton} onPress={onPress} bounceScaleValue={1.3}>

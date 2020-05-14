@@ -2,9 +2,9 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { TabBarSelection, tabBarItemsData } from './TabBar/helpers';
-import { useTabBarControllerContext } from './helpers';
 import { useUpdateEffect } from '../helpers/general';
 import MenuScreen from './MenuScreen/MenuScreen';
+import { useSelector } from '../redux/store';
 
 
 const TabBarControllerContentView = (() => {
@@ -28,7 +28,7 @@ const TabBarControllerContentView = (() => {
 
 	return function () {
 
-		const currentSelection = useTabBarControllerContext().currentSelection;
+		const currentSelection = useSelector(state => state.tabBarController.currentSelection);
 		const initialScreensSelectionsValue = useMemo(() => [currentSelection], []);
 		const [currentScreensSelections, setCurrentScreensSelections] = useState<TabBarSelection[]>(initialScreensSelectionsValue);
 		const [animationIsInProgress, setAnimationIsInProgress] = useState(false);
@@ -42,7 +42,8 @@ const TabBarControllerContentView = (() => {
 			previousValue[currentValue.selection] = { translateX: new Animated.Value(0), opacity: new Animated.Value(isCurrentSelection ? 1 : 0) }
 			return previousValue;
 		}, {})).current;
-
+		
+		
 		useUpdateEffect(() => {
 			setCurrentScreensSelections(oldState => {
 				const newState = oldState.filter(x => {

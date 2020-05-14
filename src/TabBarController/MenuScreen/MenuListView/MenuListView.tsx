@@ -7,9 +7,10 @@ import MenuListItemView from './MenuListItemView';
 import MenuListViewSectionHeader from './MenuListViewSectionHeader';
 import LayoutConstants from '../../../LayoutConstants';
 import { getNumbersList } from '../../../helpers/general';
-import { useCurrentTabBarPosition, TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../helpers';
+import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../helpers';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNotificationListener } from '../../../helpers/Notification';
+import { useSelector } from '../../../redux/store';
 
 
 
@@ -49,7 +50,7 @@ const MenuListView = (() => {
 
     function useNumberOfColumns(){
 
-        const isSideBarShowing = useCurrentTabBarPosition() === TabBarPosition.side;
+        const isSideBarShowing = useSelector(state => state.tabBarController.tabBarPosition) === TabBarPosition.side;
         const safeAreaInsets = useSafeArea();
 
         const intialNumberOfColumns = useMemo(() => {
