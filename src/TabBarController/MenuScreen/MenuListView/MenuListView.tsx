@@ -1,6 +1,6 @@
 
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { StyleSheet, SectionList, View, LayoutChangeEvent, SafeAreaView, Dimensions } from 'react-native';
+import React, { useState, useMemo, useCallback } from 'react';
+import { StyleSheet, SectionList, View, LayoutChangeEvent, Dimensions } from 'react-native';
 import MenuListViewHeader from './MenuListViewHeader';
 import { MenuListSection, menuListSections, MenuListItem } from './helpers';
 import MenuListItemView from './MenuListItemView';
@@ -101,7 +101,6 @@ const MenuListView = (() => {
                 }
             });
         }, [numberOfColumns]);
-
 
         return useMemo(() => (
             <View

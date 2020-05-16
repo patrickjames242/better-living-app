@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import LayoutConstants from '../../../LayoutConstants';
 import { CustomFont } from '../../../helpers/fonts/fonts';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import CustomizedText from '../../../helpers/CustomizedText';
 import BouncyButton from '../../../helpers/BouncyButton';
 import { CustomColors, Color } from '../../../helpers/colors';

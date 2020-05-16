@@ -7,6 +7,7 @@ import MenuScreen from './MenuScreen/MenuScreen';
 import { useSelector } from '../redux/store';
 
 
+
 const TabBarControllerContentView = (() => {
 
 	const styles = StyleSheet.create({
@@ -148,6 +149,9 @@ function CartScreen() {
 		flex: 1
 	}} />
 }
+
+
+
 
 function HealthTipsScreen() {
 	return <View style={{
