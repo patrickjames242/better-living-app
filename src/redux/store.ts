@@ -1,3 +1,4 @@
+
 import { tabBarController_reducer } from "./tabBarController";
 import {combineReducers, createStore } from 'redux';
 import { 
@@ -19,3 +20,4 @@ export default store;
 export const useSelector: TypedUseSelectorHook<AppState> = untypedUseSelector;
 export const useStore: () => typeof store = untypedUseStore;
 export const useDispatch: () => typeof store.dispatch = untypedUseDispatch;
+

@@ -13,7 +13,6 @@ import { useNotificationListener } from '../../../helpers/Notification';
 import { useSelector } from '../../../redux/store';
 
 
-
 export interface MenuListViewProps {
     topContentInset?: number;
     bottomContentInset?: number;
@@ -46,9 +45,9 @@ const MenuListView = (() => {
         return Math.ceil((listViewWidth + itemSpacing - (2 * sideInsets)) / (maxItemWidth + itemSpacing));
     }
 
-    
 
-    function useNumberOfColumns(){
+
+    function useNumberOfColumns() {
 
         const isSideBarShowing = useSelector(state => state.tabBarController.tabBarPosition) === TabBarPosition.side;
         const safeAreaInsets = useSafeArea();
@@ -75,18 +74,18 @@ const MenuListView = (() => {
             setNumberOfColumns(estimateNumberOfColumsnBasedOn(dimensions));
         }, [estimateNumberOfColumsnBasedOn])
 
-        function rootViewOnLayoutCallback(event: LayoutChangeEvent){
+        function rootViewOnLayoutCallback(event: LayoutChangeEvent) {
             setNumberOfColumns(getNumberOfColumnsBasedOnListViewWidth(event.nativeEvent.layout.width));
         }
 
-        return {numberOfColumns, rootViewOnLayoutCallback};
+        return { numberOfColumns, rootViewOnLayoutCallback };
 
     }
 
     return function MenuListView(props: MenuListViewProps) {
 
-        const {numberOfColumns, rootViewOnLayoutCallback} = useNumberOfColumns();
-        
+        const { numberOfColumns, rootViewOnLayoutCallback } = useNumberOfColumns();
+
         // for each menuListSection this returns a fake section where each item in the data array represents one of the row indices of the section in order starting from 0
 
         const fakeSections = useMemo(() => {
@@ -102,10 +101,16 @@ const MenuListView = (() => {
             });
         }, [numberOfColumns]);
 
+
+
         return useMemo(() => (
+
             <View
                 onLayout={rootViewOnLayoutCallback}
                 style={[styles.root]}>
+
+
+
                 <SectionList
                     style={styles.listView}
                     contentContainerStyle={{

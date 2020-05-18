@@ -1,10 +1,13 @@
 
 import React, { useState, useMemo, useRef } from 'react';
-import { View, StyleSheet, Animated, Easing } from 'react-native';
+import { View, StyleSheet, Animated, Easing, Text } from 'react-native';
 import { TabBarSelection, tabBarItemsData } from './TabBar/helpers';
 import { useUpdateEffect } from '../helpers/general';
 import MenuScreen from './MenuScreen/MenuScreen';
 import { useSelector } from '../redux/store';
+import { PanGestureHandler, TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigationScreenContext } from '../helpers/NavigationController/NavigationScreen';
+import NavigationController from '../helpers/NavigationController/NavigationController';
 
 
 
@@ -43,8 +46,7 @@ const TabBarControllerContentView = (() => {
 			previousValue[currentValue.selection] = { translateX: new Animated.Value(0), opacity: new Animated.Value(isCurrentSelection ? 1 : 0) }
 			return previousValue;
 		}, {})).current;
-		
-		
+
 		useUpdateEffect(() => {
 			setCurrentScreensSelections(oldState => {
 				const newState = oldState.filter(x => {
@@ -89,18 +91,21 @@ const TabBarControllerContentView = (() => {
 				toValue: 1,
 				easing: easing,
 				duration: duration,
+				useNativeDriver: true,
 			}).start();
 
 			Animated.timing(oldViewOpacity, {
 				toValue: 0,
 				easing: easing,
 				duration: duration,
+				useNativeDriver: true,
 			}).start();
 
 			Animated.timing(oldViewTranslateX, {
 				toValue: fromRight ? -maxTranslationX : maxTranslationX,
 				easing: easing,
 				duration: duration,
+				useNativeDriver: true,
 			}).start(() => {
 				oldViewTranslateX.setValue(0);
 			});
@@ -110,11 +115,12 @@ const TabBarControllerContentView = (() => {
 				toValue: 0,
 				easing: easing,
 				duration: duration,
+				useNativeDriver: true,
 			}).start();
 
 		}, [currentSelection]);
 
-
+		Animated.event([], {});
 		return <View style={[styles.root, {
 			overflow: animationIsInProgress ? 'hidden' : undefined,
 		}]}>
@@ -130,7 +136,6 @@ const TabBarControllerContentView = (() => {
 					}]}>
 						<Component />
 					</Animated.View>
-
 				})
 			})()}
 		</View>
@@ -144,10 +149,47 @@ export default TabBarControllerContentView;
 
 
 function CartScreen() {
+	
+		// <View style={{
+		// 	backgroundColor: 'green',
+		// 	flex: 1
+		// }} />
+
+		return <NavigationController initialComponent={<CartChild />}/>
+}
+
+
+function CartChild(props: {color?: string}){
+
+	const color = props.color ?? 'red';
+
+	const screenContext = useNavigationScreenContext();
+
+
 	return <View style={{
-		backgroundColor: 'green',
-		flex: 1
-	}} />
+		backgroundColor: color,
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+	}}>
+		<TouchableOpacity onPress={() => screenContext.present(<CartChild color={color === 'red' ? 'yellow' : 'red'}/>)}>
+			<Text style={{
+				backgroundColor: 'blue',
+				color: 'white',
+				padding: 20,
+				fontSize: 20,
+			}}>Present New</Text>
+		</TouchableOpacity>
+		<TouchableOpacity onPress={() => screenContext.dismiss()}>
+			<Text style={{
+				backgroundColor: 'blue',
+				color: 'white',
+				padding: 20,
+				fontSize: 20,
+				marginTop: 20,
+			}}>Dismiss Current</Text>
+		</TouchableOpacity>
+	</View>
 }
 
 

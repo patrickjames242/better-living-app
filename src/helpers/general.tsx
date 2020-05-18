@@ -29,3 +29,16 @@ export function useUpdateEffect(effect: React.EffectCallback, dependencies?: Rea
     }, dependencies);
 }
 
+
+// works just like useEffect, except that the effect is not called after the first render, as is the case with useEffect.
+export function useUpdateLayoutEffect(effect: React.EffectCallback, dependencies?: React.DependencyList){
+    const flag = React.useRef(true);
+
+    React.useLayoutEffect(() => {
+        if (flag.current === true) {
+            flag.current = false;
+        } else {
+            return effect();
+        }
+    }, dependencies);
+}

@@ -17,7 +17,7 @@ export default function App() {
 
 	useEffect(() => {
 		loadFonts().then(() => setAppIsReady(true));
-	}, [])
+	}, []);
 
 	if (appIsReady === false) {
 		return <AppLoading />
@@ -28,8 +28,6 @@ export default function App() {
 				<TabBarController />
 			</SafeAreaProvider>
 		</ReduxProvider>
-
-
 	}
 }
 

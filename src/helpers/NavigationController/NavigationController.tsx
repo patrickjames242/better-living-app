@@ -1,193 +1,318 @@
 
-// import React, { useState, useMemo, useRef, useEffect } from 'react';
-// import { View, Animated, StyleSheet, Easing, LayoutChangeEvent, Dimensions } from 'react-native';
-// import { Optional } from '../general';
-// import { batch } from 'react-redux';
-// import NavigationScreen from './NavigationScreen';
+import React, { useState, useMemo, useRef, useCallback, useLayoutEffect } from 'react';
+import { View, Animated, StyleSheet, Easing, LayoutChangeEvent, Dimensions } from 'react-native';
+import { Optional } from '../general';
+import { batch } from 'react-redux';
+import NavigationScreen from './NavigationScreen';
+import { State as GestureState, PanGestureHandlerGestureEvent, PanGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
 
 
 
-// class NavigationScreenInfo {
 
-//     private static nextAvailableKey = 0;
-//     readonly key = NavigationScreenInfo.nextAvailableKey++;
+/*
 
-//     readonly dimmerViewOpacity = new Animated.Value(0);
-//     readonly translateX: Animated.Value;
+PROBLEMS 
 
-//     constructor(
-//         readonly component: React.ReactElement,
-//         defaultTranslateXValue: number = 0,
-//     ) {
-//         this.translateX = new Animated.Value(defaultTranslateXValue);
-//     }
-// }
+- velocity is represented in different units on the web than on ios, check out how it works on android
+- when the views bounce (because of the animation), you can see the views that are beneath them, which looks tacky
+- On ios, theres a slight delay between when when the user's finger lifts and when the dismissal animation beings
+- when you swipe toward the left and lift you finger, the views flicker 
+
+*/
+
+class NavigationScreenInfo {
+
+    private static nextAvailableKey = 0;
+    readonly key = NavigationScreenInfo.nextAvailableKey++;
+
+    constructor(
+        readonly component: React.ReactElement,
+    ) { }
+
+}
 
 
+const NavigationController = (() => {
 
-// const NavigationController = (() => {
+    const styles = StyleSheet.create({
+        root: {
+            flex: 1,
+            backgroundColor: 'black',
+        },
+        childScreen: {
+            ...StyleSheet.absoluteFillObject,
+        },
+    });
 
-//     const styles = StyleSheet.create({
-//         root: {
-//             flex: 1,
-//             backgroundColor: 'black',
-//         },
-//         childScreen: {
-//             ...StyleSheet.absoluteFillObject,
-//         },
-//     });
+    function lastIndexOfInfo(info: NavigationScreenInfo, stack: NavigationScreenInfo[]): Optional<number> {
 
-//     function lastIndexOfInfo(info: NavigationScreenInfo, stack: NavigationScreenInfo[]): Optional<number> {
+        // moving backwards through the screen stack
+        for (let i = stack.length - 1; i >= 0; i--) {
+            const item = stack[i];
+            if (item === info) {
+                return i;
+            }
+        }
 
-//         // moving backwards through the screen stack
-//         for (let i = stack.length - 1; i >= 0; i--) {
-//             const item = stack[i];
-//             if (item === info) {
-//                 return i;
-//             }
-//         }
+        return null;
+    }
 
-//         return null;
-//     }
+    function shouldDismissAfterInteraction(velocityX: number, translationX: number, screenWidth: number): boolean{
+        
+        const progress = translationX / screenWidth;
+        return (() => {
+            if (velocityX >= 0 && velocityX <= 300){
+                return progress > 0.5;
+            } else if (velocityX > 0){
+                return true;
+            } else {
+                return false;
+            }
+        })();
+        
+    }
 
-//     return function (props: { initialComponent: React.ReactElement }) {
+    const fullAnimationDuration = 350;
 
-//         const initialScreenStackState = useMemo(() => {
-//             return [new NavigationScreenInfo(props.initialComponent)]
-//         }, []);
+    return function (props: { initialComponent: React.ReactElement }) {
 
-//         const latestControllerWidth = useRef<Optional<number>>(null);
+        const initialScreenStackState = useMemo(() => {
+            return [new NavigationScreenInfo(props.initialComponent)]
+        }, []);
 
-//         const [screenStack, setScreenStack] = useState(initialScreenStackState);
+        const latestControllerWidth = useRef(Dimensions.get('window').width);
 
-//         // can represent either a new screen to present, or a screen underneath the current screen, where all screens on top of it must be dismissed.
-//         const [screenToShow, setScreenToShow] = useState<Optional<NavigationScreenInfo>>(null);
+        const [screenStack, setScreenStack] = useState(initialScreenStackState);
 
-//         const screenActions = useMemo(() => ({
-//             dismiss(sender: NavigationScreenInfo) {
-//                 batch(() => {
-//                     setScreenStack(oldState => {
-//                         if (
-//                             screenToShow != null ||
-//                             oldState.length <= 1 ||
-//                             oldState[oldState.length - 1] !== sender
-//                         ) { return oldState; }
-//                         setScreenToShow(oldState[oldState.length - 2]);
-//                         return oldState;
-//                     });
-//                 });
-//             },
-//             present(sender: NavigationScreenInfo, newComponent: React.ReactElement) {
-//                 batch(() => {
-//                     setScreenStack(oldState => {
-//                         if (
-//                             screenToShow != null ||
-//                             oldState[oldState.length - 1] !== sender
-//                         ) { return oldState; }
-//                         const newItem = new NavigationScreenInfo(newComponent, latestControllerWidth.current ?? 10000000);
-//                         setScreenToShow(newItem);
-//                         return [...oldState, newItem];
-//                     });
-//                 });
+        // can represent either a new screen to present, or a screen underneath the current screen, where all screens on top of it must be dismissed.
+        const [screenBeingShown, setScreenBeingShown] = useState<Optional<NavigationScreenInfo>>(null);
+        const [isInteractionActive, setIsInteractionActive] = useState(false);
 
-//             }
-//         }), [screenToShow]);
+
+        const translateXValue = useRef(new Animated.Value(0)).current;
 
 
 
-//         useEffect(() => {
-//             if (screenToShow == null) { return; }
-
-//             const currentIndexOfScreenToShow = lastIndexOfInfo(screenToShow, screenStack);
-//             if (currentIndexOfScreenToShow == null){
-//                 throw new Error("THIS SHOULD NOT BE NULL!! CHECK LOGIC");
-//             }
-
-//             const isPresenting = currentIndexOfScreenToShow === screenStack.length - 1;
-//             const frontItem = screenStack[screenStack.length - 1];
-//             const behindItem = isPresenting ? screenStack[screenStack.length - 2] : screenStack[currentIndexOfScreenToShow];
-
-//             if (isPresenting === false) {
-//                 (function filterOutScreensToSkip(){
-//                     setScreenStack(oldState => {
-//                         let foundAnItemToRemove = false;
-//                         const newState = oldState.filter((_, index) => {
-//                             const shouldkeep = index <= currentIndexOfScreenToShow || index === oldState.length - 1;
-//                             if (shouldkeep === false) { foundAnItemToRemove = true; }
-//                             return shouldkeep;
-//                         });
-//                         if (foundAnItemToRemove) {
-//                             return newState;
-//                         } else { return oldState; }
-//                     });
-//                 })();
-//             }
-
-//             const duration = 500;
-//             const easing = Easing.elastic(0.7);
-//             const minBehindViewTranslateX = -100;
-
-//             const behindItemAnimationPromise = new Promise(resolve => {
-//                 behindItem.translateX.setValue(isPresenting ? 0 : minBehindViewTranslateX);
-//                 Animated.timing(behindItem.translateX, {
-//                     duration,
-//                     easing,
-//                     toValue: isPresenting ? minBehindViewTranslateX : 0,
-//                 }).start(() => {
-//                     behindItem.translateX.setValue(0);
-//                     resolve();
-//                 });
-//             });
-
-//             const frontItemAnimationPromise = new Promise(resolve => {
-//                 const controllerWidth = latestControllerWidth.current ?? Dimensions.get("window").width;
-
-//                 frontItem.translateX.setValue(isPresenting ? controllerWidth : 0);
-//                 Animated.timing(frontItem.translateX, {
-//                     duration,
-//                     easing,
-//                     toValue: isPresenting ? 0 : controllerWidth,
-//                 }).start(() => {
-//                     frontItem.translateX.setValue(0);
-//                     resolve();
-//                 });
-//             });
-
-//             Promise.all([behindItemAnimationPromise, frontItemAnimationPromise]).then(() => {
-//                 batch(() => {
-//                     if (isPresenting === false) {
-//                         setScreenStack(oldState => {
-//                             const newState = [...oldState];
-//                             newState.pop();
-//                             return newState;
-//                         });
-//                     }
-//                     setScreenToShow(null);
-//                 });
-//             });
-//         }, [screenToShow]);
-
-//         function onLayout(event: LayoutChangeEvent) {
-//             latestControllerWidth.current = event.nativeEvent.layout.width;
-//         }
-
-//         return <View style={[styles.root, {
-//             overflow: screenToShow == null ? undefined : 'hidden',
-//         }]} onLayout={onLayout}>
-//             {screenStack.map(item => {
-//                 return <NavigationScreen key={item.key} style={[styles.childScreen, {
-//                     transform: [{ translateX: item.translateX }]
-//                 }]} component={item.component} actions={{
-//                     dismiss: () => screenActions.dismiss(item),
-//                     present: component => screenActions.present(item, component),
-//                 }} />
-//             })}
-//         </View>
-//     }
-
-// })();
-
-// export default NavigationController;
+        const animateScreenToNewState = useCallback((isPresentation: boolean, duration: number = fullAnimationDuration) => {
+            return new Promise(resolve => {
+                Animated.timing(translateXValue, {
+                    duration: duration,
+                    easing: Easing.elastic(0.75),
+                    toValue: isPresentation ? 0 : latestControllerWidth.current,
+                    useNativeDriver: true,
+                }).start(() => {
+                    batch(() => {
+                        if (isPresentation === false) {
+                            setScreenStack(oldState => {
+                                const newState = [...oldState];
+                                newState.pop();
+                                return newState;
+                            });
+                        }
+                        resolve();
+                    });
+                });
+            })
+        }, []);
 
 
+        const showScreen = useCallback((screenToShow: NavigationScreenInfo) => {
+            if (screenBeingShown != null || isInteractionActive) { return; }
+
+            const currentIndexOfScreenToShow = lastIndexOfInfo(screenToShow, screenStack);
+
+            if (
+                (currentIndexOfScreenToShow != null && currentIndexOfScreenToShow < 0) ||
+                currentIndexOfScreenToShow === screenStack.length - 1
+            ) { return; }
+
+            const isPresenting = currentIndexOfScreenToShow == null;
+
+            translateXValue.setValue(isPresenting ? latestControllerWidth.current : 0);
+
+            batch(() => {
+                if (currentIndexOfScreenToShow == null) {
+                    setScreenStack(oldState => {
+                        const newState = [...oldState];
+                        newState.push(screenToShow);
+                        return newState;
+                    })
+                } else {
+                    (function filterOutScreensToSkip() {
+                        setScreenStack(oldState => {
+                            let foundAnItemToRemove = false;
+                            const newState = oldState.filter((_, index) => {
+                                const shouldkeep = index <= currentIndexOfScreenToShow || index === oldState.length - 1;
+                                if (shouldkeep === false) { foundAnItemToRemove = true; }
+                                return shouldkeep;
+                            });
+                            if (foundAnItemToRemove) {
+                                return newState;
+                            } else { return oldState; }
+                        });
+                    })();
+                }
+
+                setScreenBeingShown(screenToShow);
+            });
+
+            animateScreenToNewState(isPresenting).then(() => {
+                setScreenBeingShown(null);
+            });
+
+        }, [screenBeingShown, screenStack, isInteractionActive])
+
+
+        const screenActions = useMemo(() => ({
+            dismiss(sender: NavigationScreenInfo) {
+                if (screenStack[screenStack.length - 1] !== sender) { return; }
+                const screenToShow = screenStack[screenStack.length - 2];
+                if (screenToShow instanceof NavigationScreenInfo) {
+                    showScreen(screenToShow);
+                }
+            },
+            present(sender: NavigationScreenInfo, newComponent: React.ReactElement) {
+                if (screenStack[screenStack.length - 1] !== sender) { return; }
+                const newItem = new NavigationScreenInfo(newComponent);
+                showScreen(newItem);
+            }
+        }), [screenBeingShown, screenStack, showScreen]);
+
+        const latestGestureXVelocity = useRef(0);
+        const latestGestureXTranslation = useRef(0);
+
+        
+        function updateShouldDismissAfterInteraction(event: PanGestureHandlerGestureEvent) {
+            latestGestureXVelocity.current = event.nativeEvent.velocityX;
+            latestGestureXTranslation.current = event.nativeEvent.translationX;
+        }
+
+        function panGestureStateDidChange(event: PanGestureHandlerStateChangeEvent) {
+
+            batch(() => {
+                switch (event.nativeEvent.state) {
+                    case GestureState.BEGAN:
+                    case GestureState.ACTIVE:
+                        setIsInteractionActive(true);
+                        break;
+                    case GestureState.END:
+
+                        const screenWidth = latestControllerWidth.current;
+                        const translationX = latestGestureXTranslation.current;
+                        const velocity = latestGestureXVelocity.current;
+                        const shouldDismiss = shouldDismissAfterInteraction(velocity, translationX, screenWidth);
+                        
+                        setScreenBeingShown(screenStack[screenStack.length - 1]);
+                        
+                        const animationDuration = (() => {
+                            
+                            let remainingDistance = (() => {
+                                const x = shouldDismiss ? screenWidth - translationX : translationX;
+                                return Math.min(Math.max(x, 0), screenWidth);
+                            })();
+
+                            const val = (remainingDistance / Math.abs(velocity)) * 1000 * 1.2;
+                            const valueToReturn = Math.min(Math.max(val, 50), 400);
+                            
+                            return valueToReturn;
+                        })();
+
+                        animateScreenToNewState(shouldDismiss === false, animationDuration).then(() => {
+                            setScreenBeingShown(null);
+                        });
+
+                    // intentionally not breaking becuase I want the isInteractionActive state to be set
+                    case GestureState.CANCELLED:
+                    case GestureState.FAILED:
+                        setIsInteractionActive(false);
+                        break;
+                }
+            });
+        }
+
+
+        function onLayout(event: LayoutChangeEvent) {
+            latestControllerWidth.current = event.nativeEvent.layout.width;
+        }
+
+
+        useLayoutEffect(() => {
+            // without this, the translation for all screens are not set to zero after an uninteractive presentation or dismissal 
+            if (screenBeingShown == null && isInteractionActive === false) {
+                translateXValue.setValue(0);
+            }
+        });
+
+        return <View style={[styles.root, {
+            overflow: (screenBeingShown != null || isInteractionActive) ? 'hidden' : undefined,
+        }]} onLayout={onLayout}>
+
+            {screenStack.map((item, index) => {
+
+                const isTopView = index === screenStack.length - 1;
+                const isBehindView = index === screenStack.length - 2;
+
+                const screenWidth = latestControllerWidth.current;
+                const minBehindViewTranslateX = -(latestControllerWidth.current / 3);
+
+                const zero = translateXValue.interpolate({
+                    inputRange: [-1, 0, 1],
+                    outputRange: [0, 0, 0],
+                });
+
+                const translateX = (() => {
+                    if (
+                        screenBeingShown == null && isInteractionActive === false ||
+                        (isTopView === false && isBehindView === false)
+                    ) { return zero; }
+
+                    let input = [0, screenWidth];
+
+                    let output = (() => {
+                        if (isTopView) {
+                            return [...input];
+                        } else if (isBehindView) {
+                            return [minBehindViewTranslateX, 0]
+                        } else { throw new Error('this point should not be reached!!') }
+                    })();
+
+                    if (isInteractionActive) {
+                        input = [input[0] - 1, ...input, input[input.length - 1] + 1];
+                        output = [output[0], ...output, output[output.length - 1]]
+                    }
+
+                    return translateXValue.interpolate({
+                        inputRange: input, outputRange: output
+                    });
+                })();
+
+                return <NavigationScreen
+                    key={item.key}
+                    style={[styles.childScreen, { transform: [{ translateX }] }]}
+                    component={item.component}
+                    actions={{
+                        dismiss: () => screenActions.dismiss(item),
+                        present: component => screenActions.present(item, component),
+                    }}
+                    panGestureProps={{
+                        enabled: screenStack.length > 1 && isTopView && screenBeingShown == null,
+                        onGestureEvent: Animated.event([{
+                            nativeEvent: {
+                                translationX: translateXValue,
+                            }
+                        }], {
+                            useNativeDriver: true,
+                            listener: updateShouldDismissAfterInteraction,
+                        }),
+                        onHandlerStateChange: panGestureStateDidChange
+                    }}
+                />
+            })}
+
+        </View>
+    }
+
+})();
+
+export default NavigationController;
 
