@@ -1,18 +1,13 @@
+import { getShadowStyle } from "./helpers/general";
 
 const LayoutConstants = {
 
     pageSideInsets: 20,
+    productImageHeightPercentageOfWidth: 0.55,
 
     navBar: {
         cornerRadius: 25,
-        shadowConfig: {
-
-            shadowColor: '#000',
-            shadowOpacity: 0.1,
-            shadowRadius: 20,
-            elevation: 5,
-
-        }
+        shadowConfig: getShadowStyle(8),
     },
 
     sideMenuBar: {

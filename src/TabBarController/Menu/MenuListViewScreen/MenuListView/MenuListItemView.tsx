@@ -8,32 +8,27 @@ import { CustomFont } from '../../../../helpers/fonts/fonts';
 import { CustomColors, Color } from '../../../../helpers/colors';
 import { useNavigationScreenContext } from '../../../../helpers/NavigationController/NavigationScreen';
 import MenuItemDetailScreen from '../../MenuItemDetailScreen/MenuItemDetailScreen';
+import { getShadowStyle } from '../../../../helpers/general';
+import LayoutConstants from '../../../../LayoutConstants';
+import AspectRatioView from '../../../../helpers/AspectRatioView';
 
 
 const MenuListItemView = (() => {
 
     const borderRadius = 15;
 
-    const shadowConfig = {
-        shadowColor: 'black',
-        shadowRadius: 20,
-        shadowOpacity: 0.15
-    }
+    const shadowConfig = getShadowStyle(8);
 
     const styles = StyleSheet.create({
         root: {
-            
+
         },
-        imageHolderHolder: {
-            paddingTop: '55%',
+        imageHolder: {
             overflow: 'hidden',
             borderTopLeftRadius: borderRadius,
             borderTopRightRadius: borderRadius,
             ...shadowConfig,
             backgroundColor: 'white',
-        },
-        imageHolder: {
-            ...StyleSheet.absoluteFillObject,
         },
         image: {
             width: '100%',
@@ -68,7 +63,7 @@ const MenuListItemView = (() => {
         startingAtText: {
             color: Color.gray(0.7).stringValue,
             fontSize: 13,
-            marginBottom: 2, 
+            marginBottom: 2,
         },
         priceText: {
             color: CustomColors.themeGreen.stringValue,
@@ -81,16 +76,19 @@ const MenuListItemView = (() => {
 
         const navigationScreenContext = useNavigationScreenContext();
 
-        function onPress(){
-            navigationScreenContext.present(<MenuItemDetailScreen/>)
+        function onPress() {
+            navigationScreenContext.present(<MenuItemDetailScreen />)
         }
 
         return <BouncyButton style={styles.root} bounceScaleValue={0.93} onPress={onPress}>
-            <View style={styles.imageHolderHolder}>
-                <View style={styles.imageHolder}>
-                    <Image style={styles.image} source={props.item.imageSource} resizeMode="cover" />
-                </View>
-            </View>
+
+            <AspectRatioView
+                heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}
+                style={styles.imageHolder}
+            >
+                <Image style={styles.image} source={props.item.imageSource} resizeMode="cover" />
+            </AspectRatioView>
+
             <View style={styles.textBox}>
                 <View style={styles.textBox_leftSide}>
                     <CustomizedText style={styles.textBox_productName} numberOfLines={2} ellipsizeMode={'tail'}>

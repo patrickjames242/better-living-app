@@ -1,7 +1,6 @@
 
 import React, { useState, useMemo, useRef, useCallback, useLayoutEffect } from 'react';
 import { View, Animated, StyleSheet, Easing, Dimensions, LayoutChangeEvent } from 'react-native';
-
 import { batch } from 'react-redux';
 import NavigationScreen from './NavigationScreen';
 import { State as GestureState, PanGestureHandlerGestureEvent, PanGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
@@ -315,9 +314,7 @@ const NavigationController = (() => {
                     panGestureProps={{
                         enabled: screenStack.length > 1 && isTopView && screenBeingShown == null,
                         onGestureEvent: Animated.event([{
-                            nativeEvent: {
-                                translationX: translateXValue,
-                            }
+                            nativeEvent: { translationX: translateXValue,}
                         }], {
                             useNativeDriver: true,
                             listener: updateShouldDismissAfterInteraction,

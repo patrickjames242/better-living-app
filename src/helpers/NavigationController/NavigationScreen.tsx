@@ -41,6 +41,7 @@ const NavigationScreen = (() => {
         dimmerView: {
             ...StyleSheet.absoluteFillObject,
             backgroundColor: Color.gray(0).withAdjustedOpacity(0.7).stringValue,
+            elevation: 1000,
         }
     });
 
