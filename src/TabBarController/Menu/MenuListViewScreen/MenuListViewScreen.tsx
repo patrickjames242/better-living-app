@@ -5,7 +5,7 @@ import TopBar from './TopBar/TopBar';
 import MenuListView from './MenuListView/MenuListView';
 
 
-const MenuScreen = (() => {
+const MenuListScreen = (() => {
 	
 	const styles = StyleSheet.create({
 		root: {
@@ -18,14 +18,14 @@ const MenuScreen = (() => {
 		},
 	});
 
-	return function () {
+	return function MenuListScreen() {
 		return <View style={styles.root}>
 			<TopBar />
 			<View style={styles.contentView}>
 				<MenuListView />
 			</View>
 		</View>
-	}
+	};
 })();
 
-export default MenuScreen;
+export default MenuListScreen;

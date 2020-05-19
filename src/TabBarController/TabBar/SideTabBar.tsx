@@ -38,6 +38,7 @@ const SideTabBar = (() => {
 			return dimensions.height > 500 ? marginSizes.tallScreen : marginSizes.shortScreen
 		}, []);
 
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		const initialItemMarginSize = useMemo(() => getMarginSize(Dimensions.get('window')), [])
 
 		const [itemMarginSize, setItemMarginSize] = useState(initialItemMarginSize);
@@ -50,7 +51,7 @@ const SideTabBar = (() => {
 	}
 
 
-	return function () {
+	return function SideTabBar() {
 		const safeAreaInsets = useSafeArea();
 		const currentSelection = useSelector(state => state.tabBarController.currentSelection);
 		const dispatch = useDispatch();
@@ -108,7 +109,7 @@ const SideBarItem = (() => {
 		}
 	});
 
-	return function (props: SideTabBarItemProps) {
+	return function SideBarItem(props: SideTabBarItemProps) {
 		return <BouncyButton
 			onPress={props.onPress}
 			bounceScaleValue={0.8}

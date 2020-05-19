@@ -20,7 +20,7 @@ export function changeCurrentSelection(newSelection: TabBarSelection): ChangeCur
     }
 }
 
-function currentSelectionReducer(state = TabBarSelection.cart, action: ChangeCurrentSelectionAction) {
+function currentSelectionReducer(state = TabBarSelection.menu, action: ChangeCurrentSelectionAction) {
     switch (action.type) {
         case ActionStrings.TabBarController.CHANGE_CURRENT_SELECTION:
             return action.newSelection;

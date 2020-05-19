@@ -5,12 +5,12 @@ import MenuListViewHeader from './MenuListViewHeader';
 import { MenuListSection, menuListSections, MenuListItem } from './helpers';
 import MenuListItemView from './MenuListItemView';
 import MenuListViewSectionHeader from './MenuListViewSectionHeader';
-import LayoutConstants from '../../../LayoutConstants';
-import { getNumbersList } from '../../../helpers/general';
-import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../helpers';
+import LayoutConstants from '../../../../LayoutConstants';
+import { getNumbersList } from '../../../../helpers/general';
+import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../../helpers';
 import { useSafeArea } from 'react-native-safe-area-context';
-import { useNotificationListener } from '../../../helpers/Notification';
-import { useSelector } from '../../../redux/store';
+import { useNotificationListener } from '../../../../helpers/Notification';
+import { useSelector } from '../../../../redux/store';
 
 
 export interface MenuListViewProps {
@@ -35,7 +35,7 @@ const MenuListView = (() => {
         },
     });
 
-    const sideInsets = LayoutConstants.menuPage.pageSideInsets;
+    const sideInsets = LayoutConstants.pageSideInsets;
     const itemSpacing = 20;
     const sectionBottomSpacing = 40;
 
@@ -59,7 +59,7 @@ const MenuListView = (() => {
                 listViewWidth -= LayoutConstants.sideMenuBar.totalWidth;
             }
             return getNumberOfColumnsBasedOnListViewWidth(listViewWidth);
-        }, []);
+        }, [isSideBarShowing, safeAreaInsets.left, safeAreaInsets.right]);
 
         const [numberOfColumns, setNumberOfColumns] = useState(intialNumberOfColumns);
 
@@ -68,15 +68,15 @@ const MenuListView = (() => {
             width -= (safeAreaInsets.left + safeAreaInsets.right);
             width -= isSideBarShowing ? LayoutConstants.sideMenuBar.totalWidth : 0;
             return getNumberOfColumnsBasedOnListViewWidth(width);
-        }, [safeAreaInsets.left, safeAreaInsets.right]);
+        }, [isSideBarShowing, safeAreaInsets.left, safeAreaInsets.right]);
 
         useNotificationListener(windowDimensionsDidChangeNotification, dimensions => {
             setNumberOfColumns(estimateNumberOfColumsnBasedOn(dimensions));
         }, [estimateNumberOfColumsnBasedOn])
 
-        function rootViewOnLayoutCallback(event: LayoutChangeEvent) {
+        const rootViewOnLayoutCallback = useCallback(function (event: LayoutChangeEvent) {
             setNumberOfColumns(getNumberOfColumnsBasedOnListViewWidth(event.nativeEvent.layout.width));
-        }
+        }, []);
 
         return { numberOfColumns, rootViewOnLayoutCallback };
 
@@ -103,14 +103,11 @@ const MenuListView = (() => {
 
 
 
-        return useMemo(() => (
 
+        return useMemo(() => (
             <View
                 onLayout={rootViewOnLayoutCallback}
                 style={[styles.root]}>
-
-
-
                 <SectionList
                     style={styles.listView}
                     contentContainerStyle={{
@@ -127,9 +124,9 @@ const MenuListView = (() => {
                             } else if (leadingTrailingInfo.trailingSection !== undefined) {
                                 return sectionBottomSpacing;
                             } else {
-                                return LayoutConstants.menuPage.pageSideInsets;
+                                return LayoutConstants.pageSideInsets;
                             }
-                        })();
+                        })()
                         return <View style={{ height: size, width: size }} />
                     }}
                     renderSectionHeader={info => {
@@ -152,7 +149,7 @@ const MenuListView = (() => {
                     }}
                 />
             </View>
-        ), [fakeSections, numberOfColumns]);
+        ), [fakeSections, numberOfColumns, props.bottomContentInset, props.topContentInset, rootViewOnLayoutCallback]);
     }
 })();
 
@@ -176,7 +173,7 @@ const MenuListSectionItemRow = (() => {
         },
     });
 
-    return function (props: MenuListSectionItemRowProps) {
+    return function MenuListSectionItemRow(props: MenuListSectionItemRowProps) {
 
         const startingIndex = props.numberOfColumns * props.rowIndex;
 

@@ -39,12 +39,12 @@ export default function BottomTabBar(props: ViewProps){
 
 const tabBarStyles = StyleSheet.create({
     tabBar: (() => {
-        const borderRadius = LayoutConstants.menuPage.topAndBottomBarCornerRadius;
+        const borderRadius = LayoutConstants.navBar.cornerRadius;
         return {
             backgroundColor: 'white',
             borderTopLeftRadius: borderRadius, 
             borderTopRightRadius: borderRadius,
-            ...LayoutConstants.menuPage.topAndBottomBarShadowConfig,
+            ...LayoutConstants.navBar.shadowConfig,
         } as ViewStyle;
     })(),
     contentView: {

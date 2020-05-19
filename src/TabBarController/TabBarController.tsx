@@ -30,7 +30,7 @@ const TabBarController = (() => {
 		},
 	});
 
-	return function () {
+	return function TabBarController() {
 
 		const safeAreaInsets = useSafeArea();
 
@@ -41,7 +41,7 @@ const TabBarController = (() => {
 			if (currentTabBarPosition !== newPosition){
 				dispatch(changeTabBarPosition(newPosition));
 			}
-		}, [currentTabBarPosition])
+		}, [currentTabBarPosition, dispatch])
 
 		const { rootViewOnLayoutCallback } = useSetUpWindowDimensionsObserver();
 

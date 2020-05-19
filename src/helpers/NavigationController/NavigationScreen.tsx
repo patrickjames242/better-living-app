@@ -3,6 +3,7 @@ import React, { useContext, useRef, useEffect } from 'react';
 import { Optional } from '../general';
 import { Animated, StyleProp, ViewStyle, StyleSheet } from 'react-native';
 import { PanGestureHandler, PanGestureHandlerProperties } from 'react-native-gesture-handler';
+import { CustomColors, Color } from '../colors';
 
 
 export const NavigationScreenContext = React.createContext<Optional<NavigationScreenContextValue>>(null);
@@ -12,7 +13,7 @@ export interface NavigationScreenActions {
     present: (component: React.ReactElement) => void
 }
 
-export interface NavigationScreenContextValue extends NavigationScreenActions {}
+export interface NavigationScreenContextValue extends NavigationScreenActions { }
 
 export function useNavigationScreenContext(): NavigationScreenContextValue {
     const contextValue = useContext(NavigationScreenContext);
@@ -27,17 +28,23 @@ export interface NavigationScreenProps {
     style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>,
     actions: NavigationScreenActions,
     panGestureProps: PanGestureHandlerProperties,
+    dimmerViewStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>,
+    shouldShowDimmerView?: boolean,
 }
 
 const NavigationScreen = (() => {
 
     const styles = StyleSheet.create({
         root: {
-            
+            backgroundColor: CustomColors.mainBackgroundColor.stringValue,
+        },
+        dimmerView: {
+            ...StyleSheet.absoluteFillObject,
+            backgroundColor: Color.gray(0).withAdjustedOpacity(0.7).stringValue,
         }
     });
 
-    return function (props: NavigationScreenProps) {
+    return function NavigationScreen(props: NavigationScreenProps) {
 
         const dismissAction = useRef<Optional<() => void>>(null);
         const presentAction = useRef<Optional<(component: React.ReactElement) => void>>(null);
@@ -54,10 +61,15 @@ const NavigationScreen = (() => {
 
         return <NavigationScreenContext.Provider value={contextValue}>
             <PanGestureHandler {...props.panGestureProps}>
-                <Animated.View style={[styles.root, props.style]} children={props.component} />
+                <Animated.View style={[styles.root, props.style]}>
+                    {props.component}
+                    {props.shouldShowDimmerView &&
+                        <Animated.View style={[styles.dimmerView, props.dimmerViewStyle]} />
+                    }
+                </Animated.View>
             </PanGestureHandler>
         </NavigationScreenContext.Provider>
-    }
+    };
 
 })();
 

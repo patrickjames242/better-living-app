@@ -23,7 +23,7 @@ const HighlightView: React.FC<ViewProps & {onPress?: () => {}}> = (props) => {
 			duration: shouldShowCoverView ? touchDownAnimationLength : touchUpAnimationLength,
 		}).start();
 
-	}, [shouldShowCoverView]);
+	}, [coverViewOpacityAnimation, shouldShowCoverView]);
 
 	function touchDown() {
 		setShouldShowCoverView(true);

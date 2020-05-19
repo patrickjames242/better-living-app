@@ -2,10 +2,13 @@
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { MenuListItem } from './helpers';
-import BouncyButton from '../../../helpers/BouncyButton';
-import CustomizedText from '../../../helpers/CustomizedText';
-import { CustomFont } from '../../../helpers/fonts/fonts';
-import { CustomColors } from '../../../helpers/colors';
+import BouncyButton from '../../../../helpers/BouncyButton';
+import CustomizedText from '../../../../helpers/CustomizedText';
+import { CustomFont } from '../../../../helpers/fonts/fonts';
+import { CustomColors, Color } from '../../../../helpers/colors';
+import { useNavigationScreenContext } from '../../../../helpers/NavigationController/NavigationScreen';
+import MenuItemDetailScreen from '../../MenuItemDetailScreen/MenuItemDetailScreen';
+
 
 const MenuListItemView = (() => {
 
@@ -60,6 +63,12 @@ const MenuListItemView = (() => {
         },
         textBox_rightSide: {
             marginLeft: 30,
+            alignItems: 'flex-end',
+        },
+        startingAtText: {
+            color: Color.gray(0.7).stringValue,
+            fontSize: 13,
+            marginBottom: 2, 
         },
         priceText: {
             color: CustomColors.themeGreen.stringValue,
@@ -68,8 +77,15 @@ const MenuListItemView = (() => {
         }
     });
 
-    return function (props: { item: MenuListItem }) {
-        return <BouncyButton style={styles.root} bounceScaleValue={0.93}>
+    return function MenuListItemView(props: { item: MenuListItem }) {
+
+        const navigationScreenContext = useNavigationScreenContext();
+
+        function onPress(){
+            navigationScreenContext.present(<MenuItemDetailScreen/>)
+        }
+
+        return <BouncyButton style={styles.root} bounceScaleValue={0.93} onPress={onPress}>
             <View style={styles.imageHolderHolder}>
                 <View style={styles.imageHolder}>
                     <Image style={styles.image} source={props.item.imageSource} resizeMode="cover" />
@@ -85,6 +101,7 @@ const MenuListItemView = (() => {
                     </CustomizedText>
                 </View>
                 <View style={styles.textBox_rightSide}>
+                    <CustomizedText style={styles.startingAtText}>from</CustomizedText>
                     <CustomizedText style={styles.priceText}>$7.88</CustomizedText>
                 </View>
             </View>

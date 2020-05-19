@@ -1,7 +1,8 @@
 
 
-import React from 'react';
-import { getNumbersList } from '../../../helpers/general';
+
+import { getNumbersList } from '../../../../helpers/general';
+
 
 
 export interface MenuListSection{

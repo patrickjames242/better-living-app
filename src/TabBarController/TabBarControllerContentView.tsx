@@ -1,13 +1,11 @@
 
 import React, { useState, useMemo, useRef } from 'react';
-import { View, StyleSheet, Animated, Easing, Text } from 'react-native';
+import { View, StyleSheet, Animated, Easing} from 'react-native';
 import { TabBarSelection, tabBarItemsData } from './TabBar/helpers';
 import { useUpdateEffect } from '../helpers/general';
-import MenuScreen from './MenuScreen/MenuScreen';
+import MenuScreen from './Menu/Menu';
 import { useSelector } from '../redux/store';
-import { PanGestureHandler, TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigationScreenContext } from '../helpers/NavigationController/NavigationScreen';
-import NavigationController from '../helpers/NavigationController/NavigationController';
+
 
 
 
@@ -30,9 +28,11 @@ const TabBarControllerContentView = (() => {
 		[TabBarSelection.settings]: SettingsScreen,
 	}
 
-	return function () {
+	return function TabBarControllerContentView() {
 
 		const currentSelection = useSelector(state => state.tabBarController.currentSelection);
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		const initialScreensSelectionsValue = useMemo(() => [currentSelection], []);
 		const [currentScreensSelections, setCurrentScreensSelections] = useState<TabBarSelection[]>(initialScreensSelectionsValue);
 		const [animationIsInProgress, setAnimationIsInProgress] = useState(false);
@@ -118,6 +118,7 @@ const TabBarControllerContentView = (() => {
 				useNativeDriver: true,
 			}).start();
 
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [currentSelection]);
 
 		Animated.event([], {});
@@ -139,7 +140,7 @@ const TabBarControllerContentView = (() => {
 				})
 			})()}
 		</View>
-	}
+	};
 
 })();
 
@@ -148,52 +149,13 @@ export default TabBarControllerContentView;
 
 
 
+
 function CartScreen() {
-	
-		// <View style={{
-		// 	backgroundColor: 'green',
-		// 	flex: 1
-		// }} />
-
-		return <NavigationController initialComponent={<CartChild />}/>
-}
-
-
-function CartChild(props: {color?: string}){
-
-	const color = props.color ?? 'red';
-
-	const screenContext = useNavigationScreenContext();
-
-
 	return <View style={{
-		backgroundColor: color,
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-	}}>
-		<TouchableOpacity onPress={() => screenContext.present(<CartChild color={color === 'red' ? 'yellow' : 'red'}/>)}>
-			<Text style={{
-				backgroundColor: 'blue',
-				color: 'white',
-				padding: 20,
-				fontSize: 20,
-			}}>Present New</Text>
-		</TouchableOpacity>
-		<TouchableOpacity onPress={() => screenContext.dismiss()}>
-			<Text style={{
-				backgroundColor: 'blue',
-				color: 'white',
-				padding: 20,
-				fontSize: 20,
-				marginTop: 20,
-			}}>Dismiss Current</Text>
-		</TouchableOpacity>
-	</View>
+		backgroundColor: 'green',
+		flex: 1
+	}} />
 }
-
-
-
 
 function HealthTipsScreen() {
 	return <View style={{

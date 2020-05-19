@@ -1,10 +1,12 @@
 
 import React, { useState, useMemo, useRef, useCallback, useLayoutEffect } from 'react';
-import { View, Animated, StyleSheet, Easing, LayoutChangeEvent, Dimensions } from 'react-native';
-import { Optional } from '../general';
+import { View, Animated, StyleSheet, Easing, Dimensions, LayoutChangeEvent } from 'react-native';
+
 import { batch } from 'react-redux';
 import NavigationScreen from './NavigationScreen';
 import { State as GestureState, PanGestureHandlerGestureEvent, PanGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
+import { Optional } from '../general';
+import { CustomColors } from '../colors';
 
 
 
@@ -37,7 +39,7 @@ const NavigationController = (() => {
     const styles = StyleSheet.create({
         root: {
             flex: 1,
-            backgroundColor: 'black',
+            backgroundColor: CustomColors.mainBackgroundColor.stringValue,
         },
         childScreen: {
             ...StyleSheet.absoluteFillObject,
@@ -57,19 +59,19 @@ const NavigationController = (() => {
         return null;
     }
 
-    function shouldDismissAfterInteraction(velocityX: number, translationX: number, screenWidth: number): boolean{
-        
+    function shouldDismissAfterInteraction(velocityX: number, translationX: number, screenWidth: number): boolean {
+
         const progress = translationX / screenWidth;
         return (() => {
-            if (velocityX >= 0 && velocityX <= 300){
+            if (velocityX >= 0 && velocityX <= 300) {
                 return progress > 0.5;
-            } else if (velocityX > 0){
+            } else if (velocityX > 0) {
                 return true;
             } else {
                 return false;
             }
         })();
-        
+
     }
 
     const fullAnimationDuration = 350;
@@ -78,7 +80,7 @@ const NavigationController = (() => {
 
         const initialScreenStackState = useMemo(() => {
             return [new NavigationScreenInfo(props.initialComponent)]
-        }, []);
+        }, [props.initialComponent]);
 
         const latestControllerWidth = useRef(Dimensions.get('window').width);
 
@@ -113,7 +115,7 @@ const NavigationController = (() => {
                     });
                 });
             })
-        }, []);
+        }, [translateXValue]);
 
 
         const showScreen = useCallback((screenToShow: NavigationScreenInfo) => {
@@ -160,7 +162,7 @@ const NavigationController = (() => {
                 setScreenBeingShown(null);
             });
 
-        }, [screenBeingShown, screenStack, isInteractionActive])
+        }, [screenBeingShown, isInteractionActive, screenStack, translateXValue, animateScreenToNewState])
 
 
         const screenActions = useMemo(() => ({
@@ -176,12 +178,12 @@ const NavigationController = (() => {
                 const newItem = new NavigationScreenInfo(newComponent);
                 showScreen(newItem);
             }
-        }), [screenBeingShown, screenStack, showScreen]);
+        }), [screenStack, showScreen]);
 
         const latestGestureXVelocity = useRef(0);
         const latestGestureXTranslation = useRef(0);
 
-        
+
         function updateShouldDismissAfterInteraction(event: PanGestureHandlerGestureEvent) {
             latestGestureXVelocity.current = event.nativeEvent.velocityX;
             latestGestureXTranslation.current = event.nativeEvent.translationX;
@@ -195,17 +197,17 @@ const NavigationController = (() => {
                     case GestureState.ACTIVE:
                         setIsInteractionActive(true);
                         break;
-                    case GestureState.END:
+                    case GestureState.END: {
 
                         const screenWidth = latestControllerWidth.current;
                         const translationX = latestGestureXTranslation.current;
                         const velocity = latestGestureXVelocity.current;
                         const shouldDismiss = shouldDismissAfterInteraction(velocity, translationX, screenWidth);
-                        
+
                         setScreenBeingShown(screenStack[screenStack.length - 1]);
-                        
+
                         const animationDuration = (() => {
-                            
+
                             let remainingDistance = (() => {
                                 const x = shouldDismiss ? screenWidth - translationX : translationX;
                                 return Math.min(Math.max(x, 0), screenWidth);
@@ -213,15 +215,15 @@ const NavigationController = (() => {
 
                             const val = (remainingDistance / Math.abs(velocity)) * 1000 * 1.2;
                             const valueToReturn = Math.min(Math.max(val, 50), 400);
-                            
+
                             return valueToReturn;
                         })();
 
                         animateScreenToNewState(shouldDismiss === false, animationDuration).then(() => {
                             setScreenBeingShown(null);
                         });
-
-                    // intentionally not breaking becuase I want the isInteractionActive state to be set
+                    }
+                    //falls through
                     case GestureState.CANCELLED:
                     case GestureState.FAILED:
                         setIsInteractionActive(false);
@@ -286,14 +288,30 @@ const NavigationController = (() => {
                     });
                 })();
 
+                const dimmerViewOpacity = (() => {
+                    if (
+                        isBehindView === false ||
+                        (screenBeingShown == null && isInteractionActive === false)
+                    ) { return undefined; }
+
+                    return translateXValue.interpolate({
+                        inputRange: [0, screenWidth],
+                        outputRange: [1, 0],
+                    });
+                })();
+
+                const screenOpacity = (screenBeingShown == null && isInteractionActive === false && isTopView === false) ? 0 : undefined;
+
                 return <NavigationScreen
                     key={item.key}
-                    style={[styles.childScreen, { transform: [{ translateX }] }]}
+                    style={[styles.childScreen, { transform: [{ translateX }], opacity: screenOpacity }]}
                     component={item.component}
                     actions={{
                         dismiss: () => screenActions.dismiss(item),
                         present: component => screenActions.present(item, component),
                     }}
+                    shouldShowDimmerView={Boolean(dimmerViewOpacity)}
+                    dimmerViewStyle={{ opacity: dimmerViewOpacity }}
                     panGestureProps={{
                         enabled: screenStack.length > 1 && isTopView && screenBeingShown == null,
                         onGestureEvent: Animated.event([{

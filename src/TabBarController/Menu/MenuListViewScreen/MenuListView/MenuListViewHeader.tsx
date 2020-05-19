@@ -1,12 +1,12 @@
 
 
 import React, { useState } from 'react';
-import LayoutConstants from '../../../LayoutConstants';
-import { CustomFont } from '../../../helpers/fonts/fonts';
+import LayoutConstants from '../../../../LayoutConstants';
+import { CustomFont } from '../../../../helpers/fonts/fonts';
 import { View, FlatList, StyleSheet } from 'react-native';
-import CustomizedText from '../../../helpers/CustomizedText';
-import BouncyButton from '../../../helpers/BouncyButton';
-import { CustomColors, Color } from '../../../helpers/colors';
+import CustomizedText from '../../../../helpers/CustomizedText';
+import BouncyButton from '../../../../helpers/BouncyButton';
+import { CustomColors, Color } from '../../../../helpers/colors';
 import { menuListSections } from './helpers';
 
 const MenuListViewHeader = (() => {
@@ -17,8 +17,8 @@ const MenuListViewHeader = (() => {
         },
         topTitlesHolder: {
             marginTop: 30,
-            marginLeft: LayoutConstants.menuPage.pageSideInsets,
-            marginRight: LayoutConstants.menuPage.pageSideInsets,
+            marginLeft: LayoutConstants.pageSideInsets,
+            marginRight: LayoutConstants.pageSideInsets,
         },
         topTitles_topBoldTitle: {
             fontFamily: CustomFont.bold,
@@ -31,7 +31,7 @@ const MenuListViewHeader = (() => {
         },
     });
 
-    return function () {
+    return function MenuListViewHeader() {
         return <View style={styles.root}>
             <View style={styles.topTitlesHolder}>
                 <CustomizedText style={styles.topTitles_topBoldTitle}>Hello, Patrick</CustomizedText>
@@ -65,12 +65,12 @@ const MenuCategoriesListView = (() => {
             
         },
         listViewContainer: {
-            paddingLeft: LayoutConstants.menuPage.pageSideInsets,
-            paddingRight: LayoutConstants.menuPage.pageSideInsets,
+            paddingLeft: LayoutConstants.pageSideInsets,
+            paddingRight: LayoutConstants.pageSideInsets,
         }
     })
 
-    return function () {
+    return function MenuCategoriesListView() {
 
         const [selectedItem, setSelectedItem] = useState(categories[0]);
 
@@ -125,7 +125,7 @@ const MenuCategoriesListViewItem = (() => {
         }
     });
 
-    return function (props: MenuCategoriesListViewItemProps) {
+    return function MenuCategoriesListViewItem(props: MenuCategoriesListViewItemProps) {
         return <BouncyButton
             bounceScaleValue={0.9}
             onPress={() => props.onPress(props.text)}
