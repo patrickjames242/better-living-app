@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { StyleSheet, Image} from 'react-native';
-import { LargeHeadingNavigationBar } from '../../../../helpers/NavigationBar';
+import LargeHeadingNavigationBar from '../../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 
 
 

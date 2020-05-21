@@ -4,7 +4,8 @@ import { ViewProps, Animated, Easing } from 'react-native';
 import { useUpdateEffect } from './general';
 import CustomDelayedTouchable from './CustomDelayedTouchable';
 
-export interface BouncyButtonProps{
+
+export interface BouncyButtonProps {
     onPress?: () => void;
     bounceScaleValue?: number;
 }
@@ -16,11 +17,15 @@ const BouncyButton: React.FC<ViewProps & BouncyButtonProps> = (props) => {
     const transformAnimation = useRef(new Animated.Value(1)).current;
 
     useUpdateEffect(() => {
+
         Animated.timing(transformAnimation, {
             toValue: isPressed ? (props.bounceScaleValue ?? 0.7) : 1,
             duration: 250,
             easing: Easing.elastic(1),
+            useNativeDriver: true,
         }).start();
+        
+        //eslint-disable-next-line
     }, [isPressed]);
 
     function touchDown() {

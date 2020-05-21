@@ -24,6 +24,14 @@ const LayoutConstants = {
         },
     },
 
+    floatingCellStyles: {
+        padding: 15,
+        borderRadius: 10,
+        shadowConfig: getShadowStyle(15),
+    },
+
+
+
 };
 
 export default LayoutConstants;
