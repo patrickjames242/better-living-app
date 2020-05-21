@@ -13,6 +13,7 @@ import Spacer from '../../../helpers/Spacers/Spacer';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import PurchaseOptionBox from './ChildComponents/PurchaseOptionBox';
 import TitleBox from './ChildComponents/TitleBox';
+import RoundedTextBouncyButton from '../../../helpers/Buttons/RoundedTextBouncyButton';
 
 
 const MenuItemDetailScreen = (() => {
@@ -52,7 +53,10 @@ const MenuItemDetailScreen = (() => {
 
     return function MenuItemDetailScreen() {
         return <View style={styles.root}>
-            <NavigationControllerNavigationBar title="Pumpkin Soup" />
+            <NavigationControllerNavigationBar title="Pumpkin Soup" rightAlignedView={
+                // <RoundedTextBouncyButton text="Purchase"/>
+                undefined
+            }/>
             <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
                 <Spacer space={30}>
 
@@ -93,6 +97,7 @@ const SectionView = (() => {
         titleText: {
             fontFamily: CustomFont.bold,
             fontSize: 20,
+            marginLeft: LayoutConstants.floatingCellStyles.borderRadius,
         },
     });
 

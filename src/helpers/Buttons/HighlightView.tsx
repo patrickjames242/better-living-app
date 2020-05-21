@@ -2,8 +2,8 @@
 import React, {useState, useRef } from 'react';
 import { ViewProps, View, StyleSheet, Animated } from "react-native";
 
-import { CustomColors } from "./colors";
-import { useUpdateEffect } from './general';
+import { CustomColors } from "../colors";
+import { useUpdateEffect } from '../general';
 import CustomDelayedTouchable from './CustomDelayedTouchable';
 
 const touchDownAnimationLength = 125;

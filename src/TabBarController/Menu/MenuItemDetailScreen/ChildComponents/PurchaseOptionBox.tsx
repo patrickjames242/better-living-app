@@ -7,9 +7,7 @@ import { CustomColors, Color } from '../../../../helpers/colors';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import SpacerView from '../../../../helpers/Spacers/SpacerView';
 import CustomizedText from '../../../../helpers/CustomizedText';
-import BouncyButton from '../../../../helpers/BouncyButton';
-
-
+import RoundedTextBouncyButton from '../../../../helpers/Buttons/RoundedTextBouncyButton';
 
 
 const PurchaseOptionBox = (() => {
@@ -25,7 +23,7 @@ const PurchaseOptionBox = (() => {
             ...getShadowStyle(15),
         },
         leftSide: {
-
+            flexShrink: 1,
         },
         priceText: {
             color: CustomColors.themeGreen.stringValue,
@@ -37,18 +35,6 @@ const PurchaseOptionBox = (() => {
             fontFamily: CustomFont.medium,
             color: Color.gray(0.4).stringValue,
         },
-        purchaseButton: {
-            backgroundColor: CustomColors.themeGreen.stringValue,
-            padding: 15,
-            paddingTop: 10,
-            paddingBottom: 10,
-            borderRadius: 1000,
-        },
-        purchaseButtonText: {
-            color: 'white',
-            fontSize: 13,
-            fontFamily: CustomFont.medium,
-        },
     });
 
     return function PurchaseOptionBox(props: { price: string, title: string, buttonText: string}) {
@@ -57,12 +43,11 @@ const PurchaseOptionBox = (() => {
                 <CustomizedText style={styles.priceText}>{props.price}</CustomizedText>
                 <CustomizedText style={styles.titleText}>{props.title}</CustomizedText>
             </SpacerView>
-            <BouncyButton style={styles.purchaseButton} bounceScaleValue={0.8}>
-                <CustomizedText style={styles.purchaseButtonText}>{props.buttonText}</CustomizedText>
-            </BouncyButton>
+            <RoundedTextBouncyButton text={props.buttonText}/>
         </SpacerView>
     }
 
 })();
 
 export default PurchaseOptionBox;
+

@@ -1,3 +1,4 @@
+
 import { getShadowStyle } from "./helpers/general";
 
 const LayoutConstants = {
@@ -30,8 +31,8 @@ const LayoutConstants = {
         shadowConfig: getShadowStyle(15),
     },
 
-
-
 };
 
 export default LayoutConstants;
+
+

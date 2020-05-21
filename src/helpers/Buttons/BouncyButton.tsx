@@ -1,7 +1,7 @@
 
 import React, { useState, useRef } from 'react';
 import { ViewProps, Animated, Easing } from 'react-native';
-import { useUpdateEffect } from './general';
+import { useUpdateEffect } from '../general';
 import CustomDelayedTouchable from './CustomDelayedTouchable';
 
 

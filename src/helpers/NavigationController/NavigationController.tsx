@@ -4,7 +4,7 @@ import { View, Animated, StyleSheet, Easing, Dimensions, LayoutChangeEvent } fro
 import { batch } from 'react-redux';
 import NavigationScreen from './NavigationScreen';
 import { State as GestureState, PanGestureHandlerGestureEvent, PanGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
-import { Optional } from '../general';
+import { Optional, limitNumber } from '../general';
 import { CustomColors } from '../colors';
 
 
@@ -209,11 +209,11 @@ const NavigationController = (() => {
 
                             let remainingDistance = (() => {
                                 const x = shouldDismiss ? screenWidth - translationX : translationX;
-                                return Math.min(Math.max(x, 0), screenWidth);
+                                return limitNumber(x, 0, screenWidth);
                             })();
 
                             const val = (remainingDistance / Math.abs(velocity)) * 1000 * 1.2;
-                            const valueToReturn = Math.min(Math.max(val, 50), 400);
+                            const valueToReturn = limitNumber(val, 50, 400);
 
                             return valueToReturn;
                         })();
@@ -222,7 +222,7 @@ const NavigationController = (() => {
                             setScreenBeingShown(null);
                         });
                     }
-                    //falls through
+                    // falls through
                     case GestureState.CANCELLED:
                     case GestureState.FAILED:
                         setIsInteractionActive(false);

@@ -8,7 +8,11 @@ import { CustomColors } from '../../../../helpers/colors';
 import CustomizedText from '../../../../helpers/CustomizedText';
 import Space, { SpaceDimension } from '../../../../helpers/Spacers/Space';
 
+const foodTagViewsSpacing = 10;
+
 const TitleBox = (() => {
+
+    
 
     const styles = StyleSheet.create({
         root: {
@@ -42,6 +46,7 @@ const TitleBox = (() => {
             flexDirection: 'row',
             justifyContent: 'flex-start',
             flexWrap: 'wrap',
+            marginBottom: -foodTagViewsSpacing,
         },
     });
 
@@ -53,7 +58,7 @@ const TitleBox = (() => {
             <Image style={styles.categoryIcon} source={require('./forkAndKnife.png')}/>
             <CustomizedText style={styles.categoryText}>Soups</CustomizedText>
         </SpacerView>
-        <SpacerView space={10} style={styles.foodTagViewsHolder}>
+        <SpacerView space={foodTagViewsSpacing} style={styles.foodTagViewsHolder}>
             <FoodTagView title={"Vegan"} />
             <FoodTagView title={"Gluten Free"} />
             <FoodTagView title={"Low Soduim"} />
@@ -74,6 +79,7 @@ const FoodTagView = (() => {
             paddingRight: 8,
             backgroundColor: CustomColors.themeGreen.stringValue,
             borderRadius: 5,
+            marginBottom: foodTagViewsSpacing,
         },
         text: {
             color: 'white',

@@ -2,7 +2,7 @@
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { MenuListItem } from './helpers';
-import BouncyButton from '../../../../helpers/BouncyButton';
+import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
 import CustomizedText from '../../../../helpers/CustomizedText';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import { CustomColors, Color } from '../../../../helpers/colors';

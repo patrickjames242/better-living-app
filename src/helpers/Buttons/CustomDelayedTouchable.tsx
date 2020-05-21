@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react';
 import { ViewProps, TouchableWithoutFeedback } from 'react-native';
-import { Optional } from './general';
+import { Optional } from '../general';
 
 export interface CustomDelayedTouchableProps {
     onPress?: () => void;

@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, StyleSheet, Image, ViewStyle, ViewProps } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
-import BouncyButton from '../../helpers/BouncyButton';
+import BouncyButton from '../../helpers/Buttons/BouncyButton';
 import { CustomColors, Color } from '../../helpers/colors';
 import LayoutConstants from '../../LayoutConstants';
 import { tabBarItemsData} from './helpers';

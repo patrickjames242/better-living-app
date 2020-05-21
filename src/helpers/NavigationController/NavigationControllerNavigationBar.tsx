@@ -2,7 +2,7 @@
 import React from 'react';
 import { StyleSheet, Image, ImageStyle } from 'react-native';
 import CenteredTitleNavigationBar from '../NavigationBar/CenteredTitleNavigationBar';
-import BouncyButton from '../BouncyButton';
+import BouncyButton from '../Buttons/BouncyButton';
 import { CustomColors } from '../colors';
 import { useNavigationScreenContext } from './NavigationScreen';
 
