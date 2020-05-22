@@ -18,7 +18,6 @@ import { windowDimensionsDidChangeNotification } from '../../helpers';
 
 
 
-
 const MenuItemDetailScreen = (() => {
 
     const styles = StyleSheet.create({
@@ -33,7 +32,7 @@ const MenuItemDetailScreen = (() => {
             padding: LayoutConstants.pageSideInsets,
         },
         scrollViewCenteredContent: {
-            maxWidth: 700, 
+            maxWidth: 700,
             width: '100%',
             alignSelf: 'center',
         },
@@ -90,24 +89,21 @@ export default MenuItemDetailScreen;
 
 const FoodImageView = (() => {
 
-
     const styles = StyleSheet.create({
-        root: {
-            ...LayoutConstants.floatingCellStyles.shadowConfig,
-            borderRadius: LayoutConstants.floatingCellStyles.borderRadius,
-            overflow: 'hidden',
-            backgroundColor: 'white',
+
+        imageHolder: {
             width: '100%',
             alignSelf: 'center',
+            backgroundColor: 'white',
+            borderRadius: LayoutConstants.floatingCellStyles.borderRadius,
+            ...LayoutConstants.floatingCellStyles.shadowConfig,
         },
         image: {
             width: '100%',
             height: '100%',
+            borderRadius: LayoutConstants.floatingCellStyles.borderRadius,
         },
     });
-
-
-    console.warn("cant see image shadow on ios");
 
     return function ProductImageView() {
 
@@ -125,9 +121,10 @@ const FoodImageView = (() => {
 
         useNotificationListener(windowDimensionsDidChangeNotification, (dimensions) => { adjustMaxSizeAccordingToWindowHeight(dimensions.height) });
 
-        return <AspectRatioView ref={imageViewRef} style={styles.root} heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}>
+        return <AspectRatioView ref={imageViewRef} style={styles.imageHolder} heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}>
             <Image style={styles.image} source={require('../MenuListViewScreen/MenuListView/food-images/soup.jpg')} resizeMode={'cover'} />
         </AspectRatioView>
+
     }
 })();
 
