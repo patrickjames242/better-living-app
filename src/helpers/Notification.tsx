@@ -51,7 +51,7 @@ export function useNotificationListener<InfoType = {}>(
     useEffect(() => {
         return notification.addListener(listener);
         // eslint-disable-next-line react-hooks/exhaustive-deps 
-    },dependencyList ?? []);
+    }, dependencyList ?? []);
         
 }
 

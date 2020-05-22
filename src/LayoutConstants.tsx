@@ -12,7 +12,7 @@ const LayoutConstants = {
     },
 
     sideMenuBar: {
-        minWidthToShowSideBar: 800,
+        minWidthToShowSideBar: 600,
         padding: 30,
         barItem: {
             imageSize: 30,

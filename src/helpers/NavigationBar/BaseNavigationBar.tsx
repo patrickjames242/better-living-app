@@ -21,7 +21,7 @@ const BaseNavigationBar = (() => {
         }
     });
 
-    const Component: React.FC<BaseNavigationBarProps> = props => {
+    const BaseNavigationBar: React.FC<BaseNavigationBarProps> = props => {
 
         const safeAreaInsets = useSafeArea();
 
@@ -32,7 +32,7 @@ const BaseNavigationBar = (() => {
         </View>;
     };
 
-    return Component;
+    return BaseNavigationBar;
 
 })();
 

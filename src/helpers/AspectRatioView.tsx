@@ -25,19 +25,19 @@ const AspectRatioView = (() => {
 
     });
 
-    const Component: React.FC<AspectRatioViewProps> = function(props){
+    const AspectRatioView: React.ForwardRefRenderFunction<View, React.PropsWithChildren<AspectRatioViewProps>> = function(props, ref){
 
         const paddingTop = (limitNumber(props.heightPercentageOfWidth, 0, 1) * 100) + "%";
 
-        return <View {...props} style={[props.style, styles.root, ]}>
+        return <View ref={ref} {...props} style={[props.style, styles.root]}>
             <View style={[styles.contentHolderHolder, {paddingTop}]}>
                 <View style={styles.contentHolder}>{props.children}</View>
             </View>
         </View>
     }
 
-    return Component;
+    return AspectRatioView;
 
 })();
 
-export default AspectRatioView;
+export default React.forwardRef(AspectRatioView);
