@@ -102,8 +102,6 @@ const MenuListView = (() => {
         }, [numberOfColumns]);
 
 
-
-
         return useMemo(() => (
             <View
                 onLayout={rootViewOnLayoutCallback}

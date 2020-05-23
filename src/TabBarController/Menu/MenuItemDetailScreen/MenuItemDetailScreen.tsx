@@ -7,7 +7,6 @@ import LayoutConstants from '../../../LayoutConstants';
 import AspectRatioView from '../../../helpers/AspectRatioView';
 import { getShadowStyle, Optional } from '../../../helpers/general';
 import CustomizedText from '../../../helpers/CustomizedText';
-import { CustomFont } from '../../../helpers/fonts/fonts';
 import { Color } from '../../../helpers/colors';
 import Spacer from '../../../helpers/Spacers/Spacer';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
@@ -15,6 +14,8 @@ import PurchaseOptionBox from './ChildComponents/PurchaseOptionBox';
 import TitleBox from './ChildComponents/TitleBox';
 import { useNotificationListener } from '../../../helpers/Notification';
 import { windowDimensionsDidChangeNotification } from '../../helpers';
+import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
+import MenuPresentableScreens from '../MenuPresentableScreens';
 
 
 
@@ -38,9 +39,9 @@ const MenuItemDetailScreen = (() => {
         },
         descriptionTextHolder: {
             backgroundColor: 'white',
-            padding: 15,
+            padding: LayoutConstants.floatingCellStyles.padding,
             ...getShadowStyle(15),
-            borderRadius: 10,
+            borderRadius: LayoutConstants.floatingCellStyles.borderRadius,
         },
         descriptionText: {
             lineHeight: 20,
@@ -50,11 +51,20 @@ const MenuItemDetailScreen = (() => {
     });
 
     return function MenuItemDetailScreen() {
+
+        const navigationScreenContext = useNavigationScreenContext();
+
+        function onMealButtonPressed(){
+            const MealCreatorScreen = MenuPresentableScreens.MealCreatorScreen();
+            if (MealCreatorScreen == null){return;}
+            navigationScreenContext.present(<MealCreatorScreen/>)
+        }
+
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Pumpkin Soup" />
             <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
                 <View style={styles.scrollViewCenteredContent}>
-                    <Spacer space={30}>
+                    <Spacer space={LayoutConstants.floatingCellStyles.sectionSpacing}>
                         <SpacerView space={20}>
                             <FoodImageView />
                             <TitleBox />
@@ -71,8 +81,8 @@ const MenuItemDetailScreen = (() => {
                         <SectionView sectionTitle="Purchase Options">
                             <SpacerView space={15}>
                                 <PurchaseOptionBox price="$5.48" title="Purchase Separately" buttonText="Add To Cart" />
-                                <PurchaseOptionBox price="$8.68" title="Small Plate" buttonText="Create Meal" />
-                                <PurchaseOptionBox price="$11.92" title="Large Plate" buttonText="Create Meal" />
+                                <PurchaseOptionBox price="$8.68" title="Small Plate" buttonText="Create Meal" onButtonPress={onMealButtonPressed}/>
+                                <PurchaseOptionBox price="$11.92" title="Large Plate" buttonText="Create Meal" onButtonPress={onMealButtonPressed} />
                             </SpacerView>
                         </SectionView>
 
@@ -134,14 +144,13 @@ const SectionView = (() => {
 
     const styles = StyleSheet.create({
         titleText: {
-            fontFamily: CustomFont.bold,
-            fontSize: 20,
+            ...LayoutConstants.floatingCellStyles.sectionHeaderTextStyles,
             marginLeft: LayoutConstants.floatingCellStyles.borderRadius,
         },
     });
 
     return function SectionView(props: { sectionTitle: string, children: React.ReactElement }) {
-        return <SpacerView space={20}>
+        return <SpacerView space={LayoutConstants.floatingCellStyles.sectionHeaderBottomSpacing}>
             <CustomizedText style={styles.titleText}>{props.sectionTitle}</CustomizedText>
             {props.children}
         </SpacerView>

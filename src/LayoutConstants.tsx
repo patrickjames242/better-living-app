@@ -1,5 +1,7 @@
 
 import { getShadowStyle } from "./helpers/general";
+import { CustomFont } from "./helpers/fonts/fonts";
+import { CustomColors } from "./helpers/colors";
 
 const LayoutConstants = {
 
@@ -27,8 +29,17 @@ const LayoutConstants = {
 
     floatingCellStyles: {
         padding: 15,
-        borderRadius: 10,
+        borderRadius: 15,
+        backgroundColor: 'white',
         shadowConfig: getShadowStyle(15),
+        sectionSpacing: 30,
+        sectionHeaderTextStyles: {
+            fontSize: 20,
+            fontFamily: CustomFont.bold,
+            color: CustomColors.offBlackTitle.stringValue,
+        },
+        sectionHeaderBottomSpacing: 20,
+      
     },
 
 };

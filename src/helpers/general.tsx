@@ -59,3 +59,21 @@ export function getShadowStyle(elevation: number) {
 export function limitNumber(number: number, min: number, max: number): number{
     return Math.max(Math.min(number, max), min);
 }
+
+
+
+export function lazilyImport<ModuleType, ImportedItem>(importCall: Promise<ModuleType>, elementGetter: (module: ModuleType) => ImportedItem): () => Optional<ImportedItem>{
+	
+	const ref: {current: Optional<ImportedItem>} = {
+		current: null,
+	}
+
+	importCall.then(module => {
+		ref.current = elementGetter(module);
+	})
+
+	return () => {
+		return ref.current;
+	}
+
+}

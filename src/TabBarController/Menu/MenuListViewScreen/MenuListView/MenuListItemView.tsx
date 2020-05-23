@@ -7,10 +7,10 @@ import CustomizedText from '../../../../helpers/CustomizedText';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import { CustomColors, Color } from '../../../../helpers/colors';
 import { useNavigationScreenContext } from '../../../../helpers/NavigationController/NavigationScreen';
-import MenuItemDetailScreen from '../../MenuItemDetailScreen/MenuItemDetailScreen';
 import { getShadowStyle } from '../../../../helpers/general';
 import LayoutConstants from '../../../../LayoutConstants';
 import AspectRatioView from '../../../../helpers/AspectRatioView';
+import MenuPresentableScreens from '../../MenuPresentableScreens';
 
 
 const MenuListItemView = (() => {
@@ -77,6 +77,8 @@ const MenuListItemView = (() => {
         const navigationScreenContext = useNavigationScreenContext();
 
         function onPress() {
+            const MenuItemDetailScreen = MenuPresentableScreens.MenuItemDetailScreen();
+            if (MenuItemDetailScreen == null){return;}
             navigationScreenContext.present(<MenuItemDetailScreen />)
         }
 

@@ -57,7 +57,7 @@ export const menuListSections: MenuListSection[] = (() => {
 
 
 
-function getRandomFoods(number: number): MenuListItem[]{
+export function getRandomFoods(number: number): MenuListItem[]{
     return getNumbersList(0, number - 1).map(() => {
         const productIndex = Math.round(Math.random() * (products.length - 1));
         return products[productIndex];

@@ -8,6 +8,7 @@ import { CustomFont } from '../../../../helpers/fonts/fonts';
 import SpacerView from '../../../../helpers/Spacers/SpacerView';
 import CustomizedText from '../../../../helpers/CustomizedText';
 import RoundedTextBouncyButton from '../../../../helpers/Buttons/RoundedTextBouncyButton';
+import LayoutConstants from '../../../../LayoutConstants';
 
 
 const PurchaseOptionBox = (() => {
@@ -19,7 +20,7 @@ const PurchaseOptionBox = (() => {
             alignItems: 'center',
             padding: 15,
             backgroundColor: 'white',
-            borderRadius: 10,
+            borderRadius: LayoutConstants.floatingCellStyles.borderRadius,
             ...getShadowStyle(15),
         },
         leftSide: {
@@ -37,13 +38,13 @@ const PurchaseOptionBox = (() => {
         },
     });
 
-    return function PurchaseOptionBox(props: { price: string, title: string, buttonText: string}) {
+    return function PurchaseOptionBox(props: { price: string, title: string, buttonText: string, onButtonPress?: () => void}) {
         return <SpacerView space={20} style={styles.root}>
             <SpacerView space={5} style={styles.leftSide}>
                 <CustomizedText style={styles.priceText}>{props.price}</CustomizedText>
                 <CustomizedText style={styles.titleText}>{props.title}</CustomizedText>
             </SpacerView>
-            <RoundedTextBouncyButton text={props.buttonText}/>
+            <RoundedTextBouncyButton text={props.buttonText} onPress={props.onButtonPress}/>
         </SpacerView>
     }
 

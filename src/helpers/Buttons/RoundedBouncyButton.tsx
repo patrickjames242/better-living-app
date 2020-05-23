@@ -3,6 +3,10 @@ import { StyleSheet, ViewProps } from 'react-native';
 import BouncyButton from './BouncyButton';
 import { CustomColors } from '../colors';
 
+export interface RoundedBouncyButtonProps extends ViewProps{
+    onPress?: () => void,
+}
+
 const RoundedBouncyButton = (() => {
 
     const styles = StyleSheet.create({
@@ -15,8 +19,8 @@ const RoundedBouncyButton = (() => {
         },
     });
 
-    const RoundedBouncyButton: React.FC<ViewProps> = props => {
-        return <BouncyButton {...props} style={[styles.root, props.style]} bounceScaleValue={0.8}>
+    const RoundedBouncyButton: React.FC<RoundedBouncyButtonProps> = props => {
+        return <BouncyButton {...props} style={[styles.root, props.style]} bounceScaleValue={0.8} onPress={props.onPress}>
             {props.children}
         </BouncyButton>
     };

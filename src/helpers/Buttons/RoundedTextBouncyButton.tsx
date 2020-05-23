@@ -4,8 +4,11 @@ import { CustomColors } from '../colors';
 import { ViewProps, StyleSheet } from 'react-native';
 import { CustomFont } from '../fonts/fonts';
 import CustomizedText from '../CustomizedText';
-import RoundedBouncyButton from './RoundedBouncyButton';
+import RoundedBouncyButton, { RoundedBouncyButtonProps } from './RoundedBouncyButton';
 
+export interface RoundedTextBouncyButtonProps extends RoundedBouncyButtonProps{
+    text: string,
+}
 
 const RoundedTextBouncyButton = (() => {
 
@@ -24,8 +27,8 @@ const RoundedTextBouncyButton = (() => {
         }
     });
 
-    const RoundedTextBouncyButton: React.FC<ViewProps & {text: string}> = props => {
-        return <RoundedBouncyButton {...props} style={[styles.root, props.style]}>
+    const RoundedTextBouncyButton: React.FC<RoundedTextBouncyButtonProps> = props => {
+        return <RoundedBouncyButton {...props} style={[styles.root, props.style]} onPress={props.onPress}>
             <CustomizedText numberOfLines={1} ellipsizeMode={'tail'} style={styles.text}>{props.text}</CustomizedText>
         </RoundedBouncyButton>
     };

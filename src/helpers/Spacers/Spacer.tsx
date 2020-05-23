@@ -1,6 +1,5 @@
 
-import React, { useCallback } from 'react';
-import { View } from 'react-native';
+import React from 'react';
 import Space, { SpaceProps } from './Space';
 import { Optional } from '../general';
 
@@ -13,21 +12,46 @@ import { Optional } from '../general';
 */
 const Spacer: React.FC<SpaceProps> = props => {
 
+    return <BaseSpacer renderSpacer={(lhs, rhs) => {
+        const eitherSideIsASpace = [lhs.item, rhs.item].some(x => (x as React.ReactElement)?.type === Space);
+        if (eitherSideIsASpace){return null;}
+        return <Space {...props}/>
+    }}>{props.children}</BaseSpacer>
+
+}
+
+export default Spacer;
+
+
+
+export interface BaseSpacerChild {
+    item: React.ReactNode,
+    index: number,
+}
+
+export interface BaseSpacerProps {
+    renderSpacer: (leftItem: BaseSpacerChild, rightItem: BaseSpacerChild) => Optional<React.ReactElement>,
+}
+
+export const BaseSpacer: React.FC<BaseSpacerProps> = props => {
     const newChildren = (() => {
         const oldChildren = props.children;
         if (oldChildren instanceof Array) {
             const arrayToReturn: React.ReactNode[] = [];
 
-            let previousItem: Optional<React.ReactNode>;
+            let previousItem: Optional<React.ReactNode> = null;
 
             oldChildren.forEach((item, index) => {
-                if (
-                    index !== 0 &&
-                    (item as React.ReactElement)?.type !== Space && 
-                    (previousItem as any)?.type !== Space
-                ) {
-                    arrayToReturn.push(<Space {...props} />);
+                if (item == null){return;}
+
+                if (index !== 0 && previousItem != null) {
+                    const elementToPush = props.renderSpacer(
+                        { item: previousItem, index: index - 1, },
+                        { item, index }
+                    );
+                    elementToPush != null && arrayToReturn.push(elementToPush);
                 }
+
                 arrayToReturn.push(item);
                 previousItem = item;
             });
@@ -40,6 +64,4 @@ const Spacer: React.FC<SpaceProps> = props => {
 
     return React.createElement(React.Fragment, null, ...newChildren);
 }
-
-export default Spacer;
 
