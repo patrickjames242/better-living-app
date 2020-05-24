@@ -4,12 +4,13 @@ import LayoutConstants from '../../../../LayoutConstants';
 import { ViewStyle, View, StyleSheet, Image } from 'react-native';
 import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
 import { CustomColors, Color } from '../../../../helpers/colors';
+import MealCreatorConstants from '../MealCreatorConstants';
 
 const MealCreatorCheckBoxButton = (() => {
 
     const styles = StyleSheet.create({
         root: {
-            padding: LayoutConstants.floatingCellStyles.padding,
+            padding: MealCreatorConstants.foodSections.contentViewPadding,
             alignItems: 'center',
             justifyContent: 'center',
         },
@@ -32,7 +33,7 @@ const MealCreatorCheckBoxButton = (() => {
     });
 
     const MealCreatorCheckBoxButton = (props: { onPress: () => void, isSelected: boolean }) => {
-        const touchPadding = LayoutConstants.floatingCellStyles.padding;
+        const touchPadding = MealCreatorConstants.foodSections.contentViewPadding;
         return <View style={styles.root}>
             <BouncyButton
                 contentViewProps={{style: [styles.buttonContentView, {

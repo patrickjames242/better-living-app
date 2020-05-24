@@ -4,16 +4,8 @@ import MenuListScreen from './MenuListViewScreen/MenuListViewScreen';
 
 
 
-
 export default function Menu(){
-    return <NavigationController initialComponent={
-        
-        <MenuListScreen/>
-    }/>
+    return <NavigationController initialComponent={<MenuListScreen/>}/>
 }
-
-
-
-
 
 

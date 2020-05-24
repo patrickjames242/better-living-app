@@ -9,6 +9,7 @@ import Spacer, { BaseSpacer } from '../../../../helpers/Spacers/Spacer';
 import { Optional } from '../../../../helpers/general';
 import { Color } from '../../../../helpers/colors';
 import MealCreatorSelectionItem from './MealCreatorSelectionItem';
+import MealCreatorConstants from '../MealCreatorConstants';
 
 
 
@@ -20,10 +21,12 @@ const MealCreatorSectionView = (() => {
 
     const styles = StyleSheet.create({
         root: {
-
+            width: '100%',
+            alignSelf: 'center',
+            maxWidth: LayoutConstants.floatingCellStyles.maxWidth
         },
         headerText: {
-            ...LayoutConstants.floatingCellStyles.sectionHeaderTextStyles,
+            ...MealCreatorConstants.foodSections.sectionHeaderTextStyles,
             marginLeft: LayoutConstants.floatingCellStyles.borderRadius,
         },
         sectionContentHolderHolderView: {
@@ -41,15 +44,20 @@ const MealCreatorSectionView = (() => {
         },
     });
 
-    console.warn("Animate changes in background color due to the selected item changing");
 
     const MealCreatorSectionView = (props: MealCreatorSectionViewProps) => {
 
         
         const [selectedIndex, setSelectedIndex] = useState<Optional<number>>(null);
 
+        setTimeout(() => {
+            console.log(props.section.title);
+            console.trace();
+        }, 1000);
+
+
         return <View style={styles.root}>
-            <Spacer space={LayoutConstants.floatingCellStyles.sectionHeaderBottomSpacing}>
+            <Spacer space={MealCreatorConstants.foodSections.sectionHeaderBottomSpacing}>
                 <CustomizedText style={styles.headerText}>{props.section.title}</CustomizedText>
                 <View style={styles.sectionContentHolderHolderView}>
                     <View style={styles.sectionContentHolderView}>
@@ -64,7 +72,6 @@ const MealCreatorSectionView = (() => {
                         </BaseSpacer>
                     </View>
                 </View>
-
             </Spacer>
         </View>
     }
@@ -72,7 +79,7 @@ const MealCreatorSectionView = (() => {
     return MealCreatorSectionView;
 })();
 
-export default MealCreatorSectionView;
+export default React.memo(MealCreatorSectionView);
 
 
 

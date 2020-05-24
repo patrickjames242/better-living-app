@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { MenuListItem } from "../../MenuListViewScreen/MenuListView/helpers";
-import LayoutConstants from "../../../../LayoutConstants";
 import { getShadowStyle } from "../../../../helpers/general";
 import { CustomFont } from "../../../../helpers/fonts/fonts";
 import BouncyButton from "../../../../helpers/Buttons/BouncyButton";
@@ -9,6 +8,7 @@ import Spacer from "../../../../helpers/Spacers/Spacer";
 import AspectRatioView from "../../../../helpers/AspectRatioView";
 import CustomizedText from "../../../../helpers/CustomizedText";
 import {StyleSheet, Image} from 'react-native';
+import MealCreatorConstants from '../MealCreatorConstants';
 
 
 export interface MealCreatorItemInfoBoxProps {
@@ -24,10 +24,9 @@ const MealCreatorItemInfoBox = (() => {
     const styles = StyleSheet.create({
         root: {
             flex: 1,
-            paddingLeft: LayoutConstants.floatingCellStyles.padding,
-            paddingTop: LayoutConstants.floatingCellStyles.padding,
-            paddingBottom: LayoutConstants.floatingCellStyles.padding,
-            
+            paddingLeft: MealCreatorConstants.foodSections.contentViewPadding,
+            paddingTop: MealCreatorConstants.foodSections.contentViewPadding,
+            paddingBottom: MealCreatorConstants.foodSections.contentViewPadding,
             alignItems: 'flex-start',
         },
         contentView: {
@@ -36,7 +35,7 @@ const MealCreatorItemInfoBox = (() => {
             
         },
         imageHolder: {
-            width: 80,
+            width: MealCreatorConstants.foodSections.imageWidth,
             ...getShadowStyle(10),
             backgroundColor: 'white',
             borderRadius: imageBorderRadius,
@@ -48,14 +47,14 @@ const MealCreatorItemInfoBox = (() => {
         },
         titleText: {
             fontFamily: CustomFont.medium,
-            fontSize: 16,
+            fontSize: MealCreatorConstants.foodSections.rowTitleFontSize,
         },
     });
 
     const MealCreatorItemInfoBox = (props: MealCreatorItemInfoBoxProps) => {
         return <BouncyButton style={styles.root} bounceScaleValue={0.9} onPress={props.onPress} contentViewProps={{style: styles.contentView}}>
-            <Spacer space={LayoutConstants.floatingCellStyles.padding}>
-                <AspectRatioView style={styles.imageHolder} heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}>
+            <Spacer space={MealCreatorConstants.foodSections.contentViewPadding}>
+                <AspectRatioView style={styles.imageHolder} heightPercentageOfWidth={MealCreatorConstants.foodSections.imageHeightPercentageOfWidth}>
                     <Image style={styles.image} source={props.item.imageSource} resizeMode="cover" />
                 </AspectRatioView>
                 <CustomizedText style={styles.titleText}>{props.item.name}</CustomizedText>

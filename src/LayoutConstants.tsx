@@ -39,7 +39,7 @@ const LayoutConstants = {
             color: CustomColors.offBlackTitle.stringValue,
         },
         sectionHeaderBottomSpacing: 20,
-      
+        maxWidth: 700,
     },
 
 };

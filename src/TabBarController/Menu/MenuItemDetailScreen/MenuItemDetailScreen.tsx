@@ -33,7 +33,7 @@ const MenuItemDetailScreen = (() => {
             padding: LayoutConstants.pageSideInsets,
         },
         scrollViewCenteredContent: {
-            maxWidth: 700,
+            maxWidth: LayoutConstants.floatingCellStyles.maxWidth,
             width: '100%',
             alignSelf: 'center',
         },
