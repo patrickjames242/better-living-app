@@ -1,26 +1,37 @@
 import React from 'react';
-import { StyleSheet, ViewProps } from 'react-native';
-import BouncyButton from './BouncyButton';
+import { StyleSheet } from 'react-native';
+import BouncyButton, { BouncyButtonProps } from './BouncyButton';
 import { CustomColors } from '../colors';
 
-export interface RoundedBouncyButtonProps extends ViewProps{
-    onPress?: () => void,
+
+export interface  RoundedBouncyButtonProps extends BouncyButtonProps{
+
 }
+
 
 const RoundedBouncyButton = (() => {
 
     const styles = StyleSheet.create({
         root: {
-            backgroundColor: CustomColors.themeGreen.stringValue,
-            padding: 15,
-            paddingTop: 10,
-            paddingBottom: 10,
-            borderRadius: 100000,
+
         },
+        contentView: {
+            padding: 10,
+            borderRadius: 100000,
+            backgroundColor: CustomColors.themeGreen.stringValue
+        }
     });
 
     const RoundedBouncyButton: React.FC<RoundedBouncyButtonProps> = props => {
-        return <BouncyButton {...props} style={[styles.root, props.style]} bounceScaleValue={0.8} onPress={props.onPress}>
+        return <BouncyButton
+            // set before the props are added because I want the callers props to take precedence
+            bounceScaleValue={0.85}
+            {...props}
+            style={[styles.root, props.style]}
+            contentViewProps={{
+                style: [styles.contentView, props.contentViewProps?.style]
+            }}
+        >
             {props.children}
         </BouncyButton>
     };

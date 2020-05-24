@@ -98,6 +98,9 @@ const SideBarItem = (() => {
 
 	const styles = StyleSheet.create({
 		root: {
+			
+		},
+		contentView: {
 			padding: LayoutConstants.sideMenuBar.barItem.padding,
 			borderRadius: 15,
 			shadowRadius: 25,
@@ -113,12 +116,15 @@ const SideBarItem = (() => {
 		return <BouncyButton
 			onPress={props.onPress}
 			bounceScaleValue={0.8}
-			style={[styles.root, {
-				marginTop: (props.isFirstInList ?? false) ? undefined : props.marginSize,
-				backgroundColor: props.isSelected ? CustomColors.themeGreen.stringValue : 'white',
-				shadowColor: props.isSelected ? CustomColors.themeGreen.stringValue : 'black',
-				shadowOpacity: props.isSelected ? 0.5 : 0.05,
-			}]}>
+			contentViewProps={{
+				style: [styles.contentView, {
+					marginTop: (props.isFirstInList ?? false) ? undefined : props.marginSize,
+					backgroundColor: props.isSelected ? CustomColors.themeGreen.stringValue : 'white',
+					shadowColor: props.isSelected ? CustomColors.themeGreen.stringValue : 'black',
+					shadowOpacity: props.isSelected ? 0.5 : 0.05,
+				}]
+			}}
+			>
 			<Image source={props.imageSource} style={[styles.image, {
 				tintColor: props.isSelected ? 'white' : CustomColors.themeGreen.stringValue,
 			}]} />

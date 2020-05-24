@@ -77,3 +77,12 @@ export function lazilyImport<ModuleType, ImportedItem>(importCall: Promise<Modul
 	}
 
 }
+
+// executes closure if value is not null or undefined and returns its result, otherwise returns null.
+export function mapOptional<Unwrapped, ReturnVal>(optional: Unwrapped | undefined | null, action: (unwrapped: Unwrapped) => ReturnVal): ReturnVal | null{
+    if (optional == null){
+        return null;
+    } else {
+        return action(optional);
+    }   
+}

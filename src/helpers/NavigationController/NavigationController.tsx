@@ -18,6 +18,7 @@ PROBLEMS
 - when the views bounce (because of the animation), you can see the views that are beneath them, which looks tacky
 - On ios, theres a slight delay between when when the user's finger lifts and when the dismissal animation beings
 - when you swipe toward the left and lift you finger, the views flicker 
+- sometimes I see this error on the web: Warning: `NaN` is an invalid value for the `opacity` css style property.
 
 */
 

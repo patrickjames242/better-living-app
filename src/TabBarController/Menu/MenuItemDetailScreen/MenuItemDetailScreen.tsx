@@ -5,7 +5,7 @@ import NavigationControllerNavigationBar from '../../../helpers/NavigationContro
 import { ScrollView } from 'react-native-gesture-handler';
 import LayoutConstants from '../../../LayoutConstants';
 import AspectRatioView from '../../../helpers/AspectRatioView';
-import { getShadowStyle, Optional } from '../../../helpers/general';
+import { getShadowStyle, Optional, mapOptional } from '../../../helpers/general';
 import CustomizedText from '../../../helpers/CustomizedText';
 import { Color } from '../../../helpers/colors';
 import Spacer from '../../../helpers/Spacers/Spacer';
@@ -55,9 +55,9 @@ const MenuItemDetailScreen = (() => {
         const navigationScreenContext = useNavigationScreenContext();
 
         function onMealButtonPressed(){
-            const MealCreatorScreen = MenuPresentableScreens.MealCreatorScreen();
-            if (MealCreatorScreen == null){return;}
-            navigationScreenContext.present(<MealCreatorScreen/>)
+            mapOptional(MenuPresentableScreens.MealCreatorScreen(), X => {
+                navigationScreenContext.present(<X/>);
+            });
         }
 
         return <View style={styles.root}>

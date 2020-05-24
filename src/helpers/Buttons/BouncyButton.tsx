@@ -1,16 +1,17 @@
 
 import React, { useState, useRef } from 'react';
-import { ViewProps, Animated, Easing } from 'react-native';
+import { ViewProps, Animated, Easing, View } from 'react-native';
 import { useUpdateEffect } from '../general';
 import CustomDelayedTouchable from './CustomDelayedTouchable';
 
 
-export interface BouncyButtonProps {
+export interface BouncyButtonProps extends ViewProps {
     onPress?: () => void;
     bounceScaleValue?: number;
+    contentViewProps?: ViewProps,
 }
 
-const BouncyButton: React.FC<ViewProps & BouncyButtonProps> = (props) => {
+const BouncyButton: React.FC<BouncyButtonProps> = (props) => {
 
     const [isPressed, setIsPressed] = useState(false);
 
@@ -41,9 +42,11 @@ const BouncyButton: React.FC<ViewProps & BouncyButtonProps> = (props) => {
         onPressOut={touchUp}
         onPress={props.onPress}
     >
-        <Animated.View {...props} style={[props.style, {
-            transform: [{scale: transformAnimation}]
-        }]}/>
+        <View {...props}>
+            <Animated.View {...props.contentViewProps} style={[props.contentViewProps?.style, {
+                transform: [{scale: transformAnimation}]
+            }]}>{props.children}</Animated.View>
+        </View>
     </CustomDelayedTouchable>
 }
 
