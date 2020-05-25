@@ -32,7 +32,7 @@ const LayoutConstants = {
         borderRadius: 15,
         backgroundColor: 'white',
         shadowConfig: {
-            ...getShadowStyle(15)
+            // ...getShadowStyle(15)
         },
         sectionSpacing: 30,
         sectionHeaderTextStyles: {
