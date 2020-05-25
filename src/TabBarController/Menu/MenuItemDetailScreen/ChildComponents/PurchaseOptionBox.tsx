@@ -2,7 +2,6 @@
 
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import { getShadowStyle } from '../../../../helpers/general';
 import { CustomColors, Color } from '../../../../helpers/colors';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import SpacerView from '../../../../helpers/Spacers/SpacerView';
@@ -21,7 +20,7 @@ const PurchaseOptionBox = (() => {
             padding: 15,
             backgroundColor: 'white',
             borderRadius: LayoutConstants.floatingCellStyles.borderRadius,
-            ...getShadowStyle(15),
+            ...LayoutConstants.floatingCellStyles.shadowConfig,
         },
         leftSide: {
             flexShrink: 1,

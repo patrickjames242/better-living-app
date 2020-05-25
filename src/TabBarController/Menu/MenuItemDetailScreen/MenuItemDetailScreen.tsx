@@ -5,7 +5,7 @@ import NavigationControllerNavigationBar from '../../../helpers/NavigationContro
 import { ScrollView } from 'react-native-gesture-handler';
 import LayoutConstants from '../../../LayoutConstants';
 import AspectRatioView from '../../../helpers/AspectRatioView';
-import { getShadowStyle, Optional, mapOptional } from '../../../helpers/general';
+import { Optional, mapOptional } from '../../../helpers/general';
 import CustomizedText from '../../../helpers/CustomizedText';
 import { Color } from '../../../helpers/colors';
 import Spacer from '../../../helpers/Spacers/Spacer';
@@ -16,7 +16,6 @@ import { useNotificationListener } from '../../../helpers/Notification';
 import { windowDimensionsDidChangeNotification } from '../../helpers';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import MenuPresentableScreens from '../MenuPresentableScreens';
-
 
 
 const MenuItemDetailScreen = (() => {
@@ -40,7 +39,7 @@ const MenuItemDetailScreen = (() => {
         descriptionTextHolder: {
             backgroundColor: 'white',
             padding: LayoutConstants.floatingCellStyles.padding,
-            ...getShadowStyle(15),
+            ...LayoutConstants.floatingCellStyles.shadowConfig,
             borderRadius: LayoutConstants.floatingCellStyles.borderRadius,
         },
         descriptionText: {

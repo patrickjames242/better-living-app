@@ -15,6 +15,7 @@ import {LinearGradient} from 'expo-linear-gradient';
 import { useSelector } from '../../../redux/store';
 import { TabBarPosition } from '../../helpers';
 import MealCreatorConstants from './MealCreatorConstants';
+import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 
 
 
@@ -64,6 +65,12 @@ const MealCreatorScreen = (() => {
             setIsScrollViewAtBottom(isScrollViewAtBottom);
         }
 
+        const navigationScreenContext = useNavigationScreenContext();
+
+        function onAddToCartButtonPressed(){
+            navigationScreenContext.dismissToRoot();
+        }
+
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Large Plate" />
             <FlatList
@@ -77,7 +84,7 @@ const MealCreatorScreen = (() => {
                 initialNumToRender={initialNumToRender}
                 windowSize={5}
             />
-            <AddToCartButton shouldGradientBeVisible={isScrollViewAtBottom === false}/>
+            <AddToCartButton shouldGradientBeVisible={isScrollViewAtBottom === false} onPress={onAddToCartButtonPressed}/>
         </View>
     }
 

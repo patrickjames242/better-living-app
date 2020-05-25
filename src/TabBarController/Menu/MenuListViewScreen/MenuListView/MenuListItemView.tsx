@@ -17,7 +17,8 @@ const MenuListItemView = (() => {
 
     const borderRadius = 15;
 
-    const shadowConfig = getShadowStyle(8);
+    // const shadowConfig = getShadowStyle(8);
+    const shadowConfig = LayoutConstants.floatingCellStyles.shadowConfig;
 
     const styles = StyleSheet.create({
         root: {

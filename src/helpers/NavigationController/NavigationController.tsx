@@ -93,8 +93,6 @@ const NavigationController = (() => {
 
         const translateXValue = useRef(new Animated.Value(0)).current;
 
-
-
         const animateScreenToNewState = useCallback((isPresentation: boolean, duration: number = fullAnimationDuration) => {
             return new Promise(resolve => {
                 Animated.timing(translateXValue, {
@@ -118,8 +116,18 @@ const NavigationController = (() => {
         }, [translateXValue]);
 
 
+        /* 
+
+        This function will do whatever it needs to do in order to show the screen that you tell it to show (unless you don't give it an appropriate to screen to show, in which case it will do nothing). 
+        
+        - If the screenToShow is the screen currently being shown (it is currently at the top of the stack), it will do nothing. 
+        - If the screenToShow is in the screen stack but not at the top, it will remove the screens in between the top screen and screen to show, and animate the dismissal of the top screen to reveal the screen to show. 
+        - If the screenToShow is not already in the screen stack, it will present that screen by sliding it onto the stack.
+        
+        */
+
         const showScreen = useCallback((screenToShow: NavigationScreenInfo) => {
-            if (screenBeingShown != null || isInteractionActive) { return; }
+            if (screenBeingShown != null || isInteractionActive || screenToShow instanceof NavigationScreenInfo === false) { return; }
 
             const currentIndexOfScreenToShow = lastIndexOfInfo(screenToShow, screenStack);
 
@@ -134,23 +142,16 @@ const NavigationController = (() => {
 
             batch(() => {
                 if (currentIndexOfScreenToShow == null) {
-                    setScreenStack(oldState => {
-                        const newState = [...oldState];
-                        newState.push(screenToShow);
-                        return newState;
-                    })
+                    setScreenStack(oldState => [...oldState, screenToShow]);
                 } else {
                     (function filterOutScreensToSkip() {
                         setScreenStack(oldState => {
-                            let foundAnItemToRemove = false;
                             const newState = oldState.filter((_, index) => {
                                 const shouldkeep = index <= currentIndexOfScreenToShow || index === oldState.length - 1;
-                                if (shouldkeep === false) { foundAnItemToRemove = true; }
                                 return shouldkeep;
                             });
-                            if (foundAnItemToRemove) {
-                                return newState;
-                            } else { return oldState; }
+                            const foundItemsToRemove = oldState.length !== newState.length;
+                            return foundItemsToRemove ? newState : oldState;
                         });
                     })();
                 }
@@ -166,7 +167,13 @@ const NavigationController = (() => {
 
 
         const screenActions = useMemo(() => ({
-            dismiss(sender: NavigationScreenInfo) {
+            dismissToRoot() {
+                const screenToShow = screenStack[0];
+                if (screenToShow instanceof NavigationScreenInfo) {
+                    showScreen(screenToShow);
+                }
+            },
+            dismissCurrent(sender: NavigationScreenInfo) {
                 if (screenStack[screenStack.length - 1] !== sender) { return; }
                 const screenToShow = screenStack[screenStack.length - 2];
                 if (screenToShow instanceof NavigationScreenInfo) {
@@ -307,7 +314,8 @@ const NavigationController = (() => {
                     style={[styles.childScreen, { transform: [{ translateX }], opacity: screenOpacity }]}
                     component={item.component}
                     actions={{
-                        dismiss: () => screenActions.dismiss(item),
+                        dismiss: () => screenActions.dismissCurrent(item),
+                        dismissToRoot: () => screenActions.dismissToRoot(),
                         present: component => screenActions.present(item, component),
                     }}
                     shouldShowDimmerView={Boolean(dimmerViewOpacity)}
@@ -315,7 +323,7 @@ const NavigationController = (() => {
                     panGestureProps={{
                         enabled: screenStack.length > 1 && isTopView && screenBeingShown == null,
                         onGestureEvent: Animated.event([{
-                            nativeEvent: { translationX: translateXValue,}
+                            nativeEvent: { translationX: translateXValue, }
                         }], {
                             useNativeDriver: true,
                             listener: updateShouldDismissAfterInteraction,

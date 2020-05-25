@@ -50,12 +50,6 @@ const MealCreatorSectionView = (() => {
         
         const [selectedIndex, setSelectedIndex] = useState<Optional<number>>(null);
 
-        setTimeout(() => {
-            console.log(props.section.title);
-            console.trace();
-        }, 1000);
-
-
         return <View style={styles.root}>
             <Spacer space={MealCreatorConstants.foodSections.sectionHeaderBottomSpacing}>
                 <CustomizedText style={styles.headerText}>{props.section.title}</CustomizedText>

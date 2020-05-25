@@ -10,6 +10,7 @@ export const NavigationScreenContext = React.createContext<Optional<NavigationSc
 
 export interface NavigationScreenActions {
     dismiss: () => void,
+    dismissToRoot: () => void,
     present: (component: React.ReactElement) => void
 }
 
@@ -48,15 +49,18 @@ const NavigationScreen = (() => {
     return function NavigationScreen(props: NavigationScreenProps) {
 
         const dismissAction = useRef<Optional<() => void>>(null);
+        const dismissToRootAction = useRef<Optional<() => void>>(null);
         const presentAction = useRef<Optional<(component: React.ReactElement) => void>>(null);
 
         const contextValue = useRef<NavigationScreenContextValue>({
             dismiss: () => dismissAction.current?.(),
+            dismissToRoot: () => dismissToRootAction.current?.(),
             present: (component: React.ReactElement) => presentAction.current?.(component),
         }).current;
 
         useEffect(() => {
             dismissAction.current = props.actions.dismiss;
+            dismissToRootAction.current = props.actions.dismissToRoot;
             presentAction.current = props.actions.present;
         });
 
