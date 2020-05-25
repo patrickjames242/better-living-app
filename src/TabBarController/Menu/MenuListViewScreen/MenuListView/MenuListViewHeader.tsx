@@ -62,7 +62,7 @@ const MenuCategoriesListView = (() => {
             }
         })(),
         listView: {
-            
+
         },
         listViewContainer: {
             paddingLeft: LayoutConstants.pageSideInsets,
@@ -108,7 +108,10 @@ interface MenuCategoriesListViewItemProps {
 const MenuCategoriesListViewItem = (() => {
 
     const styles = StyleSheet.create({
-        root: (() => {
+        root: {
+
+        },
+        buttonContentView: (() => {
             const topAndBottomPadding = 10;
             const sidePadding = 15;
             return {
@@ -119,6 +122,7 @@ const MenuCategoriesListViewItem = (() => {
                 borderWidth: 1,
             }
         })(),
+
         text: {
             fontFamily: CustomFont.bold,
             fontSize: 13,
@@ -129,10 +133,13 @@ const MenuCategoriesListViewItem = (() => {
         return <BouncyButton
             bounceScaleValue={0.9}
             onPress={() => props.onPress(props.text)}
-            style={[styles.root, {
-                backgroundColor: props.isSelected ? CustomColors.themeGreen.stringValue : 'white',
-                borderColor: props.isSelected ? 'transparent' : Color.gray(0.94).stringValue,
-            }]}>
+            contentViewProps={{
+                style: [styles.buttonContentView, {
+                    backgroundColor: props.isSelected ? CustomColors.themeGreen.stringValue : 'white',
+                    borderColor: props.isSelected ? 'transparent' : Color.gray(0.94).stringValue,
+                }]
+            }}
+        >
             <CustomizedText style={[styles.text, {
                 color: props.isSelected ? 'white' : CustomColors.offBlackTitle.stringValue,
             }]}>{props.text}</CustomizedText>
