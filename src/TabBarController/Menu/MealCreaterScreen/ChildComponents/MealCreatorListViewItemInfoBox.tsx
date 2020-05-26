@@ -11,13 +11,13 @@ import {StyleSheet, Image} from 'react-native';
 import MealCreatorConstants from '../MealCreatorConstants';
 
 
-export interface MealCreatorItemInfoBoxProps {
+export interface MealCreatorListViewItemInfoBoxProps {
     item: MenuListItem,
     onPress: () => void,
 }
 
 
-const MealCreatorItemInfoBox = (() => {
+const MealCreatorListViewItemInfoBox = (() => {
 
     const imageBorderRadius = 8;
 
@@ -51,7 +51,7 @@ const MealCreatorItemInfoBox = (() => {
         },
     });
 
-    const MealCreatorItemInfoBox = (props: MealCreatorItemInfoBoxProps) => {
+    const MealCreatorListViewItemInfoBox = (props: MealCreatorListViewItemInfoBoxProps) => {
         return <BouncyButton style={styles.root} bounceScaleValue={0.9} onPress={props.onPress} contentViewProps={{style: styles.contentView}}>
             <Spacer space={MealCreatorConstants.foodSections.contentViewPadding}>
                 <AspectRatioView style={styles.imageHolder} heightPercentageOfWidth={MealCreatorConstants.foodSections.imageHeightPercentageOfWidth}>
@@ -61,9 +61,9 @@ const MealCreatorItemInfoBox = (() => {
             </Spacer>
         </BouncyButton>
     }
-    return MealCreatorItemInfoBox;
+    return MealCreatorListViewItemInfoBox;
 })();
 
 
-export default MealCreatorItemInfoBox;
+export default MealCreatorListViewItemInfoBox;
 

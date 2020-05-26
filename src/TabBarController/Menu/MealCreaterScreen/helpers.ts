@@ -1,16 +1,24 @@
+
 import { MenuListItem, getRandomFoods } from "../MenuListViewScreen/MenuListView/helpers"
 
+export interface MealCreatorListItem extends MenuListItem{
+    readonly isSelected?: boolean,
+}
 
 export interface MealCreatorSection {
-    title: string,
-    data: MenuListItem[],
+    id: number,
+    readonly title: string,
+    readonly data: MealCreatorListItem[],
 }
 
 export const listData: MealCreatorSection[] = [
     "Entré", "Starch Side", "Vegetable Side 1", "Vegetable Side 2"
-].map(sectionName => {
+].map((sectionName, index) => {
     return {
+        id: index,
         title: sectionName,
         data: getRandomFoods(4),
     }
-})
+});
+
+

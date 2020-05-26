@@ -32,7 +32,3 @@ export default function App() {
 	}
 }
 
-
-
-
-

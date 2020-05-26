@@ -6,19 +6,31 @@ import { getNumbersList } from '../../../../helpers/general';
 
 
 export interface MenuListSection{
-    id: number;
-    title: string;
-    data: MenuListItem[];
+    readonly id: number;
+    readonly title: string;
+    readonly data: MenuListItem[];
 }
 
 export interface MenuListItem{
-    id: number,
-    name: string;
-    priceInDollars: number;
-    imageSource: any;
+    readonly id: number,
+    readonly name: string;
+    readonly priceInDollars: number;
+    readonly imageSource: any;
 }
 
-const products: MenuListItem[] = [
+
+
+
+let nextAvailableMenuListItemIndex = 0;
+
+export function getRandomFoods(number: number): MenuListItem[]{
+    return getNumbersList(0, number - 1).map(() => {
+        const productIndex = Math.round(Math.random() * (allProducts.length - 1));
+        return {...allProducts[productIndex], id: nextAvailableMenuListItemIndex++};
+    });
+}
+
+const allProducts: Omit<MenuListItem, 'id'>[] = [
     {
         name: 'Veggie Macaroni',
         priceInDollars: 4,
@@ -34,7 +46,8 @@ const products: MenuListItem[] = [
         priceInDollars: 4,
         imageSource: require('./food-images/soup.jpg'),
     },
-].map((item, index) => ({...item, id: index}));
+];
+
 
 
 export const menuListSections: MenuListSection[] = (() => {
@@ -54,14 +67,4 @@ export const menuListSections: MenuListSection[] = (() => {
         }
     });
 })();
-
-
-
-export function getRandomFoods(number: number): MenuListItem[]{
-    return getNumbersList(0, number - 1).map(() => {
-        const productIndex = Math.round(Math.random() * (products.length - 1));
-        return products[productIndex];
-    });
-}
-
 

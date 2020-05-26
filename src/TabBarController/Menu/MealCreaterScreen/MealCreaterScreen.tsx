@@ -1,23 +1,17 @@
 
 import React, { useState, useMemo } from 'react';
-import { StyleSheet, View, FlatList, NativeSyntheticEvent, NativeScrollEvent, Dimensions } from 'react-native';
+import { StyleSheet, View, NativeSyntheticEvent, NativeScrollEvent, Dimensions, SectionList } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
-import MealCreatorSectionView from './ChildComponents/MealCreatorSectionView';
-import { listData } from './helpers';
+import { listData, MealCreatorSection } from './helpers';
 import LayoutConstants from '../../../LayoutConstants';
-import Space from '../../../helpers/Spacers/Space';
-import { CustomColors } from '../../../helpers/colors';
-import BouncyButton from '../../../helpers/Buttons/BouncyButton';
-import CustomizedText from '../../../helpers/CustomizedText';
-import { getShadowStyle } from '../../../helpers/general';
-import { CustomFont } from '../../../helpers/fonts/fonts';
-import {LinearGradient} from 'expo-linear-gradient';
-import { useSelector } from '../../../redux/store';
-import { TabBarPosition } from '../../helpers';
 import MealCreatorConstants from './MealCreatorConstants';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
-
-
+import MealCreatorScreenAddToCartButton from './ChildComponents/MealCreatorScreenAddToCartButton';
+import CustomizedText from '../../../helpers/CustomizedText';
+import MealCreatorListViewItem from './ChildComponents/MealCreatorListViewItem';
+import { Map } from 'immutable';
+import Space from '../../../helpers/Spacers/Space';
+import { Color } from '../../../helpers/colors';
 
 
 const MealCreatorScreen = (() => {
@@ -26,7 +20,7 @@ const MealCreatorScreen = (() => {
         root: {
             flex: 1,
         },
-        flatList: {
+        sectionList: {
             overflow: 'visible',
             zIndex: -1,
         },
@@ -35,56 +29,92 @@ const MealCreatorScreen = (() => {
             paddingTop: MealCreatorConstants.foodSections.sectionSpacing,
             paddingBottom: MealCreatorConstants.scrollViewBotomInset,
         },
+        flatListItemSeparatorLine: {
+            height: StyleSheet.hairlineWidth,
+            backgroundColor: Color.gray(0.8).withAdjustedOpacity(0.4).stringValue,
+        },
     });
 
-    
+
 
     const MealCreatorScreen = () => {
 
-        const initialNumToRender = useMemo(() => {
 
-            let result = 0;
+        const [isScrollViewAtBottom, setIsScrollViewAtBottom] = useState(false);
 
-            let currentLength = 0;
-            let remainingData = [...listData];
-            const windowHeight = Dimensions.get('window').height;
-
-            while (currentLength < windowHeight && remainingData.length >= 1){
-                const nextElement = remainingData.splice(0, 2)[0];
-                currentLength += MealCreatorConstants.foodSections.sectionHeight(nextElement.data.length);
-                result += 1;
-            }
-
-            return result;
-        }, []);
-
-        const [isScrollViewAtBottom, setIsScrollViewAtBottom] = useState(false); 
-
-        function onScroll(event: NativeSyntheticEvent<NativeScrollEvent>){
-            const isScrollViewAtBottom = (event.nativeEvent.contentOffset.y + event.nativeEvent.layoutMeasurement.height) >= (event.nativeEvent.contentSize.height -  10);
+        function onScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
+            const isScrollViewAtBottom = (event.nativeEvent.contentOffset.y + event.nativeEvent.layoutMeasurement.height) >= (event.nativeEvent.contentSize.height - 10);
             setIsScrollViewAtBottom(isScrollViewAtBottom);
         }
 
         const navigationScreenContext = useNavigationScreenContext();
 
-        function onAddToCartButtonPressed(){
+        function onAddToCartButtonPressed() {
             navigationScreenContext.dismissToRoot();
         }
 
+        // key is the section id. value is the item id.
+        const [selectedItems, setSelectedItems] = useState(Map<number, number>());
+
+        const initialNumToRender = useMemo(() => {
+            return Math.ceil(Dimensions.get('window').height / MealCreatorConstants.foodSections.rowHeight);
+        }, []);
+
+
+
+        const sectionList = useMemo(() => {
+            return <SectionList
+                style={styles.sectionList}
+                contentContainerStyle={styles.flatListContentContainer}
+                sections={listData}
+                stickySectionHeadersEnabled={false}
+                renderSectionHeader={info => {
+                    return <MealCreatorListViewSectionHeader title={(info.section as MealCreatorSection).title} />
+                }}
+                SectionSeparatorComponent={args => {
+                    const isBottomOfList = args.trailingItem == undefined && args.trailingSection == undefined;
+                    const isTopOfHeader = args.trailingItem == undefined;
+                    const isBottomOfHeader = args.leadingItem == undefined;
+
+                    const space = (() => {
+                        if (isBottomOfList) {
+                            return 0;
+                        } else if (isTopOfHeader) {
+                            return MealCreatorConstants.foodSections.sectionSpacing;
+                        } else if (isBottomOfHeader) {
+                            return MealCreatorConstants.foodSections.sectionHeaderBottomSpacing;
+                        } else { throw new Error("this point should not be reached!!!"); }
+                    })();
+                    return <Space space={space} />
+                }}
+                ItemSeparatorComponent={() => {
+                    return <View style={styles.flatListItemSeparatorLine} />
+                }}
+                onScroll={onScroll}
+                renderItem={({ item, section, index }) => {
+                    const _section = section = section as MealCreatorSection;
+                    return <MealCreatorListViewItem
+                        item={item}
+                        isSelected={selectedItems.get(_section.id) === item.id}
+                        isFirstInSection={index === 0}
+                        isLastInSection={index === (_section.data.length - 1)}
+                        onCheckMarkButtonPress={() => {
+                            setSelectedItems(x => x.set(_section.id, item.id));
+                        }}
+                    />
+                }}
+                removeClippedSubviews
+                initialNumToRender={initialNumToRender}
+                windowSize={10}
+            />
+
+        }, [initialNumToRender, selectedItems]);
+
+
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Large Plate" />
-            <FlatList
-                ItemSeparatorComponent={() => <Space space={MealCreatorConstants.foodSections.sectionSpacing} />}
-                contentContainerStyle={styles.flatListContentContainer}
-                style={styles.flatList}
-                data={listData}
-                keyExtractor={(_, index) => String(index)}
-                renderItem={({ item }) => <MealCreatorSectionView section={item} />}
-                onScroll={onScroll}
-                initialNumToRender={initialNumToRender}
-                windowSize={5}
-            />
-            <AddToCartButton shouldGradientBeVisible={isScrollViewAtBottom === false} onPress={onAddToCartButtonPressed}/>
+            {sectionList}
+            <MealCreatorScreenAddToCartButton shouldGradientBeVisible={isScrollViewAtBottom === false} onPress={onAddToCartButtonPressed} />
         </View>
     }
 
@@ -92,83 +122,28 @@ const MealCreatorScreen = (() => {
 
 })();
 
-export default MealCreatorScreen;
+export default React.memo(MealCreatorScreen);
 
 
 
-
-export interface AddToCartButtonProps {
-    onPress?: () => void;
-    shouldGradientBeVisible: boolean,
+interface MealCreatorListViewSectionHeaderProps {
+    title: string,
 }
 
-const AddToCartButton = (() => {
-
+const MealCreatorListViewSectionHeader = (() => {
 
     const styles = StyleSheet.create({
         root: {
-            position: 'absolute',
-            bottom: 0,
-            left: 0, right: 0,
-            paddingLeft: LayoutConstants.pageSideInsets,
-            paddingRight: LayoutConstants.pageSideInsets,
-            paddingBottom: MealCreatorConstants.addToCartButton.bottomInset,
-        },
-        linearGradient: {
-            position: 'absolute',
-            left: 0, right: 0,
-            top: -70,
-            
-        },
-        button: {
-            width: '100%',
-            maxWidth: 400,
-            alignSelf: 'center',
-        },
-        contentView: {
-            backgroundColor: CustomColors.themeGreen.stringValue,
-            borderRadius: 15,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            padding: MealCreatorConstants.addToCartButton.padding,
-            paddingLeft: 18,
-            paddingRight: 18,
-            ...getShadowStyle(10),
-        },
-        text: {
-            color: 'white',
-            fontSize: MealCreatorConstants.addToCartButton.fontSize,
-            fontFamily: CustomFont.bold,
+            marginLeft: LayoutConstants.floatingCellStyles.borderRadius,
+            ...LayoutConstants.floatingCellStyles.sectionHeaderTextStyles,
         },
     });
 
-    const AddToCartButton = (props: AddToCartButtonProps) => {
-
-        const tabBarIsOnBottom = useSelector(state => state.tabBarController.tabBarPosition === TabBarPosition.bottom);
-
-        return <View style={styles.root} pointerEvents="box-none">
-            <LinearGradient 
-                colors={[CustomColors.mainBackgroundColor.withAdjustedOpacity(0).stringValue, CustomColors.mainBackgroundColor.withAdjustedOpacity(1).stringValue]}
-                start={[0.5, 0]}
-                end={[0.5, 0.9]}
-                style={[styles.linearGradient, {
-                    opacity: props.shouldGradientBeVisible ? 1 : 0, 
-                    bottom: tabBarIsOnBottom ? -LayoutConstants.navBar.cornerRadius : 0,
-                }]}
-                pointerEvents="none"
-            />
-
-            <BouncyButton style={styles.button} contentViewProps={{ style: styles.contentView }} onPress={props.onPress} bounceScaleValue={0.9}>
-                <CustomizedText style={styles.text}>Add to Cart</CustomizedText>
-                <CustomizedText style={styles.text}>$11.88</CustomizedText>
-            </BouncyButton>
-        </View>
-
+    const MealCreatorListViewSectionHeader = (props: MealCreatorListViewSectionHeaderProps) => {
+        return <CustomizedText style={styles.root}>{props.title}</CustomizedText>
     }
-    return AddToCartButton;
 
+    return MealCreatorListViewSectionHeader;
 })();
-
-
 
 

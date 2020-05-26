@@ -14,8 +14,7 @@ export interface Notification<InfoType> {
 
 export default function Notification<InfoType = {}>(): Notification<InfoType> {
 
-    // the boolean values are not being used. I just wanna have a way of efficiently removing listeners and checking to see if they exist.
-    const listeners = new Map<NotificationListener<InfoType>, boolean>();
+    const listeners = new Set<NotificationListener<InfoType>>();
 
     function post(info: InfoType) {
         // just looping through the listeners, typescript is giving me an error when I try to use a for of loop to do it... don't feel like figuring out if I should change the tsconfig file.
@@ -31,7 +30,7 @@ export default function Notification<InfoType = {}>(): Notification<InfoType> {
     }
 
     function addListener(listener: NotificationListener<InfoType>) {
-        listeners.set(listener, true);
+        listeners.add(listener);
         return () => removeListener(listener);
     }
 
