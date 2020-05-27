@@ -1,17 +1,16 @@
 
 import React, { useState, useMemo } from 'react';
-import { StyleSheet, View, NativeSyntheticEvent, NativeScrollEvent, Dimensions, SectionList } from 'react-native';
+import { StyleSheet, View, NativeSyntheticEvent, NativeScrollEvent, Dimensions } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
-import { listData, MealCreatorSection } from './helpers';
-import LayoutConstants from '../../../LayoutConstants';
+import { listData, MealCreatorSection, MealCreatorListItem } from './helpers';
 import MealCreatorConstants from './MealCreatorConstants';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import MealCreatorScreenAddToCartButton from './ChildComponents/MealCreatorScreenAddToCartButton';
-import CustomizedText from '../../../helpers/CustomizedText';
 import MealCreatorListViewItem from './ChildComponents/MealCreatorListViewItem';
 import { Map } from 'immutable';
-import Space from '../../../helpers/Spacers/Space';
-import { Color } from '../../../helpers/colors';
+import FloatingCellStyleList from '../../../helpers/FloatingCellStyleList';
+import ValueBox from '../../../helpers/ValueBox';
+import { Optional } from '../../../helpers/general';
 
 
 const MealCreatorScreen = (() => {
@@ -21,24 +20,16 @@ const MealCreatorScreen = (() => {
             flex: 1,
         },
         sectionList: {
-            overflow: 'visible',
-            zIndex: -1,
+
         },
         flatListContentContainer: {
-            padding: LayoutConstants.pageSideInsets,
-            paddingTop: MealCreatorConstants.foodSections.sectionSpacing,
             paddingBottom: MealCreatorConstants.scrollViewBotomInset,
-        },
-        flatListItemSeparatorLine: {
-            height: StyleSheet.hairlineWidth,
-            backgroundColor: Color.gray(0.8).withAdjustedOpacity(0.4).stringValue,
         },
     });
 
 
 
     const MealCreatorScreen = () => {
-
 
         const [isScrollViewAtBottom, setIsScrollViewAtBottom] = useState(false);
 
@@ -54,61 +45,38 @@ const MealCreatorScreen = (() => {
         }
 
         // key is the section id. value is the item id.
-        const [selectedItems, setSelectedItems] = useState(Map<number, number>());
+        const selectedItemsForEachSection = useMemo(() => {
+            return Map<number, ValueBox<Optional<number>>>().withMutations(mutable => {
+                listData.forEach(x => {
+                    mutable.set(x.id, new ValueBox<Optional<number>>(null));
+                });
+            });
+        }, []);
 
         const initialNumToRender = useMemo(() => {
             return Math.ceil(Dimensions.get('window').height / MealCreatorConstants.foodSections.rowHeight);
         }, []);
 
-
-
         const sectionList = useMemo(() => {
-            return <SectionList
+            
+            return <FloatingCellStyleList<MealCreatorListItem, MealCreatorSection>
                 style={styles.sectionList}
                 contentContainerStyle={styles.flatListContentContainer}
                 sections={listData}
-                stickySectionHeadersEnabled={false}
-                renderSectionHeader={info => {
-                    return <MealCreatorListViewSectionHeader title={(info.section as MealCreatorSection).title} />
-                }}
-                SectionSeparatorComponent={args => {
-                    const isBottomOfList = args.trailingItem == undefined && args.trailingSection == undefined;
-                    const isTopOfHeader = args.trailingItem == undefined;
-                    const isBottomOfHeader = args.leadingItem == undefined;
-
-                    const space = (() => {
-                        if (isBottomOfList) {
-                            return 0;
-                        } else if (isTopOfHeader) {
-                            return MealCreatorConstants.foodSections.sectionSpacing;
-                        } else if (isBottomOfHeader) {
-                            return MealCreatorConstants.foodSections.sectionHeaderBottomSpacing;
-                        } else { throw new Error("this point should not be reached!!!"); }
-                    })();
-                    return <Space space={space} />
-                }}
-                ItemSeparatorComponent={() => {
-                    return <View style={styles.flatListItemSeparatorLine} />
-                }}
+                titleForSection={section => section.id == 0 ? null : section.title}                
                 onScroll={onScroll}
-                renderItem={({ item, section, index }) => {
+                renderItem={({ item, section }) => {
                     const _section = section = section as MealCreatorSection;
                     return <MealCreatorListViewItem
                         item={item}
-                        isSelected={selectedItems.get(_section.id) === item.id}
-                        isFirstInSection={index === 0}
-                        isLastInSection={index === (_section.data.length - 1)}
-                        onCheckMarkButtonPress={() => {
-                            setSelectedItems(x => x.set(_section.id, item.id));
-                        }}
+                        sectionSelectionValue={selectedItemsForEachSection.get(_section.id)!}
                     />
                 }}
-                removeClippedSubviews
                 initialNumToRender={initialNumToRender}
                 windowSize={10}
             />
 
-        }, [initialNumToRender, selectedItems]);
+        }, [initialNumToRender, selectedItemsForEachSection]);
 
 
         return <View style={styles.root}>
@@ -123,27 +91,4 @@ const MealCreatorScreen = (() => {
 })();
 
 export default React.memo(MealCreatorScreen);
-
-
-
-interface MealCreatorListViewSectionHeaderProps {
-    title: string,
-}
-
-const MealCreatorListViewSectionHeader = (() => {
-
-    const styles = StyleSheet.create({
-        root: {
-            marginLeft: LayoutConstants.floatingCellStyles.borderRadius,
-            ...LayoutConstants.floatingCellStyles.sectionHeaderTextStyles,
-        },
-    });
-
-    const MealCreatorListViewSectionHeader = (props: MealCreatorListViewSectionHeaderProps) => {
-        return <CustomizedText style={styles.root}>{props.title}</CustomizedText>
-    }
-
-    return MealCreatorListViewSectionHeader;
-})();
-
 

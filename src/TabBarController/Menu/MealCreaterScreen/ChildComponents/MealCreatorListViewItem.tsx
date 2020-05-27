@@ -1,5 +1,5 @@
 
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useState} from 'react';
 import { MenuListItem } from "../../MenuListViewScreen/MenuListView/helpers";
 import { useNavigationScreenContext } from "../../../../helpers/NavigationController/NavigationScreen";
 import MenuPresentableScreens from "../../MenuPresentableScreens";
@@ -7,16 +7,15 @@ import { StyleSheet, Animated, View } from "react-native";
 import { CustomColors } from "../../../../helpers/colors";
 import MealCreatorCheckBoxButton from './MealCreatorCheckBox';
 import MealCreatorListViewItemInfoBox from './MealCreatorListViewItemInfoBox';
-import { mapOptional } from '../../../../helpers/general';
-import LayoutConstants from '../../../../LayoutConstants';
+import { mapOptional, Optional } from '../../../../helpers/general';
+import ValueBox from '../../../../helpers/ValueBox';
+
 
 
 export interface MealCreatorListViewItemProps {
-    isSelected: boolean,
-    isFirstInSection: boolean,
-    isLastInSection: boolean,
+    // the number is the id of the item,
+    sectionSelectionValue: ValueBox<Optional<number>>,
     item: MenuListItem,
-    onCheckMarkButtonPress: () => void,
 }
 
 const MealCreatorListViewItem = (() => {
@@ -24,8 +23,6 @@ const MealCreatorListViewItem = (() => {
     const styles = StyleSheet.create({
         root: {
             flexDirection: 'row',
-            backgroundColor: 'white',
-            overflow: 'hidden',
         },
         backgroundSelectionView: {
             ...StyleSheet.absoluteFillObject
@@ -42,24 +39,30 @@ const MealCreatorListViewItem = (() => {
             });
         }
 
+        const [shouldBeSelected, setShouldBeSelected] = useState(false);
+    
         // 0 is translucent, 1 is green
-        const backgroundColor = useRef(new Animated.Value(props.isSelected ? 1 : 0));
+        const backgroundColor = useRef(new Animated.Value(shouldBeSelected ? 1 : 0));
+
+
+        //i'm observing the value because depending on props for selectionState is too slow, because all cells in the list would have to be rerendered.
+        useLayoutEffect(() => {
+            const listener = (newSelection: Optional<number>) => {
+                const _shouldBeSelected = newSelection === props.item.id;
+                setShouldBeSelected(_shouldBeSelected);
+            }
+            listener(props.sectionSelectionValue.value);
+            return props.sectionSelectionValue.observer.addListener(listener);
+        }, [props.item.id, props.sectionSelectionValue.observer, props.sectionSelectionValue.value]);
 
         useLayoutEffect(() => {
-
             Animated.timing(backgroundColor.current, {
-                toValue: props.isSelected ? 1 : 0,
+                toValue: shouldBeSelected ? 1 : 0,
                 duration: 150,
             }).start();
+        }, [shouldBeSelected]);
 
-        }, [props.isSelected]);
-
-        return <View style={[styles.root, {
-            borderTopLeftRadius: props.isFirstInSection ? LayoutConstants.floatingCellStyles.borderRadius : 0,
-            borderTopRightRadius: props.isFirstInSection ? LayoutConstants.floatingCellStyles.borderRadius : 0,
-            borderBottomLeftRadius: props.isLastInSection ? LayoutConstants.floatingCellStyles.borderRadius : 0,
-            borderBottomRightRadius: props.isLastInSection ? LayoutConstants.floatingCellStyles.borderRadius : 0,
-        }]}>
+        return <View style={styles.root}>
             <Animated.View style={[styles.backgroundSelectionView, {
                 backgroundColor: backgroundColor.current.interpolate({
                     inputRange: [0, 1],
@@ -67,7 +70,7 @@ const MealCreatorListViewItem = (() => {
                 }),
             }]} />
             <MealCreatorListViewItemInfoBox item={props.item} onPress={onButtonPress} />
-            <MealCreatorCheckBoxButton onPress={props.onCheckMarkButtonPress} isSelected={props.isSelected} />
+            <MealCreatorCheckBoxButton onPress={() => {props.sectionSelectionValue.value = props.item.id}} isSelected={shouldBeSelected} />
         </View>
     }
 

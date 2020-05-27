@@ -12,7 +12,9 @@ export interface MealCreatorSection {
 }
 
 export const listData: MealCreatorSection[] = [
+
     "Entré", "Starch Side", "Vegetable Side 1", "Vegetable Side 2"
+    
 ].map((sectionName, index) => {
     return {
         id: index,
