@@ -5,7 +5,7 @@ import LayoutConstants from "../../../LayoutConstants";
 const MealCreatorConstants = {
 
     addToCartButton: {
-        padding: 15,
+        padding: 17.5,
         fontSize: 16,
         bottomInset: 15,
     },

@@ -23,7 +23,7 @@ const LargeHeadingNavigationBar = (() => {
     });
 
     return function LargeHeadingNavigationBar(props: {
-        rightAlignedView: React.ReactElement,
+        rightAlignedView?: React.ReactElement,
         title: string,
     }) {
         return <BaseNavigationBar>

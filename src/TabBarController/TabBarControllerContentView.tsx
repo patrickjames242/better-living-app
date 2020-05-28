@@ -5,6 +5,7 @@ import { TabBarSelection, tabBarItemsData } from './TabBar/helpers';
 import { useUpdateEffect } from '../helpers/general';
 import MenuScreen from './Menu/Menu';
 import { useSelector } from '../redux/store';
+import Cart from './Cart/Cart';
 
 
 
@@ -22,7 +23,7 @@ const TabBarControllerContentView = (() => {
 
 	const selectionComponents = {
 		[TabBarSelection.menu]: MenuScreen,
-		[TabBarSelection.cart]: CartScreen,
+		[TabBarSelection.cart]: Cart,
 		[TabBarSelection.tips]: HealthTipsScreen,
 		[TabBarSelection.contactRequests]: InquiriesScreen,
 		[TabBarSelection.settings]: SettingsScreen,
@@ -150,12 +151,6 @@ export default TabBarControllerContentView;
 
 
 
-function CartScreen() {
-	return <View style={{
-		backgroundColor: 'green',
-		flex: 1
-	}} />
-}
 
 function HealthTipsScreen() {
 	return <View style={{

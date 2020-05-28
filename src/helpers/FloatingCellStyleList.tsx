@@ -29,11 +29,10 @@ const FloatingCellStyleList = (() => {
             paddingTop: LayoutConstants.floatingCellStyles.sectionSpacing,
             width: '100%',
             alignSelf: 'center',
-            maxWidth: LayoutConstants.floatingCellStyles.maxWidth
-
+            maxWidth: LayoutConstants.floatingCellStyles.maxWidth + (LayoutConstants.pageSideInsets * 2)
         },
         sectionListItemSeparatorLine: {
-            height: StyleSheet.hairlineWidth,
+            height: StyleSheet.hairlineWidth * 1.5,
             backgroundColor: Color.gray(0.8).withAdjustedOpacity(0.4).stringValue,
         }
     });

@@ -63,7 +63,7 @@ const MealCreatorScreen = (() => {
                 style={styles.sectionList}
                 contentContainerStyle={styles.flatListContentContainer}
                 sections={listData}
-                titleForSection={section => section.id == 0 ? null : section.title}                
+                titleForSection={section => section.title}                
                 onScroll={onScroll}
                 renderItem={({ item, section }) => {
                     const _section = section = section as MealCreatorSection;
