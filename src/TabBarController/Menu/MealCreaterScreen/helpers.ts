@@ -1,14 +1,12 @@
 
 import { MenuListItem, getRandomFoods } from "../MenuListViewScreen/MenuListView/helpers"
 
-export interface MealCreatorListItem extends MenuListItem{
-    readonly isSelected?: boolean,
-}
+
 
 export interface MealCreatorSection {
     id: number,
     readonly title: string,
-    readonly data: MealCreatorListItem[],
+    readonly data: MenuListItem[],
 }
 
 export const listData: MealCreatorSection[] = [

@@ -29,5 +29,5 @@ export const CustomColors = {
 	themeGreen: new Color(39, 196, 120),
 	mainBackgroundColor: new Color(242, 244, 249),
 	offBlackTitle: new Color(43, 55, 43),
-	offBlackSubtitle: new Color(150, 150, 150),
+	offBlackSubtitle: new Color(180, 180, 180),
 }

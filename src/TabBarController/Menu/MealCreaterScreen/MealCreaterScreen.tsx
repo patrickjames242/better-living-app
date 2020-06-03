@@ -1,8 +1,10 @@
 
-import React, { useState, useMemo } from 'react';
-import { StyleSheet, View, NativeSyntheticEvent, NativeScrollEvent, Dimensions } from 'react-native';
+
+
+import React, { useState, useMemo, useRef } from 'react';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
-import { listData, MealCreatorSection, MealCreatorListItem } from './helpers';
+import { listData, MealCreatorSection} from './helpers';
 import MealCreatorConstants from './MealCreatorConstants';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import MealCreatorScreenAddToCartButton from './ChildComponents/MealCreatorScreenAddToCartButton';
@@ -11,9 +13,14 @@ import { Map } from 'immutable';
 import FloatingCellStyleList from '../../../helpers/FloatingCellStyleList';
 import ValueBox from '../../../helpers/ValueBox';
 import { Optional } from '../../../helpers/general';
+import { MenuListItem } from '../MenuListViewScreen/MenuListView/helpers';
+import BottomScreenGradientHolder, { BottomScreenGradientHolderRef } from '../../../helpers/BottomScreenGradientHolder';
+import LayoutConstants from '../../../LayoutConstants';
 
 
 const MealCreatorScreen = (() => {
+
+    const bottomButtonTopAndBottomInsets = 15;
 
     const styles = StyleSheet.create({
         root: {
@@ -22,21 +29,17 @@ const MealCreatorScreen = (() => {
         sectionList: {
 
         },
-        flatListContentContainer: {
-            paddingBottom: MealCreatorConstants.scrollViewBotomInset,
-        },
+        bottomButtonHolder: {
+            paddingLeft: LayoutConstants.pageSideInsets,
+            paddingRight: LayoutConstants.pageSideInsets,
+            paddingBottom: bottomButtonTopAndBottomInsets,
+        }
     });
-
 
 
     const MealCreatorScreen = () => {
 
-        const [isScrollViewAtBottom, setIsScrollViewAtBottom] = useState(false);
-
-        function onScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
-            const isScrollViewAtBottom = (event.nativeEvent.contentOffset.y + event.nativeEvent.layoutMeasurement.height) >= (event.nativeEvent.contentSize.height - 10);
-            setIsScrollViewAtBottom(isScrollViewAtBottom);
-        }
+        const [bottomButtonViewHeight, setBottomButtonViewHeight] = useState(0);
 
         const navigationScreenContext = useNavigationScreenContext();
 
@@ -57,14 +60,17 @@ const MealCreatorScreen = (() => {
             return Math.ceil(Dimensions.get('window').height / MealCreatorConstants.foodSections.rowHeight);
         }, []);
 
+        const bottomButtonHolderRef = useRef<BottomScreenGradientHolderRef>(null);
+
         const sectionList = useMemo(() => {
             
-            return <FloatingCellStyleList<MealCreatorListItem, MealCreatorSection>
+            return <FloatingCellStyleList<MenuListItem, MealCreatorSection>
                 style={styles.sectionList}
-                contentContainerStyle={styles.flatListContentContainer}
+                contentContainerStyle={{paddingBottom: bottomButtonViewHeight + bottomButtonTopAndBottomInsets}}
                 sections={listData}
                 titleForSection={section => section.title}                
-                onScroll={onScroll}
+                onScroll={event => bottomButtonHolderRef.current?.notifyThatScrollViewScrolled(event)}
+                keyExtractor={item => String(item.id)}
                 renderItem={({ item, section }) => {
                     const _section = section = section as MealCreatorSection;
                     return <MealCreatorListViewItem
@@ -76,13 +82,17 @@ const MealCreatorScreen = (() => {
                 windowSize={10}
             />
 
-        }, [initialNumToRender, selectedItemsForEachSection]);
+        }, [bottomButtonViewHeight, initialNumToRender, selectedItemsForEachSection]);
 
 
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Large Plate" />
             {sectionList}
-            <MealCreatorScreenAddToCartButton shouldGradientBeVisible={isScrollViewAtBottom === false} onPress={onAddToCartButtonPressed} />
+            <BottomScreenGradientHolder style={styles.bottomButtonHolder} ref={bottomButtonHolderRef} onLayout={layout => {
+                setBottomButtonViewHeight(layout.nativeEvent.layout.height);
+            }}>
+                <MealCreatorScreenAddToCartButton onPress={onAddToCartButtonPressed}/>
+            </BottomScreenGradientHolder>
         </View>
     }
 

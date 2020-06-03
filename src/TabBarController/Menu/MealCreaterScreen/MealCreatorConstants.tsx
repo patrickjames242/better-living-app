@@ -1,22 +1,14 @@
+
+
+
 import LayoutConstants from "../../../LayoutConstants";
 
 
 
 const MealCreatorConstants = {
 
-    addToCartButton: {
-        padding: 17.5,
-        fontSize: 16,
-        bottomInset: 15,
-    },
-
-    get scrollViewBotomInset(){
-        return (this.addToCartButton.bottomInset * 2) +
-        (this.addToCartButton.padding * 2) + 
-        (this.addToCartButton.fontSize * 1.2);
-    },
-
     foodSections: {
+
         sectionSpacing: LayoutConstants.floatingCellStyles.sectionSpacing,
         sectionHeaderBottomSpacing: LayoutConstants.floatingCellStyles.sectionHeaderBottomSpacing,
         contentViewPadding: LayoutConstants.floatingCellStyles.padding,
@@ -32,6 +24,7 @@ const MealCreatorConstants = {
         sectionHeight(numOfRows: number){
             return (this.sectionHeaderTextStyles.fontSize * 1.2) + this.sectionHeaderBottomSpacing + (this.rowHeight * numOfRows);
         }
+
     },
 
 };

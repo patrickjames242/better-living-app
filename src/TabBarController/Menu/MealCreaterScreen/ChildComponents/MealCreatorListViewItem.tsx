@@ -47,8 +47,8 @@ const MealCreatorListViewItem = (() => {
 
         //i'm observing the value because depending on props for selectionState is too slow, because all cells in the list would have to be rerendered.
         useLayoutEffect(() => {
-            const listener = (newSelection: Optional<number>) => {
-                const _shouldBeSelected = newSelection === props.item.id;
+            const listener = (newValue: Optional<number>) => {
+                const _shouldBeSelected = newValue === props.item.id;
                 setShouldBeSelected(_shouldBeSelected);
             }
             listener(props.sectionSelectionValue.value);

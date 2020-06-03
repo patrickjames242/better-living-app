@@ -1,13 +1,15 @@
 
-import React, {useState, useRef } from 'react';
+import React, {useRef, useCallback } from 'react';
 import { ViewProps, View, StyleSheet, Animated } from "react-native";
-
 import { Color } from "../colors";
-import { useUpdateEffect } from '../general';
 import CustomDelayedTouchable from './CustomDelayedTouchable';
+
+
 
 const touchDownAnimationLength = 125;
 const touchUpAnimationLength = 400;
+
+
 
 interface HighlightButtonProps extends ViewProps{
 	onPress?: () => void,
@@ -26,42 +28,37 @@ const HighlightButton = (() => {
 	
 	const HighlightButton: React.FC<HighlightButtonProps> = (props) => {
 	
-		const [shouldShowCoverView, setShouldShowCoverView] = useState(false);
-	
 		const coverViewOpacityAnimation = useRef(new Animated.Value(0)).current;
 	
-		useUpdateEffect(() => {
-	
+		const animateCoverView = useCallback((show: boolean) => {
 			Animated.timing(coverViewOpacityAnimation, {
-				toValue: shouldShowCoverView ? 1 : 0,
-				duration: shouldShowCoverView ? touchDownAnimationLength : touchUpAnimationLength,
+				toValue: show ? 1 : 0,
+				duration: show ? touchDownAnimationLength : touchUpAnimationLength,
 			}).start();
-	
-		}, [coverViewOpacityAnimation, shouldShowCoverView]);
-	
-		function touchDown() {
-			setShouldShowCoverView(true);
-		}
-	
-		function touchUp() {
-			setShouldShowCoverView(false);
-		}
-	
-		const children = props.children;
-		const newProps = { ...props };
-		delete newProps.children;
+		}, [coverViewOpacityAnimation]);
+
+		const touchDown = useCallback(() => {
+			animateCoverView(true);
+		}, [animateCoverView]);
 		
+		const touchUp = useCallback(() => {
+			animateCoverView(false);
+		}, [animateCoverView]);
+
+
 		return <CustomDelayedTouchable
 			onPressIn={touchDown}
 			onPressOut={touchUp}
 			onPress={props.onPress}
 		>
-			<View {...newProps}>
-				{children}
-				<Animated.View style={[styles.highlightCoverView, { 
-					opacity: coverViewOpacityAnimation,
-					backgroundColor: (props.highlightColor ?? Color.gray(0).withAdjustedOpacity(0.1)).stringValue,
-				}]} />	
+			<View {...props}>
+				{props.children}
+				{(() => {
+					return <Animated.View pointerEvents="none" style={[styles.highlightCoverView, {
+						opacity: coverViewOpacityAnimation,
+						backgroundColor: (props.highlightColor ?? Color.gray(0).withAdjustedOpacity(0.05)).stringValue,
+					}]} />
+				})()}
 			</View>
 		</CustomDelayedTouchable>
 	}

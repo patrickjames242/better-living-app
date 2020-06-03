@@ -1,23 +1,33 @@
 
-import React, { useState } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+
+import React, { useState, useRef } from 'react';
+import { StyleSheet, Image, Animated } from 'react-native';
 import { MenuListItem } from '../../Menu/MenuListViewScreen/MenuListView/helpers';
 import AspectRatioView from '../../../helpers/AspectRatioView';
 import LayoutConstants from '../../../LayoutConstants';
 import CustomizedText from '../../../helpers/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
-import Spacer, { BaseSpacer } from '../../../helpers/Spacers/Spacer';
-import { getShadowStyle } from '../../../helpers/general';
-import HighlightButton from '../../../helpers/Buttons/HighlightView';
-import { Color, CustomColors } from '../../../helpers/colors';
+import { getShadowStyle, Optional, mapOptional } from '../../../helpers/general';
+import { CustomColors, Color } from '../../../helpers/colors';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
-
+import QuantityPickerView from './QuantityPickerView';
+import HighlightButton from '../../../helpers/Buttons/HighlightView';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import BouncyButton from '../../../helpers/Buttons/BouncyButton';
+import ValueBox from '../../../helpers/ValueBox';
+import { useNotificationListener } from '../../../helpers/Notification';
+import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
+import MenuPresentableScreens from '../../Menu/MenuPresentableScreens';
 
 
 
 export interface CartItemListItemViewProps {
     item: MenuListItem,
+    // the number refers to the id of the item
+    currentlyOpenDrawerID: ValueBox<Optional<number>>
 }
+
+
 
 const CartItemListItemView = (() => {
 
@@ -25,6 +35,9 @@ const CartItemListItemView = (() => {
 
     const styles = StyleSheet.create({
         root: {
+
+        },
+        contentView: {
             padding: LayoutConstants.floatingCellStyles.padding,
             flexDirection: 'row',
             alignItems: 'center',
@@ -32,7 +45,6 @@ const CartItemListItemView = (() => {
         imageHolder: {
             width: 90,
             borderRadius: imageBorderRadius,
-            // alignSelf: 'flex-start',
             ...getShadowStyle(5),
         },
         image: {
@@ -48,15 +60,18 @@ const CartItemListItemView = (() => {
             fontFamily: CustomFont.medium,
             fontSize: 16,
         },
-        itemPriceSubtitle: {
+        rightSide: {
+            alignItems: 'flex-end',
+        },
+        quantityTimesPriceText: {
             fontFamily: CustomFont.medium,
-            fontSize: 14,
             color: CustomColors.offBlackSubtitle.stringValue,
+            fontSize: 14,
         },
         totalPriceText: {
             fontFamily: CustomFont.medium,
-            color: CustomColors.offBlackSubtitle.stringValue,
-            fontSize: 17,
+            fontSize: 18,
+            color: Color.gray(0.4).stringValue,
         },
     });
 
@@ -67,30 +82,69 @@ const CartItemListItemView = (() => {
 
         const [quantity, setQuantity] = useState(minQuantity);
 
-        function increment(){
+        function increment() {
             setQuantity(x => Math.min(x + 1, maxQuantity));
         }
 
-        function decrement(){
+        function decrement() {
             setQuantity(x => Math.max(x - 1, minQuantity))
         }
 
-        return <View style={styles.root}>
-            <Spacer space={15}>
-                <AspectRatioView style={styles.imageHolder} heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}>
-                    <Image style={styles.image} source={props.item.imageSource} />
-                </AspectRatioView>
-                <SpacerView style={styles.center} space={5}>
-                    <CustomizedText style={styles.title}>{props.item.name}</CustomizedText>
-                    {quantity > 1 && <CustomizedText style={[styles.itemPriceSubtitle, {
-                        marginBottom: 7,
-                        marginTop: 2
-                    }]}>Item price: $5.47</CustomizedText>}
-                    <QuantityPickerView increment={increment} decrement={decrement} value={quantity}/>
+        const swipeableRef = useRef<Swipeable>(null);
+
+        const swipeableIsOpen = useRef(false);
+
+        useNotificationListener(props.currentlyOpenDrawerID.observer, newValue => {
+            if (newValue !== props.item.id && swipeableIsOpen.current){
+                swipeableRef.current?.close();
+            }
+        }, [props.item.id]);
+
+        const navigationScreenContext = useNavigationScreenContext();
+
+        function presentMenuItemDetailView() {
+            if (props.currentlyOpenDrawerID.value === props.item.id){return;}
+            mapOptional(MenuPresentableScreens.MenuItemDetailScreen(), Component => {
+                navigationScreenContext.present(<Component />)
+            });
+        }
+
+        return <HighlightButton style={styles.root} onPress={presentMenuItemDetailView}>
+            <Swipeable
+                ref={swipeableRef}
+                useNativeAnimations
+                overshootRight={false}
+                overshootFriction={3}
+                onSwipeableWillOpen={() => {
+                    swipeableIsOpen.current = true;
+                    props.currentlyOpenDrawerID.value = props.item.id;
+                }}
+                onSwipeableWillClose={() => {
+                    swipeableIsOpen.current = false;
+                }}
+                onSwipeableClose={() => {
+                    if (props.currentlyOpenDrawerID.value !== props.item.id){return;}
+                    props.currentlyOpenDrawerID.value = null;
+                }}
+                renderRightActions={(_, dragValue) => {
+                    return <SwipableButtonActions dragAnimatedValue={dragValue} />
+                }}
+            >
+                <SpacerView space={15} style={styles.contentView}>
+                    <AspectRatioView style={styles.imageHolder} heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}>
+                        <Image style={styles.image} source={props.item.imageSource} />
+                    </AspectRatioView>
+                    <SpacerView style={styles.center} space={9}>
+                        <CustomizedText style={styles.title}>{props.item.name}</CustomizedText>
+                        <QuantityPickerView increment={increment} decrement={decrement} value={quantity} />
+                    </SpacerView>
+                    <SpacerView style={styles.rightSide} space={7}>
+                        {quantity > 1 && <CustomizedText style={styles.quantityTimesPriceText}>{quantity + " × $5.47"}</CustomizedText>}
+                        <CustomizedText style={styles.totalPriceText}>$5.47</CustomizedText>
+                    </SpacerView>
                 </SpacerView>
-                <CustomizedText style={styles.totalPriceText}>$5.47</CustomizedText>
-            </Spacer>
-        </View>
+            </Swipeable>
+        </HighlightButton>
     }
     return CartItemListItemView;
 })();
@@ -104,73 +158,57 @@ export default CartItemListItemView;
 
 
 
-interface QuantityPickerViewProps {
-    value: number,
-    increment: () => void,
-    decrement: () => void,
+
+
+interface SwipableButtonActionsProps {
+    dragAnimatedValue: Animated.AnimatedInterpolation,
+    onDeleteButtonPressed?: () => void;
 }
 
-const QuantityPickerView = (() => {
+const SwipableButtonActions = (() => {
 
-    const buttonSize = 35;
+    const imageWidth = 22.5;
+    const imagePadding = 12.5;
+    const buttonWidth = imageWidth + (imagePadding * 2);
+    const buttonRightInset = 30;
+    const buttonLeftInset = buttonRightInset - LayoutConstants.floatingCellStyles.padding;
+    const totalContainerWidth = buttonLeftInset + buttonWidth + buttonRightInset;
 
     const styles = StyleSheet.create({
         root: {
-            borderRadius: 7,
-            flexDirection: 'row',
-            overflow: 'hidden',
-            backgroundColor: Color.gray(0.95).stringValue,
-        },
-        buttons: {
-            height: buttonSize * 0.9,
-            width: buttonSize,
+            paddingLeft: buttonLeftInset,
+            paddingRight: buttonRightInset,
             justifyContent: 'center',
             alignItems: 'center',
         },
-        buttonText: {
-            fontFamily: CustomFont.medium,
-            fontSize: 18,
-            color: Color.gray(0.4).stringValue,
+        trashCanButtonContent: {
+            padding: imagePadding,
+            backgroundColor: 'red',
+            borderRadius: 10
         },
-        centerLabelHolder: {
-            minWidth: buttonSize,
-            paddingLeft: 10,
-            paddingRight: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        centerLabel: {
-            fontFamily: CustomFont.medium,
-            fontSize: 15,
-            color: Color.gray(0.4).stringValue,
-        },
-        separatorLine: {
-            width: 1,
-            backgroundColor: Color.gray(0.9).stringValue,
-            marginTop: 6,
-            marginBottom: 6,
-        },
+        trashButtonImage: {
+            width: imageWidth,
+            height: imageWidth,
+            tintColor: 'white',
+        }
     });
 
+    const SwipableButtonActions = (props: SwipableButtonActionsProps) => {
 
-    const QuantityPickerView = (props: QuantityPickerViewProps) => {
+        const translateX = props.dragAnimatedValue.interpolate({
+            inputRange: [-totalContainerWidth, 0],
+            outputRange: [0, totalContainerWidth]
+        });
 
-        return <View style={styles.root}>
-            <BaseSpacer renderSpacer={() => <View style={styles.separatorLine}/>}>
-                <HighlightButton style={[styles.buttons]} onPress={props.decrement}>
-                    <CustomizedText style={styles.buttonText}>-</CustomizedText>
-                </HighlightButton>
-                <View style={styles.centerLabelHolder}>
-                    <CustomizedText style={styles.centerLabel}>{props.value}</CustomizedText>
-                </View>
-                <HighlightButton style={[styles.buttons]} onPress={props.increment}>
-                    <CustomizedText style={styles.buttonText}>+</CustomizedText>
-                </HighlightButton>
-            </BaseSpacer>
-        </View>
+        return <Animated.View style={[styles.root, { transform: [{ translateX }] }]}>
+            <BouncyButton onPress={props.onDeleteButtonPressed} contentViewProps={{ style: styles.trashCanButtonContent }}>
+                <Image style={styles.trashButtonImage} source={require('./trash.png')} />
+            </BouncyButton>
+        </Animated.View>
     }
-    return QuantityPickerView;
+    return SwipableButtonActions;
 })();
+
 
 
 
