@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo, useRef, useCallback, useLayoutEffect } from 'react';
-import { View, Animated, StyleSheet, Easing, Dimensions, LayoutChangeEvent } from 'react-native';
+import { View, Animated, StyleSheet, Easing, Dimensions, LayoutChangeEvent, Keyboard } from 'react-native';
 import { batch } from 'react-redux';
 import NavigationScreen from './NavigationScreen';
 import { State as GestureState, PanGestureHandlerGestureEvent, PanGestureHandlerStateChangeEvent } from 'react-native-gesture-handler';
@@ -136,6 +136,8 @@ const NavigationController = (() => {
                 currentIndexOfScreenToShow === screenStack.length - 1
             ) { return; }
 
+            Keyboard.dismiss(); // so that the keyboard would be automatically dismissed when a presentation or dismissal occurs.
+
             const isPresenting = currentIndexOfScreenToShow == null;
 
             translateXValue.setValue(isPresenting ? latestControllerWidth.current : 0);
@@ -201,6 +203,9 @@ const NavigationController = (() => {
             batch(() => {
                 switch (event.nativeEvent.state) {
                     case GestureState.BEGAN:
+                        Keyboard.dismiss(); // so that the keyboard would be automatically dismissed when an interactive dismissal is starting.
+                        
+                        //falls through
                     case GestureState.ACTIVE:
                         setIsInteractionActive(true);
                         break;

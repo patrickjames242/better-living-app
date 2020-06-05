@@ -1,10 +1,7 @@
 
 import React, { useEffect } from "react";
 
-
-
 export type NotificationListener<InfoType> = (info: InfoType) => void;
-
 
 export interface Notification<InfoType> {
     post(info: InfoType): void;

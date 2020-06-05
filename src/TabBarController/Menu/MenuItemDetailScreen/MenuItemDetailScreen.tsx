@@ -15,7 +15,8 @@ import TitleBox from './ChildComponents/TitleBox';
 import { useNotificationListener } from '../../../helpers/Notification';
 import { windowDimensionsDidChangeNotification } from '../../helpers';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
-import MenuPresentableScreens from '../MenuPresentableScreens';
+import PresentableScreens from '../../../PresentableScreens';
+import FloatingCellStyleSectionView from '../../../helpers/FloatingCellStyleSectionView';
 
 
 const MenuItemDetailScreen = (() => {
@@ -54,7 +55,7 @@ const MenuItemDetailScreen = (() => {
         const navigationScreenContext = useNavigationScreenContext();
 
         function onMealButtonPressed(){
-            mapOptional(MenuPresentableScreens.MealCreatorScreen(), X => {
+            mapOptional(PresentableScreens.MealCreatorScreen(), X => {
                 navigationScreenContext.present(<X/>);
             });
         }
@@ -69,21 +70,21 @@ const MenuItemDetailScreen = (() => {
                             <TitleBox />
                         </SpacerView>
 
-                        <SectionView sectionTitle="Description">
+                        <FloatingCellStyleSectionView sectionTitle="Description">
                             <View style={styles.descriptionTextHolder}>
                                 <CustomizedText style={styles.descriptionText}>
                                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia, ullam voluptate error tenetur eaque veniam deleniti quos, aut natus accusamus iusto pariatur facere est excepturi cum laboriosam ut totam perferendis repudiandae eum, eos quisquam provident? Odit quisquam odio vitae reiciendis ab, corporis minima laudantium natus ducimus ea deserunt amet nemo?
                             </CustomizedText>
                             </View>
-                        </SectionView>
+                        </FloatingCellStyleSectionView>
 
-                        <SectionView sectionTitle="Purchase Options">
+                        <FloatingCellStyleSectionView sectionTitle="Purchase Options">
                             <SpacerView space={15}>
                                 <PurchaseOptionBox price="$5.48" title="Purchase Separately" buttonText="Add To Cart" />
                                 <PurchaseOptionBox price="$8.68" title="Small Plate" buttonText="Create Meal" onButtonPress={onMealButtonPressed}/>
                                 <PurchaseOptionBox price="$11.92" title="Large Plate" buttonText="Create Meal" onButtonPress={onMealButtonPressed} />
                             </SpacerView>
-                        </SectionView>
+                        </FloatingCellStyleSectionView>
 
                     </Spacer>
                 </View>
@@ -139,21 +140,5 @@ const FoodImageView = (() => {
 
 
 
-const SectionView = (() => {
 
-    const styles = StyleSheet.create({
-        titleText: {
-            ...LayoutConstants.floatingCellStyles.sectionHeaderTextStyles,
-            marginLeft: LayoutConstants.floatingCellStyles.borderRadius,
-        },
-    });
-
-    return function SectionView(props: { sectionTitle: string, children: React.ReactElement }) {
-        return <SpacerView space={LayoutConstants.floatingCellStyles.sectionHeaderBottomSpacing}>
-            <CustomizedText style={styles.titleText}>{props.sectionTitle}</CustomizedText>
-            {props.children}
-        </SpacerView>
-    };
-
-})();
 

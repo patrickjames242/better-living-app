@@ -17,7 +17,7 @@ import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import ValueBox from '../../../helpers/ValueBox';
 import { useNotificationListener } from '../../../helpers/Notification';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
-import MenuPresentableScreens from '../../Menu/MenuPresentableScreens';
+import PresentableScreens from '../../../PresentableScreens';
 
 
 
@@ -104,7 +104,7 @@ const CartItemListItemView = (() => {
 
         function presentMenuItemDetailView() {
             if (props.currentlyOpenDrawerID.value === props.item.id){return;}
-            mapOptional(MenuPresentableScreens.MenuItemDetailScreen(), Component => {
+            mapOptional(PresentableScreens.MenuItemDetailScreen(), Component => {
                 navigationScreenContext.present(<Component />)
             });
         }

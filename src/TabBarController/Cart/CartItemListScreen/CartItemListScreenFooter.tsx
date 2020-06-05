@@ -10,6 +10,7 @@ import LayoutConstants from '../../../LayoutConstants';
 
 interface CartItemListCheckOutButton {
     maxWidth: number;
+    onPress: () => void;
 }
 
 const CartItemListCheckOutButton = (() => {
@@ -50,7 +51,7 @@ const CartItemListCheckOutButton = (() => {
             style={[styles.root, {maxWidth: props.maxWidth}]}
             contentViewProps={{ style: styles.contentView }}
             bounceScaleValue={0.925}
-
+            onPress={props.onPress}
         >
             <CustomizedText style={styles.confirmOrderText}>Confirm Order</CustomizedText>
             <View style={styles.cartIconHolder}>

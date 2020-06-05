@@ -2,7 +2,7 @@
 import React, { useLayoutEffect, useRef, useState} from 'react';
 import { MenuListItem } from "../../MenuListViewScreen/MenuListView/helpers";
 import { useNavigationScreenContext } from "../../../../helpers/NavigationController/NavigationScreen";
-import MenuPresentableScreens from "../../MenuPresentableScreens";
+import PresentableScreens from "../../../../PresentableScreens";
 import { StyleSheet, Animated, View } from "react-native";
 import { CustomColors } from "../../../../helpers/colors";
 import MealCreatorCheckBoxButton from './MealCreatorCheckBox';
@@ -34,7 +34,7 @@ const MealCreatorListViewItem = (() => {
         const navigationScreenContext = useNavigationScreenContext();
 
         function onButtonPress() {
-            mapOptional(MenuPresentableScreens.MenuItemDetailScreen(), X => {
+            mapOptional(PresentableScreens.MenuItemDetailScreen(), X => {
                 navigationScreenContext.present(<X />)
             });
         }
