@@ -1,3 +1,5 @@
+
+
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
@@ -40,14 +42,13 @@ export const CartItemListTotalSummaryView = (() => {
         },
         finalTotalText: {
             fontFamily: CustomFont.bold,
-            fontSize: 21.5,
+            fontSize: 21,
         },
         finalPriceText: {
             fontFamily: CustomFont.bold,
-            fontSize: 28,
+            fontSize: 21,
             marginBottom: -4,
         },
-
     });
 
     const CartItemListTotalSummaryView = () => {
@@ -62,7 +63,6 @@ export const CartItemListTotalSummaryView = (() => {
                     <CustomizedText style={styles.subtotalItemText}>$1.53</CustomizedText>
                 </View>
             </SpacerView>
-
             <View style={[styles.amountItemBox, styles.finalTotalHolderBox]}>
                 <CustomizedText style={styles.finalTotalText}>Total:</CustomizedText>
                 <CustomizedText style={styles.finalPriceText}>$11.24</CustomizedText>

@@ -86,3 +86,10 @@ export function mapOptional<Unwrapped, ReturnVal>(optional: Unwrapped | undefine
         return action(optional);
     }   
 }
+
+
+
+export function isDigit(string: string): boolean{
+    const regex = /^\d$/;
+    return regex.test(string);
+}

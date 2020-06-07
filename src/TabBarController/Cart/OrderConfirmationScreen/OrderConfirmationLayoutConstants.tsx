@@ -9,7 +9,7 @@ const OrderConfirmationLayoutConstants = {
             unselected: Color.gray(0.94).stringValue,
             selected: CustomColors.themeGreen.withAdjustedOpacity(0.8).stringValue,
         },
-        width: 3,
+        width: 2.5,
         
     }
 };

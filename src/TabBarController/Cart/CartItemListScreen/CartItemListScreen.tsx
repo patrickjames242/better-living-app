@@ -11,16 +11,14 @@ import ValueBox from '../../../helpers/ValueBox';
 import { Optional, mapOptional } from '../../../helpers/general';
 import { CartItemListTotalSummaryView } from './CartItemListTotalSummaryView';
 import BottomScreenGradientHolder, { BottomScreenGradientHolderRef } from '../../../helpers/BottomScreenGradientHolder';
-import CartItemListCheckOutButton from './CartItemListScreenFooter';
+import CartItemListCheckOutButton from './CartItemListCheckOutButton';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import PresentableScreens from '../../../PresentableScreens';
+import BottomScreenButtonWithGradient, { BottomScreenButtonWithGradientRef } from '../../../helpers/BottomScreenButtonWithGradient';
 
 
 
 const CartItemListScreen = (() => {
-
-    const maxWidthForTotalSummaryAndBottomButton = 450;
-    const bottomButtonTopAndBottomInsets = 15;
 
     const styles = StyleSheet.create({
         root: {
@@ -31,15 +29,10 @@ const CartItemListScreen = (() => {
         },
         totalSummaryHolder: {
             marginTop: LayoutConstants.pageSideInsets,
-            maxWidth: maxWidthForTotalSummaryAndBottomButton,
+            maxWidth: LayoutConstants.bottomScreenButtonWithGradient.maxWidth,
             width: '100%',
             alignSelf: 'center',
         },
-        bottomButtonHolder: {
-            paddingLeft: LayoutConstants.pageSideInsets,
-            paddingRight: LayoutConstants.pageSideInsets,
-            paddingBottom: bottomButtonTopAndBottomInsets,
-        }
     });
 
     interface Section {
@@ -54,7 +47,7 @@ const CartItemListScreen = (() => {
 
         // the number refers to the id of the item
         const currentlyOpenDrawerID = useRef(new ValueBox<Optional<number>>(null)).current;
-        const bottomGradientViewRef = useRef<BottomScreenGradientHolderRef>(null);
+        const bottomGradientViewRef = useRef<BottomScreenButtonWithGradientRef>(null);
         const [bottomButtonHolderHeight, setBottomButtonHolderHeight] = useState(0);
 
         const navigationScreenContext = useNavigationScreenContext();
@@ -67,12 +60,11 @@ const CartItemListScreen = (() => {
 
         const listView = useMemo(() => {
             return <FloatingCellStyleList<MenuListItem, Section>
-                
-                contentContainerStyle={[styles.listViewContent, {paddingBottom: bottomButtonHolderHeight + bottomButtonTopAndBottomInsets}]}
+                contentContainerStyle={[styles.listViewContent, {paddingBottom: bottomButtonHolderHeight + LayoutConstants.bottomScreenButtonWithGradient.bottomPadding}]}
                 titleForSection={() => null}
                 sections={sections}
                 onScroll={event => {
-                    bottomGradientViewRef.current?.notifyThatScrollViewScrolled(event);
+                    bottomGradientViewRef.current?.gradientHolder?.notifyThatScrollViewScrolled(event);
                     currentlyOpenDrawerID.value = null
                 }}
                 keyExtractor={item => String(item.id)}
@@ -93,11 +85,19 @@ const CartItemListScreen = (() => {
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Your Cart" />
             {listView}
-            <BottomScreenGradientHolder ref={bottomGradientViewRef} style={styles.bottomButtonHolder} onLayout={event => {
-                setBottomButtonHolderHeight(event.nativeEvent.layout.height);
-            }}>
-                <CartItemListCheckOutButton maxWidth={maxWidthForTotalSummaryAndBottomButton} onPress={onCheckOutButtonPressed} />
-            </BottomScreenGradientHolder>
+            <BottomScreenButtonWithGradient
+                ref={bottomGradientViewRef}
+                gradientHolderProps={{
+                    onLayout: event => {
+                        setBottomButtonHolderHeight(event.nativeEvent.layout.height);
+                    }
+                }}
+                buttonProps={{
+                    iconSource: require('../../TabBar/icons/shopping-cart.png'),
+                    text: "Confirm Order",
+                    onPress: onCheckOutButtonPressed,
+                }}
+            />
         </View>
     }
     return React.memo(CartItemListScreen);

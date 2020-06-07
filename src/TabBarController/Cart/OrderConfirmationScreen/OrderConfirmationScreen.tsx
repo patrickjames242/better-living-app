@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
 import FloatingCellStyleSectionView from '../../../helpers/FloatingCellStyleSectionView';
@@ -8,6 +8,8 @@ import LayoutConstants from '../../../LayoutConstants';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import OrderConfirmationPickUpOrDeliveryView from './OrderConfirmationPickUpOrDeliveryView';
 import OrderConfirmationHowToPayView from './OrderConfirmationHowToPayView';
+import GreenTextAndIconButton from '../../../helpers/Buttons/GreenTextAndIconButton';
+import Space from '../../../helpers/Spacers/Space';
 
 
 
@@ -31,13 +33,25 @@ const OrderConfirmationScreen = (() => {
             width: '100%',
             alignSelf: 'center',
         },
+        submitButton: {
+            maxWidth: LayoutConstants.bottomScreenButtonWithGradient.maxWidth,
+            alignSelf: 'center',
+            width: '100%',
+        },
     });
 
     const OrderConfirmationScreen = () => {
 
-        return <KeyboardAvoidingView behavior="height" style={styles.root}>
+        const scrollView = useRef<ScrollView>(null);
+
+        useLayoutEffect(() => {
+            scrollView.current?.scrollTo({x: 0, y: 0}); 
+        }, []);
+
+        return <KeyboardAvoidingView behavior='padding' style={styles.root}>
             <NavigationControllerNavigationBar title="Confirm Order" />
             <ScrollView
+                ref={scrollView}
                 style={styles.scrollView}
                 alwaysBounceVertical={true}
                 contentContainerStyle={styles.scrollViewContentContainer}
@@ -48,6 +62,12 @@ const OrderConfirmationScreen = (() => {
                     </FloatingCellStyleSectionView>
                     <OrderConfirmationPickUpOrDeliveryView />
                     <OrderConfirmationHowToPayView />
+                    <Space space={LayoutConstants.pageSideInsets}/>
+                    <GreenTextAndIconButton 
+                        text="Submit Order"
+                        iconSource={require('./icons/hotel.png')}
+                        style={styles.submitButton}
+                    />
                 </SpacerView>
             </ScrollView>
         </KeyboardAvoidingView>

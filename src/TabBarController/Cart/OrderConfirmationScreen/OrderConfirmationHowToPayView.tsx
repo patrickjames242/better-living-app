@@ -41,7 +41,7 @@ const OrderConfirmationHowToPayView = (() => {
                     isSelected={howToPay === HowToPay.online}
                     onCheckMarkPressed={() => setHowToPay(HowToPay.online)}
                 />
-                <OrderConfirmationCardDetailsView/>
+                <OrderConfirmationCardDetailsView isEnabled={howToPay === HowToPay.online} />
             </Spacer>
         </FloatingCellStyleSectionView>
     }

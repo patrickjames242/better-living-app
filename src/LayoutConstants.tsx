@@ -44,6 +44,11 @@ const LayoutConstants = {
         maxWidth: 660,
     },
 
+    bottomScreenButtonWithGradient: {
+        bottomPadding: 15,
+        maxWidth: 450,
+    }
+
 };
 
 export default LayoutConstants;
