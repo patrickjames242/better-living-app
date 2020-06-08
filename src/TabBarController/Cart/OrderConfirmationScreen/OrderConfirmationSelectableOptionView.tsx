@@ -1,7 +1,5 @@
 
-
 import React from 'react';
-
 import {StyleSheet, Image} from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
 import OrderConfirmationLayoutConstants from './OrderConfirmationLayoutConstants';
@@ -58,3 +56,5 @@ const OrderConfirmationSelectableOptionView = (() => {
 })();
 
 export default OrderConfirmationSelectableOptionView;
+
+

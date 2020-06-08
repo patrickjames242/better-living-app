@@ -65,14 +65,14 @@ const NavigationScreen = (() => {
         });
 
         return <NavigationScreenContext.Provider value={contextValue}>
-            <PanGestureHandler {...props.panGestureProps}>
-                <Animated.View style={[styles.root, props.style]}>
-                    {props.component}
-                    {props.shouldShowDimmerView &&
-                        <Animated.View style={[styles.dimmerView, props.dimmerViewStyle]} />
-                    }
-                </Animated.View>
-            </PanGestureHandler>
+                <PanGestureHandler {...props.panGestureProps}>
+                    <Animated.View style={[styles.root, props.style]}>
+                        {props.component}
+                        {props.shouldShowDimmerView &&
+                            <Animated.View style={[styles.dimmerView, props.dimmerViewStyle]} />
+                        }
+                    </Animated.View>
+                </PanGestureHandler>
         </NavigationScreenContext.Provider>
     };
 

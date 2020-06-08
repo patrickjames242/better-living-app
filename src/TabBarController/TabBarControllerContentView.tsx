@@ -1,11 +1,12 @@
 
 import React, { useState, useMemo, useRef } from 'react';
-import { View, StyleSheet, Animated, Easing} from 'react-native';
+import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { TabBarSelection, tabBarItemsData } from './TabBar/helpers';
 import { useUpdateEffect } from '../helpers/general';
 import MenuScreen from './Menu/Menu';
 import { useSelector } from '../redux/store';
 import Cart from './Cart/Cart';
+import Tips from './Tips/Tips';
 
 
 
@@ -24,7 +25,7 @@ const TabBarControllerContentView = (() => {
 	const selectionComponents = {
 		[TabBarSelection.menu]: MenuScreen,
 		[TabBarSelection.cart]: Cart,
-		[TabBarSelection.tips]: HealthTipsScreen,
+		[TabBarSelection.tips]: Tips,
 		[TabBarSelection.contactRequests]: InquiriesScreen,
 		[TabBarSelection.settings]: SettingsScreen,
 	}
@@ -119,10 +120,11 @@ const TabBarControllerContentView = (() => {
 				useNativeDriver: true,
 			}).start();
 
-		// eslint-disable-next-line react-hooks/exhaustive-deps
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [currentSelection]);
 
 		Animated.event([], {});
+
 		return <View style={[styles.root, {
 			overflow: animationIsInProgress ? 'hidden' : undefined,
 		}]}>
@@ -152,12 +154,7 @@ export default TabBarControllerContentView;
 
 
 
-function HealthTipsScreen() {
-	return <View style={{
-		backgroundColor: 'blue',
-		flex: 1
-	}} />
-}
+
 
 function InquiriesScreen() {
 	return <View style={{

@@ -4,8 +4,10 @@ import MenuListScreen from './MenuListViewScreen/MenuListViewScreen';
 
 
 
-export default function Menu(){
+const Menu = React.memo(function _InnerMenu(){
     return <NavigationController initialComponent={<MenuListScreen/>}/>
-}
+});
+
+export default Menu;
 
 

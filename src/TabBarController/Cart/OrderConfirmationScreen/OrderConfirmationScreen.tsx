@@ -45,7 +45,7 @@ const OrderConfirmationScreen = (() => {
         const scrollView = useRef<ScrollView>(null);
 
         useLayoutEffect(() => {
-            scrollView.current?.scrollTo({x: 0, y: 0}); 
+            scrollView.current?.scrollTo({ x: 0, y: 0 });
         }, []);
 
         return <KeyboardAvoidingView behavior='padding' style={styles.root}>
@@ -62,8 +62,8 @@ const OrderConfirmationScreen = (() => {
                     </FloatingCellStyleSectionView>
                     <OrderConfirmationPickUpOrDeliveryView />
                     <OrderConfirmationHowToPayView />
-                    <Space space={LayoutConstants.pageSideInsets}/>
-                    <GreenTextAndIconButton 
+                    <Space space={LayoutConstants.pageSideInsets} />
+                    <GreenTextAndIconButton
                         text="Submit Order"
                         iconSource={require('./icons/hotel.png')}
                         style={styles.submitButton}

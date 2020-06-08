@@ -4,7 +4,9 @@ import CartItemListScreen from './CartItemListScreen/CartItemListScreen';
 
 
 
-export default function Cart(){
+const Cart = React.memo(function _InnerCart(){
     return <NavigationController initialComponent={<CartItemListScreen/>}/>
-}
+});
+
+export default Cart;
 

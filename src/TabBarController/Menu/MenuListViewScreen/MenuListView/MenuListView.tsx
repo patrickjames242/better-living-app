@@ -6,7 +6,7 @@ import { MenuListSection, menuListSections, MenuListItem } from './helpers';
 import MenuListItemView from './MenuListItemView';
 import MenuListViewSectionHeader from './MenuListViewSectionHeader';
 import LayoutConstants from '../../../../LayoutConstants';
-import { getNumbersList } from '../../../../helpers/general';
+import { getNumbersList, computeNumberOfListColumns } from '../../../../helpers/general';
 import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../../helpers';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNotificationListener } from '../../../../helpers/Notification';
@@ -42,7 +42,11 @@ const MenuListView = (() => {
     const maxItemWidth = 450;
 
     function getNumberOfColumnsBasedOnListViewWidth(listViewWidth: number): number {
-        return Math.ceil((listViewWidth + itemSpacing - (2 * sideInsets)) / (maxItemWidth + itemSpacing));
+        return computeNumberOfListColumns({
+            listWidth: listViewWidth, 
+            maxItemWidth, sideInsets, 
+            horizontalItemSpacing: itemSpacing
+        });
     }
 
 

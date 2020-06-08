@@ -93,3 +93,11 @@ export function isDigit(string: string): boolean{
     const regex = /^\d$/;
     return regex.test(string);
 }
+
+
+
+export function computeNumberOfListColumns(props: {listWidth: number, maxItemWidth: number, sideInsets: number, horizontalItemSpacing: number}){
+    return Math.ceil((props.listWidth + props.horizontalItemSpacing - (2 * props.sideInsets)) / (props.maxItemWidth + props.horizontalItemSpacing));
+}
+
+
