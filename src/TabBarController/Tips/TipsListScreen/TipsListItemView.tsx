@@ -7,6 +7,9 @@ import LayoutConstants from '../../../LayoutConstants';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { CustomColors } from '../../../helpers/colors';
 import Spacer from '../../../helpers/Spacers/Spacer';
+import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
+import { mapOptional } from '../../../helpers/general';
+import PresentableScreens from '../../../PresentableScreens';
 
 
 
@@ -37,10 +40,20 @@ const TipsListItemView = (() => {
     });
 
     const TipsListItemView = () => {
+
+
+        const navigationScreenContext = useNavigationScreenContext();
+
+        function onPress(){
+            mapOptional(PresentableScreens.TipsDetailScreen(), Component => navigationScreenContext.present(<Component/>));
+        }
+
+
         return <BouncyButton
             style={styles.root}
             bounceScaleValue={0.925}
             contentViewProps={{ style: styles.buttonContentView }}
+            onPress={onPress}
         >
             <Spacer space={10}>
                 <CustomizedText style={styles.dateLabel}>Sept 27, 2020</CustomizedText>
@@ -51,7 +64,6 @@ const TipsListItemView = (() => {
                     Lorem ipsum dolor, sit amet conse ctetur adipis icing elit. Quis, repudi andae?
                 </CustomizedText>
             </Spacer>
-            
         </BouncyButton>
     }
     return TipsListItemView;

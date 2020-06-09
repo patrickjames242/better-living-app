@@ -1,9 +1,10 @@
 
-import React, { useContext, useRef, useEffect } from 'react';
+import React, { useContext, useRef, useEffect, useState, useMemo, Ref } from 'react';
 import { Optional } from '../general';
 import { Animated, StyleProp, ViewStyle, StyleSheet } from 'react-native';
 import { PanGestureHandler, PanGestureHandlerProperties } from 'react-native-gesture-handler';
 import { CustomColors, Color } from '../colors';
+import { Set } from 'immutable';
 
 
 export const NavigationScreenContext = React.createContext<Optional<NavigationScreenContextValue>>(null);
@@ -11,10 +12,13 @@ export const NavigationScreenContext = React.createContext<Optional<NavigationSc
 export interface NavigationScreenActions {
     dismiss: () => void,
     dismissToRoot: () => void,
-    present: (component: React.ReactElement) => void
+    present: (component: React.ReactElement) => void,
+    
 }
 
-export interface NavigationScreenContextValue extends NavigationScreenActions { }
+export interface NavigationScreenContextValue extends NavigationScreenActions { 
+    addGestureToWaitOn: (ref: React.Ref<any>) => void,
+}
 
 export function useNavigationScreenContext(): NavigationScreenContextValue {
     const contextValue = useContext(NavigationScreenContext);
@@ -52,10 +56,15 @@ const NavigationScreen = (() => {
         const dismissToRootAction = useRef<Optional<() => void>>(null);
         const presentAction = useRef<Optional<(component: React.ReactElement) => void>>(null);
 
+        const [gesturesToWaitFor, setGesturesToWaitFor] = useState(Set<React.Ref<any>>());
+        const gesturesToWaitForArray = useMemo(() => gesturesToWaitFor.toJS(), [gesturesToWaitFor]);
+
+
         const contextValue = useRef<NavigationScreenContextValue>({
             dismiss: () => dismissAction.current?.(),
             dismissToRoot: () => dismissToRootAction.current?.(),
             present: (component: React.ReactElement) => presentAction.current?.(component),
+            addGestureToWaitOn: (ref) => setGesturesToWaitFor(x => x.add(ref)),
         }).current;
 
         useEffect(() => {
@@ -65,14 +74,17 @@ const NavigationScreen = (() => {
         });
 
         return <NavigationScreenContext.Provider value={contextValue}>
-                <PanGestureHandler {...props.panGestureProps}>
-                    <Animated.View style={[styles.root, props.style]}>
-                        {props.component}
-                        {props.shouldShowDimmerView &&
-                            <Animated.View style={[styles.dimmerView, props.dimmerViewStyle]} />
-                        }
-                    </Animated.View>
-                </PanGestureHandler>
+            <PanGestureHandler
+                waitFor={gesturesToWaitForArray}
+                {...props.panGestureProps}
+            >
+                <Animated.View style={[styles.root, props.style]}>
+                    {props.component}
+                    {props.shouldShowDimmerView &&
+                        <Animated.View style={[styles.dimmerView, props.dimmerViewStyle]} />
+                    }
+                </Animated.View>
+            </PanGestureHandler>
         </NavigationScreenContext.Provider>
     };
 

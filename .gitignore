@@ -12,3 +12,5 @@ web-report/
 
 # macOS
 .DS_Store
+src/helpers/react-native-scrubber/react-native-scrubber.d.ts
+src/helpers/react-native-scrubber/react-native-scrubber.js

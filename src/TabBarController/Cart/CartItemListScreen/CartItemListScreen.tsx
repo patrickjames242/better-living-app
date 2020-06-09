@@ -10,8 +10,6 @@ import LayoutConstants from '../../../LayoutConstants';
 import ValueBox from '../../../helpers/ValueBox';
 import { Optional, mapOptional } from '../../../helpers/general';
 import { CartItemListTotalSummaryView } from './CartItemListTotalSummaryView';
-import BottomScreenGradientHolder, { BottomScreenGradientHolderRef } from '../../../helpers/BottomScreenGradientHolder';
-import CartItemListCheckOutButton from './CartItemListCheckOutButton';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import PresentableScreens from '../../../PresentableScreens';
 import BottomScreenButtonWithGradient, { BottomScreenButtonWithGradientRef } from '../../../helpers/BottomScreenButtonWithGradient';
@@ -29,7 +27,7 @@ const CartItemListScreen = (() => {
         },
         totalSummaryHolder: {
             marginTop: LayoutConstants.pageSideInsets,
-            maxWidth: LayoutConstants.bottomScreenButtonWithGradient.maxWidth,
+            maxWidth: 500,
             width: '100%',
             alignSelf: 'center',
         },
