@@ -7,8 +7,6 @@ import { loadFonts } from './helpers/fonts/fonts';
 import TabBarController from './TabBarController/TabBarController';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './redux/store';
-import { CustomParsers } from './helpers/Parser';
-
 
 registerRootComponent(App);
 
@@ -31,5 +29,6 @@ export default function App() {
 			</SafeAreaProvider>
 		</ReduxProvider>
 	}
+
 }
 

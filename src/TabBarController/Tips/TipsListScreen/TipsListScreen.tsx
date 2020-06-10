@@ -17,10 +17,13 @@ const TipsListScreen = (() => {
     const styles = StyleSheet.create({
         root: {
             flex: 1,
+            
         },
         flatList: {
             overflow: 'visible',
             zIndex: -1,
+            flex: 1, 
+            
         },
         flatListContentContainer: {
             alignSelf: 'center',

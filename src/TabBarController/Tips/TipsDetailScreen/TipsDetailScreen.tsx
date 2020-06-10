@@ -9,6 +9,7 @@ import { CustomFont } from '../../../helpers/fonts/fonts';
 import { CustomColors, Color } from '../../../helpers/colors';
 import Spacer from '../../../helpers/Spacers/Spacer';
 import TipsDetailAudioPlayerView from './TipsDetailAudioPlayerView';
+import TipsDetailYTVideoView from './TipsDetailYTVideoView';
 
 
 const TipsDetailScreen = (() => {
@@ -41,6 +42,7 @@ const TipsDetailScreen = (() => {
                 <Spacer space={spacing}>
                     <TipsDetailTitleView/>
                     <TipsDetailAudioPlayerView/>
+                    <TipsDetailYTVideoView/>
                     <TipsDetailDescriptionView/>
                 </Spacer>
             </ScrollView>

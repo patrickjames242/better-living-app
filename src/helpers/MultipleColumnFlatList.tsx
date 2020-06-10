@@ -70,6 +70,7 @@ const MultiColumnFlatListRowView = (() => {
         },
         itemHolder: {
             flex: 1,
+            flexDirection: 'row',
         },
     });
 

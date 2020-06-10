@@ -26,7 +26,7 @@ const BaseNavigationBar = (() => {
         const safeAreaInsets = useSafeArea();
 
         return <View {...props} style={[styles.root, {
-            paddingTop: safeAreaInsets.top,
+            paddingTop: safeAreaInsets.top
         }, props.style]}>
             <View style={styles.contentView}>{props.children}</View>
         </View>;
