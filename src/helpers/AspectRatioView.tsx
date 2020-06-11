@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { View, StyleSheet, ViewProperties } from 'react-native';
 import { limitNumber } from './general';

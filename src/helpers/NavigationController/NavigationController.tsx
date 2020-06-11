@@ -216,7 +216,7 @@ const NavigationController = (() => {
                         const velocity = latestGestureXVelocity.current;
                         const shouldDismiss = shouldDismissAfterInteraction(velocity, translationX, screenWidth);
 
-                        setScreenBeingShown(screenStack[screenStack.length - 1]);
+                        setScreenBeingShown(screenStack[screenStack.length - (shouldDismiss ? 2 : 1)]);
 
                         const animationDuration = (() => {
 

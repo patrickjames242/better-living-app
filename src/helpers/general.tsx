@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 
 export type Optional<Wrapped> = Wrapped | null;
 
@@ -56,48 +56,56 @@ export function getShadowStyle(elevation: number) {
 }
 
 // returns min if the number is less than or equal to min, returns max if the number is greater than or equal to max, otherwise returns the same number
-export function limitNumber(number: number, min: number, max: number): number{
+export function limitNumber(number: number, min: number, max: number): number {
     return Math.max(Math.min(number, max), min);
 }
 
 
 
-export function lazilyImport<ModuleType, ImportedItem>(importCall: Promise<ModuleType>, elementGetter: (module: ModuleType) => ImportedItem): () => Optional<ImportedItem>{
-	
-	const ref: {current: Optional<ImportedItem>} = {
-		current: null,
-	}
+export function lazilyImport<ModuleType, ImportedItem>(importCall: Promise<ModuleType>, elementGetter: (module: ModuleType) => ImportedItem): () => Optional<ImportedItem> {
 
-	importCall.then(module => {
-		ref.current = elementGetter(module);
-	})
+    const ref: { current: Optional<ImportedItem> } = {
+        current: null,
+    }
 
-	return () => {
-		return ref.current;
-	}
+    importCall.then(module => {
+        ref.current = elementGetter(module);
+    })
+
+    return () => {
+        return ref.current;
+    }
 
 }
 
 // executes closure if value is not null or undefined and returns its result, otherwise returns null.
-export function mapOptional<Unwrapped, ReturnVal>(optional: Unwrapped | undefined | null, action: (unwrapped: Unwrapped) => ReturnVal): ReturnVal | null{
-    if (optional == null){
+export function mapOptional<Unwrapped, ReturnVal>(optional: Unwrapped | undefined | null, action: (unwrapped: Unwrapped) => ReturnVal): ReturnVal | null {
+    if (optional == null) {
         return null;
     } else {
         return action(optional);
-    }   
+    }
 }
 
 
 
-export function isDigit(string: string): boolean{
+export function isDigit(string: string): boolean {
     const regex = /^\d$/;
     return regex.test(string);
 }
 
 
 
-export function computeNumberOfListColumns(props: {listWidth: number, maxItemWidth: number, sideInsets: number, horizontalItemSpacing: number}){
+export function computeNumberOfListColumns(props: { listWidth: number, maxItemWidth: number, sideInsets: number, horizontalItemSpacing: number }) {
     return Math.ceil((props.listWidth + props.horizontalItemSpacing - (2 * props.sideInsets)) / (props.maxItemWidth + props.horizontalItemSpacing));
+}
+
+
+
+export function useForceUpdate() {
+    // eslint-disable-next-line react-hooks/rules-of-hooks,  @typescript-eslint/no-unused-vars
+    const [_, setRandomState] = useState({});
+    return () => setRandomState({});
 }
 
 

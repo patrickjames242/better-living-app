@@ -1,6 +1,6 @@
 
-import React, { useState, useMemo } from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import React from 'react';
+import { StyleSheet, View, LayoutRectangle } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 import { getNumbersList, computeNumberOfListColumns } from '../../../helpers/general';
 import TipsListItemView from './TipsListItemView';
@@ -33,22 +33,18 @@ const TipsListScreen = (() => {
         },
     });
 
-    function calculateListColumns(viewWidth: number){
-        const num = computeNumberOfListColumns({listWidth: viewWidth, sideInsets: listViewPadding, horizontalItemSpacing: itemSpacing, maxItemWidth: 600})
+    function calculateListColumns(layout: LayoutRectangle){
+        const num = computeNumberOfListColumns({listWidth: layout.width, sideInsets: listViewPadding, horizontalItemSpacing: itemSpacing, maxItemWidth: 600})
         return Math.min(num, 2);
     }    
     
     const TipsListScreen = () => {
 
-        const initialNumOfColumns = useMemo(() => calculateListColumns(Dimensions.get('window').width), []);
-        const [numOfColumns, setNumOfColumns] = useState(initialNumOfColumns);
-
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Health Tips" />
             <MultiColumnFlatList
-                numberOfColumns={numOfColumns}
+                numberOfColumns={calculateListColumns}
                 columnSpacing={itemSpacing}
-                onLayout={layout => setNumOfColumns(calculateListColumns(layout.nativeEvent.layout.width))}
                 contentContainerStyle={styles.flatListContentContainer}
                 style={styles.flatList}
                 data={getNumbersList(1, 10)}
@@ -64,7 +60,6 @@ const TipsListScreen = (() => {
     }
 
     return TipsListScreen;
-
 })();
 
 

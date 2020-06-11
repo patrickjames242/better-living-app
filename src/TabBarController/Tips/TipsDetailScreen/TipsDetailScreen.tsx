@@ -113,7 +113,6 @@ const TipsDetailDescriptionView = (() => {
             fontSize: 16,
             lineHeight: 25,
         },
-        
     });
     
     const TipsDetailDescriptionView = () => {

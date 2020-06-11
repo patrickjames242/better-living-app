@@ -7,6 +7,7 @@ import MenuScreen from './Menu/Menu';
 import { useSelector } from '../redux/store';
 import Cart from './Cart/Cart';
 import Tips from './Tips/Tips';
+import Inquiries from './Inquiries/Inquiries';
 
 
 
@@ -26,7 +27,7 @@ const TabBarControllerContentView = (() => {
 		[TabBarSelection.menu]: MenuScreen,
 		[TabBarSelection.cart]: Cart,
 		[TabBarSelection.tips]: Tips,
-		[TabBarSelection.contactRequests]: InquiriesScreen,
+		[TabBarSelection.contactRequests]: Inquiries,
 		[TabBarSelection.settings]: SettingsScreen,
 	}
 
@@ -155,13 +156,6 @@ export default TabBarControllerContentView;
 
 
 
-
-function InquiriesScreen() {
-	return <View style={{
-		backgroundColor: 'yellow',
-		flex: 1
-	}} />
-}
 
 function SettingsScreen() {
 	return <View style={{
