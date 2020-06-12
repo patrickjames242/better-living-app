@@ -7,6 +7,9 @@ import SpacerView from '../../../helpers/Spacers/SpacerView';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { Color, CustomColors } from '../../../helpers/colors';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
+import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
+import { mapOptional } from '../../../helpers/general';
+import PresentableScreens from '../../../PresentableScreens';
 
 
 export enum InquiryUnreadStatus {
@@ -55,7 +58,14 @@ const InquiriesListItemView = (() => {
     });
 
     const InquiriesListItemView = (props: InquiriesListItemViewProps) => {
-        return <BouncyButton bounceScaleValue={0.9} contentViewProps={{style: styles.root}}>
+
+        const navigationScreenContext = useNavigationScreenContext();
+
+        function respondToButtonPressed(){
+            mapOptional(PresentableScreens.InquiryDetailScreen(), Component => (navigationScreenContext.present(<Component/>)));
+        }
+
+        return <BouncyButton bounceScaleValue={0.9} contentViewProps={{style: styles.root}} onPress={respondToButtonPressed}>
             {
                 (props.unreadStatus !== InquiryUnreadStatus.none) &&
                 <View style={styles.unreadSideBar} />

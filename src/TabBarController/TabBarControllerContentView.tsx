@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo, useRef } from 'react';
-import { View, StyleSheet, Animated, Easing } from 'react-native';
+import { View, StyleSheet, Animated, Easing} from 'react-native';
 import { TabBarSelection, tabBarItemsData } from './TabBar/helpers';
 import { useUpdateEffect } from '../helpers/general';
 import MenuScreen from './Menu/Menu';
@@ -8,7 +8,7 @@ import { useSelector } from '../redux/store';
 import Cart from './Cart/Cart';
 import Tips from './Tips/Tips';
 import Inquiries from './Inquiries/Inquiries';
-
+import Settings from './Settings/Settings';
 
 
 
@@ -28,7 +28,7 @@ const TabBarControllerContentView = (() => {
 		[TabBarSelection.cart]: Cart,
 		[TabBarSelection.tips]: Tips,
 		[TabBarSelection.contactRequests]: Inquiries,
-		[TabBarSelection.settings]: SettingsScreen,
+		[TabBarSelection.settings]: Settings,
 	}
 
 	return function TabBarControllerContentView() {
@@ -153,14 +153,4 @@ export default TabBarControllerContentView;
 
 
 
-
-
-
-
-function SettingsScreen() {
-	return <View style={{
-		backgroundColor: 'red',
-		flex: 1
-	}} />
-}
 

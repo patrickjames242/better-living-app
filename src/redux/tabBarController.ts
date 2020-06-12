@@ -1,8 +1,11 @@
+
+
 import { TabBarSelection } from "../TabBarController/TabBar/helpers";
 import { CustomReduxAction } from "./helpers";
 import { combineReducers } from "redux";
 import ActionStrings from "./actionStrings";
 import { TabBarPosition, calculateCurrentDesiredTabBarPosition } from "../TabBarController/helpers";
+import AppSettings from "../settings";
 
 
 
@@ -20,7 +23,7 @@ export function changeCurrentSelection(newSelection: TabBarSelection): ChangeCur
     }
 }
 
-function currentSelectionReducer(state = TabBarSelection.tips, action: ChangeCurrentSelectionAction) {
+function currentSelectionReducer(state = AppSettings.defaultTabBarSelection, action: ChangeCurrentSelectionAction) {
     switch (action.type) {
         case ActionStrings.TabBarController.CHANGE_CURRENT_SELECTION:
             return action.newSelection;

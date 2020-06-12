@@ -109,3 +109,19 @@ export function useForceUpdate() {
 }
 
 
+
+
+
+export interface SectionSeparatorComponentInfo<
+    Item = any,
+    Section extends object = {}
+    > {
+    readonly highlighted: boolean;
+    readonly leadingItem?: Item;
+    readonly leadingSection?: Section;
+    readonly section?: Section;
+    readonly trailingItem?: Item;
+    readonly trailingSection?: Section;
+}
+
+

@@ -6,6 +6,7 @@ const PresentableScreens = {
     MenuItemDetailScreen: lazilyImport(import('./TabBarController/Menu/MenuItemDetailScreen/MenuItemDetailScreen'), module => module.default),
     OrderConfirmationScreen: lazilyImport(import('./TabBarController/Cart/OrderConfirmationScreen/OrderConfirmationScreen'), module => module.default),
     TipsDetailScreen: lazilyImport(import('./TabBarController/Tips/TipsDetailScreen/TipsDetailScreen'), module => module.default),
+    InquiryDetailScreen: lazilyImport(import('./TabBarController/Inquiries/InquiryDetailScreen/InquiryDetailScreen'), module => module.default),
 }
 
 export default PresentableScreens;
