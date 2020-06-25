@@ -7,6 +7,12 @@ import { loadFonts } from './helpers/fonts/fonts';
 import TabBarController from './TabBarController/TabBarController';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './redux/store';
+import { startListeningForUpdates } from './api/realtimeUpdates';
+
+
+store.subscribe(() => {
+    console.log(store.getState().healthTips.toJS());
+});
 
 registerRootComponent(App);
 
@@ -16,7 +22,10 @@ export default function App() {
 	const [appIsReady, setAppIsReady] = useState(false);
 
 	useEffect(() => {
-		loadFonts().then(() => setAppIsReady(true));
+		loadFonts().then(() => {
+			setAppIsReady(true)
+			startListeningForUpdates()
+		});
 	}, []);
 
 	if (appIsReady === false) {
@@ -29,6 +38,6 @@ export default function App() {
 			</SafeAreaProvider>
 		</ReduxProvider>
 	}
-
 }
+
 

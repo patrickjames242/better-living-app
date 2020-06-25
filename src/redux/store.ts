@@ -7,9 +7,11 @@ import {
     useStore as untypedUseStore, 
     useDispatch as untypedUseDispatch,
 } from "react-redux";
+import { healthTipsReducer } from "./healthTips";
 
 const appReducer = combineReducers({
-    tabBarController: tabBarController_reducer
+    tabBarController: tabBarController_reducer,
+    healthTips: healthTipsReducer,
 });
 
 export type AppState = ReturnType<typeof appReducer>;
@@ -20,4 +22,7 @@ export default store;
 export const useSelector: TypedUseSelectorHook<AppState> = untypedUseSelector;
 export const useStore: () => typeof store = untypedUseStore;
 export const useDispatch: () => typeof store.dispatch = untypedUseDispatch;
+
+
+
 

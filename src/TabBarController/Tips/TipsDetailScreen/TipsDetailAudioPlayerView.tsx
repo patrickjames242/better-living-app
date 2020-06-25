@@ -43,7 +43,7 @@ const TipsDetailAudioPlayerView = (() => {
         const userIsScrubbing = useRef(false);
 
         useEffect(() => {
-            soundObject.loadAsync(require('./yummy.mp3')).then(status => {
+            soundObject.loadAsync(require('./healthTipAudio.mp3')).then(status => {
                 if (status.isLoaded === false){return;}
                 setTotalSongSeconds((status.playableDurationMillis ?? 0) / 1000);
                 soundObject.setProgressUpdateIntervalAsync(500);

@@ -8,9 +8,13 @@ import CustomizedText from '../../../helpers/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { CustomColors, Color } from '../../../helpers/colors';
 import Spacer from '../../../helpers/Spacers/Spacer';
-import TipsDetailAudioPlayerView from './TipsDetailAudioPlayerView';
-import TipsDetailYTVideoView from './TipsDetailYTVideoView';
+// import TipsDetailAudioPlayerView from './TipsDetailAudioPlayerView';
+// import TipsDetailYTVideoView from './TipsDetailYTVideoView';
+import { useSelector } from '../../../redux/store';
 
+interface TipsDetailScreenProps{
+    healthTipId: number;
+}
 
 const TipsDetailScreen = (() => {
 
@@ -32,7 +36,10 @@ const TipsDetailScreen = (() => {
         }
     });
 
-    const TipsDetailScreen = () => {
+    const TipsDetailScreen = (props: TipsDetailScreenProps) => {
+
+        const healthTip = useSelector(state => state.healthTips.get(props.healthTipId));
+
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Improving Rationality through culture rather than education" />
             <ScrollView
@@ -40,10 +47,14 @@ const TipsDetailScreen = (() => {
                 contentContainerStyle={styles.scrollViewContentContainer}
             >
                 <Spacer space={spacing}>
-                    <TipsDetailTitleView/>
-                    <TipsDetailAudioPlayerView/>
-                    <TipsDetailYTVideoView/>
-                    <TipsDetailDescriptionView/>
+                    <TipsDetailTitleView dateString={healthTip?.getFormattedDateString()} titleString={healthTip?.title}/>
+                    {/* <TipsDetailAudioPlayerView/>
+                    <TipsDetailYTVideoView/> */}
+                    {(() => {
+                        return (typeof healthTip?.articleText === 'string') && 
+                        <TipsDetailDescriptionView articleText={healthTip.articleText}/>
+                    })()}
+                    
                 </Spacer>
             </ScrollView>
         </View>
@@ -55,7 +66,10 @@ export default TipsDetailScreen;
 
 
 
-
+interface TipsDetailTitleViewProps{
+    dateString?: string;
+    titleString?: string;
+}
 
 const TipsDetailTitleView = (() => {
     
@@ -81,11 +95,11 @@ const TipsDetailTitleView = (() => {
         },
     });
     
-    const TipsDetailTitleView = () => {
+    const TipsDetailTitleView = (props: TipsDetailTitleViewProps) => {
         return <SpacerView style={styles.root} space={15}>
-            <CustomizedText style={styles.dateLabel}>Sept 27, 2020</CustomizedText>
+            <CustomizedText style={styles.dateLabel}>{props.dateString}</CustomizedText>
                 <CustomizedText style={styles.titleLabel}>
-                    Improving Rationality through culture rather than education
+                    {props.titleString}
                 </CustomizedText>
                 <CustomizedText style={styles.authorLabel}>
                     ― by Dr. Idamae Hanna
@@ -98,7 +112,9 @@ const TipsDetailTitleView = (() => {
 
 
 
-
+interface TipsDetailDescriptionViewProps{
+    articleText: string
+}
 
 const TipsDetailDescriptionView = (() => {
     
@@ -115,9 +131,9 @@ const TipsDetailDescriptionView = (() => {
         },
     });
     
-    const TipsDetailDescriptionView = () => {
+    const TipsDetailDescriptionView = (props: TipsDetailDescriptionViewProps) => {
         return <View style={styles.root}>
-            <CustomizedText style={styles.textLabel}>{"Lorem, ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, nemo officia quibusdam distinctio expedita sequi, veniam hic illo, perferendis quia corporis incidunt. Excepturi, nesciunt? Vero adipisci nam non harum itaque sapiente quos expedita dolor error. Quia sint beatae deserunt quis nesciunt iure natus, quibusdam unde saepe aliquid placeat possimus rerum tenetur quam numquam qui fugiat, animi ipsum corporis, similique consectetur.\n\nEligendi aliquam facere nihil quibusdam debitis excepturi quo explicabo voluptates minus, odit labore dolore! Sit saepe ex labore adipisci, corporis praesentium earum consequuntur quis harum suscipit, quo ad repudiandae numquam nihil modi minima voluptatem itaque delectus asperiores quam! Quasi, eos.\n\nLorem, ipsum dolor sit amet consectetur adipisicing elit. Obcaecati, nemo officia quibusdam distinctio expedita sequi, veniam hic illo, perferendis quia corporis incidunt. Excepturi, nesciunt? Vero adipisci nam non harum itaque sapiente quos expedita dolor error. Quia sint beatae deserunt quis nesciunt iure natus, quibusdam unde saepe aliquid placeat possimus rerum tenetur quam numquam qui fugiat, animi ipsum corporis, similique consectetur."}</CustomizedText>
+            <CustomizedText style={styles.textLabel}>{props.articleText}</CustomizedText>
         </View>
     }
     return TipsDetailDescriptionView;

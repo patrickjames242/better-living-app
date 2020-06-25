@@ -2,11 +2,12 @@
 import React from 'react';
 import { StyleSheet, View, LayoutRectangle } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
-import { getNumbersList, computeNumberOfListColumns } from '../../../helpers/general';
+import { computeNumberOfListColumns } from '../../../helpers/general';
 import TipsListItemView from './TipsListItemView';
 import LayoutConstants from '../../../LayoutConstants';
 import Space from '../../../helpers/Spacers/Space';
 import MultiColumnFlatList from '../../../helpers/MultipleColumnFlatList';
+import { useAllHealthTipsArray } from '../../../api/healthTips/helpers';
 
 
 const TipsListScreen = (() => {
@@ -40,6 +41,8 @@ const TipsListScreen = (() => {
     
     const TipsListScreen = () => {
 
+        const healthTips = useAllHealthTipsArray();
+        
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Health Tips" />
             <MultiColumnFlatList
@@ -47,13 +50,13 @@ const TipsListScreen = (() => {
                 columnSpacing={itemSpacing}
                 contentContainerStyle={styles.flatListContentContainer}
                 style={styles.flatList}
-                data={getNumbersList(1, 10)}
+                data={healthTips}
                 ItemSeparatorComponent={() => {
                     return <Space space={itemSpacing} />
                 }}
                 keyExtractor={item => String(item)}
-                renderItem={() => {
-                    return <TipsListItemView />
+                renderItem={(item) => {
+                    return <TipsListItemView id={item.id}/>
                 }}
             />
         </View>

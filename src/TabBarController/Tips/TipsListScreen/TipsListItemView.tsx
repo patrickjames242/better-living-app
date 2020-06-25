@@ -10,8 +10,11 @@ import Spacer from '../../../helpers/Spacers/Spacer';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import { mapOptional } from '../../../helpers/general';
 import PresentableScreens from '../../../PresentableScreens';
+import { useSelector } from '../../../redux/store';
 
-
+interface TipsListItemViewProps{
+    id: number,
+}
 
 const TipsListItemView = (() => {
 
@@ -39,15 +42,21 @@ const TipsListItemView = (() => {
         },
     });
 
-    const TipsListItemView = () => {
+    
 
+    const TipsListItemView = (props: TipsListItemViewProps) => {
+
+        const healthTip = useSelector(state => state.healthTips.get(props.id));
 
         const navigationScreenContext = useNavigationScreenContext();
 
         function onPress(){
-            mapOptional(PresentableScreens.TipsDetailScreen(), Component => navigationScreenContext.present(<Component/>));
+            const healthTipID = healthTip?.id;
+            if (healthTipID == null){return;}
+            mapOptional(PresentableScreens.TipsDetailScreen(), Component => {
+                return navigationScreenContext.present(<Component healthTipId={healthTipID}/>)
+            });
         }
-
 
         return <BouncyButton
             style={styles.root}
@@ -56,12 +65,14 @@ const TipsListItemView = (() => {
             onPress={onPress}
         >
             <Spacer space={10}>
-                <CustomizedText style={styles.dateLabel}>Sept 27, 2020</CustomizedText>
-                <CustomizedText style={styles.titleLabel}>
-                    Improving Rationality through culture rather than education
+                <CustomizedText style={styles.dateLabel}>{
+                    healthTip?.getFormattedDateString()
+                }</CustomizedText>
+                <CustomizedText style={styles.titleLabel} numberOfLines={2}>
+                    {healthTip?.title}
                 </CustomizedText>
-                <CustomizedText style={styles.descriptionLabel}>
-                    Lorem ipsum dolor, sit amet conse ctetur adipis icing elit. Quis, repudi andae?
+                <CustomizedText style={styles.descriptionLabel} numberOfLines={2}>
+                    {healthTip?.articleText}
                 </CustomizedText>
             </Spacer>
         </BouncyButton>
