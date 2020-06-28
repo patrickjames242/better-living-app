@@ -2,13 +2,13 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import { StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
-import FloatingCellStyleSectionView from '../../../helpers/FloatingCellStyleSectionView';
+import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import { CartItemListTotalSummaryView } from '../CartItemListScreen/CartItemListTotalSummaryView';
 import LayoutConstants from '../../../LayoutConstants';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import OrderConfirmationPickUpOrDeliveryView from './OrderConfirmationPickUpOrDeliveryView';
 import OrderConfirmationHowToPayView from './OrderConfirmationHowToPayView';
-import GreenTextAndIconButton from '../../../helpers/Buttons/GreenTextAndIconButton';
+import LongTextAndIconButton from '../../../helpers/Buttons/GreenTextAndIconButton';
 import Space from '../../../helpers/Spacers/Space';
 
 
@@ -63,7 +63,7 @@ const OrderConfirmationScreen = (() => {
                     <OrderConfirmationPickUpOrDeliveryView />
                     <OrderConfirmationHowToPayView />
                     <Space space={LayoutConstants.pageSideInsets} />
-                    <GreenTextAndIconButton
+                    <LongTextAndIconButton
                         text="Submit Order"
                         iconSource={require('./icons/hotel.png')}
                         style={styles.submitButton}

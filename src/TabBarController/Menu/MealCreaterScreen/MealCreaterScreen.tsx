@@ -10,11 +10,11 @@ import { useNavigationScreenContext } from '../../../helpers/NavigationControlle
 import MealCreatorScreenAddToCartButton from './ChildComponents/MealCreatorScreenAddToCartButton';
 import MealCreatorListViewItem from './ChildComponents/MealCreatorListViewItem';
 import { Map } from 'immutable';
-import FloatingCellStyleList from '../../../helpers/FloatingCellStyleList';
+import FloatingCellStyleList from '../../../helpers/Views/FloatingCellStyleList';
 import ValueBox from '../../../helpers/ValueBox';
 import { Optional } from '../../../helpers/general';
 import { MenuListItem } from '../MenuListViewScreen/MenuListView/helpers';
-import BottomScreenGradientHolder, { BottomScreenGradientHolderRef } from '../../../helpers/BottomScreenGradientHolder';
+import BottomScreenGradientHolder, { BottomScreenGradientHolderRef } from '../../../helpers/Views/BottomScreenGradientHolder';
 import LayoutConstants from '../../../LayoutConstants';
 
 

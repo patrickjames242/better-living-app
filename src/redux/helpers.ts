@@ -1,4 +1,8 @@
 import { Action as ReduxAction } from "redux";
+import { AppState } from "react-native";
+import { Optional, useUpdateEffect } from "../helpers/general";
+import { useRef, useMemo } from "react";
+import { useSelector } from "react-redux";
 
 
 export type CustomReduxAction<Payload extends object> = ReduxAction<string> & Payload;
@@ -36,3 +40,30 @@ export function nestReduxActionStrings<_ActionStringsObject extends ActionString
 
 	return prefixAllValues(actionsObj);
 }
+
+
+
+
+export function useCachingSelector<ValueType>(selector: (state: AppState) => ValueType){
+	const previousValueHolder = useRef<Optional<ValueType>>(null);
+	
+	const currentValue = useSelector(selector);
+
+	const isInitialRender = useRef(true);
+
+	const previousValue = useMemo(() => {
+		const _previous = previousValueHolder.current;
+		if (isInitialRender.current === false){
+			previousValueHolder.current = currentValue;
+		} else {
+			isInitialRender.current = false;
+		}
+		return _previous;
+	}, [currentValue]);
+
+	return {
+		currentValue,
+		previousValue
+	}
+}
+

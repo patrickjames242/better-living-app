@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import { Color } from '../../../helpers/colors';
-import CustomizedText from '../../../helpers/CustomizedText';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 

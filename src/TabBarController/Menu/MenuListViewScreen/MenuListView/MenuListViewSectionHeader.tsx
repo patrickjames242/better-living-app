@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import { MenuListSection } from './helpers';
-import CustomizedText from '../../../../helpers/CustomizedText';
+import CustomizedText from '../../../../helpers/Views/CustomizedText';
 
 
 const MenuListViewSectionHeader = (() => {

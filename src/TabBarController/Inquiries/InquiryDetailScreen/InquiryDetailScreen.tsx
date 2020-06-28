@@ -5,7 +5,7 @@ import NavigationControllerNavigationBar from '../../../helpers/NavigationContro
 import LayoutConstants from '../../../LayoutConstants';
 import InquiryPostView from './InquiryPostView';
 import { getNumbersList } from '../../../helpers/general';
-import CustomizedText from '../../../helpers/CustomizedText';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
 import Space from '../../../helpers/Spacers/Space';
 
 

@@ -10,6 +10,7 @@ import Scrubber from 'react-native-scrubber';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import { Audio } from 'expo-av';
+import AssetImages from '../../../images/AssetImages';
 
 
 const TipsDetailAudioPlayerView = (() => {
@@ -161,8 +162,8 @@ const PlayPauseButton = (() => {
                 transform: [{ translateX: props.stateValue === PlayPauseButtonState.play ? circleSize * 0.05 : 0 }],
             }]} source={(() => {
                 switch (props.stateValue) {
-                    case PlayPauseButtonState.pause: return require('./pause.png')
-                    case PlayPauseButtonState.play: return require('./play.png');
+                    case PlayPauseButtonState.pause: return AssetImages.pauseIcon;
+                    case PlayPauseButtonState.play: return AssetImages.playIcon;
                 }
             })()} />
         </BouncyButton>

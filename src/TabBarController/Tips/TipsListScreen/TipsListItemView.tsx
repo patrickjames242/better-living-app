@@ -2,7 +2,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
-import CustomizedText from '../../../helpers/CustomizedText';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
 import LayoutConstants from '../../../LayoutConstants';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { CustomColors } from '../../../helpers/colors';

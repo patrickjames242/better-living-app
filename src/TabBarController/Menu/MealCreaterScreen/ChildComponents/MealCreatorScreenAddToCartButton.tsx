@@ -5,7 +5,7 @@ import { CustomColors } from '../../../../helpers/colors';
 import { getShadowStyle } from '../../../../helpers/general';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
-import CustomizedText from '../../../../helpers/CustomizedText';
+import CustomizedText from '../../../../helpers/Views/CustomizedText';
 
 
 export interface MealCreatorScreenAddToCartButtonProps {

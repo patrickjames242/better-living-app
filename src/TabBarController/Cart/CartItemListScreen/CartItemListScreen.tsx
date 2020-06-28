@@ -2,7 +2,7 @@
 
 import React, { useMemo, useRef, useState} from 'react';
 import { StyleSheet, View } from 'react-native';
-import FloatingCellStyleList from '../../../helpers/FloatingCellStyleList';
+import FloatingCellStyleList from '../../../helpers/Views/FloatingCellStyleList';
 import { getRandomFoods, MenuListItem } from '../../Menu/MenuListViewScreen/MenuListView/helpers';
 import CartItemListItemView from './CartItemLIstItemView';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
@@ -12,7 +12,7 @@ import { Optional, mapOptional } from '../../../helpers/general';
 import { CartItemListTotalSummaryView } from './CartItemListTotalSummaryView';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import PresentableScreens from '../../../PresentableScreens';
-import BottomScreenButtonWithGradient, { BottomScreenButtonWithGradientRef } from '../../../helpers/BottomScreenButtonWithGradient';
+import BottomScreenButtonWithGradient, { BottomScreenButtonWithGradientRef } from '../../../helpers/Views/BottomScreenButtonWithGradient';
 
 
 

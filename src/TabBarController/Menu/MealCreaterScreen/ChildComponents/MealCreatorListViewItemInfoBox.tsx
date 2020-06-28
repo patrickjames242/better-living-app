@@ -5,8 +5,8 @@ import { getShadowStyle } from "../../../../helpers/general";
 import { CustomFont } from "../../../../helpers/fonts/fonts";
 import BouncyButton from "../../../../helpers/Buttons/BouncyButton";
 import Spacer from "../../../../helpers/Spacers/Spacer";
-import AspectRatioView from "../../../../helpers/AspectRatioView";
-import CustomizedText from "../../../../helpers/CustomizedText";
+import AspectRatioView from "../../../../helpers/Views/AspectRatioView";
+import CustomizedText from "../../../../helpers/Views/CustomizedText";
 import {StyleSheet, Image} from 'react-native';
 import MealCreatorConstants from '../MealCreatorConstants';
 

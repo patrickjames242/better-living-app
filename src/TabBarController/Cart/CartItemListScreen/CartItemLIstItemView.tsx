@@ -3,9 +3,9 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, Image, Animated } from 'react-native';
 import { MenuListItem } from '../../Menu/MenuListViewScreen/MenuListView/helpers';
-import AspectRatioView from '../../../helpers/AspectRatioView';
+import AspectRatioView from '../../../helpers/Views/AspectRatioView';
 import LayoutConstants from '../../../LayoutConstants';
-import CustomizedText from '../../../helpers/CustomizedText';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { getShadowStyle, Optional, mapOptional } from '../../../helpers/general';
 import { CustomColors, Color } from '../../../helpers/colors';
@@ -18,6 +18,7 @@ import ValueBox from '../../../helpers/ValueBox';
 import { useNotificationListener } from '../../../helpers/Notification';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import PresentableScreens from '../../../PresentableScreens';
+import AssetImages from '../../../images/AssetImages';
 
 
 
@@ -183,7 +184,7 @@ const SwipableButtonActions = (() => {
         },
         trashCanButtonContent: {
             padding: imagePadding,
-            backgroundColor: 'red',
+            backgroundColor: CustomColors.redColor.stringValue,
             borderRadius: 10
         },
         trashButtonImage: {
@@ -202,7 +203,7 @@ const SwipableButtonActions = (() => {
 
         return <Animated.View style={[styles.root, { transform: [{ translateX }] }]}>
             <BouncyButton onPress={props.onDeleteButtonPressed} contentViewProps={{ style: styles.trashCanButtonContent }}>
-                <Image style={styles.trashButtonImage} source={require('./trash.png')} />
+                <Image style={styles.trashButtonImage} source={AssetImages.deleteIcon} />
             </BouncyButton>
         </Animated.View>
     }

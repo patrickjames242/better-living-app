@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native';
 import { CustomColors, Color } from '../../../../helpers/colors';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import SpacerView from '../../../../helpers/Spacers/SpacerView';
-import CustomizedText from '../../../../helpers/CustomizedText';
+import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import RoundedTextBouncyButton from '../../../../helpers/Buttons/RoundedTextBouncyButton';
 import LayoutConstants from '../../../../LayoutConstants';
 

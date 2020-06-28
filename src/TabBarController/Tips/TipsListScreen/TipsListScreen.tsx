@@ -2,12 +2,16 @@
 import React from 'react';
 import { StyleSheet, View, LayoutRectangle } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
-import { computeNumberOfListColumns } from '../../../helpers/general';
+import { computeNumberOfListColumns, mapOptional } from '../../../helpers/general';
 import TipsListItemView from './TipsListItemView';
 import LayoutConstants from '../../../LayoutConstants';
 import Space from '../../../helpers/Spacers/Space';
-import MultiColumnFlatList from '../../../helpers/MultipleColumnFlatList';
+import MultiColumnFlatList from '../../../helpers/Views/MultipleColumnFlatList';
 import { useAllHealthTipsArray } from '../../../api/healthTips/helpers';
+import PlusButton from '../../../helpers/Buttons/PlusButton';
+import PresentableScreens from '../../../PresentableScreens';
+import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
+import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
 
 
 const TipsListScreen = (() => {
@@ -42,9 +46,15 @@ const TipsListScreen = (() => {
     const TipsListScreen = () => {
 
         const healthTips = useAllHealthTipsArray();
+
+        const navigationScreenContext = useNavigationScreenContext();
+
+        function onPlusButtonPressed(){
+            mapOptional(PresentableScreens.CreateOrEditTipScreen(), Component => navigationScreenContext.present(<Component tipIdToEdit={null}/>));
+        }
         
         return <View style={styles.root}>
-            <LargeHeadingNavigationBar title="Health Tips" />
+            <LargeHeadingNavigationBar title="Health Tips" rightAlignedView={<PlusButton onPress={onPlusButtonPressed}/>}/>
             <MultiColumnFlatList
                 numberOfColumns={calculateListColumns}
                 columnSpacing={itemSpacing}

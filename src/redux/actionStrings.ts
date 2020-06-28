@@ -1,9 +1,9 @@
+
 import { nestReduxActionStrings } from "./helpers";
 
 
-
 const ActionStrings = nestReduxActionStrings({
-    TabBarController:{
+    TabBarController: {
         CHANGE_CURRENT_SELECTION: 'CHANGE_CURRENT_SELECTION',
         CHANGE_TAB_BAR_POSITION: 'CHANGE_TAB_BAR_POSITION',
     },
@@ -17,3 +17,4 @@ const ActionStrings = nestReduxActionStrings({
 
 
 export default ActionStrings;
+

@@ -9,7 +9,7 @@ export type UpdateAllHealthTipsAction = CustomReduxAction<{
     allHealthTips: List<HealthTip>,
 }>;
 
-export function updateAllHealthTips(allHealthTips: List<HealthTip>): UpdateAllHealthTipsAction{
+export function updateAllHealthTipsAction(allHealthTips: List<HealthTip>): UpdateAllHealthTipsAction{
     return {
         type: ActionStrings.healthTips.UPDATE_ALL_HEALTH_TIPS,
         allHealthTips,
@@ -24,7 +24,7 @@ export type InsertOrUpdateHealthTipAction = CustomReduxAction<{
     healthTip: HealthTip,
 }>;
 
-export function insertOrUpdateHealthTip(healthTip: HealthTip): InsertOrUpdateHealthTipAction{
+export function insertOrUpdateHealthTipAction(healthTip: HealthTip): InsertOrUpdateHealthTipAction{
     return {
         type: ActionStrings.healthTips.INSERT_OR_UPDATE_HEALTH_TIP,
         healthTip: healthTip,
@@ -39,7 +39,7 @@ export type DeleteHealthTipAction = CustomReduxAction<{
     healthTipID: number,
 }>
 
-export function deleteHealthTip(healthTipID: number): DeleteHealthTipAction{
+export function deleteHealthTipAction(healthTipID: number): DeleteHealthTipAction{
     return {
         type: ActionStrings.healthTips.DELETE_HEALTH_TIP,
         healthTipID,

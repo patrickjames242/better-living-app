@@ -2,7 +2,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { CustomFont } from '../fonts/fonts';
-import CustomizedText from '../CustomizedText';
+import CustomizedText from '../Views/CustomizedText';
 import RoundedBouncyButton, { RoundedBouncyButtonProps } from './RoundedBouncyButton';
 
 export interface RoundedTextBouncyButtonProps extends RoundedBouncyButtonProps {

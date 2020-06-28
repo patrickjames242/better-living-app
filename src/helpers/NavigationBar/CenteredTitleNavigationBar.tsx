@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { CustomFont } from "../fonts/fonts";
 import { View, StyleSheet, LayoutChangeEvent, Text, LayoutRectangle } from "react-native";
 import BaseNavigationBar from "./BaseNavigationBar";
-import CustomizedText from "../CustomizedText";
+import CustomizedText from "../Views/CustomizedText";
 import Spacer from '../Spacers/Spacer';
 import { Optional } from '../general';
 

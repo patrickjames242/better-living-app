@@ -5,7 +5,7 @@ import { StyleSheet, TextInput, TextInputProps, ViewProps, Animated } from 'reac
 import LayoutConstants from '../../../LayoutConstants';
 import OrderConfirmationLayoutConstants from './OrderConfirmationLayoutConstants';
 import { CustomColors } from '../../../helpers/colors';
-import CustomizedText from '../../../helpers/CustomizedText';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import Spacer from '../../../helpers/Spacers/Spacer';

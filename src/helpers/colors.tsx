@@ -27,6 +27,7 @@ export class Color {
 
 export const CustomColors = {
 	themeGreen: new Color(39, 196, 120),
+	redColor: new Color(255, 70, 70),
 	mainBackgroundColor: new Color(242, 244, 249),
 	offBlackTitle: new Color(43, 55, 43),
 	offBlackSubtitle: new Color(180, 180, 180),

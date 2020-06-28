@@ -3,7 +3,7 @@ import React from 'react';
 import { CustomFont } from '../fonts/fonts';
 import BaseNavigationBar from './BaseNavigationBar';
 import { View, StyleSheet } from 'react-native';
-import CustomizedText from '../CustomizedText';
+import CustomizedText from '../Views/CustomizedText';
 
 
 const LargeHeadingNavigationBar = (() => {

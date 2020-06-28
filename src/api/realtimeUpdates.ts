@@ -1,7 +1,8 @@
 
 import NetInfo from '@react-native-community/netinfo';
-import { handleHealthTipsRealtimeUpdate } from './healthTips/healthTipsAPI';
+import { handleHealthTipsRealtimeUpdate } from './healthTips/realtimeUpdates';
 import { Platform } from 'react-native';
+import AppSettings from '../settings';
 
 
 export function startListeningForUpdates() {
@@ -44,12 +45,16 @@ function addInternetReachabilityListener(listener: (isInternetReachable: boolean
 
 
 function setUpWebsocket() {
-
-    const socket = new WebSocket('ws://127.0.0.1:8000/realtime-updates');
+    const websocketUrl = (() => {
+        const protocolString = AppSettings.debugMode ? 'ws' : 'wss';
+        return `${protocolString}://${AppSettings.apiHostUrl()}/realtime-updates`;
+    })();
+    const socket = new WebSocket(websocketUrl);
     socket.onopen = function (event) {
         console.log(event);
     }
     socket.onmessage = function (event) {
+        console.log(event);
         const data = JSON.parse(event.data);
         if (typeof data !== 'object') { return; }
         const healthTips = data.health_tips;
@@ -59,20 +64,20 @@ function setUpWebsocket() {
     };
     socket.onclose = function (event) {
         console.log(event);
-        getInternetReachability().then(isInternetReachable => {
-            if (isInternetReachable) {
-                setTimeout(() => {
-                    setUpWebsocket();
-                }, 1000);
-            } else {
-                let unlisten = addInternetReachabilityListener((isInternetReachable) => {
-                    if (isInternetReachable) {
-                        setUpWebsocket()
-                        unlisten?.()
-                    }
-                })
-            }
-        })
+        // getInternetReachability().then(isInternetReachable => {
+        //     if (isInternetReachable) {
+        //         setTimeout(() => {
+        //             setUpWebsocket();
+        //         }, 1000);
+        //     } else {
+        //         let unlisten = addInternetReachabilityListener((isInternetReachable) => {
+        //             if (isInternetReachable) {
+        //                 setUpWebsocket()
+        //                 unlisten?.()
+        //             }
+        //         })
+        //     }
+        // })
     };
 }
 

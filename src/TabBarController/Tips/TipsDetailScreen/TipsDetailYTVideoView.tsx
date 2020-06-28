@@ -2,7 +2,7 @@
 import React from 'react';
 import { StyleSheet, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
-import AspectRatioView from '../../../helpers/AspectRatioView';
+import AspectRatioView from '../../../helpers/Views/AspectRatioView';
 import LayoutConstants from '../../../LayoutConstants';
 
 

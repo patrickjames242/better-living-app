@@ -2,10 +2,10 @@
 
 import React, { useImperativeHandle, useState } from 'react';
 import { StyleSheet, View, ViewProps, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import { useSelector } from '../redux/store';
-import LayoutConstants from '../LayoutConstants';
-import { CustomColors } from './colors';
-import { TabBarPosition } from '../TabBarController/helpers';
+import { useSelector } from '../../redux/store';
+import LayoutConstants from '../../LayoutConstants';
+import { CustomColors } from '../colors';
+import { TabBarPosition } from '../../TabBarController/helpers';
 import { LinearGradient } from 'expo-linear-gradient';
 
 

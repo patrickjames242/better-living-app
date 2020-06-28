@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
-import SpacerView from '../../../helpers/Spacers/SpacerView';
-import { CustomColors, Color } from '../../../helpers/colors';
-import CustomizedText from '../../../helpers/CustomizedText';
+import { Color } from '../../../helpers/colors';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import Spacer from '../../../helpers/Spacers/Spacer';

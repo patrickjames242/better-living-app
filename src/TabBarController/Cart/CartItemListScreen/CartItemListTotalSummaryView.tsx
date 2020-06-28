@@ -6,7 +6,7 @@ import LayoutConstants from '../../../LayoutConstants';
 import { CustomColors } from '../../../helpers/colors';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
-import CustomizedText from '../../../helpers/CustomizedText';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
 
 export const CartItemListTotalSummaryView = (() => {
 

@@ -4,9 +4,9 @@ import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
 import { ScrollView } from 'react-native-gesture-handler';
 import LayoutConstants from '../../../LayoutConstants';
-import AspectRatioView from '../../../helpers/AspectRatioView';
+import AspectRatioView from '../../../helpers/Views/AspectRatioView';
 import { Optional, mapOptional } from '../../../helpers/general';
-import CustomizedText from '../../../helpers/CustomizedText';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { Color } from '../../../helpers/colors';
 import Spacer from '../../../helpers/Spacers/Spacer';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
@@ -16,7 +16,7 @@ import { useNotificationListener } from '../../../helpers/Notification';
 import { windowDimensionsDidChangeNotification } from '../../helpers';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import PresentableScreens from '../../../PresentableScreens';
-import FloatingCellStyleSectionView from '../../../helpers/FloatingCellStyleSectionView';
+import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 
 
 const MenuItemDetailScreen = (() => {

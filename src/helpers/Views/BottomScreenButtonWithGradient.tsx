@@ -2,9 +2,9 @@
 import React, { useRef, useImperativeHandle } from 'react';
 import { StyleSheet } from 'react-native';
 import BottomScreenGradientHolder, { BottomScreenGradientHolderProps, BottomScreenGradientHolderRef } from './BottomScreenGradientHolder';
-import GreenTextAndIconButton, { GreenTextAndIconButtonProps } from './Buttons/GreenTextAndIconButton';
-import LayoutConstants from '../LayoutConstants';
-import { Optional } from './general';
+import LongTextAndIconButton, { GreenTextAndIconButtonProps } from '../Buttons/GreenTextAndIconButton';
+import LayoutConstants from '../../LayoutConstants';
+import { Optional } from '../general';
 
 export interface BottomScreenButtonWithGradientProps {
     buttonProps: GreenTextAndIconButtonProps;
@@ -43,7 +43,7 @@ const BottomScreenButtonWithGradient = (() => {
             {...props.gradientHolderProps}
             style={[styles.root, props.gradientHolderProps?.style]}
         >
-            <GreenTextAndIconButton
+            <LongTextAndIconButton
                 {...props.buttonProps}
                 style={[styles.button, props.buttonProps?.style]}
             />

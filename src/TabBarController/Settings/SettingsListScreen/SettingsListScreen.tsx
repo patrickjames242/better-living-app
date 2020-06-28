@@ -6,7 +6,7 @@ import SettingsListScreenHeader from './SettingsListScreenHeader';
 import { getNumbersList, SectionSeparatorComponentInfo } from '../../../helpers/general';
 import SettingsListItemView from './SettingsListItemView';
 import LayoutConstants from '../../../LayoutConstants';
-import CustomizedText from '../../../helpers/CustomizedText';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
 import Space from '../../../helpers/Spacers/Space';
 
 

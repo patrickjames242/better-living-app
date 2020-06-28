@@ -1,8 +1,8 @@
 
 import React, { useMemo, useRef } from 'react';
 import { StyleSheet, FlatList, FlatListProps, View, LayoutRectangle, Dimensions } from 'react-native';
-import { getNumbersList, Optional, useForceUpdate } from './general';
-import Spacer from './Spacers/Spacer';
+import { getNumbersList, Optional, useForceUpdate } from '../general';
+import Spacer from '../Spacers/Spacer';
 
 type NumberOfColumns = number | ((layout: LayoutRectangle) => number);
 

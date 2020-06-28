@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import {StyleSheet} from 'react-native';
 import { Optional } from '../../../helpers/general';
-import FloatingCellStyleSectionView from '../../../helpers/FloatingCellStyleSectionView';
+import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import Spacer from '../../../helpers/Spacers/Spacer';
 import OrderConfirmationLayoutConstants from './OrderConfirmationLayoutConstants';
 import OrderConfirmationSelectableOptionView from './OrderConfirmationSelectableOptionView';

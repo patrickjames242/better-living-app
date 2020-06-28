@@ -4,7 +4,7 @@ import { Color } from '../../../helpers/colors';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { BaseSpacer } from '../../../helpers/Spacers/Spacer';
 import HighlightButton from '../../../helpers/Buttons/HighlightView';
-import CustomizedText from '../../../helpers/CustomizedText';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
 
 
 export interface QuantityPickerViewProps {

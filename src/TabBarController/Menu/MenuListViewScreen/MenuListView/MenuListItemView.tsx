@@ -3,13 +3,13 @@ import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { MenuListItem } from './helpers';
 import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
-import CustomizedText from '../../../../helpers/CustomizedText';
+import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import { CustomColors, Color } from '../../../../helpers/colors';
 import { useNavigationScreenContext } from '../../../../helpers/NavigationController/NavigationScreen';
 import { mapOptional } from '../../../../helpers/general';
 import LayoutConstants from '../../../../LayoutConstants';
-import AspectRatioView from '../../../../helpers/AspectRatioView';
+import AspectRatioView from '../../../../helpers/Views/AspectRatioView';
 import PresentableScreens from '../../../../PresentableScreens';
 
 

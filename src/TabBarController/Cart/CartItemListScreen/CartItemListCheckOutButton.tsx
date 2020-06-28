@@ -2,7 +2,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import GreenTextAndIconButton from '../../../helpers/Buttons/GreenTextAndIconButton';
+import LongTextAndIconButton from '../../../helpers/Buttons/GreenTextAndIconButton';
 
 
 interface CartItemListCheckOutButtonProps {
@@ -20,7 +20,7 @@ const CartItemListCheckOutButton = (() => {
     });
 
     const CartItemListCheckOutButton = (props: CartItemListCheckOutButtonProps) => {
-        return <GreenTextAndIconButton
+        return <LongTextAndIconButton
             iconSource={require('../../TabBar/icons/shopping-cart.png')}
             text="Confirm Order"
             style={[styles.root, {maxWidth: props.maxWidth}]}

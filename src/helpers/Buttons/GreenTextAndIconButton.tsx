@@ -4,20 +4,21 @@ import { CustomColors, Color } from '../colors';
 import LayoutConstants from '../../LayoutConstants';
 import { CustomFont } from '../fonts/fonts';
 import BouncyButton, { BouncyButtonProps } from './BouncyButton';
-import CustomizedText from '../CustomizedText';
+import CustomizedText from '../Views/CustomizedText';
 
 export interface GreenTextAndIconButtonProps extends BouncyButtonProps{
     iconSource: any;
     text: string;
+    backgroundColor?: Color;
+    onPress?: () => void;
 }
 
-const GreenTextAndIconButton = (() => {
+const LongTextAndIconButton = (() => {
     
     const styles = StyleSheet.create({
         root: {
         },
         contentView: {
-            backgroundColor: CustomColors.themeGreen.stringValue,
             borderRadius: LayoutConstants.floatingCellStyles.borderRadius,
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -44,12 +45,17 @@ const GreenTextAndIconButton = (() => {
     
     const GreenTextAndIconButton = (props: GreenTextAndIconButtonProps) => {
         return <BouncyButton
+            onPress={props.onPress}
             bounceScaleValue={0.925}
             {...props}
             style={[styles.root, props.style]}
             contentViewProps={{ 
                 ...props.contentViewProps,
-                style: [styles.contentView, props.contentViewProps?.style]
+                style: [
+                    styles.contentView, 
+                    props.contentViewProps?.style, 
+                    {backgroundColor: (props.backgroundColor ?? CustomColors.themeGreen).stringValue},
+                ]
             }}
         >
             <CustomizedText style={styles.text}>{props.text}</CustomizedText>
@@ -61,4 +67,4 @@ const GreenTextAndIconButton = (() => {
     return GreenTextAndIconButton;
 })();
 
-export default GreenTextAndIconButton;
+export default LongTextAndIconButton;

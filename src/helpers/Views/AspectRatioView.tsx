@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { View, StyleSheet, ViewProperties } from 'react-native';
-import { limitNumber } from './general';
+import { limitNumber } from '../general';
 
 
 export interface AspectRatioViewProps extends ViewProperties{

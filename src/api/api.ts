@@ -1,7 +1,8 @@
+import AppSettings from "../settings";
 
 
 
-const API_URL = 'http://127.0.0.1:8000/';
+const API_URL = `https://${AppSettings.apiHostUrl()}/`;
 
 export enum HttpMethod{
     get,
@@ -41,7 +42,13 @@ export async function fetchFromAPI(props: {
         method: getHttpMethodText(props.method),
         body: bodyToSend
     });
-    return response.json() as Promise<ApiResponse>;
+    const json = await (response.json() as Promise<ApiResponse>);
+    if (json.isSuccess) {
+        return json.data;
+    } else {
+        return Promise.reject(new Error(json.errorMessage));
+    }
+    
 }
 
 

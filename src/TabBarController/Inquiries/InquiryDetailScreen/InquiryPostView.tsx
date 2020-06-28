@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import InquiryPostAuthorView from './InquiryPostAuthorView';
 import LayoutConstants from '../../../LayoutConstants';
-import CustomizedText from '../../../helpers/CustomizedText';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { Color } from '../../../helpers/colors';
 import Space from '../../../helpers/Spacers/Space';

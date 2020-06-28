@@ -1,14 +1,13 @@
 
 import React from 'react';
-import {StyleSheet, View, Image, LayoutRectangle } from 'react-native';
+import {StyleSheet, View, LayoutRectangle } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
-import BouncyButton from '../../../helpers/Buttons/BouncyButton';
-import { CustomColors } from '../../../helpers/colors';
-import MultiColumnFlatList from '../../../helpers/MultipleColumnFlatList';
+import MultiColumnFlatList from '../../../helpers/Views/MultipleColumnFlatList';
 import InquiriesListItemView, { InquiryUnreadStatus } from './InquiriesListItemView';
 import { getNumbersList, computeNumberOfListColumns } from '../../../helpers/general';
 import LayoutConstants from '../../../LayoutConstants';
 import Space from '../../../helpers/Spacers/Space';
+import PlusButton from '../../../helpers/Buttons/PlusButton';
 
 
 
@@ -39,7 +38,7 @@ const InquiriesListScreen = (() => {
     
     const InquiriesListScreen = () => {
         return <View style={styles.root}>
-            <LargeHeadingNavigationBar title="Your Inquiries" rightAlignedView={<CreateNewInquiryButton/>}/>
+            <LargeHeadingNavigationBar title="Your Inquiries" rightAlignedView={<PlusButton/>}/>
             <MultiColumnFlatList
                 contentContainerStyle={styles.flatListContentContainer}
                 style={styles.flatList}
@@ -62,33 +61,7 @@ export default InquiriesListScreen;
 
 
 
-const CreateNewInquiryButton = (() => {
-    
-    const styles = StyleSheet.create({
-        root: {
-            
-        },
-        buttonContentView: {
 
-        },
-        iconImage: {
-            height: 20,
-            width: 20,
-            tintColor: CustomColors.themeGreen.stringValue,
-            marginLeft: 5 ,
-            marginRight: 5,
-        },
-    });
-    
-    const CreateNewInquiryButton = () => {
-        const hitSlopVal = 20;
-        const hitSlop = {left: hitSlopVal, right: hitSlopVal, top: hitSlopVal, bottom: hitSlopVal};
-        return <BouncyButton contentViewProps={{style: styles.buttonContentView}} style={styles.root} hitSlop={hitSlop}>
-            <Image style={styles.iconImage} source={require('./plus.png')}/>
-        </BouncyButton>
-    }
-    return CreateNewInquiryButton;
-})();
 
 
 

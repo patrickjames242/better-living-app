@@ -5,7 +5,7 @@ import SpacerView from '../../../../helpers/Spacers/SpacerView';
 import LayoutConstants from '../../../../LayoutConstants';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import { CustomColors } from '../../../../helpers/colors';
-import CustomizedText from '../../../../helpers/CustomizedText';
+import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import Space, { SpaceDimension } from '../../../../helpers/Spacers/Space';
 
 const foodTagViewsSpacing = 10;

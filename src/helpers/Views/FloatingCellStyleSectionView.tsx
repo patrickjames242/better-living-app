@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { StyleSheet, ViewProps } from 'react-native';
-import LayoutConstants from '../LayoutConstants';
-import SpacerView from './Spacers/SpacerView';
+import LayoutConstants from '../../LayoutConstants';
+import SpacerView from '../Spacers/SpacerView';
 import CustomizedText from './CustomizedText';
 
 interface FloatingCellStyleSectionViewProps extends ViewProps {
