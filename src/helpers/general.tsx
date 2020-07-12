@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Alert, Platform } from 'react-native';
 
 export type Optional<Wrapped> = Wrapped | null;
 
@@ -42,6 +43,14 @@ export function useUpdateLayoutEffect(effect: React.EffectCallback, dependencies
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, dependencies);
+}
+
+export function useIsUnmounted(){
+    const isUnmounted = useRef(false);
+    useEffect(() => {
+        return () => {isUnmounted.current = true};
+    }, []);
+    return isUnmounted;
 }
 
 
@@ -122,6 +131,17 @@ export interface SectionSeparatorComponentInfo<
     readonly section?: Section;
     readonly trailingItem?: Item;
     readonly trailingSection?: Section;
+}
+
+
+
+export function displayErrorMessage(message: string){
+    if (Platform.OS === 'web'){
+        alert("Oops! " + message);
+    } else {
+        Alert.alert('Oops!', message, [{text: 'Ok'}]);
+    }
+    
 }
 
 

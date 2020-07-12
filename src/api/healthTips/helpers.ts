@@ -21,10 +21,9 @@ export function useAllHealthTipsArray(){
 
 export function getHealthTipFromObject_orThrow(object: {[index: string]: any}){
     const yt_ids = List<string>(object.yt_video_ids);
-    const audio_urls = List<string>(object.audio_urls);
+    const audio_urls = List<{id: number, url: string}>(object.audio_files);
     return new HealthTip(object.id, object.title, new Date(object.date), yt_ids, audio_urls, object.article_text);
 }
-
 
 export function getHealthTipFromObject_orNull(object: { [index: string]: any }) {
     try {

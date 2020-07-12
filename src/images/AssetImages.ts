@@ -6,7 +6,11 @@ const AssetImages = {
     pauseIcon: require('./pause.png'),
     deleteIcon: require('./trash.png'),
     editIcon: require('./edit.png'),
+    warningIconColored: require('./warningColored.png'),
     warningIcon: require('./warning.png'),
+    errorIcon: require('./error.png'),
+    saveIcon: require('./save.png'),
+    reloadIcon: require('./reload.png'),
 };
 
 export default AssetImages;

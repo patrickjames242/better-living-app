@@ -42,7 +42,7 @@ export const BaseSpacer: React.FC<BaseSpacerProps> = props => {
             let previousItem: Optional<React.ReactNode> = null;
 
             oldChildren.forEach((item, index) => {
-                if (item == null){return;}
+                if (item == null || typeof item === 'boolean'){return;}
 
                 if (index !== 0 && previousItem != null) {
                     const elementToPush = props.renderSpacer(

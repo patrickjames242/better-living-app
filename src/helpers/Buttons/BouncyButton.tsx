@@ -1,7 +1,7 @@
 
 import React, { useState, useRef } from 'react';
 import { ViewProps, Animated, Easing, View } from 'react-native';
-import { useUpdateEffect } from '../general';
+import { useUpdateEffect, useIsUnmounted } from '../general';
 import CustomDelayedTouchable from './CustomDelayedTouchable';
 
 
@@ -17,7 +17,10 @@ const BouncyButton: React.FC<BouncyButtonProps> = (props) => {
 
     const transformAnimation = useRef(new Animated.Value(1)).current;
 
+    
     useUpdateEffect(() => {
+
+        if (isUnmounted.current){return;}
 
         Animated.timing(transformAnimation, {
             toValue: isPressed ? (props.bounceScaleValue ?? 0.7) : 1,
@@ -29,11 +32,15 @@ const BouncyButton: React.FC<BouncyButtonProps> = (props) => {
         //eslint-disable-next-line
     }, [isPressed]);
 
+    const isUnmounted = useIsUnmounted();
+
     function touchDown() {
+        if (isUnmounted.current){return;}
         setIsPressed(true);
     }
 
     function touchUp() {
+        if (isUnmounted.current){return;}
         setIsPressed(false);
     }
 

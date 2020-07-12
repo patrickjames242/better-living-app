@@ -2,7 +2,10 @@ import AppSettings from "../settings";
 
 
 
-const API_URL = `https://${AppSettings.apiHostUrl()}/`;
+const API_URL = (() => {
+    const apiProtocol = AppSettings.debugMode ? 'http' : 'https';
+    return `${apiProtocol}://${AppSettings.apiHostUrl()}/`;
+})();
 
 export enum HttpMethod{
     get,
@@ -29,18 +32,22 @@ export async function fetchFromAPI(props: {
     jsonBody?: any, 
     rawBody?: BodyInit, 
 }){
-    const bodyToSend = (() => {
-        if (props.jsonBody != undefined){
-            return JSON.stringify(props.jsonBody);
-        } else if (props.rawBody != undefined){
-            return props.rawBody;
-        } else {
-            return undefined;
-        }
-    })();
+    const headersToSend: {[property: string]: string} = {};
+    let bodyToSend: BodyInit | undefined
+
+    if (props.jsonBody != undefined){
+        bodyToSend = JSON.stringify(props.jsonBody);
+        headersToSend['Content-Type'] = 'application/json';
+    } else if (props.rawBody != undefined){
+        bodyToSend = props.rawBody;
+    } else {
+        bodyToSend = undefined;
+    }
+
     const response = await fetch(API_URL + props.path, {
         method: getHttpMethodText(props.method),
-        body: bodyToSend
+        body: bodyToSend,
+        headers: headersToSend,
     });
     const json = await (response.json() as Promise<ApiResponse>);
     if (json.isSuccess) {

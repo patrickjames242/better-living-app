@@ -1,14 +1,11 @@
 
 
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { StyleSheet, TextInput, TextInputProps, ViewProps, Animated } from 'react-native';
+import { StyleSheet, Animated } from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
-import OrderConfirmationLayoutConstants from './OrderConfirmationLayoutConstants';
-import { CustomColors } from '../../../helpers/colors';
-import CustomizedText from '../../../helpers/Views/CustomizedText';
-import { CustomFont } from '../../../helpers/fonts/fonts';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import Spacer from '../../../helpers/Spacers/Spacer';
+import TextFieldView, { TextFieldViewProps } from '../../../helpers/Views/TextFieldView';
 
 
 
@@ -104,7 +101,7 @@ const OrderConfirmationCardDetailsView = (() => {
             opacity: opacity,
         }]}>
             <Spacer space={10}>
-                <TextFieldView
+                <NumberTextFieldView
                     topTitleText="Credit Card Number"
                     value={creditCardNumber}
                     onValueChange={value => setCreditCardNumber(value)}
@@ -113,7 +110,7 @@ const OrderConfirmationCardDetailsView = (() => {
                     }}
                 />
                 <SpacerView space={10} style={styles.bottomRow}>
-                    <TextFieldView
+                    <NumberTextFieldView
                         style={[styles.bottomRowItem]}
                         topTitleText="Expiration"
                         // value={getDisplayStringForExpirationDate(expirationDate)}
@@ -124,7 +121,7 @@ const OrderConfirmationCardDetailsView = (() => {
                             placeholder: "07/20"
                         }}
                     />
-                    <TextFieldView
+                    <NumberTextFieldView
                         style={[styles.bottomRowItem]}
                         topTitleText="CVV"
                         value={CVV}
@@ -144,67 +141,13 @@ export default OrderConfirmationCardDetailsView;
 
 
 
-
-
-
-
-
-
-
-interface TextFieldViewProps extends ViewProps {
-    topTitleText: string;
-    value: string;
-    onValueChange: (newValue: string) => void;
-    textInputProps: Omit<TextInputProps, 'value' | 'onChange' | 'onFocus' | 'onBlur' | 'selectionColor'>
+function NumberTextFieldView(props: TextFieldViewProps){
+    return <TextFieldView 
+        {...props}
+        textInputProps={{
+            keyboardType: 'number-pad',
+            ...props.textInputProps,
+        }}
+    />
 }
-
-const TextFieldView = (() => {
-
-    const styles = StyleSheet.create({
-        root: {
-
-        },
-        topTitleText: {
-            marginLeft: LayoutConstants.floatingCellStyles.padding * 0.5,
-            color: CustomColors.offBlackTitle.stringValue,
-            fontFamily: CustomFont.medium
-        },
-        textInput: {
-            borderWidth: OrderConfirmationLayoutConstants.selectionOutline.width,
-            borderRadius: 10,
-            padding: 10,
-            fontSize: 16,
-            color: CustomColors.offBlackTitle.stringValue,
-        },
-    });
-
-    const TextFieldView = (props: TextFieldViewProps) => {
-
-        const [isActive, setIsActive] = useState(false);
-
-        return <SpacerView
-            {...props}
-            style={[styles.root, props.style]}
-            space={10}
-        >
-            <CustomizedText style={styles.topTitleText}>{props.topTitleText}</CustomizedText>
-            <TextInput
-                keyboardType="number-pad"
-                returnKeyType="done"
-                {...props.textInputProps}
-                style={[styles.textInput, {
-                    borderColor: isActive ? OrderConfirmationLayoutConstants.selectionOutline.color.selected : OrderConfirmationLayoutConstants.selectionOutline.color.unselected,
-                }]}
-                onFocus={() => setIsActive(true)}
-                onBlur={() => setIsActive(false)}
-                value={props.value}
-                onChange={event => props.onValueChange(event.nativeEvent.text)}
-                selectionColor={CustomColors.themeGreen.stringValue}
-            />
-        </SpacerView>
-    }
-    return TextFieldView;
-})();
-
-
 

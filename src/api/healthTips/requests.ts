@@ -7,9 +7,12 @@ import { insertOrUpdateHealthTipAction, deleteHealthTipAction } from "../../redu
 
 const basePath = 'health-tips/';
 
-interface HealthTipRequestObj{
+export interface HealthTipRequestObj{
     title: string,
-    articleText: Optional<string>,
+    article_text: Optional<string>,
+    yt_video_ids?: string[]
+    audio_files_to_insert?: File[],
+    audio_files_to_delete?: number[],
 }
 
 export function createNewHealthTip(healthTip: HealthTipRequestObj){
@@ -22,6 +25,18 @@ export function createNewHealthTip(healthTip: HealthTipRequestObj){
         store.dispatch(insertOrUpdateHealthTipAction(healthTip));
         return healthTip;
     });
+}
+
+export function updateHealthTip(id: number, requestObj: Partial<HealthTipRequestObj>){
+    return fetchFromAPI({
+        path: basePath + id + '/',
+        method: HttpMethod.put,
+        jsonBody: requestObj,
+    }).then(response => {
+        const healthTip = getHealthTipFromObject_orThrow(response);
+        store.dispatch(insertOrUpdateHealthTipAction(healthTip));
+        return healthTip;
+    })
 }
 
 export function deleteHealthTip(id: number){

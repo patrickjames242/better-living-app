@@ -2,7 +2,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import LongTextAndIconButton from '../../../helpers/Buttons/GreenTextAndIconButton';
+import LongTextAndIconButton from '../../../helpers/Buttons/LongTextAndIconButton';
 
 
 interface CartItemListCheckOutButtonProps {

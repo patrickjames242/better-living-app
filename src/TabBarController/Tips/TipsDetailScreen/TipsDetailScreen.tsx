@@ -1,11 +1,12 @@
 
+
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
 import LayoutConstants from '../../../LayoutConstants';
 import Spacer from '../../../helpers/Spacers/Spacer';
-// import TipsDetailAudioPlayerView from './TipsDetailAudioPlayerView';
-// import TipsDetailYTVideoView from './TipsDetailYTVideoView';
+import TipsDetailAudioPlayerView from './TipsDetailAudioPlayerView/TipsDetailAudioPlayerView';
+import TipsDetailYTVideoView from './TipsDetailYTVideoView';
 import { useSelector } from '../../../redux/store';
 import TipsDetailTitleView from './TipsDetailTitleView';
 import TipsDetailDescriptionView from './TipsDetailDescriptionView';
@@ -51,7 +52,7 @@ const TipsDetailScreen = (() => {
                 navigationScreenContext.dismiss();
             }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [healthTipId])
+        }, [healthTipId]);
 
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title={healthTip?.title ?? ''} />
@@ -63,15 +64,15 @@ const TipsDetailScreen = (() => {
                         style={styles.scrollView}
                         contentContainerStyle={styles.scrollViewContentContainer}
                     >
-                        <Spacer space={spacing}>
-                            <TipsDetailTitleView dateString={healthTip.getFormattedDateString()} titleString={healthTip.title} />
-                            {/* <TipsDetailAudioPlayerView/>
-                            <TipsDetailYTVideoView/> */}
-                            {(typeof healthTip.articleText === 'string') &&
-                                <TipsDetailDescriptionView articleText={healthTip.articleText} />
-                            }
-                            <TipsDetailBottomButtonsView healthTipId={props.healthTipId} />
-                        </Spacer>
+                        {/*eslint-disable-next-line react/no-children-prop*/}
+                        <Spacer space={spacing} children={[
+                            <TipsDetailTitleView key="title-view" dateString={healthTip.getFormattedDateString()} titleString={healthTip.title} />,
+                            ...healthTip?.audioUrls.toArray().map(x => <TipsDetailAudioPlayerView key={x.id} audioFileUrl={x.url}/>) ?? [],
+                            ...healthTip?.youtubeVideoIDs.toArray().map(x => <TipsDetailYTVideoView key={x} ytVideoID={x}/>) ?? [],
+                            (typeof healthTip.articleText === 'string') &&
+                                <TipsDetailDescriptionView key='description-view' articleText={healthTip.articleText} />,
+                            <TipsDetailBottomButtonsView key='bottom-buttons' healthTipId={props.healthTipId} />
+                        ]}/>
                     </ScrollView>
                 }
             })()}
@@ -81,10 +82,5 @@ const TipsDetailScreen = (() => {
 })();
 
 export default TipsDetailScreen;
-
-
-
-
-
 
 

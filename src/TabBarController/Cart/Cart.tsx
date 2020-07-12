@@ -9,4 +9,3 @@ const Cart = React.memo(function _InnerCart(){
 });
 
 export default Cart;
-

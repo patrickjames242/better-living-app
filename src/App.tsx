@@ -1,4 +1,6 @@
 
+import 'intl';
+
 import React, { useState, useEffect } from 'react';
 import { StatusBar, Platform } from 'react-native';
 import { registerRootComponent, AppLoading } from 'expo';
@@ -8,12 +10,12 @@ import TabBarController from './TabBarController/TabBarController';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './redux/store';
 import { startListeningForUpdates } from './api/realtimeUpdates';
-
+import { fetchYoutubeVideo } from './api/youtube';
 
 
 store.subscribe(() => {
 	if (Platform.OS === 'web'){
-		console.log(store.getState().healthTips.toJS());
+		console.log(store.getState().healthTips.toJS())	
 	}
 });
 
@@ -41,6 +43,9 @@ export default function App() {
 			</SafeAreaProvider>
 		</ReduxProvider>
 	}
+
+	
 }
+
 
 

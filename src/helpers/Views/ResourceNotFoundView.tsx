@@ -6,7 +6,7 @@ import CustomizedText from './CustomizedText';
 import SpacerView from '../Spacers/SpacerView';
 import { CustomFont } from '../fonts/fonts';
 import LayoutConstants from '../../LayoutConstants';
-import { CustomColors, Color } from '../colors';
+import { Color } from '../colors';
 
 export interface ResourceNotFoundViewProps{
     
@@ -37,7 +37,7 @@ const ResourceNotFoundView = (() => {
     
     const ResourceNotFoundView = (props: ResourceNotFoundViewProps) => {
         return <SpacerView style={styles.root} space={20}>
-            <Image style={styles.image} source={AssetImages.warningIcon}/>
+            <Image style={styles.image} source={AssetImages.warningIconColored}/>
             <CustomizedText style={styles.text}>This resource could not be found. It may have been deleted.</CustomizedText>
         </SpacerView>
     }

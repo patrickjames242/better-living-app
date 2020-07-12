@@ -1,14 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import {StyleSheet} from 'react-native';
-import LongTextAndIconButton from '../../../helpers/Buttons/GreenTextAndIconButton';
+import LongTextAndIconButton from '../../../helpers/Buttons/LongTextAndIconButton';
 import AssetImages from '../../../images/AssetImages';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import LayoutConstants from '../../../LayoutConstants';
 import { CustomColors } from '../../../helpers/colors';
 import { deleteHealthTip } from '../../../api/healthTips/requests';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
-import { mapOptional } from '../../../helpers/general';
+import { mapOptional, displayErrorMessage, useIsUnmounted } from '../../../helpers/general';
 import PresentableScreens from '../../../PresentableScreens';
 
 export interface TipsDetailBottomButtonsViewProps{
@@ -29,17 +29,29 @@ const TipsDetailBottomButtonsView = (() => {
 
         const navigationScreenContext = useNavigationScreenContext();
 
+        const [deleteIsLoading, setDeleteIsLoading] = useState(false);
+
         function editButtonPressed(){
             mapOptional(PresentableScreens.CreateOrEditTipScreen(), Component => navigationScreenContext.present(<Component tipIdToEdit={props.healthTipId}/>))
+            
         }
 
+        const isUnmounted = useIsUnmounted();
+
         function deleteButtonPressed(){
-            deleteHealthTip(props.healthTipId);
+            setDeleteIsLoading(true);
+            deleteHealthTip(props.healthTipId).catch(error => {
+                displayErrorMessage(error.message);
+            }).finally(() => {
+                if (isUnmounted.current === false){
+                    setDeleteIsLoading(false);
+                }
+            });
         }
 
         return <SpacerView style={styles.root} space={10}>
             <LongTextAndIconButton text="Edit Health Tip" iconSource={AssetImages.editIcon} onPress={editButtonPressed}/>
-            <LongTextAndIconButton text="Delete Health Tip" iconSource={AssetImages.deleteIcon} backgroundColor={CustomColors.redColor} onPress={deleteButtonPressed}/>
+            <LongTextAndIconButton text="Delete Health Tip" iconSource={AssetImages.deleteIcon} backgroundColor={CustomColors.redColor} onPress={deleteButtonPressed} isLoading={deleteIsLoading}/>
         </SpacerView>
     }
     return TipsDetailBottomButtonsView;

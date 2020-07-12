@@ -59,7 +59,6 @@ const NavigationScreen = (() => {
         const [gesturesToWaitFor, setGesturesToWaitFor] = useState(Set<React.Ref<any>>());
         const gesturesToWaitForArray = useMemo(() => gesturesToWaitFor.toJS(), [gesturesToWaitFor]);
 
-
         const contextValue = useRef<NavigationScreenContextValue>({
             dismiss: () => dismissAction.current?.(),
             dismissToRoot: () => dismissToRootAction.current?.(),

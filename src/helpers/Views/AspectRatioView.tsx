@@ -1,12 +1,13 @@
 
 import React from 'react';
-import { View, StyleSheet, ViewProperties } from 'react-native';
+import { View, StyleSheet, ViewProperties, StyleProp, ViewProps, ViewStyle } from 'react-native';
 import { limitNumber } from '../general';
 
 
 export interface AspectRatioViewProps extends ViewProperties{
     // expects a percentage expressed as a decimal between 0 and 1
-    heightPercentageOfWidth: number
+    heightPercentageOfWidth: number,
+    innerHolderViewStyle?: StyleProp<ViewStyle>,
 }
 
 
@@ -32,7 +33,7 @@ const AspectRatioView = (() => {
 
         return <View ref={ref} {...props} style={[props.style, styles.root]}>
             <View style={[styles.contentHolderHolder, {paddingTop}]}>
-                <View style={styles.contentHolder}>{props.children}</View>
+                <View style={[styles.contentHolder, props.innerHolderViewStyle]}>{props.children}</View>
             </View>
         </View>
     }

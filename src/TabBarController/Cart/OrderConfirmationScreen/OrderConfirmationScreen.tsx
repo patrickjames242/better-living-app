@@ -1,6 +1,6 @@
 
-import React, { useLayoutEffect, useRef } from 'react';
-import { StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, KeyboardAvoidingView } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import { CartItemListTotalSummaryView } from '../CartItemListScreen/CartItemListTotalSummaryView';
@@ -8,8 +8,9 @@ import LayoutConstants from '../../../LayoutConstants';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import OrderConfirmationPickUpOrDeliveryView from './OrderConfirmationPickUpOrDeliveryView';
 import OrderConfirmationHowToPayView from './OrderConfirmationHowToPayView';
-import LongTextAndIconButton from '../../../helpers/Buttons/GreenTextAndIconButton';
+import LongTextAndIconButton from '../../../helpers/Buttons/LongTextAndIconButton';
 import Space from '../../../helpers/Spacers/Space';
+import { ScrollView, NativeViewGestureHandler } from 'react-native-gesture-handler';
 
 
 
@@ -43,33 +44,34 @@ const OrderConfirmationScreen = (() => {
     const OrderConfirmationScreen = () => {
 
         const scrollView = useRef<ScrollView>(null);
+    
+        const scrollViewRef = useRef<NativeViewGestureHandler>(null);
 
-        useLayoutEffect(() => {
-            scrollView.current?.scrollTo({ x: 0, y: 0 });
-        }, []);
 
         return <KeyboardAvoidingView behavior='padding' style={styles.root}>
             <NavigationControllerNavigationBar title="Confirm Order" />
-            <ScrollView
-                ref={scrollView}
-                style={styles.scrollView}
-                alwaysBounceVertical={true}
-                contentContainerStyle={styles.scrollViewContentContainer}
-            >
-                <SpacerView style={styles.scrollViewContentHolder} space={LayoutConstants.floatingCellStyles.sectionSpacing}>
-                    <FloatingCellStyleSectionView sectionTitle="Order Total">
-                        <CartItemListTotalSummaryView />
-                    </FloatingCellStyleSectionView>
-                    <OrderConfirmationPickUpOrDeliveryView />
-                    <OrderConfirmationHowToPayView />
-                    <Space space={LayoutConstants.pageSideInsets} />
-                    <LongTextAndIconButton
-                        text="Submit Order"
-                        iconSource={require('./icons/hotel.png')}
-                        style={styles.submitButton}
-                    />
-                </SpacerView>
-            </ScrollView>
+            <NativeViewGestureHandler ref={scrollViewRef}>
+                <ScrollView
+                    ref={scrollView}
+                    style={styles.scrollView}
+                    alwaysBounceVertical={true}
+                    contentContainerStyle={styles.scrollViewContentContainer}
+                >
+                    <SpacerView style={styles.scrollViewContentHolder} space={LayoutConstants.floatingCellStyles.sectionSpacing}>
+                        <FloatingCellStyleSectionView sectionTitle="Order Total">
+                            <CartItemListTotalSummaryView />
+                        </FloatingCellStyleSectionView>
+                        <OrderConfirmationPickUpOrDeliveryView />
+                        <OrderConfirmationHowToPayView />
+                        <Space space={LayoutConstants.pageSideInsets} />
+                        <LongTextAndIconButton
+                            text="Submit Order"
+                            iconSource={require('./icons/hotel.png')}
+                            style={styles.submitButton}
+                        />
+                    </SpacerView>
+                </ScrollView>
+            </NativeViewGestureHandler>
         </KeyboardAvoidingView>
     }
     return OrderConfirmationScreen;
