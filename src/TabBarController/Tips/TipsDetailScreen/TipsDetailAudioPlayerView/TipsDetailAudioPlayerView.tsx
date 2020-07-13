@@ -98,6 +98,7 @@ const TipsDetailAudioPlayerView = (() => {
 
         useEffect(() => {
             navigationScreenContext.addGestureToWaitOn(scrubberPanGestureRef);
+            return () => navigationScreenContext.removeGestureToWaitOn(scrubberPanGestureRef);
         }, [navigationScreenContext]);
 
         return <SpacerView style={styles.root} space={playPauseState === PlayPauseButtonState.reload ? 10 : LayoutConstants.floatingCellStyles.padding}>

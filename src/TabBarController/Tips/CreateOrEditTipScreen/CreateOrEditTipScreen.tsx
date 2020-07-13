@@ -14,14 +14,15 @@ import { updateHealthTip, createNewHealthTip, HealthTipRequestObj } from '../../
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import CreateOrEditTipConstants from './CreateOrEditTipConstants';
 import CreateOrEditTipDescriptionView from './CreateOrEditTipDescriptionView';
-import CreateOrEditTipYoutubeSection from './CreateOrEditTipYoutubeSection';
-import { List } from 'immutable';
+import CreateOrEditTipYoutubeSection from './CreateOrEditTipYoutubeSection/CreateOrEditTipYoutubeSection';
+import { List, Set } from 'immutable';
+import CreateOrEditTipAudioFilesSection from './CreateOrEditTipAudioFilesSection/CreateOrEditTipAudioFilesSection';
+import { HealthTipAudioFile } from '../../../api/healthTips/HealthTip';
 
 
 export interface CreateOrEditTipScreenProps {
     tipIdToEdit: Optional<number>
 }
-
 
 
 const CreateOrEditTipScreen = (() => {
@@ -57,6 +58,7 @@ const CreateOrEditTipScreen = (() => {
         title: string,
         articleText: string,
         ytVideoIds: List<string>,
+        audioFiles: List<HealthTipAudioFile>,
     } {
         const healthTip = mapOptional(tipId, x => store.getState().healthTips.get(x));
         if (healthTip == null) {
@@ -64,12 +66,14 @@ const CreateOrEditTipScreen = (() => {
                 title: '',
                 articleText: '',
                 ytVideoIds: List(),
+                audioFiles: List(),
             }
         } else {
             return {
                 title: healthTip.title,
                 articleText: healthTip.articleText ?? '',
                 ytVideoIds: healthTip.youtubeVideoIDs,
+                audioFiles: healthTip.audioFiles,
             }
         }
     }
@@ -87,6 +91,10 @@ const CreateOrEditTipScreen = (() => {
         const [articleText, setArticleText] = useState(initialFieldValues.articleText);
         const [ytVideoIds, setYtVideoIds] = useState(initialFieldValues.ytVideoIds);
 
+        const [audioFilesToAdd, setAudioFilesToAdd] = useState(List<File>());
+        const [audioFilesToDelete, setAudioFilesToDelete] = useState(Set<number>());
+
+
         const navigationBarTitle = (() => {
             if (props.tipIdToEdit == null) {
                 return "Create New Health Tip";
@@ -99,7 +107,13 @@ const CreateOrEditTipScreen = (() => {
 
         function saveChanges() {
 
-            const requestObj: HealthTipRequestObj = { title: title, article_text: articleText,  yt_video_ids: ytVideoIds.toArray()};
+            const requestObj: HealthTipRequestObj = { 
+                title: title, 
+                article_text: articleText, 
+                yt_video_ids: ytVideoIds.toArray(),
+                audioFilesToInsert: audioFilesToAdd,
+                audioFilesToDelete: audioFilesToDelete.toList(),
+            };
 
             setIsLoading(true);
             ((props.tipIdToEdit == null) ?
@@ -117,21 +131,29 @@ const CreateOrEditTipScreen = (() => {
         return <KeyboardAvoidingView behavior="padding" style={styles.root}>
             <NavigationControllerNavigationBar title={navigationBarTitle} />
             <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
-                <SpacerView style={styles.inputsHolder} space={15}>
+                <SpacerView style={styles.inputsHolder} space={25}>
                     <TextFieldView
                         value={title}
                         onValueChange={setTitle}
                         topTitleText="Title"
                         textInputProps={{ placeholder: CreateOrEditTipConstants.textFieldPlaceholder }}
                     />
-                    <CreateOrEditTipYoutubeSection 
-                    videoIds={ytVideoIds} 
-                    onDeleteVideoId={videoId => {
-                        setYtVideoIds(i => i.filter(x => x !== videoId));
-                    }}
-                    onAddVideoId={videoId => {
-                        setYtVideoIds(x => x.filter(x => x !== videoId).push(videoId));
-                    }}
+                    <CreateOrEditTipYoutubeSection
+                        videoIds={ytVideoIds}
+                        onDeleteVideoId={videoId => {
+                            setYtVideoIds(i => i.filter(x => x !== videoId));
+                        }}
+                        onAddVideoId={videoId => {
+                            setYtVideoIds(x => x.filter(x => x !== videoId).push(videoId));
+                        }}
+                    />
+                    <CreateOrEditTipAudioFilesSection
+                        audioFiles={initialFieldValues.audioFiles}
+                        addedAudioFiles={audioFilesToAdd}
+                        deletedAudioFileIds={audioFilesToDelete}
+                        onUserWantsToAddFile={file => setAudioFilesToAdd(x => x.push(file))}
+                        onUserWantsToRemoveAddedFile={file => setAudioFilesToAdd(x => x.filter(y => y !== file))}
+                        onUserWantsToRemoveExistingFile={id => setAudioFilesToDelete(x => x.add(id))}
                     />
                     <CreateOrEditTipDescriptionView
                         value={articleText}

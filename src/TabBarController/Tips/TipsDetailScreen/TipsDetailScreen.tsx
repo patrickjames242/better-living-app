@@ -67,7 +67,7 @@ const TipsDetailScreen = (() => {
                         {/*eslint-disable-next-line react/no-children-prop*/}
                         <Spacer space={spacing} children={[
                             <TipsDetailTitleView key="title-view" dateString={healthTip.getFormattedDateString()} titleString={healthTip.title} />,
-                            ...healthTip?.audioUrls.toArray().map(x => <TipsDetailAudioPlayerView key={x.id} audioFileUrl={x.url}/>) ?? [],
+                            ...healthTip?.audioFiles.toArray().map(x => <TipsDetailAudioPlayerView key={x.id} audioFileUrl={x.url}/>) ?? [],
                             ...healthTip?.youtubeVideoIDs.toArray().map(x => <TipsDetailYTVideoView key={x} ytVideoID={x}/>) ?? [],
                             (typeof healthTip.articleText === 'string') &&
                                 <TipsDetailDescriptionView key='description-view' articleText={healthTip.articleText} />,

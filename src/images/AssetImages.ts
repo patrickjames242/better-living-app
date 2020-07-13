@@ -11,6 +11,7 @@ const AssetImages = {
     errorIcon: require('./error.png'),
     saveIcon: require('./save.png'),
     reloadIcon: require('./reload.png'),
+    audioFileIcon: require('./audioFileIcon.png'),
 };
 
 export default AssetImages;

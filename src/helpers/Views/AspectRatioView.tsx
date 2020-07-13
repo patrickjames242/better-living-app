@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, StyleSheet, ViewProperties, StyleProp, ViewProps, ViewStyle } from 'react-native';
+import { View, StyleSheet, ViewProperties, StyleProp, ViewStyle } from 'react-native';
 import { limitNumber } from '../general';
 
 
@@ -24,7 +24,6 @@ const AspectRatioView = (() => {
         contentHolder: {
             ...StyleSheet.absoluteFillObject
         }
-
     });
 
     const AspectRatioView: React.ForwardRefRenderFunction<View, React.PropsWithChildren<AspectRatioViewProps>> = function(props, ref){

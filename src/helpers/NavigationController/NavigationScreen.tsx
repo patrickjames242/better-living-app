@@ -18,6 +18,7 @@ export interface NavigationScreenActions {
 
 export interface NavigationScreenContextValue extends NavigationScreenActions { 
     addGestureToWaitOn: (ref: React.Ref<any>) => void,
+    removeGestureToWaitOn: (ref: React.Ref<any>) => void,
 }
 
 export function useNavigationScreenContext(): NavigationScreenContextValue {
@@ -64,6 +65,7 @@ const NavigationScreen = (() => {
             dismissToRoot: () => dismissToRootAction.current?.(),
             present: (component: React.ReactElement) => presentAction.current?.(component),
             addGestureToWaitOn: (ref) => setGesturesToWaitFor(x => x.add(ref)),
+            removeGestureToWaitOn: (ref) => setGesturesToWaitFor(x => x.remove(ref)),
         }).current;
 
         useEffect(() => {
