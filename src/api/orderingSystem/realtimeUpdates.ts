@@ -1,0 +1,26 @@
+import { handleProductsRealtimeUpdate } from "./products/realtimeUpdates";
+import { handleProductInfoTagsRealtimeUpdate } from "./productInfoTags/realtimeUpdates";
+import { handleMenusRealtimeUpdate } from "./menus/realtimeUpdates";
+
+
+export function handleOrderingSystemRealtimeUpdate(json: any){
+    if (typeof json !== 'object'){return;}
+
+    const Keys = {
+        meal_product_categories: 'meal_product_categories',
+        meals: 'meals',
+        menus: 'menus',
+        product_info_tags: 'product_info_tags',
+        products: 'products',
+    }
+    
+    for (const propertyName of Object.getOwnPropertyNames(json)){
+        const value = json[propertyName];
+        if (value === undefined){continue;}
+        switch(propertyName){
+            case Keys.products: handleProductsRealtimeUpdate(value); break;
+            case Keys.product_info_tags: handleProductInfoTagsRealtimeUpdate(value); break;
+            case Keys.menus: handleMenusRealtimeUpdate(value); break;
+        }
+    }
+}

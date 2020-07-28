@@ -5,30 +5,15 @@ import { getHealthTipFromObject_orThrow } from "./helpers";
 import store from "../../redux/store";
 import { insertOrUpdateHealthTipAction, deleteHealthTipAction, } from "../../redux/healthTips";
 import { List } from "immutable";
+import { HealthTipJsonKeys, HealthTipFormDataKeys } from "./validation";
 
 const basePath = 'health-tips/';
 
-const JsonKeys: {
-    readonly json: 'json',
-    readonly title: 'title',
-    readonly articleText: 'article_text',
-    readonly ytVideoIds: 'yt_video_ids',
-    readonly insertAudioFile: 'insert_audio_file',
-    readonly deleteAudioFile: 'delete_audio_file',
-} = {
-    json: 'json',
-    title: 'title',
-    articleText: 'article_text',
-    ytVideoIds: 'yt_video_ids',
-    insertAudioFile: 'insert_audio_file',
-    deleteAudioFile: 'delete_audio_file',
-}
-
 
 export interface HealthTipRequestObj{
-    [JsonKeys.title]: string,
-    [JsonKeys.articleText]: Optional<string>,
-    [JsonKeys.ytVideoIds]?: string[]
+    [HealthTipJsonKeys.title]: string,
+    [HealthTipJsonKeys.article_text]: Optional<string>,
+    [HealthTipJsonKeys.yt_video_ids]?: string[]
     audioFilesToInsert?: List<File>,
     audioFilesToDelete?: List<number>,
 }
@@ -38,7 +23,11 @@ function getBodyForRequestObject(obj: Partial<HealthTipRequestObj>): FormData{
     
     const json: object | undefined = (() => {
         const jsonObject: {[index: string]: any} = {};
-        for (const key of [JsonKeys.title, JsonKeys.articleText, JsonKeys.ytVideoIds]){
+        for (const key of [
+            HealthTipJsonKeys.title, 
+            HealthTipJsonKeys.article_text, 
+            HealthTipJsonKeys.yt_video_ids
+        ]){
             const value = obj[key];
             if (value === undefined){continue;}
             jsonObject[key] = value;
@@ -47,17 +36,14 @@ function getBodyForRequestObject(obj: Partial<HealthTipRequestObj>): FormData{
     })();
 
     const formData = new FormData();
-
-    json != undefined && formData.append(JsonKeys.json, JSON.stringify(json));
+    json != undefined && formData.append(HealthTipFormDataKeys.json, JSON.stringify(json));
 
     for (const audioFileId of obj.audioFilesToDelete?.toArray() ?? []){
-        formData.append(JsonKeys.deleteAudioFile, String(audioFileId));
+        formData.append(HealthTipFormDataKeys.deleteAudioFile, String(audioFileId));
     }
-
     for (const audioFile of obj.audioFilesToInsert?.toArray() ?? []){
-        formData.append(JsonKeys.insertAudioFile, audioFile, audioFile.name);
+        formData.append(HealthTipFormDataKeys.insertAudioFile, audioFile, audioFile.name);
     }
-
     return formData;
 }
 
@@ -93,6 +79,3 @@ export function deleteHealthTip(id: number){
         store.dispatch(deleteHealthTipAction(id));
     });
 }
-
-
-

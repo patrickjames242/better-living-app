@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Alert, Platform } from 'react-native';
+import { ValidateFunction } from 'ajv';
 
 export type Optional<Wrapped> = Wrapped | null;
 
@@ -145,5 +146,9 @@ export function displayErrorMessage(message: string){
 }
 
 
-
+export function getJsonValidatorErrorsText(validator: ValidateFunction): Optional<string>{
+    const errors = validator.errors;
+    if (errors == null){return null;}
+    return '[' + '\n' + errors.map(x => `\tdataPath: '${x.dataPath}', message: ${x.message}`).join(',\n') + '\n]'
+}
 

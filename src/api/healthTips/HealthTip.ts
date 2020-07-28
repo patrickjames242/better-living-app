@@ -1,6 +1,7 @@
 
-import { Optional } from "../../helpers/general";
+import { Optional, getJsonValidatorErrorsText } from "../../helpers/general";
 import { List } from "immutable";
+import { HealthTipJsonResponseObj, healthTipResponseObjValidator } from "./validation";
 
 const dateFormatter = Intl.DateTimeFormat('en-us', { month: 'short', day: 'numeric', year: 'numeric' });
 
@@ -10,50 +11,43 @@ export interface HealthTipAudioFile {
     originalFileName: string,
 }
 
+
+
 export default class HealthTip {
 
-    constructor(
-        readonly id: number,
-        readonly title: string,
-        readonly date: Date,
-        readonly youtubeVideoIDs: List<string>,
-        readonly audioFiles: List<HealthTipAudioFile>,
-        readonly articleText: Optional<string>,
-    ) {
-        if (typeof id !== 'number') {
-            throw new Error('id incorrectly typed');
+    readonly id: number;
+    readonly title: string;
+    readonly date: Date;
+    readonly youtubeVideoIDs: List<string>;
+    readonly audioFiles: List<HealthTipAudioFile>;
+    readonly articleText: Optional<string>;
+
+    constructor(apiResponseObj: HealthTipJsonResponseObj) {     
+
+        if (healthTipResponseObjValidator(apiResponseObj) === false){
+            const errorsString = (() => {
+                const errorsText = getJsonValidatorErrorsText(healthTipResponseObjValidator);
+                const beginningString = 'The apiResponseObj submitted to a HealthTip object is invalid.';
+                if (errorsText == null){return beginningString;}
+                return [beginningString, 'Here are the errors ->', errorsText].join(' ');
+            })();
+            
+            throw new Error(errorsString);
         }
-        if (typeof title !== 'string') {
-            throw new Error('title incorrectly typed');
-        }
-        if ((date instanceof Date) === false) {
-            throw new Error('date incorrectly typed');
-        }
-        if (
-            ((youtubeVideoIDs instanceof List) == false) ||
-            youtubeVideoIDs.some(x => typeof x !== 'string')
-        ) {
-            throw new Error('youtubeVideoIds incorrectly typed');
-        }
-        if (
-            ((audioFiles instanceof List) == false) ||
-            audioFiles.some(x =>
-                typeof x?.id !== 'number' ||
-                typeof x?.url !== 'string' ||
-                typeof x?.originalFileName !== 'string'
-            )
-        ) {
-            throw new Error('audioUrls incorrectly typed');
-        }
-        if (
-            typeof articleText !== 'string' &&
-            articleText !== null
-        ) { throw new Error('articleText incorrectly typed'); }
+
+        this.id = apiResponseObj.id;
+        this.title = apiResponseObj.title;
+        this.date = new Date(apiResponseObj.date);
+        this.youtubeVideoIDs = List(apiResponseObj.yt_video_ids);
+        this.audioFiles = List(apiResponseObj.audio_files.map<HealthTipAudioFile>(x => ({
+            id: x.id,
+            url: x.url,
+            originalFileName: x.original_file_name,
+        })));
+        this.articleText = apiResponseObj.article_text;
     }
 
     getFormattedDateString() {
         return dateFormatter.format(this.date);
     }
-
-
 }

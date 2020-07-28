@@ -19,11 +19,12 @@ const SideTabBar = (() => {
 			flex: 1,
 		},
 		scrollView: {
-			height: 1,
+			height: 200,
 		},
 
 		scrollViewContentView: {
 			padding: LayoutConstants.sideMenuBar.padding,
+			
 		}
 	});
 
@@ -103,6 +104,7 @@ const SideBarItem = (() => {
 		contentView: {
 			padding: LayoutConstants.sideMenuBar.barItem.padding,
 			borderRadius: 15,
+			alignSelf: 'flex-start',
 			shadowRadius: 25,
 			elevation: 1,
 		},

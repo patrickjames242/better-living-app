@@ -3,6 +3,7 @@ import NetInfo from '@react-native-community/netinfo';
 import { handleHealthTipsRealtimeUpdate } from './healthTips/realtimeUpdates';
 import { Platform } from 'react-native';
 import AppSettings from '../settings';
+import { handleOrderingSystemRealtimeUpdate } from './orderingSystem/realtimeUpdates';
 
 
 export function startListeningForUpdates() {
@@ -42,8 +43,6 @@ function addInternetReachabilityListener(listener: (isInternetReachable: boolean
 }
 
 
-
-
 function setUpWebsocket() {
     const websocketUrl = (() => {
         const protocolString = AppSettings.debugMode ? 'ws' : 'wss';
@@ -57,10 +56,26 @@ function setUpWebsocket() {
         console.log(event);
         const data = JSON.parse(event.data);
         if (typeof data !== 'object') { return; }
-        const healthTips = data.health_tips;
-        if (healthTips !== undefined) {
-            handleHealthTipsRealtimeUpdate(healthTips);
+
+        const Keys = {
+            health_tips: 'health_tips',
+            ordering_system: 'ordering_system',
         }
+
+        for (const propertyName of Object.getOwnPropertyNames(data)){
+            const value = data[propertyName];
+            if (value === undefined){continue;}
+            switch (propertyName){
+                case Keys.health_tips: 
+                    handleHealthTipsRealtimeUpdate(value);
+                    break;
+                case Keys.ordering_system: 
+                    handleOrderingSystemRealtimeUpdate(value);
+                    break;
+            }
+        }
+
+        
     };
     socket.onclose = function (event) {
         console.log(event);

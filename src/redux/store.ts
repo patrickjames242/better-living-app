@@ -8,10 +8,18 @@ import {
     useDispatch as untypedUseDispatch,
 } from "react-redux";
 import { healthTipsReducer } from "./healthTips";
+import { productsReducer } from "./orderingSystem/products";
+import { productInfoTagsReducer } from "./orderingSystem/productInfoTags";
+import { menusReducer } from "./orderingSystem/menus";
 
 const appReducer = combineReducers({
     tabBarController: tabBarController_reducer,
     healthTips: healthTipsReducer,
+    orderingSystem: combineReducers({
+        products: productsReducer,
+        productInfoTags: productInfoTagsReducer,
+        menus: menusReducer,
+    }),
 });
 
 export type AppState = ReturnType<typeof appReducer>;
