@@ -12,3 +12,6 @@ export function getProductFromJsonResponseObj_orNull(apiResponseObj: ProductJson
     }
 }
 
+
+
+

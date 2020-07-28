@@ -55,3 +55,5 @@ const ProductApiResponseSchema = {
 }
 
 export const productResponseObjValidator = (new ajv({allErrors: true})).compile(ProductApiResponseSchema);
+
+

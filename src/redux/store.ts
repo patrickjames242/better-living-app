@@ -32,5 +32,19 @@ export const useStore: () => typeof store = untypedUseStore;
 export const useDispatch: () => typeof store.dispatch = untypedUseDispatch;
 
 
+export function addSelectedStateListener<SelectedType>(
+    selector: (state: AppState) => SelectedType, 
+    action: (newValue: SelectedType) => void
+){
+    let previousValue = selector(store.getState());
 
+    return store.subscribe(() => {
+        const newValue = selector(store.getState());
+        if (newValue !== previousValue){
+            previousValue = newValue;
+            action(newValue);
+        }
+    });
+
+}
 

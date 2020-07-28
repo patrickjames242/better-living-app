@@ -23,8 +23,8 @@ export default class Menu{
     readonly id: number;
     readonly title: string;
     readonly dayOfTheWeek: Optional<DayOfTheWeek>;
-    readonly startTime: Optional<Date>;
-    readonly endTime: Optional<Date>;
+    readonly startTime: Optional<string>;
+    readonly endTime: Optional<string>;
     readonly categories: List<MenuCategory>;
 
     constructor(menuJsonResponseObj: MenuJsonResponseObj){
@@ -37,11 +37,13 @@ export default class Menu{
         this.id = json.id;
         this.title = json.title;
         this.dayOfTheWeek = menuJsonResponseObj.day_of_the_week;
-        this.startTime = json.start_time == null ? null : new Date(json.start_time);
-        this.endTime = json.end_time == null ? null : new Date(json.end_time);
+        this.startTime = json.start_time;
+        this.endTime = json.end_time;
         this.categories = List(json.categories.map<MenuCategory>(x => ({
             title: x.title,
             productIds: Set(x.product_ids),
         })))
     }
 }
+
+
