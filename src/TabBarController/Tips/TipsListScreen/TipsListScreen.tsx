@@ -6,7 +6,7 @@ import { computeNumberOfListColumns, mapOptional } from '../../../helpers/genera
 import TipsListItemView from './TipsListItemView';
 import LayoutConstants from '../../../LayoutConstants';
 import Space from '../../../helpers/Spacers/Space';
-import MultiColumnFlatList from '../../../helpers/Views/MultipleColumnFlatList';
+import MultiColumnFlatList from '../../../helpers/Views/MultipleColumnLists/MultiColumnFlatList';
 import { useAllHealthTipsArray } from '../../../api/healthTips/helpers';
 import PlusButton from '../../../helpers/Buttons/PlusButton';
 import PresentableScreens from '../../../PresentableScreens';

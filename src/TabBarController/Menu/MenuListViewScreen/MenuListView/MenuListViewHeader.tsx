@@ -7,7 +7,9 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
 import { CustomColors, Color } from '../../../../helpers/colors';
-import { menuListSections } from './helpers';
+import { useCurrentMenu } from '../../../../api/orderingSystem/menus/helpers';
+import { MenuCategory } from '../../../../api/orderingSystem/menus/Menu';
+import { Set, List } from 'immutable';
 
 const MenuListViewHeader = (() => {
 
@@ -48,11 +50,6 @@ export default MenuListViewHeader;
 
 const MenuCategoriesListView = (() => {
 
-    const categories = [
-        'All',
-        ...menuListSections.map(x => x.title),
-    ]
-
     const styles = StyleSheet.create({
         root: (() => {
             const topAndBottomInsets = 35;
@@ -68,14 +65,21 @@ const MenuCategoriesListView = (() => {
             paddingLeft: LayoutConstants.pageSideInsets,
             paddingRight: LayoutConstants.pageSideInsets,
         }
-    })
+    });
+
+    const allCategory: MenuCategory = {
+        title: 'All',
+        productIds: Set()
+    }
 
     return function MenuCategoriesListView() {
 
-        const [selectedItem, setSelectedItem] = useState(categories[0]);
+        const allCategories = (useCurrentMenu()?.categories ?? List()).unshift(allCategory);
+
+        const [selectedItemTitle, setSelectedItemTitle] = useState(allCategory.title);
 
         function onItemPress(text: string) {
-            setSelectedItem(text);
+            setSelectedItemTitle(text);
         }
 
         return <View style={styles.root}>
@@ -85,13 +89,13 @@ const MenuCategoriesListView = (() => {
                 contentContainerStyle={styles.listViewContainer}
                 horizontal
                 ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
-                data={[...categories]} // without this, on the web, react doesn't check the children of the list for changes
+                data={allCategories.toArray() as Array<MenuCategory>} // without this, on the web, react doesn't check the children of the list for changes
                 keyExtractor={(_, index) => String(index)}
                 renderItem={({ item }) => {
                     return <MenuCategoriesListViewItem
-                        text={item}
+                        text={item.title}
                         onPress={onItemPress}
-                        isSelected={item === selectedItem} />
+                        isSelected={item.title === selectedItemTitle} />
                 }}
             />
         </View>

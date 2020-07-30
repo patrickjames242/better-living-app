@@ -2,7 +2,7 @@
 import React from 'react';
 import {StyleSheet, View, LayoutRectangle } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
-import MultiColumnFlatList from '../../../helpers/Views/MultipleColumnFlatList';
+import MultiColumnFlatList from '../../../helpers/Views/MultipleColumnLists/MultiColumnFlatList';
 import InquiriesListItemView, { InquiryUnreadStatus } from './InquiriesListItemView';
 import { getNumbersList, computeNumberOfListColumns } from '../../../helpers/general';
 import LayoutConstants from '../../../LayoutConstants';

@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
-import { MenuListItem } from './helpers';
 import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
 import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
@@ -11,6 +10,8 @@ import { mapOptional } from '../../../../helpers/general';
 import LayoutConstants from '../../../../LayoutConstants';
 import AspectRatioView from '../../../../helpers/Views/AspectRatioView';
 import PresentableScreens from '../../../../PresentableScreens';
+import Product from '../../../../api/orderingSystem/products/Product';
+import { useSelector } from '../../../../redux/store';
 
 
 const MenuListItemView = (() => {
@@ -73,7 +74,9 @@ const MenuListItemView = (() => {
         }
     });
 
-    return function MenuListItemView(props: { item: MenuListItem }) {
+    return function MenuListItemView(props: { productId: number }) {
+
+        const product = useSelector(state => state.orderingSystem.products.get(props.productId));
 
         const navigationScreenContext = useNavigationScreenContext();
 
@@ -89,21 +92,21 @@ const MenuListItemView = (() => {
                 heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}
                 style={styles.imageHolder}
             >
-                <Image style={styles.image} source={props.item.imageSource} resizeMode="cover" />
+                {/* <Image style={styles.image} source={props.item.imageSource} resizeMode="cover" /> */}
             </AspectRatioView>
 
             <View style={styles.textBox}>
                 <View style={styles.textBox_leftSide}>
                     <CustomizedText style={styles.textBox_productName} numberOfLines={2} ellipsizeMode={'tail'}>
-                        {props.item.name}
+                        {product?.title}
                     </CustomizedText>
                     <CustomizedText style={styles.textBox_productDescription} numberOfLines={1} ellipsizeMode={'tail'}>
-                        Lorem ipsum dolor sit amet conse adipi elit lorem ipsum dolor sit.
+                        {product?.description}
                     </CustomizedText>
                 </View>
                 <View style={styles.textBox_rightSide}>
                     <CustomizedText style={styles.startingAtText}>from</CustomizedText>
-                    <CustomizedText style={styles.priceText}>$7.88</CustomizedText>
+                    <CustomizedText style={styles.priceText}>{String(product?.individualPrice ?? "$00.00")}</CustomizedText>
                 </View>
             </View>
         </BouncyButton>

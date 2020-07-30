@@ -1,16 +1,19 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
-import { StyleSheet, SectionList, View, LayoutChangeEvent, Dimensions } from 'react-native';
+import { StyleSheet, View, LayoutChangeEvent, Dimensions } from 'react-native';
 import MenuListViewHeader from './MenuListViewHeader';
-import { MenuListSection, menuListSections, MenuListItem } from './helpers';
 import MenuListItemView from './MenuListItemView';
 import MenuListViewSectionHeader from './MenuListViewSectionHeader';
 import LayoutConstants from '../../../../LayoutConstants';
-import { getNumbersList, computeNumberOfListColumns } from '../../../../helpers/general';
+import { computeNumberOfListColumns } from '../../../../helpers/general';
 import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../../helpers';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNotificationListener } from '../../../../helpers/Notification';
 import { useSelector } from '../../../../redux/store';
+import { useCurrentMenu } from '../../../../api/orderingSystem/menus/helpers';
+import { MenuCategory } from '../../../../api/orderingSystem/menus/Menu';
+import MultiColumnSectionList from '../../../../helpers/Views/MultipleColumnLists/MultipleColumnSectionList';
+import Product from '../../../../api/orderingSystem/products/Product';
 
 
 export interface MenuListViewProps {
@@ -92,25 +95,38 @@ const MenuListView = (() => {
 
         // for each menuListSection this returns a fake section where each item in the data array represents one of the row indices of the section in order starting from 0
 
-        const fakeSections = useMemo(() => {
-            return menuListSections.map(section => {
+        const menu = useCurrentMenu();
+
+        const allProducts = useSelector(state => state.orderingSystem.products);
+
+        const menuCategories = menu?.categories
+
+        const listViewSections = useMemo(() => {
+            const sortedCategories = menuCategories?.toArray().sort((a, b) => a.title.localeCompare(b.title)) ?? [];
+            return sortedCategories.map(category => {
                 return {
-                    realSection: section,
+                    menuCategory: category,
                     data: (() => {
-                        if (section.data.length < 1) { return [] }
-                        const amountOfRows = Math.ceil(section.data.length / numberOfColumns);
-                        return getNumbersList(0, amountOfRows - 1);
+                        let products: Product[] = [];
+                        category.productIds.forEach(productId => {
+                            const product = allProducts.get(productId);
+                            product && products.push(product);
+                        });
+                        return products.sort((a, b) => a.title.localeCompare(b.title)).map(x => x.id);
                     })()
                 }
-            });
-        }, [numberOfColumns]);
+            }) ?? [];
+        }, [allProducts, menuCategories]);
 
 
         return useMemo(() => (
             <View
                 onLayout={rootViewOnLayoutCallback}
                 style={[styles.root]}>
-                <SectionList
+                <MultiColumnSectionList<number, {data: number[]}>
+                    itemSpacing={itemSpacing}
+                    sideInsets={sideInsets}
+                    numberOfColumns={numberOfColumns}
                     style={styles.listView}
                     contentContainerStyle={{
                         paddingTop: props.topContentInset ?? 0,
@@ -133,77 +149,20 @@ const MenuListView = (() => {
                     }}
                     renderSectionHeader={info => {
                         return <MenuListViewSectionHeader
-                            section={info.section.realSection as MenuListSection}
+                            section={info.section.realSection.menuCategory as MenuCategory}
                             sideInsets={sideInsets} />
                     }}
                     stickySectionHeadersEnabled={false}
-                    sections={fakeSections}
-                    keyExtractor={(item, index) => item + "," + index}
+                    sections={listViewSections}
                     ListHeaderComponent={MenuListViewHeader}
-                    renderItem={({ item, section }) => {
-                        return <MenuListSectionItemRow
-                            sideInsets={sideInsets}
-                            numberOfColumns={numberOfColumns}
-                            rowIndex={item}
-                            allSectionItems={(section.realSection as MenuListSection).data}
-                            itemSpacing={itemSpacing}
-                        />
+                    renderItem={item => {
+                        return <MenuListItemView productId={item} />
                     }}
                 />
             </View>
-        ), [fakeSections, numberOfColumns, props.bottomContentInset, props.topContentInset, rootViewOnLayoutCallback]);
+        ), [listViewSections, numberOfColumns, props.bottomContentInset, props.topContentInset, rootViewOnLayoutCallback]);
     }
 })();
 
 export default MenuListView;
-
-
-
-interface MenuListSectionItemRowProps {
-    numberOfColumns: number,
-    rowIndex: number,
-    allSectionItems: MenuListItem[],
-    itemSpacing: number,
-    sideInsets: number,
-}
-
-const MenuListSectionItemRow = (() => {
-
-    const styles = StyleSheet.create({
-        root: {
-            flexDirection: 'row',
-        },
-    });
-
-    return function MenuListSectionItemRow(props: MenuListSectionItemRowProps) {
-
-        const startingIndex = props.numberOfColumns * props.rowIndex;
-
-        return <View style={[styles.root, {
-            marginLeft: props.sideInsets,
-            marginRight: props.sideInsets
-        }]}>
-            {(() => {
-                if (props.numberOfColumns < 1) { return undefined; }
-
-                return getNumbersList(0, props.numberOfColumns - 1).map(num => {
-
-                    const item = props.allSectionItems[startingIndex + num]
-                    const marginLeft = num === 0 ? undefined : props.itemSpacing;
-
-                    return <View key={num} style={{ flex: 1, marginLeft }}>
-                        {(() => {
-                            if (item != undefined) {
-                                return <MenuListItemView item={item} />
-                            }
-                        })()}
-                    </View>
-                });
-
-            })()}
-        </View>
-    }
-})();
-
-
 

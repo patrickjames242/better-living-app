@@ -45,6 +45,7 @@ export default class HealthTip {
             originalFileName: x.original_file_name,
         })));
         this.articleText = apiResponseObj.article_text;
+        
     }
 
     getFormattedDateString() {

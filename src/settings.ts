@@ -5,7 +5,7 @@ import { TabBarSelection } from "./TabBarController/TabBar/helpers";
 
 const AppSettings = {
     
-    defaultTabBarSelection: TabBarSelection.tips,
+    defaultTabBarSelection: TabBarSelection.menu,
     debugMode: false,
     apiHostUrl(){
         if (this.debugMode){
