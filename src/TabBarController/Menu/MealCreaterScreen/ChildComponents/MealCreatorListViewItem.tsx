@@ -34,8 +34,8 @@ const MealCreatorListViewItem = (() => {
         const navigationScreenContext = useNavigationScreenContext();
 
         function onButtonPress() {
-            mapOptional(PresentableScreens.MenuItemDetailScreen(), X => {
-                navigationScreenContext.present(<X />)
+            mapOptional(PresentableScreens.ProductDetailScreen(), X => {
+                // navigationScreenContext.present(<X />)
             });
         }
 

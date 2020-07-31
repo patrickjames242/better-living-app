@@ -12,7 +12,7 @@ import { useNotificationListener } from '../../../../helpers/Notification';
 import { useSelector } from '../../../../redux/store';
 import { useCurrentMenu } from '../../../../api/orderingSystem/menus/helpers';
 import { MenuCategory } from '../../../../api/orderingSystem/menus/Menu';
-import MultiColumnSectionList from '../../../../helpers/Views/MultipleColumnLists/MultipleColumnSectionList';
+import MultiColumnSectionList from '../../../../helpers/Views/MultipleColumnLists/MultiColumnSectionList';
 import Product from '../../../../api/orderingSystem/products/Product';
 
 
@@ -90,7 +90,7 @@ const MenuListView = (() => {
     }
 
     return function MenuListView(props: MenuListViewProps) {
-
+        
         const { numberOfColumns, rootViewOnLayoutCallback } = useNumberOfColumns();
 
         // for each menuListSection this returns a fake section where each item in the data array represents one of the row indices of the section in order starting from 0

@@ -97,6 +97,14 @@ export function mapOptional<Unwrapped, ReturnVal>(optional: Unwrapped | undefine
     }
 }
 
+export function compactMap<InputType, OutputType>(items: Array<InputType>, transformer: (input: InputType) => OutputType | undefined | null){
+    const newItems: OutputType[] = [];
+    for (const item of items){
+        const result = transformer(item);
+        result != null && newItems.push(result);
+    }
+    return newItems;
+}
 
 
 export function isDigit(string: string): boolean {

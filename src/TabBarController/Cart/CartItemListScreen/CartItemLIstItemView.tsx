@@ -105,8 +105,8 @@ const CartItemListItemView = (() => {
 
         function presentMenuItemDetailView() {
             if (props.currentlyOpenDrawerID.value === props.item.id){return;}
-            mapOptional(PresentableScreens.MenuItemDetailScreen(), Component => {
-                navigationScreenContext.present(<Component />)
+            mapOptional(PresentableScreens.ProductDetailScreen(), Component => {
+                // navigationScreenContext.present(<Component />)
             });
         }
 

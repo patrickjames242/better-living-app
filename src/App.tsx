@@ -2,7 +2,7 @@
 import 'intl';
 
 import React, { useState, useEffect } from 'react';
-import { StatusBar, Platform } from 'react-native';
+import { StatusBar } from 'react-native';
 import { registerRootComponent, AppLoading } from 'expo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loadFonts } from './helpers/fonts/fonts';
@@ -12,11 +12,11 @@ import store from './redux/store';
 import { startListeningForUpdates } from './api/realtimeUpdates';
 
 
-store.subscribe(() => {
-	if (Platform.OS === 'web'){
-		console.log(store.getState().orderingSystem.menus.toJS());
-	}
-});
+// store.subscribe(() => {
+	// if (Platform.OS === 'web'){
+	// 	console.log(store.getState().orderingSystem.menus.toJS());
+	// }
+// });
 
 registerRootComponent(App);
 

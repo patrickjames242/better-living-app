@@ -17,9 +17,14 @@ import { windowDimensionsDidChangeNotification } from '../../helpers';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import PresentableScreens from '../../../PresentableScreens';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
+import { useSelector } from '../../../redux/store';
+import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
 
+interface ProductDetailScreenProps {
+    productId: number;
+}
 
-const MenuItemDetailScreen = (() => {
+const ProductDetailScreen = (() => {
 
     const styles = StyleSheet.create({
         root: {
@@ -50,52 +55,58 @@ const MenuItemDetailScreen = (() => {
         },
     });
 
-    return function MenuItemDetailScreen() {
+    return function ProductDetailScreen(props: ProductDetailScreenProps) {
+
+        const product = useSelector(state => state.orderingSystem.products.get(props.productId));
 
         const navigationScreenContext = useNavigationScreenContext();
 
-        function onMealButtonPressed(){
+        function onMealButtonPressed() {
             mapOptional(PresentableScreens.MealCreatorScreen(), X => {
-                navigationScreenContext.present(<X/>);
+                navigationScreenContext.present(<X />);
             });
         }
 
         return <View style={styles.root}>
-            <NavigationControllerNavigationBar title="Pumpkin Soup" />
-            <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
-                <View style={styles.scrollViewCenteredContent}>
-                    <Spacer space={LayoutConstants.floatingCellStyles.sectionSpacing}>
-                        <SpacerView space={20}>
-                            <FoodImageView />
-                            <TitleBox />
-                        </SpacerView>
+            <NavigationControllerNavigationBar title={product?.title ?? ""} />
+            {(() => {
+                if (product == null) {
+                    return <ResourceNotFoundView />
+                } else {
+                    return <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
+                        <View style={styles.scrollViewCenteredContent}>
+                            <Spacer space={LayoutConstants.floatingCellStyles.sectionSpacing}>
+                                <SpacerView space={20}>
+                                    {product.imageUrl && <FoodImageView imageUri={product.imageUrl} />}
+                                    <TitleBox product={product}/>
+                                </SpacerView>
 
-                        <FloatingCellStyleSectionView sectionTitle="Description">
-                            <View style={styles.descriptionTextHolder}>
-                                <CustomizedText style={styles.descriptionText}>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia, ullam voluptate error tenetur eaque veniam deleniti quos, aut natus accusamus iusto pariatur facere est excepturi cum laboriosam ut totam perferendis repudiandae eum, eos quisquam provident? Odit quisquam odio vitae reiciendis ab, corporis minima laudantium natus ducimus ea deserunt amet nemo?
-                            </CustomizedText>
-                            </View>
-                        </FloatingCellStyleSectionView>
+                                {product.description && <FloatingCellStyleSectionView sectionTitle="Description">
+                                    <View style={styles.descriptionTextHolder}>
+                                        <CustomizedText style={styles.descriptionText}>{product.description}</CustomizedText>
+                                    </View>
+                                </FloatingCellStyleSectionView>}
 
-                        <FloatingCellStyleSectionView sectionTitle="Purchase Options">
-                            <SpacerView space={15}>
-                                <PurchaseOptionBox price="$5.48" title="Purchase Separately" buttonText="Add To Cart" />
-                                <PurchaseOptionBox price="$8.68" title="Small Plate" buttonText="Create Meal" onButtonPress={onMealButtonPressed}/>
-                                <PurchaseOptionBox price="$11.92" title="Large Plate" buttonText="Create Meal" onButtonPress={onMealButtonPressed} />
-                            </SpacerView>
-                        </FloatingCellStyleSectionView>
+                                <FloatingCellStyleSectionView sectionTitle="Purchase Options">
+                                    <SpacerView space={15}>
+                                        <PurchaseOptionBox price="$5.48" title="Purchase Separately" buttonText="Add To Cart" />
+                                        <PurchaseOptionBox price="$8.68" title="Small Plate" buttonText="Create Meal" onButtonPress={onMealButtonPressed} />
+                                        <PurchaseOptionBox price="$11.92" title="Large Plate" buttonText="Create Meal" onButtonPress={onMealButtonPressed} />
+                                    </SpacerView>
+                                </FloatingCellStyleSectionView>
 
-                    </Spacer>
-                </View>
+                            </Spacer>
+                        </View>
+                    </ScrollView>
+                }
+            })()}
 
-            </ScrollView>
         </View>
     }
 })();
 
 
-export default MenuItemDetailScreen;
+export default ProductDetailScreen;
 
 const FoodImageView = (() => {
 
@@ -115,7 +126,7 @@ const FoodImageView = (() => {
         },
     });
 
-    return function ProductImageView() {
+    return function ProductImageView(props: { imageUri: string }) {
 
         const imageViewRef = useRef<View>(null);
         const previousMaxWidthValue = useRef<Optional<number>>(null);
@@ -132,7 +143,7 @@ const FoodImageView = (() => {
         useNotificationListener(windowDimensionsDidChangeNotification, (dimensions) => { adjustMaxSizeAccordingToWindowHeight(dimensions.height) });
 
         return <AspectRatioView ref={imageViewRef} style={styles.imageHolder} heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}>
-            <Image style={styles.image} source={require('../MenuListViewScreen/MenuListView/food-images/soup.jpg')} resizeMode={'cover'} />
+            <Image style={styles.image} source={{ uri: props.imageUri }} resizeMode={'cover'} />
         </AspectRatioView>
 
     }

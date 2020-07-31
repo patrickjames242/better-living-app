@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { FlatList, FlatListProps } from 'react-native';
 import { getNumbersList } from '../../general';
 import { NumberOfColumns, useMultipleColumnFunctionality } from './helpers';
-import MultiColumnFlatListRow from './MultipleColumnListRow';
+import MultiColumnFlatListRow from './MultiColumnListRow';
 
 
 

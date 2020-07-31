@@ -10,7 +10,6 @@ import { mapOptional } from '../../../../helpers/general';
 import LayoutConstants from '../../../../LayoutConstants';
 import AspectRatioView from '../../../../helpers/Views/AspectRatioView';
 import PresentableScreens from '../../../../PresentableScreens';
-import Product from '../../../../api/orderingSystem/products/Product';
 import { useSelector } from '../../../../redux/store';
 
 
@@ -77,12 +76,13 @@ const MenuListItemView = (() => {
     return function MenuListItemView(props: { productId: number }) {
 
         const product = useSelector(state => state.orderingSystem.products.get(props.productId));
+        const description = product?.description;
 
         const navigationScreenContext = useNavigationScreenContext();
 
         function onPress() {
-            mapOptional(PresentableScreens.MenuItemDetailScreen(), X => {
-                navigationScreenContext.present(<X/>)
+            mapOptional(PresentableScreens.ProductDetailScreen(), X => {
+                navigationScreenContext.present(<X productId={props.productId}/>)
             })
         }
 
@@ -92,7 +92,7 @@ const MenuListItemView = (() => {
                 heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}
                 style={styles.imageHolder}
             >
-                {/* <Image style={styles.image} source={props.item.imageSource} resizeMode="cover" /> */}
+                <Image style={styles.image} source={{uri: product?.imageUrl ?? undefined}} resizeMode="cover" />
             </AspectRatioView>
 
             <View style={styles.textBox}>
@@ -100,9 +100,10 @@ const MenuListItemView = (() => {
                     <CustomizedText style={styles.textBox_productName} numberOfLines={2} ellipsizeMode={'tail'}>
                         {product?.title}
                     </CustomizedText>
-                    <CustomizedText style={styles.textBox_productDescription} numberOfLines={1} ellipsizeMode={'tail'}>
-                        {product?.description}
-                    </CustomizedText>
+                    {description && 
+                        <CustomizedText style={styles.textBox_productDescription} numberOfLines={1} ellipsizeMode={'tail'}>
+                            {description}
+                        </CustomizedText>}
                 </View>
                 <View style={styles.textBox_rightSide}>
                     <CustomizedText style={styles.startingAtText}>from</CustomizedText>
@@ -114,3 +115,5 @@ const MenuListItemView = (() => {
 })();
 
 export default MenuListItemView;
+
+

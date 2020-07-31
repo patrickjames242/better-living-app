@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import {SectionList, SectionListProps, SectionListData} from 'react-native';
 import { NumberOfColumns, useMultipleColumnFunctionality } from './helpers';
 import { getNumbersList } from '../../general';
-import MultiColumnListRow from './MultipleColumnListRow';
+import MultiColumnListRow from './MultiColumnListRow';
 
 
 
