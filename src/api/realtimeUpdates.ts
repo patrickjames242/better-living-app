@@ -53,8 +53,8 @@ function setUpWebsocket() {
         console.log(event);
     }
     socket.onmessage = function (event) {
-        console.log(event);
         const data = JSON.parse(event.data);
+        console.log('socket on message', data);
         if (typeof data !== 'object') { return; }
 
         const Keys = {
@@ -74,8 +74,6 @@ function setUpWebsocket() {
                     break;
             }
         }
-
-        
     };
     socket.onclose = function (event) {
         console.log(event);

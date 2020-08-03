@@ -12,10 +12,12 @@ import store from './redux/store';
 import { startListeningForUpdates } from './api/realtimeUpdates';
 
 
+
 // store.subscribe(() => {
-	// if (Platform.OS === 'web'){
-	// 	console.log(store.getState().orderingSystem.menus.toJS());
-	// }
+// 	if (Platform.OS === 'web'){
+// 		console.log(store.getState().orderingSystem.menus.toJS());
+		
+// 	}
 // });
 
 registerRootComponent(App);
@@ -45,6 +47,3 @@ export default function App() {
 
 	
 }
-
-
-

@@ -15,6 +15,8 @@ import testReduxState from "./testData";
 import AppSettings from "../settings";
 import { mealsReducer } from "./orderingSystem/meals";
 import { mealCategoriesReducer } from "./orderingSystem/mealCategories";
+import { is } from "immutable";
+
 
 const appReducer = combineReducers({
     tabBarController: tabBarController_reducer,
@@ -40,7 +42,10 @@ const store = (() => {
 
 export default store;
 
-export const useSelector: TypedUseSelectorHook<AppState> = untypedUseSelector;
+export function useSelector<ResultType>(selector: (state: AppState) => ResultType){
+    const _useSelector: TypedUseSelectorHook<AppState> = untypedUseSelector;
+    return _useSelector(selector, is);
+}
 export const useStore: () => typeof store = untypedUseStore;
 export const useDispatch: () => typeof store.dispatch = untypedUseDispatch;
 
@@ -53,11 +58,15 @@ export function addSelectedStateListener<SelectedType>(
 
     return store.subscribe(() => {
         const newValue = selector(store.getState());
-        if (newValue !== previousValue){
+        if (is(newValue, previousValue) === false){
             previousValue = newValue;
             action(newValue);
         }
     });
 
 }
+
+
+
+
 

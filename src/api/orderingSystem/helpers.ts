@@ -16,13 +16,14 @@ export function getOrderingSystemObjRealtimeUpdater<ObjType>(props: {
     deleteStateUpdater: (deletedObjId: number) => void;
 }){
     return function(json: any){
-        if (typeof json === 'object'){return;}
+    
+        if (typeof json !== 'object'){return;}
         const all_objects = json.all_objects;
 
         if (all_objects instanceof Array){
             const allConvertedObjs = List<ObjType>().withMutations(list => {
-                for (const meal of all_objects){
-                    const converted = props.jsonObjConverter(meal);
+                for (const obj of all_objects){
+                    const converted = props.jsonObjConverter(obj);
                     converted == null || list.push(converted);
                 }
             });
