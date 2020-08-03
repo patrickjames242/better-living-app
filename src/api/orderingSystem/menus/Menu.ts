@@ -14,8 +14,8 @@ enum DayOfTheWeek{
 }
 
 export interface MenuCategory{
-    title: string;
-    productIds: Set<number>;
+    readonly title: string;
+    readonly productIds: Set<number>;
 }
 
 export default class Menu{

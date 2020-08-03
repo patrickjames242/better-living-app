@@ -22,6 +22,7 @@ export type InsertOrUpdateProductAction = CustomReduxAction<{
     product: Product
 }>;
 
+
 export function insertOrUpdateProductAction(product: Product): InsertOrUpdateProductAction{
     return {
         type: ActionStrings.orderingSystem.products.INSERT_OR_UPDATE_PRODUCT,

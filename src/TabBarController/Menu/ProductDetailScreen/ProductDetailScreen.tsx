@@ -94,7 +94,7 @@ const ProductDetailScreen = (() => {
                                         <PurchaseOptionBox price="$11.92" title="Large Plate" buttonText="Create Meal" onButtonPress={onMealButtonPressed} />
                                     </SpacerView>
                                 </FloatingCellStyleSectionView>
-
+                                
                             </Spacer>
                         </View>
                     </ScrollView>

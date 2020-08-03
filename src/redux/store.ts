@@ -11,6 +11,10 @@ import { healthTipsReducer } from "./healthTips";
 import { productsReducer } from "./orderingSystem/products";
 import { productInfoTagsReducer } from "./orderingSystem/productInfoTags";
 import { menusReducer } from "./orderingSystem/menus";
+import testReduxState from "./testData";
+import AppSettings from "../settings";
+import { mealsReducer } from "./orderingSystem/meals";
+import { mealCategoriesReducer } from "./orderingSystem/mealCategories";
 
 const appReducer = combineReducers({
     tabBarController: tabBarController_reducer,
@@ -19,12 +23,21 @@ const appReducer = combineReducers({
         products: productsReducer,
         productInfoTags: productInfoTagsReducer,
         menus: menusReducer,
+        meals: mealsReducer,
+        mealCategories: mealCategoriesReducer,
     }),
 });
 
 export type AppState = ReturnType<typeof appReducer>;
 
-const store = createStore(appReducer);
+const store = (() => {
+    if (AppSettings.useTestDatabaseData){
+        return createStore(appReducer, testReduxState);
+    } else {
+        return createStore(appReducer);
+    }
+})();
+
 export default store;
 
 export const useSelector: TypedUseSelectorHook<AppState> = untypedUseSelector;

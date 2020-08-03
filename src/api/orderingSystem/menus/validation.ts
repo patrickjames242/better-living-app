@@ -1,3 +1,4 @@
+
 import { Optional, getNumbersList } from "../../../helpers/general";
 import ajv from "ajv";
 
@@ -25,6 +26,7 @@ export const MenuJsonKeys: {
         product_ids: 'product_ids',
     }
 }
+
 
 export interface MenuJsonResponseObj{
     [MenuJsonKeys.id]: number;

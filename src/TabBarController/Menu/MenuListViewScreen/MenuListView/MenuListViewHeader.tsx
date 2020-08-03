@@ -1,15 +1,17 @@
 
 
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 import LayoutConstants from '../../../../LayoutConstants';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import { View, FlatList, StyleSheet } from 'react-native';
 import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
 import { CustomColors, Color } from '../../../../helpers/colors';
-import { useCurrentMenu } from '../../../../api/orderingSystem/menus/helpers';
-import { MenuCategory } from '../../../../api/orderingSystem/menus/Menu';
-import { Set, List } from 'immutable';
+import { useMenulistViewScreenContext, ALL_CATEGORIES_CATEGORY } from '../helpers';
+
+interface MenuListViewHeader{
+    
+}
 
 const MenuListViewHeader = (() => {
 
@@ -33,7 +35,7 @@ const MenuListViewHeader = (() => {
         },
     });
 
-    return function MenuListViewHeader() {
+    return function MenuListViewHeader(props: MenuListViewHeader) {
         return <View style={styles.root}>
             <View style={styles.topTitlesHolder}>
                 <CustomizedText style={styles.topTitles_topBoldTitle}>Hello, Patrick</CustomizedText>
@@ -46,7 +48,9 @@ const MenuListViewHeader = (() => {
 
 export default MenuListViewHeader;
 
-
+interface MenuCategoriesListViewProps{
+    
+}
 
 const MenuCategoriesListView = (() => {
 
@@ -67,20 +71,15 @@ const MenuCategoriesListView = (() => {
         }
     });
 
-    const allCategory: MenuCategory = {
-        title: 'All',
-        productIds: Set()
-    }
+ 
 
-    return function MenuCategoriesListView() {
+    return function MenuCategoriesListView(props: MenuCategoriesListViewProps) {
 
-        const allCategories = (useCurrentMenu()?.categories ?? List()).unshift(allCategory);
+        const listViewContext = useMenulistViewScreenContext();
 
-        const [selectedItemTitle, setSelectedItemTitle] = useState(allCategory.title);
-
-        function onItemPress(text: string) {
-            setSelectedItemTitle(text);
-        }
+        const allCategories = useMemo(() => {
+            return listViewContext.allSortedCategories.unshift(ALL_CATEGORIES_CATEGORY).toArray();
+        }, [listViewContext.allSortedCategories]);
 
         return <View style={styles.root}>
             <FlatList
@@ -89,13 +88,13 @@ const MenuCategoriesListView = (() => {
                 contentContainerStyle={styles.listViewContainer}
                 horizontal
                 ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
-                data={allCategories.toArray() as Array<MenuCategory>} // without this, on the web, react doesn't check the children of the list for changes
+                data={allCategories} // without this, on the web, react doesn't check the children of the list for changes
                 keyExtractor={(_, index) => String(index)}
                 renderItem={({ item }) => {
                     return <MenuCategoriesListViewItem
                         text={item.title}
-                        onPress={onItemPress}
-                        isSelected={item.title === selectedItemTitle} />
+                        onPress={() => listViewContext.setSelectedCategory(item)}
+                        isSelected={item.title === listViewContext.selectedCategory.title} />
                 }}
             />
         </View>

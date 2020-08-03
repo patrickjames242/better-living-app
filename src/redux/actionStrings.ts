@@ -27,6 +27,16 @@ const ActionStrings = nestReduxActionStrings({
             UPDATE_ALL_MENUS: 'UPDATE_ALL_MENUS',
             INSERT_OR_UPDATE_MENUS: 'INSERT_OR_UPDATE_MENUS',
             DELETE_MENU: 'DELETE_MENU',
+        },
+        meals: {
+            UPDATE_ALL_MEALS: 'UPDATE_ALL_MEALS',
+            INSERT_OR_UPDATE_MEAL: 'INSERT_OR_UPDATE_MEAL',
+            DELETE_MEAL: 'DELETE_MEAL',
+        },
+        mealCategories: {
+            UPDATE_ALL_MEAL_CATEGORIES: 'UPDATE_ALL_MEAL_CATEGORIES',
+            INSERT_OR_UPDATE_MEAL_CATEGORY: 'INSERT_OR_UPDATE_MEAL_CATEGORY',
+            DELETE_MEAL_CATEGORY: 'DELETE_MEAL_CATEGORY',
         }
     }
 });

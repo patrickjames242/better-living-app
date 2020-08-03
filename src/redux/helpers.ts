@@ -1,6 +1,6 @@
 import { Action as ReduxAction } from "redux";
 import { AppState } from "react-native";
-import { Optional, useUpdateEffect } from "../helpers/general";
+import { Optional } from "../helpers/general";
 import { useRef, useMemo } from "react";
 import { useSelector } from "react-redux";
 

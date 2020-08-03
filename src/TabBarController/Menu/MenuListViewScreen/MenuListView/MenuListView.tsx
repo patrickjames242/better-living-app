@@ -14,6 +14,8 @@ import { useCurrentMenu } from '../../../../api/orderingSystem/menus/helpers';
 import { MenuCategory } from '../../../../api/orderingSystem/menus/Menu';
 import MultiColumnSectionList from '../../../../helpers/Views/MultipleColumnLists/MultiColumnSectionList';
 import Product from '../../../../api/orderingSystem/products/Product';
+import { List } from 'immutable';
+import { useMenulistViewScreenContext, ALL_CATEGORIES_CATEGORY } from '../helpers';
 
 
 export interface MenuListViewProps {
@@ -95,15 +97,19 @@ const MenuListView = (() => {
 
         // for each menuListSection this returns a fake section where each item in the data array represents one of the row indices of the section in order starting from 0
 
-        const menu = useCurrentMenu();
+        
 
         const allProducts = useSelector(state => state.orderingSystem.products);
 
-        const menuCategories = menu?.categories
+        const menuListViewContext = useMenulistViewScreenContext();
+    
+        const selectedCategory = menuListViewContext.selectedCategory;
+        const sortedCategories = menuListViewContext.allSortedCategories;
+        
 
         const listViewSections = useMemo(() => {
-            const sortedCategories = menuCategories?.toArray().sort((a, b) => a.title.localeCompare(b.title)) ?? [];
-            return sortedCategories.map(category => {
+            const categoriesToDisplay = selectedCategory === ALL_CATEGORIES_CATEGORY ? sortedCategories : List([selectedCategory]);
+            return categoriesToDisplay.toArray().map(category => {
                 return {
                     menuCategory: category,
                     data: (() => {
@@ -116,7 +122,7 @@ const MenuListView = (() => {
                     })()
                 }
             }) ?? [];
-        }, [allProducts, menuCategories]);
+        }, [allProducts, selectedCategory, sortedCategories]);
 
 
         return useMemo(() => (
