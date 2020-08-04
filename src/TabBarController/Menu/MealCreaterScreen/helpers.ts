@@ -1,24 +1,15 @@
 
-import { MenuListItem, getRandomFoods } from "../MenuListViewScreen/MenuListView/helpers"
+import { List } from "immutable";
 
 
-
-export interface MealCreatorSection {
-    id: number,
-    readonly title: string,
-    readonly data: MenuListItem[],
+export interface MealConfigCategoryChoice{
+    categoryId: number;
+    chosenProductId: number;
 }
 
-export const listData: MealCreatorSection[] = [
-
-    "Entré", "Starch Side", "Vegetable Side 1", "Vegetable Side 2"
-    
-].map((sectionName, index) => {
-    return {
-        id: index,
-        title: sectionName,
-        data: getRandomFoods(4),
-    }
-});
+export interface MealConfig{
+    mealId: number;
+    choices?: List<MealConfigCategoryChoice>;
+}
 
 

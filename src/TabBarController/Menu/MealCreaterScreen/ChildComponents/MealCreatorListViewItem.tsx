@@ -9,13 +9,14 @@ import MealCreatorCheckBoxButton from './MealCreatorCheckBox';
 import MealCreatorListViewItemInfoBox from './MealCreatorListViewItemInfoBox';
 import { mapOptional, Optional } from '../../../../helpers/general';
 import ValueBox from '../../../../helpers/ValueBox';
+import Product from '../../../../api/orderingSystem/products/Product';
 
 
 
 export interface MealCreatorListViewItemProps {
     // the number is the id of the item,
     sectionSelectionValue: ValueBox<Optional<number>>,
-    item: MenuListItem,
+    item: Product,
 }
 
 const MealCreatorListViewItem = (() => {

@@ -6,10 +6,11 @@ import { getShadowStyle } from '../../../../helpers/general';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
 import CustomizedText from '../../../../helpers/Views/CustomizedText';
-
+import currency from 'currency.js';
 
 export interface MealCreatorScreenAddToCartButtonProps {
     onPress?: () => void;
+    price: number;
 }
 
 const MealCreatorScreenAddToCartButton = (() => {
@@ -42,7 +43,7 @@ const MealCreatorScreenAddToCartButton = (() => {
 
         return <BouncyButton style={styles.root} contentViewProps={{ style: styles.contentView }} onPress={props.onPress} bounceScaleValue={0.9}>
             <CustomizedText style={styles.text}>Add to Cart</CustomizedText>
-            <CustomizedText style={styles.text}>$11.88</CustomizedText>
+            <CustomizedText style={styles.text}>{currency(props.price).format()}</CustomizedText>
         </BouncyButton>
 
     }

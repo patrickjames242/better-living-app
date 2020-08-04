@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { MenuListItem } from "../../MenuListViewScreen/MenuListView/helpers";
 import { getShadowStyle } from "../../../../helpers/general";
 import { CustomFont } from "../../../../helpers/fonts/fonts";
 import BouncyButton from "../../../../helpers/Buttons/BouncyButton";
@@ -9,10 +8,11 @@ import AspectRatioView from "../../../../helpers/Views/AspectRatioView";
 import CustomizedText from "../../../../helpers/Views/CustomizedText";
 import {StyleSheet, Image} from 'react-native';
 import MealCreatorConstants from '../MealCreatorConstants';
+import Product from '../../../../api/orderingSystem/products/Product';
 
 
 export interface MealCreatorListViewItemInfoBoxProps {
-    item: MenuListItem,
+    item: Product,
     onPress: () => void,
 }
 
@@ -55,9 +55,10 @@ const MealCreatorListViewItemInfoBox = (() => {
         return <BouncyButton style={styles.root} bounceScaleValue={0.9} onPress={props.onPress} contentViewProps={{style: styles.contentView}}>
             <Spacer space={MealCreatorConstants.foodSections.contentViewPadding}>
                 <AspectRatioView style={styles.imageHolder} heightPercentageOfWidth={MealCreatorConstants.foodSections.imageHeightPercentageOfWidth}>
-                    <Image style={styles.image} source={props.item.imageSource} resizeMode="cover" />
+                    {props.item.imageUrl &&
+                        <Image style={styles.image} source={{uri: props.item.imageUrl}} resizeMode="cover" />}
                 </AspectRatioView>
-                <CustomizedText style={styles.titleText}>{props.item.name}</CustomizedText>
+                <CustomizedText style={styles.titleText}>{props.item.title}</CustomizedText>
             </Spacer>
         </BouncyButton>
     }

@@ -1,22 +1,27 @@
 
-
-
 import React, { useState, useMemo, useRef } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
-import { listData, MealCreatorSection} from './helpers';
+import { MealConfig} from './helpers';
 import MealCreatorConstants from './MealCreatorConstants';
 import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import MealCreatorScreenAddToCartButton from './ChildComponents/MealCreatorScreenAddToCartButton';
 import MealCreatorListViewItem from './ChildComponents/MealCreatorListViewItem';
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 import FloatingCellStyleList from '../../../helpers/Views/FloatingCellStyleList';
 import ValueBox from '../../../helpers/ValueBox';
-import { Optional } from '../../../helpers/general';
-import { MenuListItem } from '../MenuListViewScreen/MenuListView/helpers';
+import { Optional, compactMap } from '../../../helpers/general';
 import BottomScreenGradientHolder, { BottomScreenGradientHolderRef } from '../../../helpers/Views/BottomScreenGradientHolder';
 import LayoutConstants from '../../../LayoutConstants';
+import { useSelector } from '../../../redux/store';
+import MealCategory from '../../../api/orderingSystem/mealCategories/MealCategory';
+import Product from '../../../api/orderingSystem/products/Product';
+import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
 
+
+export interface MealCreatorScreenProps{
+    defaultMealConfig: MealConfig
+}
 
 const MealCreatorScreen = (() => {
 
@@ -36,8 +41,42 @@ const MealCreatorScreen = (() => {
         }
     });
 
+    interface MealCreatorSection{
+        id: number;
+        title: number;
+        data: Product[];
+    }
 
-    const MealCreatorScreen = () => {
+
+    const MealCreatorScreen = (props: MealCreatorScreenProps) => {
+
+        const meal = useSelector(state => state.orderingSystem.meals.get(props.defaultMealConfig.mealId));
+        const mealCategories = useSelector(state => {
+            return List<MealCategory>().withMutations(list => {
+                meal?.productCategories.sortBy(x => x.orderNumber).forEach(({id: categoryId}) => {
+                    const category = state.orderingSystem.mealCategories.get(categoryId);
+                    category && list.push(category);
+                });
+            });
+        });
+        const productsMap = useSelector(state => {
+            return Map<number, Product>().withMutations(map => {
+                mealCategories.forEach(mealCategory => {
+                    mealCategory.productIds.forEach(productId => {
+                        const product = state.orderingSystem.products.get(productId);
+                        product && map.set(product.id, product);
+                    });
+                });
+            });
+        });
+
+        const listViewSections = useMemo(() => {
+            return mealCategories.map(category => ({
+                id: category.id,
+                title: category.displayName ?? category.uniqueName,
+                data: compactMap(category.productIds.toArray(), id => productsMap.get(id)).sort((a, b) => a.title.localeCompare(b.title)), 
+            })).toArray();
+        }, [mealCategories, productsMap]);
 
         const [bottomButtonViewHeight, setBottomButtonViewHeight] = useState(0);
 
@@ -47,14 +86,19 @@ const MealCreatorScreen = (() => {
             navigationScreenContext.dismissToRoot();
         }
 
+
         // key is the section id. value is the item id.
-        const selectedItemsForEachSection = useMemo(() => {
-            return Map<number, ValueBox<Optional<number>>>().withMutations(mutable => {
-                listData.forEach(x => {
-                    mutable.set(x.id, new ValueBox<Optional<number>>(null));
+        const selectedItemsForEachSection = useRef(Map<number, ValueBox<Optional<number>>>());
+        
+        useMemo(() => {
+            const selectedItems = selectedItemsForEachSection;
+            selectedItems.current = selectedItems.current.withMutations(map => {
+                listViewSections.forEach(section => {
+                    map.set(section.id, map.get(section.id) ?? new ValueBox(null));
                 });
             });
-        }, []);
+        }, [listViewSections]);
+
 
         const initialNumToRender = useMemo(() => {
             return Math.ceil(Dimensions.get('window').height / MealCreatorConstants.foodSections.rowHeight);
@@ -64,35 +108,43 @@ const MealCreatorScreen = (() => {
 
         const sectionList = useMemo(() => {
             
-            return <FloatingCellStyleList<MenuListItem, MealCreatorSection>
+            return <FloatingCellStyleList<Product, {id: number, title: string; data: Product[];}>
                 style={styles.sectionList}
                 contentContainerStyle={{paddingBottom: bottomButtonViewHeight + bottomButtonTopAndBottomInsets}}
-                sections={listData}
+                sections={listViewSections}
                 titleForSection={section => section.title}                
                 onScroll={event => bottomButtonHolderRef.current?.notifyThatScrollViewScrolled(event)}
                 keyExtractor={item => String(item.id)}
                 renderItem={({ item, section }) => {
-                    const _section = section = section as MealCreatorSection;
+                    const _section = section as MealCreatorSection;
                     return <MealCreatorListViewItem
                         item={item}
-                        sectionSelectionValue={selectedItemsForEachSection.get(_section.id)!}
+                        sectionSelectionValue={selectedItemsForEachSection.current.get(_section.id)!}
                     />
                 }}
                 initialNumToRender={initialNumToRender}
                 windowSize={10}
             />
 
-        }, [bottomButtonViewHeight, initialNumToRender, selectedItemsForEachSection]);
+        }, [bottomButtonViewHeight, initialNumToRender, listViewSections, selectedItemsForEachSection]);
 
 
         return <View style={styles.root}>
-            <NavigationControllerNavigationBar title="Large Plate" />
-            {sectionList}
-            <BottomScreenGradientHolder style={styles.bottomButtonHolder} ref={bottomButtonHolderRef} onLayout={layout => {
-                setBottomButtonViewHeight(layout.nativeEvent.layout.height);
-            }}>
-                <MealCreatorScreenAddToCartButton onPress={onAddToCartButtonPressed}/>
-            </BottomScreenGradientHolder>
+            <NavigationControllerNavigationBar title={meal?.title ?? ""} />
+            {(() => {
+                if (meal == null){
+                    return <ResourceNotFoundView/>
+                } else {
+                    return <>
+                        {sectionList}
+                        <BottomScreenGradientHolder style={styles.bottomButtonHolder} ref={bottomButtonHolderRef} onLayout={layout => {
+                            setBottomButtonViewHeight(layout.nativeEvent.layout.height);
+                        }}>
+                            <MealCreatorScreenAddToCartButton price={meal.price} onPress={onAddToCartButtonPressed}/>
+                        </BottomScreenGradientHolder>
+                    </>
+                }
+            })()}
         </View>
     }
 

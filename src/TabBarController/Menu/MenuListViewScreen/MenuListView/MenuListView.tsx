@@ -10,7 +10,6 @@ import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNotificationListener } from '../../../../helpers/Notification';
 import { useSelector } from '../../../../redux/store';
-import { useCurrentMenu } from '../../../../api/orderingSystem/menus/helpers';
 import { MenuCategory } from '../../../../api/orderingSystem/menus/Menu';
 import MultiColumnSectionList from '../../../../helpers/Views/MultipleColumnLists/MultiColumnSectionList';
 import Product from '../../../../api/orderingSystem/products/Product';
@@ -160,6 +159,7 @@ const MenuListView = (() => {
                     }}
                     stickySectionHeadersEnabled={false}
                     sections={listViewSections}
+                    keyExtractor={(item, index) => item + "," + index} // so react can shut up
                     ListHeaderComponent={MenuListViewHeader}
                     renderItem={item => {
                         return <MenuListItemView productId={item} />

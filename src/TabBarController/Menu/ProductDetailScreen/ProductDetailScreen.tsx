@@ -21,6 +21,7 @@ import { useSelector } from '../../../redux/store';
 import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
 import { useMealsForProduct } from '../../../api/orderingSystem/productsToMealsHelpers';
 import currency from 'currency.js';
+import { List } from 'immutable';
 
 interface ProductDetailScreenProps {
     productId: number;
@@ -63,26 +64,43 @@ const ProductDetailScreen = (() => {
 
         const navigationScreenContext = useNavigationScreenContext();
 
-        function onMealButtonPressed() {
+        function onMealButtonPressed(mealId: number) {
             mapOptional(PresentableScreens.MealCreatorScreen(), X => {
-                navigationScreenContext.present(<X />);
+                navigationScreenContext.present(<X defaultMealConfig={{mealId, choices: List()}} />);
             });
+        }
+
+        function onAddToCartButtonPressed(){
+
         }
 
         const meals = useMealsForProduct(props.productId);
 
         const productIndividualPrice = product?.individualPrice;
 
+        interface PurchaseOption{
+            mealId: Optional<number>;
+            title: string;
+            price: number;
+            buttonText: string;
+        }
+
         const purchaseOptions = useMemo(() => {
 
-            const allOptions = mapOptional(productIndividualPrice, price => [{
+            const allOptions: PurchaseOption[] = mapOptional(productIndividualPrice, price => [{
+                mealId: null,
                 title: "Purchase Separately",
                 price: price,
                 buttonText: 'Add to Cart',
             }]) ?? [];
 
-            meals.forEach(meal => {
+            meals.sort((a, b) => {
+                if (a.price === b.price) return 0; 
+                else if (a.price < b.price) return -1; 
+                else return 1;
+            }).forEach(meal => {
                 allOptions.push({
+                    mealId: meal.id,
                     title: meal.title,
                     price: meal.price,
                     buttonText: 'Create Meal'
@@ -115,16 +133,14 @@ const ProductDetailScreen = (() => {
                                     <FloatingCellStyleSectionView sectionTitle="Purchase Options">
                                         {/* eslint-disable-next-line react/no-children-prop */}
                                         <SpacerView space={15} children={
-                                            purchaseOptions.map((x, index) => <PurchaseOptionBox key={index} price={currency(x.price).format()} title={x.title} buttonText={x.buttonText} />)
+                                            purchaseOptions.map((x, index) => <PurchaseOptionBox key={index} price={currency(x.price).format()} title={x.title} buttonText={x.buttonText} onButtonPress={() => x.mealId ? onMealButtonPressed(x.mealId) : onAddToCartButtonPressed()}/>)
                                         } />
                                     </FloatingCellStyleSectionView>}
-
                             </Spacer>
                         </View>
                     </ScrollView>
                 }
             })()}
-
         </View>
     }
 })();

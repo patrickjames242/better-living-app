@@ -3,7 +3,7 @@ import { List } from "immutable";
 import { MealJsonResponseObj, mealResponseObjValidator } from "./validation";
 import getErrorObjFromApiObjValidateFunction from "../../helpers";
 
-interface MealProductCategoryEntry{
+export interface MealProductCategoryEntry{
     id: number;
     orderNumber: number;
 }

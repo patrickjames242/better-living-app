@@ -59,7 +59,7 @@ const TitleBox = (() => {
         const currentMenu = useCurrentMenu();
         
         const categoryTitles = useMemo(() => {
-            return (currentMenu?.categories.map(x => x.title).sort((a, b) => a.localeCompare(b)) ?? [])
+            return (currentMenu?.categories.filter(x => x.productIds.contains(props.product.id)).map(x => x.title).sort((a, b) => a.localeCompare(b)) ?? [])
         // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [currentMenu]);
 
