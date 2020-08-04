@@ -1,8 +1,9 @@
 
-import { Map, Set, is } from "immutable";
-import store, { addSelectedStateListener } from "../../redux/store";
+import { Map, Set, is, List } from "immutable";
+import store, { addSelectedStateListener, useSelector } from "../../redux/store";
 import ValueBox from "../../helpers/ValueBox";
 import { useState, useEffect, useMemo, useCallback } from "react";
+import Meal from "./meals/Meal";
 
 
 
@@ -85,28 +86,39 @@ export function useProductsToMealsMap() {
 
 export function useMealsForProduct(productId: number) {
 
-    const computeMeals = useCallback((map: ProductsToMealsMap) => {
+    const computeMealIds = useCallback((map: ProductsToMealsMap) => {
         return map.get(productId) ?? Set<number>()
     }, [productId]);
 
-    const initialValue = useMemo(() => computeMeals(computeProductsToMealsMap()),
+    const initialValue = useMemo(() => computeMealIds(computeProductsToMealsMap()),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
 
-    const [meals, setMeals] = useState(initialValue);
+    const allMealsState = useSelector(state => state.orderingSystem.meals);
+
+    const [mealIds, setMealIds] = useState(initialValue);
+
+    const meals = useMemo(() => {
+        return List<Meal>().withMutations(list => {
+            mealIds.forEach(mealId => {
+                const meal = allMealsState.get(mealId);
+                meal instanceof Meal && list.push(meal);
+            });
+        });
+    }, [allMealsState, mealIds]);
 
     useEffect(() => {
         return addProductstoMealsMapListener(map => {
-            const newValue = computeMeals(map);
-            setMeals(prevState => {
+            const newValue = computeMealIds(map);
+            setMealIds(prevState => {
                 if (is(prevState, newValue)) {
                     return prevState;
                 }
                 return newValue;
             });
         });
-    }, [computeMeals]);
+    }, [computeMealIds]);
 
     return meals;
 

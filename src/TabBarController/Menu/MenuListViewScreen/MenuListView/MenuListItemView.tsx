@@ -1,16 +1,18 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
 import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import { CustomColors, Color } from '../../../../helpers/colors';
 import { useNavigationScreenContext } from '../../../../helpers/NavigationController/NavigationScreen';
-import { mapOptional } from '../../../../helpers/general';
+import { mapOptional, compactMap } from '../../../../helpers/general';
 import LayoutConstants from '../../../../LayoutConstants';
 import AspectRatioView from '../../../../helpers/Views/AspectRatioView';
 import PresentableScreens from '../../../../PresentableScreens';
 import { useSelector } from '../../../../redux/store';
+import { useMealsForProduct } from '../../../../api/orderingSystem/productsToMealsHelpers';
+import currency from 'currency.js';
 
 
 const MenuListItemView = (() => {
@@ -78,6 +80,19 @@ const MenuListItemView = (() => {
         const product = useSelector(state => state.orderingSystem.products.get(props.productId));
         const description = product?.description;
 
+        
+        const mealsForProduct = useMealsForProduct(props.productId);
+
+        const productIndividualPrice = product?.individualPrice;
+        
+        const cheapestPrice = useMemo(() => {
+            const allPrices = productIndividualPrice ? [productIndividualPrice] : [];
+            allPrices.push(...mealsForProduct.toArray().map(x => x.price));
+            if (allPrices.length === 0){return null;}
+            return Math.min(...allPrices);
+        }, [mealsForProduct, productIndividualPrice]);
+
+        
         const navigationScreenContext = useNavigationScreenContext();
 
         function onPress() {
@@ -105,10 +120,10 @@ const MenuListItemView = (() => {
                             {description}
                         </CustomizedText>}
                 </View>
-                <View style={styles.textBox_rightSide}>
+                {cheapestPrice && <View style={styles.textBox_rightSide}>
                     <CustomizedText style={styles.startingAtText}>from</CustomizedText>
-                    <CustomizedText style={styles.priceText}>{String(product?.individualPrice ?? "$00.00")}</CustomizedText>
-                </View>
+                    <CustomizedText style={styles.priceText}>{currency(cheapestPrice).format()}</CustomizedText>
+                </View>}
             </View>
         </BouncyButton>
     }

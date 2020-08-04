@@ -13,6 +13,7 @@ import { startListeningForUpdates } from './api/realtimeUpdates';
 
 
 
+
 // store.subscribe(() => {
 // 	if (Platform.OS === 'web'){
 // 		console.log(store.getState().orderingSystem.menus.toJS());
@@ -47,3 +48,5 @@ export default function App() {
 
 	
 }
+
+

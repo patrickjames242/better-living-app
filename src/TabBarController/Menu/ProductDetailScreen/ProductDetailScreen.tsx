@@ -1,5 +1,5 @@
 
-import React, { useRef, useCallback, useLayoutEffect } from 'react';
+import React, { useRef, useCallback, useLayoutEffect, useMemo } from 'react';
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -19,6 +19,8 @@ import PresentableScreens from '../../../PresentableScreens';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import { useSelector } from '../../../redux/store';
 import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
+import { useMealsForProduct } from '../../../api/orderingSystem/productsToMealsHelpers';
+import currency from 'currency.js';
 
 interface ProductDetailScreenProps {
     productId: number;
@@ -67,6 +69,29 @@ const ProductDetailScreen = (() => {
             });
         }
 
+        const meals = useMealsForProduct(props.productId);
+
+        const productIndividualPrice = product?.individualPrice;
+
+        const purchaseOptions = useMemo(() => {
+
+            const allOptions = mapOptional(productIndividualPrice, price => [{
+                title: "Purchase Separately",
+                price: price,
+                buttonText: 'Add to Cart',
+            }]) ?? [];
+
+            meals.forEach(meal => {
+                allOptions.push({
+                    title: meal.title,
+                    price: meal.price,
+                    buttonText: 'Create Meal'
+                })
+            });
+            return allOptions;
+
+        }, [meals, productIndividualPrice]);
+
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title={product?.title ?? ""} />
             {(() => {
@@ -78,7 +103,7 @@ const ProductDetailScreen = (() => {
                             <Spacer space={LayoutConstants.floatingCellStyles.sectionSpacing}>
                                 <SpacerView space={20}>
                                     {product.imageUrl && <FoodImageView imageUri={product.imageUrl} />}
-                                    <TitleBox product={product}/>
+                                    <TitleBox product={product} />
                                 </SpacerView>
 
                                 {product.description && <FloatingCellStyleSectionView sectionTitle="Description">
@@ -86,15 +111,14 @@ const ProductDetailScreen = (() => {
                                         <CustomizedText style={styles.descriptionText}>{product.description}</CustomizedText>
                                     </View>
                                 </FloatingCellStyleSectionView>}
+                                {purchaseOptions.length >= 1 &&
+                                    <FloatingCellStyleSectionView sectionTitle="Purchase Options">
+                                        {/* eslint-disable-next-line react/no-children-prop */}
+                                        <SpacerView space={15} children={
+                                            purchaseOptions.map((x, index) => <PurchaseOptionBox key={index} price={currency(x.price).format()} title={x.title} buttonText={x.buttonText} />)
+                                        } />
+                                    </FloatingCellStyleSectionView>}
 
-                                <FloatingCellStyleSectionView sectionTitle="Purchase Options">
-                                    <SpacerView space={15}>
-                                        <PurchaseOptionBox price="$5.48" title="Purchase Separately" buttonText="Add To Cart" />
-                                        <PurchaseOptionBox price="$8.68" title="Small Plate" buttonText="Create Meal" onButtonPress={onMealButtonPressed} />
-                                        <PurchaseOptionBox price="$11.92" title="Large Plate" buttonText="Create Meal" onButtonPress={onMealButtonPressed} />
-                                    </SpacerView>
-                                </FloatingCellStyleSectionView>
-                                
                             </Spacer>
                         </View>
                     </ScrollView>

@@ -12,6 +12,7 @@
     "@types/react-redux": "^7.1.8",
     "@types/url-parse": "^1.4.3",
     "ajv": "^6.12.3",
+    "currency.js": "^2.0.2",
     "expo": "~37.0.3",
     "expo-av": "~8.1.0",
     "expo-document-picker": "~8.1.0",

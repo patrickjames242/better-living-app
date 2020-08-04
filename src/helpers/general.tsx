@@ -150,7 +150,6 @@ export function displayErrorMessage(message: string){
     } else {
         Alert.alert('Oops!', message, [{text: 'Ok'}]);
     }
-    
 }
 
 
@@ -159,4 +158,7 @@ export function getJsonValidatorErrorsText(validator: ValidateFunction): Optiona
     if (errors == null){return null;}
     return '[' + '\n' + errors.map(x => `\tdataPath: '${x.dataPath}', message: ${x.message}`).join(',\n') + '\n]'
 }
+
+
+
 
