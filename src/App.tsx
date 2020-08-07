@@ -1,6 +1,4 @@
 
-import 'intl';
-
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import { registerRootComponent, AppLoading } from 'expo';
@@ -10,7 +8,6 @@ import TabBarController from './TabBarController/TabBarController';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './redux/store';
 import { startListeningForUpdates } from './api/realtimeUpdates';
-
 
 
 
@@ -50,5 +47,6 @@ export default function App() {
 	}
 	
 }
+
 
 

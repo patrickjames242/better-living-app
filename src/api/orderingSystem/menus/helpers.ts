@@ -1,9 +1,9 @@
 
 import { MenuJsonResponseObj } from "./validation";
 import Menu from "./Menu";
-import { Optional } from "../../../helpers/general";
+import { Optional, mapOptional } from "../../../helpers/general";
 import store, { addSelectedStateListener, AppState } from "../../../redux/store";
-import { Map } from "immutable";
+import { Map, Set } from "immutable";
 import moment, { Moment } from 'moment-timezone';
 import ValueBox from "../../../helpers/ValueBox";
 import { useEffect, useState } from "react";
@@ -50,14 +50,24 @@ function calculateIsCurrentMenu(menu: Menu){
     return (currentTimeSeconds >= startTimeSeconds && currentTimeSeconds < endTimeSeconds);
 }
 
-function calculateCurrentMenu(menusState: Map<number, Menu>): Optional<Menu>{
+function calculateProductIdsSetForMenu(menu: Menu){
+    return Set<number>().withMutations(set => {
+        menu.categories.forEach(category => {
+            category.productIds.map(productId => {
+                set.add(productId);
+            });
+        });
+    });
+}
+
+function calculateCurrentMenu(menusState: Map<number, Menu>): Optional<[Menu, Set<number>]>{
     const iterator = menusState.values()
 
     let currentNext = iterator.next();
     
     while (currentNext.done !== true){
         const menu = currentNext.value as Menu;
-        if (calculateIsCurrentMenu(menu) === true){return menu;}
+        if (calculateIsCurrentMenu(menu) === true){return [menu, calculateProductIdsSetForMenu(menu)];}
         currentNext = iterator.next();
     }
 
@@ -66,7 +76,7 @@ function calculateCurrentMenu(menusState: Map<number, Menu>): Optional<Menu>{
 
 const selectMenusState = (state: AppState) => state.orderingSystem.menus;
 
-const currentMenuHolder = new ValueBox<Optional<Menu>>(calculateCurrentMenu(selectMenusState(store.getState())));
+const currentMenuHolder: ValueBox<Optional<[Menu, Set<number>]>> = new ValueBox(calculateCurrentMenu(selectMenusState(store.getState())));
 
 function updateCurrentMenuIfNeeded(){
     const previousMenu = currentMenuHolder.value;
@@ -81,15 +91,19 @@ addSelectedStateListener(selectMenusState, () => {
 });
 
 setInterval(() => {
-
     updateCurrentMenuIfNeeded()
-
 }, 1000 * 60);
 
-export const getCurrentMenu = () => currentMenuHolder.value;
+
+
+
+
+
+export const getCurrentMenu = () => mapOptional(currentMenuHolder.value, ([menu]) => menu);
 
 export function addCurrentMenuListener(listener: (menu: Optional<Menu>) => void){
-    return currentMenuHolder.observer.addListener(menu => {
+    return currentMenuHolder.observer.addListener(tuple => {
+        const menu = mapOptional(tuple, ([menu]) => menu);
         listener(menu);
     });
 }
@@ -102,4 +116,25 @@ export function useCurrentMenu(){
     }, []);
     return menu;
 }
+
+
+
+
+
+
+export const getProductIdsForCurrentMenu = () => mapOptional(currentMenuHolder.value, ([_, ids]) => ids) ?? Set<number>();
+
+export function addCurrentMenuProductIdsListener(listener: (ids: Set<number>) => void){
+    return currentMenuHolder.observer.addListener(tuple => {
+        const ids = mapOptional(tuple, ([,ids]) => ids) ?? Set<number>();
+        listener(ids);
+    });
+}
+
+export function useCurrentMenuProductIds(){
+    const [ids, setIds] = useState(getProductIdsForCurrentMenu());
+    useEffect(() => addCurrentMenuProductIdsListener(ids => setIds(ids)), []);
+    return ids;
+}
+
 

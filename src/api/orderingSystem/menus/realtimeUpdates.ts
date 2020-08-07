@@ -13,3 +13,4 @@ export const handleMenusRealtimeUpdate = getOrderingSystemObjRealtimeUpdater<Men
     insertOrUpdateStateUpdater: menu => store.dispatch(insertOrUpdateMenuAction(menu)),
     deleteStateUpdater: id => store.dispatch(deleteMenuAction(id)),
 });
+

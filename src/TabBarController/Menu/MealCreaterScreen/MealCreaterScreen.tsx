@@ -18,6 +18,7 @@ import Product from '../../../api/orderingSystem/products/Product';
 import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MenuNavStackParams } from '../navigationHelpers';
+import { useCurrentMenuProductIds } from '../../../api/orderingSystem/menus/helpers';
 
 
 export interface MealCreatorScreenProps{
@@ -60,10 +61,14 @@ const MealCreatorScreen = (() => {
                 });
             });
         });
+
+        const currentMenuProductIds = useCurrentMenuProductIds();
+
         const productsMap = useSelector(state => {
             return Map<number, Product>().withMutations(map => {
                 mealCategories.forEach(mealCategory => {
                     mealCategory.productIds.forEach(productId => {
+                        if (currentMenuProductIds.contains(productId) === false){return;}
                         const product = state.orderingSystem.products.get(productId);
                         product && map.set(product.id, product);
                     });

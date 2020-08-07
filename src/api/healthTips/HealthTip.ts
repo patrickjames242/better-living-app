@@ -2,8 +2,8 @@
 import { Optional, getJsonValidatorErrorsText } from "../../helpers/general";
 import { List } from "immutable";
 import { HealthTipJsonResponseObj, healthTipResponseObjValidator } from "./validation";
+import moment from 'moment-timezone';
 
-const dateFormatter = Intl.DateTimeFormat('en-us', { month: 'short', day: 'numeric', year: 'numeric' });
 
 export interface HealthTipAudioFile {
     id: number,
@@ -17,7 +17,7 @@ export default class HealthTip {
 
     readonly id: number;
     readonly title: string;
-    readonly date: Date;
+    readonly date: moment.Moment;
     readonly youtubeVideoIDs: List<string>;
     readonly audioFiles: List<HealthTipAudioFile>;
     readonly articleText: Optional<string>;
@@ -37,7 +37,7 @@ export default class HealthTip {
 
         this.id = apiResponseObj.id;
         this.title = apiResponseObj.title;
-        this.date = new Date(apiResponseObj.date);
+        this.date = moment(apiResponseObj.date);
         this.youtubeVideoIDs = List(apiResponseObj.yt_video_ids);
         this.audioFiles = List(apiResponseObj.audio_files.map<HealthTipAudioFile>(x => ({
             id: x.id,
@@ -49,6 +49,6 @@ export default class HealthTip {
     }
 
     getFormattedDateString() {
-        return dateFormatter.format(this.date);
+        return this.date.format('ll');
     }
 }

@@ -14,7 +14,6 @@ const Cart = React.memo(function _InnerCart(){
             <CartNavStack.Screen name="CartItemList" component={CartItemListScreen}/>
         </CartNavStack.Navigator>
     </NavigationContainer>
-    // return <NavigationController initialComponent={<CartItemListScreen/>}/>
 });
 
 export default Cart;

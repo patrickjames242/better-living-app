@@ -6,11 +6,12 @@ import LayoutConstants from '../../../../LayoutConstants';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import { CustomColors } from '../../../../helpers/colors';
 import CustomizedText from '../../../../helpers/Views/CustomizedText';
-import Space, { SpaceDimension } from '../../../../helpers/Spacers/Space';
+import { SpaceDimension } from '../../../../helpers/Spacers/Space';
 import Product from '../../../../api/orderingSystem/products/Product';
 import { useSelector } from '../../../../redux/store';
 import { compactMap } from '../../../../helpers/general';
 import { useCurrentMenu } from '../../../../api/orderingSystem/menus/helpers';
+import { List } from 'immutable';
 
 const foodTagViewsSpacing = 10;
 
@@ -57,10 +58,10 @@ const TitleBox = (() => {
     return function TitleBox(props: { product: Product }) {
         const allInfoTagsMap = useSelector(state => state.orderingSystem.productInfoTags);
         const currentMenu = useCurrentMenu();
-        
+
         const categoryTitles = useMemo(() => {
-            return (currentMenu?.categories.filter(x => x.productIds.contains(props.product.id)).map(x => x.title).sort((a, b) => a.localeCompare(b)) ?? [])
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+            return (currentMenu?.categories.filter(x => x.productIds.contains(props.product.id)).map(x => x.title).sort((a, b) => a.localeCompare(b)) ?? List<string>());
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [currentMenu]);
 
         const infoTags = useMemo(() => {
@@ -69,11 +70,11 @@ const TitleBox = (() => {
 
         return <SpacerView style={styles.root} space={10}>
             <CustomizedText style={styles.titleText}>{props.product.title}</CustomizedText>
-            {/* <Space space={3} /> */}
-            <SpacerView style={styles.categoryBox} space={4} dimension={SpaceDimension.onlyHorizontal}>
-                <Image style={styles.categoryIcon} source={require('./forkAndKnife.png')} />
-                <CustomizedText style={styles.categoryText}>{categoryTitles.join(' • ')}</CustomizedText>
-            </SpacerView>
+            {categoryTitles.size >= 1 &&
+                <SpacerView style={styles.categoryBox} space={4} dimension={SpaceDimension.onlyHorizontal}>
+                    <Image style={styles.categoryIcon} source={require('./forkAndKnife.png')} />
+                    <CustomizedText style={styles.categoryText}>{categoryTitles.join(' • ')}</CustomizedText>
+                </SpacerView>}
             {infoTags.length >= 1 &&
                 <SpacerView space={foodTagViewsSpacing} style={styles.foodTagViewsHolder}>
                     {infoTags.map(x => <FoodTagView key={x.id} title={x.title} />)}
