@@ -1,6 +1,6 @@
 
 import React, { useRef } from 'react';
-import { StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView, View } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import { CartItemListTotalSummaryView } from '../CartItemListScreen/CartItemListTotalSummaryView';
@@ -11,6 +11,7 @@ import OrderConfirmationHowToPayView from './OrderConfirmationHowToPayView';
 import LongTextAndIconButton from '../../../helpers/Buttons/LongTextAndIconButton';
 import Space from '../../../helpers/Spacers/Space';
 import { ScrollView, NativeViewGestureHandler } from 'react-native-gesture-handler';
+import CustomKeyboardAvoidingView from '../../../helpers/Views/CustomKeyboardAvoidingView';
 
 
 
@@ -43,16 +44,15 @@ const OrderConfirmationScreen = (() => {
 
     const OrderConfirmationScreen = () => {
 
-        const scrollView = useRef<ScrollView>(null);
+        // const scrollView = useRef<ScrollView>(null);
     
-        const scrollViewRef = useRef<NativeViewGestureHandler>(null);
+        // const scrollViewRef = useRef<NativeViewGestureHandler>(null);
 
-
-        return <KeyboardAvoidingView behavior='padding' style={styles.root}>
+        return <CustomKeyboardAvoidingView style={styles.root}>
             <NavigationControllerNavigationBar title="Confirm Order" />
-            <NativeViewGestureHandler ref={scrollViewRef}>
+            
                 <ScrollView
-                    ref={scrollView}
+            
                     style={styles.scrollView}
                     alwaysBounceVertical={true}
                     contentContainerStyle={styles.scrollViewContentContainer}
@@ -71,8 +71,8 @@ const OrderConfirmationScreen = (() => {
                         />
                     </SpacerView>
                 </ScrollView>
-            </NativeViewGestureHandler>
-        </KeyboardAvoidingView>
+
+        </CustomKeyboardAvoidingView>
     }
     return OrderConfirmationScreen;
 })();

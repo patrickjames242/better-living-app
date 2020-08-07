@@ -24,8 +24,8 @@ const TipsListScreen = (() => {
             
         },
         flatList: {
-            overflow: 'visible',
             zIndex: -1,
+            overflow: 'visible',
             flex: 1, 
             
         },
@@ -53,14 +53,14 @@ const TipsListScreen = (() => {
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Health Tips" rightAlignedView={<PlusButton onPress={onPlusButtonPressed}/>}/>
             <MultiColumnFlatList
-                numberOfColumns={calculateListColumns}
-                columnSpacing={itemSpacing}
                 contentContainerStyle={styles.flatListContentContainer}
+                numberOfColumns={calculateListColumns}
                 style={styles.flatList}
-                data={healthTips}
                 ItemSeparatorComponent={() => {
                     return <Space space={itemSpacing} />
                 }}
+                columnSpacing={itemSpacing}
+                data={healthTips}
                 keyExtractor={item => String(item)}
                 renderItem={(item) => {
                     return <TipsListItemView id={item.id}/>

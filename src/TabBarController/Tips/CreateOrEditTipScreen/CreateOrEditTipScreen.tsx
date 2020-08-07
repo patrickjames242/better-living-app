@@ -1,6 +1,6 @@
 
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
 import { Optional, mapOptional, displayErrorMessage } from '../../../helpers/general';
 import store from '../../../redux/store';
@@ -20,6 +20,7 @@ import { HealthTipAudioFile } from '../../../api/healthTips/HealthTip';
 import { StackScreenProps, StackNavigationProp } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
 import { useNavigation } from '@react-navigation/native';
+import CustomKeyboardAvoidingView from '../../../helpers/Views/CustomKeyboardAvoidingView';
 
 
 
@@ -128,9 +129,10 @@ const CreateOrEditTipScreen = (() => {
                 });
         }
 
-        return <KeyboardAvoidingView behavior="padding" style={styles.root}>
+        return <CustomKeyboardAvoidingView style={styles.root}>
             <NavigationControllerNavigationBar title={navigationBarTitle} />
             <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
+                
                 <SpacerView style={styles.inputsHolder} space={25}>
                     <TextFieldView
                         value={title}
@@ -168,8 +170,9 @@ const CreateOrEditTipScreen = (() => {
                     iconSource={AssetImages.saveIcon}
                     onPress={saveChanges}
                 />
+        
             </ScrollView>
-        </KeyboardAvoidingView>
+            </CustomKeyboardAvoidingView>
     }
     return CreateOrEditTipScreen;
 })();

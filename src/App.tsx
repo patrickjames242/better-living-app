@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, YellowBox } from 'react-native';
 import { registerRootComponent, AppLoading } from 'expo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loadFonts } from './helpers/fonts/fonts';
@@ -12,7 +12,7 @@ import { startListeningForUpdates } from './api/realtimeUpdates';
 
 
 
-
+YellowBox.ignoreWarnings(["Animated: `useNativeDriver`"]);
 
 // store.subscribe(() => {
 // 	if (Platform.OS === 'web'){
