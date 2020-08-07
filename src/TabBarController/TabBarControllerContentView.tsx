@@ -19,7 +19,8 @@ const TabBarControllerContentView = (() => {
 			flex: 1,
 		},
 		childContainer: {
-			...StyleSheet.absoluteFillObject
+			...StyleSheet.absoluteFillObject,
+			overflow: 'hidden',
 		}
 	});
 

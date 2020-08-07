@@ -29,7 +29,7 @@ const MultiColumnFlatList = (() => {
             const dataLength = propsData?.length;
             if (dataLength == null || dataLength < 1) { return []; }
             const amountOfRows = Math.ceil(dataLength / calculatedNumberOfColumns);
-            return getNumbersList(0, amountOfRows - 1);
+            return getNumbersList(0, Math.max(amountOfRows - 1, 0));
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [propsData, propsData?.length, calculatedNumberOfColumns]);
 

@@ -7,9 +7,10 @@ import SpacerView from '../../../helpers/Spacers/SpacerView';
 import LayoutConstants from '../../../LayoutConstants';
 import { CustomColors } from '../../../helpers/colors';
 import { deleteHealthTip } from '../../../api/healthTips/requests';
-import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
-import { mapOptional, displayErrorMessage, useIsUnmounted } from '../../../helpers/general';
-import PresentableScreens from '../../../PresentableScreens';
+import { displayErrorMessage, useIsUnmounted } from '../../../helpers/general';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { TipsNavStackParamList } from '../navigationHelpers';
 
 export interface TipsDetailBottomButtonsViewProps{
     healthTipId: number;
@@ -27,13 +28,13 @@ const TipsDetailBottomButtonsView = (() => {
     
     const TipsDetailBottomButtonsView = (props: TipsDetailBottomButtonsViewProps) => {
 
-        const navigationScreenContext = useNavigationScreenContext();
 
         const [deleteIsLoading, setDeleteIsLoading] = useState(false);
 
+        const navigation = useNavigation<StackNavigationProp<TipsNavStackParamList, 'TipDetail'>>();
+
         function editButtonPressed(){
-            mapOptional(PresentableScreens.CreateOrEditTipScreen(), Component => navigationScreenContext.present(<Component tipIdToEdit={props.healthTipId}/>))
-            
+            navigation.push('CreateOrEditTip', {tipIdToEdit: props.healthTipId})            
         }
 
         const isUnmounted = useIsUnmounted();

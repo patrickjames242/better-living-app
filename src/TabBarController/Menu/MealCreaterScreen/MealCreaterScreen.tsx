@@ -4,7 +4,6 @@ import { StyleSheet, View, Dimensions } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
 import { MealConfig} from './helpers';
 import MealCreatorConstants from './MealCreatorConstants';
-import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import MealCreatorScreenAddToCartButton from './ChildComponents/MealCreatorScreenAddToCartButton';
 import MealCreatorListViewItem from './ChildComponents/MealCreatorListViewItem';
 import { Map, List } from 'immutable';
@@ -17,6 +16,8 @@ import { useSelector } from '../../../redux/store';
 import MealCategory from '../../../api/orderingSystem/mealCategories/MealCategory';
 import Product from '../../../api/orderingSystem/products/Product';
 import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
+import { StackScreenProps } from '@react-navigation/stack';
+import { MenuNavStackParams } from '../navigationHelpers';
 
 
 export interface MealCreatorScreenProps{
@@ -48,9 +49,9 @@ const MealCreatorScreen = (() => {
     }
 
 
-    const MealCreatorScreen = (props: MealCreatorScreenProps) => {
+    const MealCreatorScreen = (props: StackScreenProps<MenuNavStackParams, 'MealCreator'>) => {
 
-        const meal = useSelector(state => state.orderingSystem.meals.get(props.defaultMealConfig.mealId));
+        const meal = useSelector(state => state.orderingSystem.meals.get(props.route.params.defaultMealConfig.mealId));
         const mealCategories = useSelector(state => {
             return List<MealCategory>().withMutations(list => {
                 meal?.productCategories.sortBy(x => x.orderNumber).forEach(({id: categoryId}) => {
@@ -80,12 +81,9 @@ const MealCreatorScreen = (() => {
 
         const [bottomButtonViewHeight, setBottomButtonViewHeight] = useState(0);
 
-        const navigationScreenContext = useNavigationScreenContext();
-
         function onAddToCartButtonPressed() {
-            navigationScreenContext.dismissToRoot();
+            props.navigation.popToTop();
         }
-
 
         // key is the section id. value is the item id.
         const selectedItemsForEachSection = useRef(Map<number, ValueBox<Optional<number>>>());

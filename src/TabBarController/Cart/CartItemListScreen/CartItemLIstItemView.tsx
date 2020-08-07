@@ -7,7 +7,7 @@ import AspectRatioView from '../../../helpers/Views/AspectRatioView';
 import LayoutConstants from '../../../LayoutConstants';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
-import { getShadowStyle, Optional, mapOptional } from '../../../helpers/general';
+import { getShadowStyle, Optional } from '../../../helpers/general';
 import { CustomColors, Color } from '../../../helpers/colors';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import QuantityPickerView from './QuantityPickerView';
@@ -16,8 +16,6 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import ValueBox from '../../../helpers/ValueBox';
 import { useNotificationListener } from '../../../helpers/Notification';
-import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
-import PresentableScreens from '../../../PresentableScreens';
 import AssetImages from '../../../images/AssetImages';
 
 
@@ -101,13 +99,9 @@ const CartItemListItemView = (() => {
             }
         }, [props.item.id]);
 
-        const navigationScreenContext = useNavigationScreenContext();
 
         function presentMenuItemDetailView() {
-            if (props.currentlyOpenDrawerID.value === props.item.id){return;}
-            mapOptional(PresentableScreens.ProductDetailScreen(), Component => {
-                // navigationScreenContext.present(<Component />)
-            });
+            
         }
 
         return <HighlightButton style={styles.root} onPress={presentMenuItemDetailView}>

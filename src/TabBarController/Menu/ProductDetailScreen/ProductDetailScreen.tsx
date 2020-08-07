@@ -14,18 +14,15 @@ import PurchaseOptionBox from './ChildComponents/PurchaseOptionBox';
 import TitleBox from './ChildComponents/TitleBox';
 import { useNotificationListener } from '../../../helpers/Notification';
 import { windowDimensionsDidChangeNotification } from '../../helpers';
-import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
-import PresentableScreens from '../../../PresentableScreens';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import { useSelector } from '../../../redux/store';
 import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
 import { useMealsForProduct } from '../../../api/orderingSystem/productsToMealsHelpers';
 import currency from 'currency.js';
-import { List } from 'immutable';
+import { StackScreenProps } from '@react-navigation/stack';
+import { MenuNavStackParams } from '../navigationHelpers';
 
-interface ProductDetailScreenProps {
-    productId: number;
-}
+
 
 const ProductDetailScreen = (() => {
 
@@ -58,23 +55,19 @@ const ProductDetailScreen = (() => {
         },
     });
 
-    return function ProductDetailScreen(props: ProductDetailScreenProps) {
+    return function ProductDetailScreen(props: StackScreenProps<MenuNavStackParams, 'ProductDetail'>) {
 
-        const product = useSelector(state => state.orderingSystem.products.get(props.productId));
-
-        const navigationScreenContext = useNavigationScreenContext();
+        const product = useSelector(state => state.orderingSystem.products.get(props.route.params.productId));
 
         function onMealButtonPressed(mealId: number) {
-            mapOptional(PresentableScreens.MealCreatorScreen(), X => {
-                navigationScreenContext.present(<X defaultMealConfig={{mealId, choices: List()}} />);
-            });
+            props.navigation.push('MealCreator', {defaultMealConfig: {mealId}});
         }
 
         function onAddToCartButtonPressed(){
 
         }
 
-        const meals = useMealsForProduct(props.productId);
+        const meals = useMealsForProduct(props.route.params.productId);
 
         const productIndividualPrice = product?.individualPrice;
 

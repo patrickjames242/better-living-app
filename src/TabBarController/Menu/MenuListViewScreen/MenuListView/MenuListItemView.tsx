@@ -5,14 +5,14 @@ import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
 import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import { CustomColors, Color } from '../../../../helpers/colors';
-import { useNavigationScreenContext } from '../../../../helpers/NavigationController/NavigationScreen';
-import { mapOptional } from '../../../../helpers/general';
 import LayoutConstants from '../../../../LayoutConstants';
 import AspectRatioView from '../../../../helpers/Views/AspectRatioView';
-import PresentableScreens from '../../../../PresentableScreens';
 import { useSelector } from '../../../../redux/store';
 import { useMealsForProduct } from '../../../../api/orderingSystem/productsToMealsHelpers';
 import currency from 'currency.js';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MenuNavStackParams } from '../../navigationHelpers';
 
 
 const MenuListItemView = (() => {
@@ -93,12 +93,10 @@ const MenuListItemView = (() => {
         }, [mealsForProduct, productIndividualPrice]);
 
         
-        const navigationScreenContext = useNavigationScreenContext();
+        const navigation = useNavigation<StackNavigationProp<MenuNavStackParams, 'MenuListView'>>();
 
         function onPress() {
-            mapOptional(PresentableScreens.ProductDetailScreen(), X => {
-                navigationScreenContext.present(<X productId={props.productId}/>)
-            })
+            navigation.push('ProductDetail', {productId: props.productId});
         }
 
         return <BouncyButton style={styles.root} bounceScaleValue={0.93} onPress={onPress}>

@@ -7,10 +7,10 @@ import LayoutConstants from '../../../LayoutConstants';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { CustomColors } from '../../../helpers/colors';
 import Spacer from '../../../helpers/Spacers/Spacer';
-import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
-import { mapOptional } from '../../../helpers/general';
-import PresentableScreens from '../../../PresentableScreens';
 import { useSelector } from '../../../redux/store';
+import { useNavigation } from '@react-navigation/native';
+import { TipsNavStackParamList } from '../navigationHelpers';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 interface TipsListItemViewProps{
     id: number,
@@ -48,14 +48,15 @@ const TipsListItemView = (() => {
 
         const healthTip = useSelector(state => state.healthTips.get(props.id));
 
-        const navigationScreenContext = useNavigationScreenContext();
+        const navigation = useNavigation<StackNavigationProp<TipsNavStackParamList, 'TipsList'>>();
+
 
         function onPress(){
-            const healthTipID = healthTip?.id;
-            if (healthTipID == null){return;}
-            mapOptional(PresentableScreens.TipsDetailScreen(), Component => {
-                return navigationScreenContext.present(<Component healthTipId={healthTipID}/>)
-            });
+            const healthTipId = healthTip?.id;
+            if (healthTipId == null){return;}
+
+            navigation.push('TipDetail', {healthTipId})
+
         }
 
         return <BouncyButton

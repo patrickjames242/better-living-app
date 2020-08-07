@@ -13,12 +13,12 @@ import TipsDetailDescriptionView from './TipsDetailDescriptionView';
 import TipsDetailBottomButtonsView from './TipsDetailBottomButtonsView';
 import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
 import { useUpdateEffect } from '../../../helpers/general';
-import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
+import { StackScreenProps } from '@react-navigation/stack';
+import { TipsNavStackParamList } from '../navigationHelpers';
 
 
-interface TipsDetailScreenProps {
-    healthTipId: number;
-}
+
+
 
 const TipsDetailScreen = (() => {
 
@@ -40,19 +40,19 @@ const TipsDetailScreen = (() => {
         }
     });
 
-    const TipsDetailScreen = (props: TipsDetailScreenProps) => {
+    const TipsDetailScreen = (props: StackScreenProps<TipsNavStackParamList, 'TipDetail'>) => {
 
-        const healthTip = useSelector(state => state.healthTips.get(props.healthTipId));
+        const healthTip = useSelector(state => state.healthTips.get(props.route.params.healthTipId));
         const healthTipId = healthTip?.id;
 
-        const navigationScreenContext = useNavigationScreenContext();
 
         useUpdateEffect(() => {
             if (healthTipId == null){
-                navigationScreenContext.dismiss();
+                props.navigation.goBack();
             }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [healthTipId]);
+        }, [props.route.params.healthTipId]);
+
 
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title={healthTip?.title ?? ''} />
@@ -71,7 +71,7 @@ const TipsDetailScreen = (() => {
                             ...healthTip?.youtubeVideoIDs.toArray().map(x => <TipsDetailYTVideoView key={x} ytVideoID={x}/>) ?? [],
                             (typeof healthTip.articleText === 'string') &&
                                 <TipsDetailDescriptionView key='description-view' articleText={healthTip.articleText} />,
-                            <TipsDetailBottomButtonsView key='bottom-buttons' healthTipId={props.healthTipId} />
+                            <TipsDetailBottomButtonsView key='bottom-buttons' healthTipId={props.route.params.healthTipId} />
                         ]}/>
                     </ScrollView>
                 }

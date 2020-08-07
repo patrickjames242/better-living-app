@@ -11,18 +11,18 @@ import LongTextAndIconButton from '../../../helpers/Buttons/LongTextAndIconButto
 import AssetImages from '../../../images/AssetImages';
 import Space from '../../../helpers/Spacers/Space';
 import { updateHealthTip, createNewHealthTip, HealthTipRequestObj } from '../../../api/healthTips/requests';
-import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
 import CreateOrEditTipConstants from './CreateOrEditTipConstants';
 import CreateOrEditTipDescriptionView from './CreateOrEditTipDescriptionView';
 import CreateOrEditTipYoutubeSection from './CreateOrEditTipYoutubeSection/CreateOrEditTipYoutubeSection';
 import { List, Set } from 'immutable';
 import CreateOrEditTipAudioFilesSection from './CreateOrEditTipAudioFilesSection/CreateOrEditTipAudioFilesSection';
 import { HealthTipAudioFile } from '../../../api/healthTips/HealthTip';
+import { StackScreenProps, StackNavigationProp } from '@react-navigation/stack';
+import { TipsNavStackParamList } from '../navigationHelpers';
+import { useNavigation } from '@react-navigation/native';
 
 
-export interface CreateOrEditTipScreenProps {
-    tipIdToEdit: Optional<number>
-}
+
 
 
 const CreateOrEditTipScreen = (() => {
@@ -78,10 +78,10 @@ const CreateOrEditTipScreen = (() => {
         }
     }
 
-    const CreateOrEditTipScreen = (props: CreateOrEditTipScreenProps) => {
+    const CreateOrEditTipScreen = (props: StackScreenProps<TipsNavStackParamList, 'CreateOrEditTip'>) => {
 
         const initialFieldValues = useMemo(() => {
-            return getInitialFieldValues(props.tipIdToEdit);
+            return getInitialFieldValues(props.route.params.tipIdToEdit);
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
 
@@ -96,14 +96,14 @@ const CreateOrEditTipScreen = (() => {
 
 
         const navigationBarTitle = (() => {
-            if (props.tipIdToEdit == null) {
+            if (props.route.params.tipIdToEdit == null) {
                 return "Create New Health Tip";
             } else {
                 return "Edit Health Tip";
             }
         })();
 
-        const navigationScreenContext = useNavigationScreenContext();
+        const navigation = useNavigation<StackNavigationProp<TipsNavStackParamList, 'CreateOrEditTip'>>();
 
         function saveChanges() {
 
@@ -116,11 +116,11 @@ const CreateOrEditTipScreen = (() => {
             };
 
             setIsLoading(true);
-            ((props.tipIdToEdit == null) ?
+            ((props.route.params.tipIdToEdit == null) ?
                 createNewHealthTip(requestObj) :
-                updateHealthTip(props.tipIdToEdit, requestObj))
+                updateHealthTip(props.route.params.tipIdToEdit, requestObj))
                 .then(() => {
-                    navigationScreenContext.dismiss();
+                    navigation.goBack();
                 }).catch(error => {
                     displayErrorMessage(error.message);
                 }).finally(() => {

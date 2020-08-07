@@ -7,7 +7,6 @@ import SpacerView from '../../../../helpers/Spacers/SpacerView';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import Scrubber from 'react-native-scrubber';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import { useNavigationScreenContext } from '../../../../helpers/NavigationController/NavigationScreen';
 import PlayPauseButton, { PlayPauseButtonState } from './TipsDetailAudioPlayerViewPlayPauseButton';
 import TipsDetailAudioPlayer, { TipsDetailAudioPlayerPlayableState } from './TipsDetailAudioPlayer';
 import AssetImages from '../../../../images/AssetImages';
@@ -57,7 +56,6 @@ const TipsDetailAudioPlayerView = (() => {
         const [playPauseState, setPlayPauseState] = useState(PlayPauseButtonState.loading);
 
         const scrubberPanGestureRef = useRef<PanGestureHandler>(null);
-        const navigationScreenContext = useNavigationScreenContext();
 
         const userIsScrubbing = useRef(false);
 
@@ -96,10 +94,10 @@ const TipsDetailAudioPlayerView = (() => {
             return () => audioPlayer.unloadAudioFile()
         }, [audioPlayer, props.audioFileUrl]);
 
-        useEffect(() => {
-            navigationScreenContext.addGestureToWaitOn(scrubberPanGestureRef);
-            return () => navigationScreenContext.removeGestureToWaitOn(scrubberPanGestureRef);
-        }, [navigationScreenContext]);
+        // useEffect(() => {
+        //     navigationScreenContext.addGestureToWaitOn(scrubberPanGestureRef);
+        //     return () => navigationScreenContext.removeGestureToWaitOn(scrubberPanGestureRef);
+        // }, [navigationScreenContext]);
 
         return <SpacerView style={styles.root} space={playPauseState === PlayPauseButtonState.reload ? 10 : LayoutConstants.floatingCellStyles.padding}>
             <PlayPauseButton

@@ -4,7 +4,7 @@ import { StyleSheet, Image, ImageStyle } from 'react-native';
 import CenteredTitleNavigationBar from '../NavigationBar/CenteredTitleNavigationBar';
 import BouncyButton from '../Buttons/BouncyButton';
 import { CustomColors } from '../colors';
-import { useNavigationScreenContext } from './NavigationScreen';
+import { useNavigation } from '@react-navigation/native';
 
 
 export interface NavigationControllerNavigationBarProps {
@@ -34,14 +34,14 @@ const NavigationControllerNavigationBar = (() => {
     return function NavigationControllerNavigationBar(props: NavigationControllerNavigationBarProps) {
 
 
-        const screenContext = useNavigationScreenContext();
+        const navigation = useNavigation();
 
         return <CenteredTitleNavigationBar
             title={props.title}
             rightAlignedView={props.rightAlignedView}
             leftAlignedView={
                 <BouncyButton
-                    onPress={() => screenContext.dismiss()}
+                    onPress={() => navigation.goBack()}
                     style={styles.backArrowButton}
                     hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
                 >

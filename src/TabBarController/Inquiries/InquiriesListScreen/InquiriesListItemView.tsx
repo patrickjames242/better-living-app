@@ -7,9 +7,9 @@ import SpacerView from '../../../helpers/Spacers/SpacerView';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { Color, CustomColors } from '../../../helpers/colors';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
-import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
-import { mapOptional } from '../../../helpers/general';
-import PresentableScreens from '../../../PresentableScreens';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { InquiriesNavStackParams } from '../navigationHelpers';
 
 
 export enum InquiryUnreadStatus {
@@ -59,10 +59,10 @@ const InquiriesListItemView = (() => {
 
     const InquiriesListItemView = (props: InquiriesListItemViewProps) => {
 
-        const navigationScreenContext = useNavigationScreenContext();
+        const navigation = useNavigation<StackNavigationProp<InquiriesNavStackParams, 'InquiriesList'>>();
 
         function respondToButtonPressed(){
-            mapOptional(PresentableScreens.InquiryDetailScreen(), Component => (navigationScreenContext.present(<Component/>)));
+            navigation.push('InquiryDetail');
         }
 
         return <BouncyButton bounceScaleValue={0.9} contentViewProps={{style: styles.root}} onPress={respondToButtonPressed}>

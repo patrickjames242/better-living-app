@@ -17,6 +17,7 @@ const SideTabBar = (() => {
 	const styles = StyleSheet.create({
 		root: {
 			flex: 1,
+			// backgroundColor: CustomColors.mainBackgroundColor.stringValue,
 		},
 		scrollView: {
 			height: 200,

@@ -1,15 +1,15 @@
 
 import React, { useLayoutEffect, useRef, useState} from 'react';
-import { MenuListItem } from "../../MenuListViewScreen/MenuListView/helpers";
-import { useNavigationScreenContext } from "../../../../helpers/NavigationController/NavigationScreen";
-import PresentableScreens from "../../../../PresentableScreens";
 import { StyleSheet, Animated, View } from "react-native";
 import { CustomColors } from "../../../../helpers/colors";
 import MealCreatorCheckBoxButton from './MealCreatorCheckBox';
 import MealCreatorListViewItemInfoBox from './MealCreatorListViewItemInfoBox';
-import { mapOptional, Optional } from '../../../../helpers/general';
+import { Optional } from '../../../../helpers/general';
 import ValueBox from '../../../../helpers/ValueBox';
 import Product from '../../../../api/orderingSystem/products/Product';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MenuNavStackParams } from '../../navigationHelpers';
 
 
 
@@ -32,12 +32,11 @@ const MealCreatorListViewItem = (() => {
 
     const MealCreatorListViewItem = (props: MealCreatorListViewItemProps) => {
 
-        const navigationScreenContext = useNavigationScreenContext();
 
+        const navigation = useNavigation<StackNavigationProp<MenuNavStackParams, 'MealCreator'>>();
+        
         function onButtonPress() {
-            mapOptional(PresentableScreens.ProductDetailScreen(), X => {
-                // navigationScreenContext.present(<X />)
-            });
+            navigation.push('ProductDetail', {productId: props.item.id});
         }
 
         const [shouldBeSelected, setShouldBeSelected] = useState(false);

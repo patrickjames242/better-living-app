@@ -2,10 +2,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Alert, Platform } from 'react-native';
 import { ValidateFunction } from 'ajv';
+import { CustomColors } from './colors';
 
 export type Optional<Wrapped> = Wrapped | null;
 
-
+export const DEFAULT_NAV_SCREEN_OPTIONS = {headerShown: false, cardStyle: {backgroundColor: CustomColors.mainBackgroundColor.stringValue}};
 
 export function getNumbersList(first: number, last: number): number[] {
     if (first > last) { throw new Error("first cannot be greater than last!!"); }

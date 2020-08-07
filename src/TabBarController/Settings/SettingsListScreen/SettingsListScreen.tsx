@@ -11,9 +11,7 @@ import Space from '../../../helpers/Spacers/Space';
 
 
 
-export interface SettingsListScreenProps {
 
-}
 
 const SettingsListScreen = (() => {
 
@@ -52,7 +50,7 @@ const SettingsListScreen = (() => {
         }
     })
 
-    const SettingsListScreen = (props: SettingsListScreenProps) => {
+    const SettingsListScreen = () => {
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Settings" />
             <SectionList

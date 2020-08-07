@@ -29,7 +29,7 @@ const MultiColumnSectionList = (() => {
                 data: (() => {
                     if (section.data.length < 1){return []}
                     const amountOfRows = Math.ceil(section.data.length / calculatedNumberOfColumns);
-                    return getNumbersList(0, amountOfRows -1);
+                    return getNumbersList(0, Math.max(amountOfRows -1, 0));
                 })()
             }));
         }, [calculatedNumberOfColumns, props.sections]);

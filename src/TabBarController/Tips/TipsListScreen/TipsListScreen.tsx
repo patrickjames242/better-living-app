@@ -2,16 +2,15 @@
 import React from 'react';
 import { StyleSheet, View, LayoutRectangle } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
-import { computeNumberOfListColumns, mapOptional } from '../../../helpers/general';
+import { computeNumberOfListColumns } from '../../../helpers/general';
 import TipsListItemView from './TipsListItemView';
 import LayoutConstants from '../../../LayoutConstants';
 import Space from '../../../helpers/Spacers/Space';
 import MultiColumnFlatList from '../../../helpers/Views/MultipleColumnLists/MultiColumnFlatList';
 import { useAllHealthTipsArray } from '../../../api/healthTips/helpers';
 import PlusButton from '../../../helpers/Buttons/PlusButton';
-import PresentableScreens from '../../../PresentableScreens';
-import { useNavigationScreenContext } from '../../../helpers/NavigationController/NavigationScreen';
-import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
+import { StackScreenProps } from '@react-navigation/stack';
+import { TipsNavStackParamList } from '../navigationHelpers';
 
 
 const TipsListScreen = (() => {
@@ -43,14 +42,12 @@ const TipsListScreen = (() => {
         return Math.min(num, 2);
     }    
     
-    const TipsListScreen = () => {
+    const TipsListScreen = (props: StackScreenProps<TipsNavStackParamList, 'TipsList'>) => {
 
         const healthTips = useAllHealthTipsArray();
 
-        const navigationScreenContext = useNavigationScreenContext();
-
         function onPlusButtonPressed(){
-            mapOptional(PresentableScreens.CreateOrEditTipScreen(), Component => navigationScreenContext.present(<Component tipIdToEdit={null}/>));
+            props.navigation.push('CreateOrEditTip', {tipIdToEdit: null});
         }
         
         return <View style={styles.root}>
