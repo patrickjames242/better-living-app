@@ -2,13 +2,13 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing} from 'react-native';
 import { TabBarSelection, tabBarItemsData } from './TabBar/helpers';
-import { useUpdateEffect } from '../helpers/general';
 import MenuScreen from './Menu/Menu';
 import { useSelector } from '../redux/store';
 import Cart from './Cart/Cart';
 import Tips from './Tips/Tips';
 import Inquiries from './Inquiries/Inquiries';
 import Settings from './Settings/Settings';
+import { useUpdateEffect } from '../helpers/reactHooks';
 
 
 
@@ -125,7 +125,7 @@ const TabBarControllerContentView = (() => {
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [currentSelection]);
 
-		Animated.event([], {});
+		Animated.event([], {useNativeDriver: true});
 
 		return <View style={[styles.root, {
 			overflow: animationIsInProgress ? 'hidden' : undefined,

@@ -1,8 +1,8 @@
 
 import React, { useState, useRef } from 'react';
 import { ViewProps, Animated, Easing, View } from 'react-native';
-import { useUpdateEffect, useIsUnmounted } from '../general';
 import CustomDelayedTouchable from './CustomDelayedTouchable';
+import { useUpdateEffect, useIsUnmounted } from '../reactHooks';
 
 
 export interface BouncyButtonProps extends ViewProps {

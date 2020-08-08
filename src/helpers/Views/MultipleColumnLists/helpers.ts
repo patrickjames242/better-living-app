@@ -1,6 +1,8 @@
+
 import { LayoutRectangle, Dimensions, LayoutChangeEvent } from "react-native";
-import { Optional, useForceUpdate } from "../../general";
+import { Optional } from "../../general";
 import { useRef, useMemo } from "react";
+import { useForceUpdate } from "../../reactHooks";
 
 
 export type NumberOfColumns = number | ((layout: LayoutRectangle) => number);

@@ -12,9 +12,9 @@ import TipsDetailTitleView from './TipsDetailTitleView';
 import TipsDetailDescriptionView from './TipsDetailDescriptionView';
 import TipsDetailBottomButtonsView from './TipsDetailBottomButtonsView';
 import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
-import { useUpdateEffect } from '../../../helpers/general';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
+import { useUpdateEffect } from '../../../helpers/reactHooks';
 
 
 

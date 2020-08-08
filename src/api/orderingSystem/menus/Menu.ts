@@ -3,7 +3,7 @@ import { Set, List } from "immutable";
 import { MenuJsonResponseObj, menuResponseObjValidator } from "./validation";
 import getErrorObjFromApiObjValidateFunction from "../../helpers";
 
-enum DayOfTheWeek{
+export enum DayOfTheWeek{
     sunday = 0,
     monday,
     tuesday,

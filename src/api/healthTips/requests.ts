@@ -1,5 +1,5 @@
 
-import { Optional } from "../../helpers/general";
+import { Optional, getPropsFromObject } from "../../helpers/general";
 import { fetchFromAPI, HttpMethod } from "../api";
 import { getHealthTipFromObject_orThrow } from "./helpers";
 import store from "../../redux/store";
@@ -13,7 +13,7 @@ const basePath = 'health-tips/';
 export interface HealthTipRequestObj{
     [HealthTipJsonKeys.title]: string,
     [HealthTipJsonKeys.article_text]: Optional<string>,
-    [HealthTipJsonKeys.yt_video_ids]?: string[]
+    [HealthTipJsonKeys.yt_video_ids]?: string[];
     audioFilesToInsert?: List<File>,
     audioFilesToDelete?: List<number>,
 }
@@ -22,17 +22,12 @@ export interface HealthTipRequestObj{
 function getBodyForRequestObject(obj: Partial<HealthTipRequestObj>): FormData{
     
     const json: object | undefined = (() => {
-        const jsonObject: {[index: string]: any} = {};
-        for (const key of [
+        const filteredObj = getPropsFromObject(obj, [
             HealthTipJsonKeys.title, 
             HealthTipJsonKeys.article_text, 
             HealthTipJsonKeys.yt_video_ids
-        ]){
-            const value = obj[key];
-            if (value === undefined){continue;}
-            jsonObject[key] = value;
-        }
-        return Object.getOwnPropertyNames(jsonObject).length >= 1 ? jsonObject : undefined;
+        ]);
+        return Object.getOwnPropertyNames(filteredObj).length >= 1 ? filteredObj : undefined;
     })();
 
     const formData = new FormData();
@@ -79,3 +74,5 @@ export function deleteHealthTip(id: number){
         store.dispatch(deleteHealthTipAction(id));
     });
 }
+
+

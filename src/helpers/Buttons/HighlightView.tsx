@@ -34,6 +34,7 @@ const HighlightButton = (() => {
 			Animated.timing(coverViewOpacityAnimation, {
 				toValue: show ? 1 : 0,
 				duration: show ? touchDownAnimationLength : touchUpAnimationLength,
+				useNativeDriver: true,
 			}).start();
 		}, [coverViewOpacityAnimation]);
 

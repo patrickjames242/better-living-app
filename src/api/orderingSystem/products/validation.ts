@@ -3,6 +3,13 @@
 import {Optional} from '../../../helpers/general';
 import ajv from 'ajv';
 
+export const ProductFormDataKeys: {
+    json: 'json',
+    set_image: 'set_image',
+} = {
+    json: 'json',
+    set_image: 'set_image',
+}
 
 export const ProductJsonKeys: {
     id: 'id',

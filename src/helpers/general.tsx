@@ -1,5 +1,4 @@
 
-import React, { useState, useRef, useEffect } from 'react';
 import { Alert, Platform } from 'react-native';
 import { ValidateFunction } from 'ajv';
 import { CustomColors } from './colors';
@@ -16,45 +15,6 @@ export function getNumbersList(first: number, last: number): number[] {
     }
     return numbers;
 }
-
-// works just like useEffect, except that the effect is not called after the first render, as is the case with useEffect.
-export function useUpdateEffect(effect: React.EffectCallback, dependencies?: React.DependencyList) {
-
-    const flag = React.useRef(true);
-
-    React.useEffect(() => {
-        if (flag.current === true) {
-            flag.current = false;
-        } else {
-            return effect();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, dependencies);
-}
-
-
-// works just like useEffect, except that the effect is not called after the first render, as is the case with useEffect.
-export function useUpdateLayoutEffect(effect: React.EffectCallback, dependencies?: React.DependencyList) {
-    const flag = React.useRef(true);
-
-    React.useLayoutEffect(() => {
-        if (flag.current === true) {
-            flag.current = false;
-        } else {
-            return effect();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, dependencies);
-}
-
-export function useIsUnmounted(){
-    const isUnmounted = useRef(false);
-    useEffect(() => {
-        return () => {isUnmounted.current = true};
-    }, []);
-    return isUnmounted;
-}
-
 
 export function getShadowStyle(elevation: number) {
     return {
@@ -121,15 +81,6 @@ export function computeNumberOfListColumns(props: { listWidth: number, maxItemWi
 
 
 
-export function useForceUpdate() {
-    // eslint-disable-next-line react-hooks/rules-of-hooks,  @typescript-eslint/no-unused-vars
-    const [_, setRandomState] = useState({});
-    return () => setRandomState({});
-}
-
-
-
-
 
 export interface SectionSeparatorComponentInfo<
     Item = any,
@@ -159,6 +110,31 @@ export function getJsonValidatorErrorsText(validator: ValidateFunction): Optiona
     if (errors == null){return null;}
     return '[' + '\n' + errors.map(x => `\tdataPath: '${x.dataPath}', message: ${x.message}`).join(',\n') + '\n]'
 }
+
+// export function filterObjectOwnProps<ObjType extends object>(obj: ObjType, filterer: <Key extends keyof ObjType>(key: Key, value: ObjType[Key]) => boolean){
+//     const newObj: Partial<ObjType> = {};
+//     for (const key in obj){
+//         const value = obj[key];
+//         if (filterer(key, value) === true){
+//             newObj[key] = value;
+//         }
+//     }
+//     return newObj;
+// }
+
+
+/** filters out any properties whose key is not in the included props array and whose value is not equal to undefiend*/
+export function getPropsFromObject<ObjType extends object>(obj: ObjType, includedProps: (keyof ObjType)[]){
+    const resultObj: Partial<ObjType> = {};
+    for (const key of includedProps){
+        const value = obj[key];
+        if (value === undefined){continue;}
+        resultObj[key] = value;
+    }
+    return resultObj;
+}
+
+
 
 
 

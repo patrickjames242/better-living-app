@@ -94,6 +94,7 @@ const OrderConfirmationCardDetailsView = (() => {
             Animated.timing(opacity, {
                 duration: 150,
                 toValue: currentDesiredOpacityValue,
+                useNativeDriver: true,
             }).start();
         }, [currentDesiredOpacityValue, opacity]);
 
