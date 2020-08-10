@@ -1,18 +1,22 @@
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, ImageSourcePropType } from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
 import { Color } from '../../../helpers/colors';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import Spacer from '../../../helpers/Spacers/Spacer';
+import AssetImages from '../../../images/AssetImages';
 
 
-export interface SettingsListItemViewProps {
 
+export interface SettingsItemViewProps {
+    title: string;
+    imageSource: ImageSourcePropType;
+    onPress: () => void;
 }
 
-const SettingsListItemView = (() => {
+const SettingsItemView = (() => {
 
     const styles = StyleSheet.create({
         root: {
@@ -44,20 +48,21 @@ const SettingsListItemView = (() => {
         },
     });
 
-    const SettingsListItemView = (props: SettingsListItemViewProps) => {
+    const SettingsItemView = (props: SettingsItemViewProps) => {
         return <BouncyButton
             bounceScaleValue={0.93}
             style={styles.root}
             contentViewProps={{ style: styles.buttonContentView }}
+            onPress={props.onPress}
         >
             <Spacer space={10}>
-                <Image style={styles.iconImage} source={require('./notification.png')} />
-                <CustomizedText style={styles.text}>Notifications</CustomizedText>
+                <Image style={styles.iconImage} source={props.imageSource} />
+                <CustomizedText style={styles.text}>{props.title}</CustomizedText>
                 <Image style={styles.chevronIcon} source={require('./arrow.png')} />
             </Spacer>
         </BouncyButton>
     }
-    return SettingsListItemView;
+    return SettingsItemView;
 })();
 
-export default SettingsListItemView;
+export default SettingsItemView;

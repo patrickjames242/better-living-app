@@ -59,7 +59,7 @@ const MealCreatorListViewItem = (() => {
             Animated.timing(backgroundColor.current, {
                 toValue: shouldBeSelected ? 1 : 0,
                 duration: 150,
-                useNativeDriver: true,
+                useNativeDriver: false,
             }).start();
         }, [shouldBeSelected]);
 

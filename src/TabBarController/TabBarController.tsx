@@ -71,7 +71,6 @@ const TabBarController = (() => {
 			</View>
 		</View>
 	}
-
 })();
 
 

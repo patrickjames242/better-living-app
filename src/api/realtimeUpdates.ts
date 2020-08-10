@@ -4,9 +4,11 @@ import { handleHealthTipsRealtimeUpdate } from './healthTips/realtimeUpdates';
 import { Platform } from 'react-native';
 import AppSettings from '../settings';
 import { handleOrderingSystemRealtimeUpdate } from './orderingSystem/realtimeUpdates';
+import store from '../redux/store';
+import { updateRealtimeUpdatesConnectionStateAction, RealtimeUpdatesConnectionState } from '../redux/realtimeUpdates';
 
 
-export function startListeningForUpdates() {
+export function tryConnectingWebsocketListener() {
     setUpWebsocket();
 }
 
@@ -48,13 +50,20 @@ function setUpWebsocket() {
         const protocolString = AppSettings.debugMode ? 'ws' : 'wss';
         return `${protocolString}://${AppSettings.apiHostUrl()}/realtime-updates`;
     })();
+
+    store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connecting));
+
     const socket = new WebSocket(websocketUrl);
     socket.onopen = function (event) {
         console.log(event);
+        store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connected))
     }
     socket.onmessage = function (event) {
         const data = JSON.parse(event.data);
         console.log('socket on message', data);
+
+        store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connectedAndGotInitialUpdates));
+
         if (typeof data !== 'object') { return; }
 
         const Keys = {
@@ -77,6 +86,7 @@ function setUpWebsocket() {
     };
     socket.onclose = function (event) {
         console.log(event);
+        store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.disconnected));
         // getInternetReachability().then(isInternetReachable => {
         //     if (isInternetReachable) {
         //         setTimeout(() => {

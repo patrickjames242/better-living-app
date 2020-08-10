@@ -23,7 +23,9 @@ export function changeCurrentSelection(newSelection: TabBarSelection): ChangeCur
     }
 }
 
-function currentSelectionReducer(state = AppSettings.defaultTabBarSelection, action: ChangeCurrentSelectionAction) {
+export const defaultTabBarSelection = AppSettings.defaultTabBarSelection;
+
+function currentSelectionReducer(state = defaultTabBarSelection, action: ChangeCurrentSelectionAction) {
     switch (action.type) {
         case ActionStrings.TabBarController.CHANGE_CURRENT_SELECTION:
             return action.newSelection;
@@ -48,7 +50,9 @@ export function changeTabBarPosition(newPosition: TabBarPosition): ChangeTabBarP
     }
 }
 
-function tabBarPositionReducer(state = calculateCurrentDesiredTabBarPosition(), action: ChangeTabBarPositionAction){
+export const getCurrentDefaultTabBarPosition = () => calculateCurrentDesiredTabBarPosition();
+
+function tabBarPositionReducer(state = getCurrentDefaultTabBarPosition(), action: ChangeTabBarPositionAction){
     switch (action.type){
         case ActionStrings.TabBarController.CHANGE_TAB_BAR_POSITION:
             return action.newPosition;

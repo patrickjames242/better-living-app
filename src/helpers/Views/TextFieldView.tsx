@@ -91,10 +91,10 @@ export const TextFieldTextInput = (() => {
         const [isActive, setIsActive] = useState(false);
 
         return <TextInput
-        {...props.textInputProps}
         returnKeyType="done"
         selectionColor={CustomColors.themeGreen.stringValue}
         placeholderTextColor={Color.gray(0.7).stringValue}
+        {...props.textInputProps}
         style={[styles.textInput, {
             borderColor: isActive ? OrderConfirmationLayoutConstants.selectionOutline.color.selected : OrderConfirmationLayoutConstants.selectionOutline.color.unselected, 
         }, props.textInputProps?.style]}

@@ -16,9 +16,11 @@ import AppSettings from "../settings";
 import { mealsReducer } from "./orderingSystem/meals";
 import { mealCategoriesReducer } from "./orderingSystem/mealCategories";
 import { is } from "immutable";
+import { realtimeUpdatesReducer } from "./realtimeUpdates";
 
 
 const appReducer = combineReducers({
+    realtimeUpdates: realtimeUpdatesReducer,
     tabBarController: tabBarController_reducer,
     healthTips: healthTipsReducer,
     orderingSystem: combineReducers({

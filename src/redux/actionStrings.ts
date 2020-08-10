@@ -3,6 +3,9 @@ import { nestReduxActionStrings } from "./helpers";
 
 
 const ActionStrings = nestReduxActionStrings({
+    realtimeUpdates: {
+        UPDATE_CONNECTION_STATE: 'UPDATE_CONNECTION_STATE',
+    },
     TabBarController: {
         CHANGE_CURRENT_SELECTION: 'CHANGE_CURRENT_SELECTION',
         CHANGE_TAB_BAR_POSITION: 'CHANGE_TAB_BAR_POSITION',

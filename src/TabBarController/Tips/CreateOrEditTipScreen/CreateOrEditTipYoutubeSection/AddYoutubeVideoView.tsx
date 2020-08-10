@@ -28,11 +28,17 @@ const AddYoutubeVideoView = (() => {
 
     function extractVideoId(url: string): string | null {
         try {
-            const queryString = URLParser(url)?.query;
-            if (typeof queryString !== 'string') { return null; }
-            const videoId = QueryString.parse(queryString)?.v;
-            if (typeof videoId !== 'string' || videoId.trim().length < 1) { return null; }
-            return videoId;
+            const parsedUrl = new URLParser(url, true); // because URL is not implemented in react native for some reason
+            if (parsedUrl.hostname === "youtu.be"){
+                const videoId = parsedUrl.pathname.split('/').filter(x => x.length >= 1)[0];
+                return (typeof videoId === 'string') ? videoId : null;
+            } else {
+                const queryString = parsedUrl?.query;
+                if (typeof queryString !== 'string') { return null; }
+                const videoId = QueryString.parse(queryString)?.v;
+                if (typeof videoId !== 'string' || videoId.trim().length < 1) { return null; }
+                return videoId;
+            }
         } catch {
             return null;
         }

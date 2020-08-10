@@ -9,6 +9,8 @@ import { calculateCurrentDesiredTabBarPosition } from "../TabBarController/helpe
 import AppSettings from "../settings";
 import Meal from "../api/orderingSystem/meals/Meal";
 import MealCategory from "../api/orderingSystem/mealCategories/MealCategory";
+import { getCurrentDefaultTabBarPosition, defaultTabBarSelection } from "./tabBarController";
+import { defaultRealtimeUpdatesState } from "./realtimeUpdates";
 
 const productInfoTags: [number, ProductInfoTag][] = [
     [1, new ProductInfoTag({
@@ -143,6 +145,7 @@ const meals: [number, Meal][] = [
 ]
 
 const testReduxState: AppState = {
+    realtimeUpdates: defaultRealtimeUpdatesState,
     healthTips: Map<number, HealthTip>(),
     orderingSystem: {
         products: Map<number, Product>(products),
@@ -152,8 +155,8 @@ const testReduxState: AppState = {
         mealCategories: Map<number, MealCategory>(mealCategories),
     },
     tabBarController: {
-        currentSelection: AppSettings.defaultTabBarSelection,
-        tabBarPosition: calculateCurrentDesiredTabBarPosition(),
+        currentSelection: defaultTabBarSelection,
+        tabBarPosition: getCurrentDefaultTabBarPosition(),
     }
 }
 

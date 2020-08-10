@@ -18,7 +18,7 @@ const CreateOrEditTipDescriptionView = (() => {
             {...props}
             topTitleText="Description"
             textInputProps={{
-                returnKeyType: Platform.select({ web: 'enter', default: 'return' }) as any,
+                returnKeyType: Platform.select({web: 'enter', default: 'default'}) as any,
                 scrollEnabled: false,
                 placeholder: CreateOrEditTipConstants.textFieldPlaceholder,
                 multiline: true,
