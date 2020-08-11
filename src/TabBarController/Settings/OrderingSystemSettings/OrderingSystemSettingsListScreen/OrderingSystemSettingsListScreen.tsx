@@ -2,8 +2,8 @@
 
 import React, { useMemo } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { SettingsNavStackParams } from '../navigationHelpers';
-import GenericSettingsScreen, { GenericSettingsScreenSection } from '../GenericSettingsScreen/GenericSettingsScreen';
+import { SettingsNavStackParams } from '../../navigationHelpers';
+import GenericSettingsScreen, { GenericSettingsScreenSection } from '../../GenericSettingsScreen/GenericSettingsScreen';
 
 
 
@@ -17,7 +17,7 @@ const OrderingSystemSettingsListScreen = (props: StackScreenProps<SettingsNavSta
                     {
                         title: 'Food Products',
                         imageSource: require('./products.png'),
-                        onPress: () => {},
+                        onPress: () => {props.navigation.push('ProductsList')},
                     },
                     {
                         title: 'Menus',
@@ -37,7 +37,7 @@ const OrderingSystemSettingsListScreen = (props: StackScreenProps<SettingsNavSta
                 ]
             }
         ]
-    }, []);
+    }, [props.navigation]);
 
     return <GenericSettingsScreen navBarTitle="Ordering System" sections={sections}/>
 };

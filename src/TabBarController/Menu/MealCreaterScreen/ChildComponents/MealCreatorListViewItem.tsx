@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useRef, useState} from 'react';
 import { StyleSheet, Animated, View } from "react-native";
 import { CustomColors } from "../../../../helpers/colors";
 import MealCreatorCheckBoxButton from './MealCreatorCheckBox';
-import MealCreatorListViewItemInfoBox from './MealCreatorListViewItemInfoBox';
+import ListViewProductItemView from './MealCreatorListViewItemInfoBox';
 import { Optional } from '../../../../helpers/general';
 import ValueBox from '../../../../helpers/ValueBox';
 import Product from '../../../../api/orderingSystem/products/Product';
@@ -70,7 +70,7 @@ const MealCreatorListViewItem = (() => {
                     outputRange: [CustomColors.themeGreen.withAdjustedOpacity(0).stringValue, CustomColors.themeGreen.withAdjustedOpacity(0.15).stringValue],
                 }),
             }]} />
-            <MealCreatorListViewItemInfoBox item={props.item} onPress={onButtonPress} />
+            <ListViewProductItemView style={{paddingRight: 0}} item={props.item} onPress={onButtonPress} />
             <MealCreatorCheckBoxButton onPress={() => {props.sectionSelectionValue.value = props.item.id}} isSelected={shouldBeSelected} />
         </View>
     }

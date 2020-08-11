@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ViewProps, TextInputProps, StyleSheet, TextInput, Platform} from 'react-native';
+import { ViewProps, TextInputProps, StyleSheet, TextInput, Platform } from 'react-native';
 import LayoutConstants from '../../LayoutConstants';
 import { CustomColors, Color } from '../colors';
 import { CustomFont } from '../fonts/fonts';
@@ -12,34 +12,40 @@ export const TextFieldViewConstants = {
     borderRadius: 10,
 }
 
+
+
 export interface TextFieldViewProps extends TextFieldViewContainerProps, TextFieldTextInputProps {
-    
+
 }
 
-const TextFieldView = (() => {
+export const MultilineTextFieldView = (props: TextFieldViewProps) => {
+    return <TextFieldViewContainer {...props}>
+        <MultilineTextFieldTextInput {...props} />
+    </TextFieldViewContainer>
+}
 
-    const TextFieldView = (props: TextFieldViewProps) => {
-        
-        return <TextFieldViewContainer 
-            {...props}
-        >
-            <TextFieldTextInput {...props}/>
-        </TextFieldViewContainer>
-    }
-    return TextFieldView;
-})();
+export const TextFieldView = (props: TextFieldViewProps) => {
 
-export default TextFieldView;
+    return <TextFieldViewContainer {...props}>
+        <TextFieldTextInput {...props} />
+    </TextFieldViewContainer>
+}
 
 
 
 
-export interface TextFieldViewContainerProps extends React.PropsWithChildren<ViewProps>{
+
+
+
+
+
+
+export interface TextFieldViewContainerProps extends React.PropsWithChildren<ViewProps> {
     topTitleText?: string;
 }
 
 export const TextFieldViewContainer = (() => {
-    
+
     const styles = StyleSheet.create({
         root: {
 
@@ -49,7 +55,7 @@ export const TextFieldViewContainer = (() => {
             fontFamily: CustomFont.medium
         },
     });
-    
+
     const TextFieldViewContainer = (props: TextFieldViewContainerProps) => {
         return <SpacerView
             {...props}
@@ -67,14 +73,33 @@ export const TextFieldViewContainer = (() => {
 
 
 
-export interface TextFieldTextInputProps{
+
+
+
+
+export interface TextFieldTextInputProps {
     value?: string;
     onValueChange?: (newValue: string) => void;
     textInputProps?: Omit<TextInputProps, 'value' | 'onChangeText' | 'onFocus' | 'onBlur' | 'selectionColor'>
 }
 
+export const MultilineTextFieldTextInput = (props: TextFieldTextInputProps) => {
+    return <TextFieldTextInput
+        {...props}
+        textInputProps={{
+            returnKeyType: Platform.select({ web: 'enter', default: 'default' }) as any,
+            scrollEnabled: false,
+            multiline: true,
+            style: [{
+                minHeight: 175,
+            }, props.textInputProps?.style],
+            ...props.textInputProps,
+        }}
+    />
+};
+
 export const TextFieldTextInput = (() => {
-    
+
     const styles = StyleSheet.create({
         textInput: {
             borderWidth: OrderConfirmationLayoutConstants.selectionOutline.width,
@@ -82,27 +107,29 @@ export const TextFieldTextInput = (() => {
             padding: TextFieldViewConstants.borderRadius,
             fontSize: 16,
             color: CustomColors.offBlackTitle.stringValue,
-            ...(Platform.select({web: {outlineStyle: 'none'}, default: undefined})),
+            ...(Platform.select({ web: { outlineStyle: 'none' }, default: undefined })),
         },
     });
-    
+
     const TextFieldTextInput = (props: TextFieldTextInputProps) => {
 
         const [isActive, setIsActive] = useState(false);
 
         return <TextInput
-        returnKeyType="done"
-        selectionColor={CustomColors.themeGreen.stringValue}
-        placeholderTextColor={Color.gray(0.7).stringValue}
-        {...props.textInputProps}
-        style={[styles.textInput, {
-            borderColor: isActive ? OrderConfirmationLayoutConstants.selectionOutline.color.selected : OrderConfirmationLayoutConstants.selectionOutline.color.unselected, 
-        }, props.textInputProps?.style]}
-        onFocus={() => setIsActive(true)}
-        onBlur={() => setIsActive(false)}
-        value={props.value}
-        onChangeText={text => props.onValueChange?.(text)}
-    />
+            returnKeyType="done"
+            selectionColor={CustomColors.themeGreen.stringValue}
+            placeholderTextColor={Color.gray(0.7).stringValue}
+            placeholder="Type here..."
+            {...props.textInputProps}
+            style={[styles.textInput, {
+                borderColor: isActive ? OrderConfirmationLayoutConstants.selectionOutline.color.selected : OrderConfirmationLayoutConstants.selectionOutline.color.unselected,
+            }, props.textInputProps?.style]}
+            onFocus={() => setIsActive(true)}
+            onBlur={() => setIsActive(false)}
+            value={props.value}
+            onChangeText={text => props.onValueChange?.(text)}
+        />
     }
     return TextFieldTextInput;
 })();
+

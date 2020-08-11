@@ -5,8 +5,6 @@ import HealthTip from "../api/healthTips/HealthTip";
 import Product from "../api/orderingSystem/products/Product";
 import ProductInfoTag from "../api/orderingSystem/productInfoTags/ProductInfoTag";
 import Menu from "../api/orderingSystem/menus/Menu";
-import { calculateCurrentDesiredTabBarPosition } from "../TabBarController/helpers";
-import AppSettings from "../settings";
 import Meal from "../api/orderingSystem/meals/Meal";
 import MealCategory from "../api/orderingSystem/mealCategories/MealCategory";
 import { getCurrentDefaultTabBarPosition, defaultTabBarSelection } from "./tabBarController";

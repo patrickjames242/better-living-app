@@ -6,33 +6,31 @@ import BouncyButton from "../../../../helpers/Buttons/BouncyButton";
 import Spacer from "../../../../helpers/Spacers/Spacer";
 import AspectRatioView from "../../../../helpers/Views/AspectRatioView";
 import CustomizedText from "../../../../helpers/Views/CustomizedText";
-import {StyleSheet, Image} from 'react-native';
+import {StyleSheet, Image, ViewProps} from 'react-native';
 import MealCreatorConstants from '../MealCreatorConstants';
 import Product from '../../../../api/orderingSystem/products/Product';
+import LayoutConstants from '../../../../LayoutConstants';
 
 
-export interface MealCreatorListViewItemInfoBoxProps {
+export interface ListViewProductItemViewProps extends ViewProps {
     item: Product,
     onPress: () => void,
 }
 
 
-const MealCreatorListViewItemInfoBox = (() => {
+const ListViewProductItemView = (() => {
 
     const imageBorderRadius = 8;
 
     const styles = StyleSheet.create({
         root: {
             flex: 1,
-            paddingLeft: MealCreatorConstants.foodSections.contentViewPadding,
-            paddingTop: MealCreatorConstants.foodSections.contentViewPadding,
-            paddingBottom: MealCreatorConstants.foodSections.contentViewPadding,
+            padding: LayoutConstants.floatingCellStyles.padding,
             alignItems: 'flex-start',
         },
         contentView: {
             flexDirection: 'row',
             alignItems: 'center',
-            
         },
         imageHolder: {
             width: MealCreatorConstants.foodSections.imageWidth,
@@ -51,8 +49,8 @@ const MealCreatorListViewItemInfoBox = (() => {
         },
     });
 
-    const MealCreatorListViewItemInfoBox = (props: MealCreatorListViewItemInfoBoxProps) => {
-        return <BouncyButton style={styles.root} bounceScaleValue={0.9} onPress={props.onPress} contentViewProps={{style: styles.contentView}}>
+    const MealCreatorListViewItemInfoBox = (props: ListViewProductItemViewProps) => {
+        return <BouncyButton {...props} style={[styles.root, props.style]} bounceScaleValue={0.9} onPress={props.onPress} contentViewProps={{style: styles.contentView}}>
             <Spacer space={MealCreatorConstants.foodSections.contentViewPadding}>
                 <AspectRatioView style={styles.imageHolder} heightPercentageOfWidth={MealCreatorConstants.foodSections.imageHeightPercentageOfWidth}>
                     {props.item.imageUrl &&
@@ -66,5 +64,5 @@ const MealCreatorListViewItemInfoBox = (() => {
 })();
 
 
-export default MealCreatorListViewItemInfoBox;
+export default ListViewProductItemView;
 

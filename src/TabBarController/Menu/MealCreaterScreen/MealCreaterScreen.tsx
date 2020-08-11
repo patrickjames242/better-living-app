@@ -19,6 +19,7 @@ import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MenuNavStackParams } from '../navigationHelpers';
 import { useCurrentMenuProductIds } from '../../../api/orderingSystem/menus/helpers';
+import Meal from '../../../api/orderingSystem/meals/Meal';
 
 
 export interface MealCreatorScreenProps{
@@ -50,31 +51,35 @@ const MealCreatorScreen = (() => {
     }
 
 
-    const MealCreatorScreen = (props: StackScreenProps<MenuNavStackParams, 'MealCreator'>) => {
 
-        const meal = useSelector(state => state.orderingSystem.meals.get(props.route.params.defaultMealConfig.mealId));
-        const mealCategories = useSelector(state => {
+    function useListViewSections(meal?: Meal){
+
+        const allReduxMealCategories = useSelector(state => state.orderingSystem.mealCategories);
+
+        const mealCategories = useMemo(() => {
             return List<MealCategory>().withMutations(list => {
                 meal?.productCategories.sortBy(x => x.orderNumber).forEach(({id: categoryId}) => {
-                    const category = state.orderingSystem.mealCategories.get(categoryId);
+                    const category = allReduxMealCategories.get(categoryId);
                     category && list.push(category);
                 });
             });
-        });
+        }, [allReduxMealCategories, meal]);
 
         const currentMenuProductIds = useCurrentMenuProductIds();
 
-        const productsMap = useSelector(state => {
+        const allReduxProducts = useSelector(state => state.orderingSystem.products);
+
+        const productsMap = useMemo(() => {
             return Map<number, Product>().withMutations(map => {
                 mealCategories.forEach(mealCategory => {
                     mealCategory.productIds.forEach(productId => {
                         if (currentMenuProductIds.contains(productId) === false){return;}
-                        const product = state.orderingSystem.products.get(productId);
+                        const product = allReduxProducts.get(productId);
                         product && map.set(product.id, product);
                     });
                 });
             });
-        });
+        }, [allReduxProducts, currentMenuProductIds, mealCategories]);
 
         const listViewSections = useMemo(() => {
             return mealCategories.map(category => ({
@@ -83,6 +88,18 @@ const MealCreatorScreen = (() => {
                 data: compactMap(category.productIds.toArray(), id => productsMap.get(id)).sort((a, b) => a.title.localeCompare(b.title)), 
             })).toArray();
         }, [mealCategories, productsMap]);
+
+        return listViewSections;
+    }
+
+    
+
+
+    const MealCreatorScreen = (props: StackScreenProps<MenuNavStackParams, 'MealCreator'>) => {
+
+        const meal = useSelector(state => state.orderingSystem.meals.get(props.route.params.defaultMealConfig.mealId));
+        
+        const listViewSections = useListViewSections(meal);
 
         const [bottomButtonViewHeight, setBottomButtonViewHeight] = useState(0);
 

@@ -1,18 +1,9 @@
 
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
-import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
 import { Optional, mapOptional, displayErrorMessage } from '../../../helpers/general';
 import store from '../../../redux/store';
-import LayoutConstants from '../../../LayoutConstants';
-import SpacerView from '../../../helpers/Spacers/SpacerView';
-import TextFieldView from '../../../helpers/Views/TextFieldView';
-import LongTextAndIconButton from '../../../helpers/Buttons/LongTextAndIconButton';
-import AssetImages from '../../../images/AssetImages';
-import Space from '../../../helpers/Spacers/Space';
+import { TextFieldView, MultilineTextFieldView } from '../../../helpers/Views/TextFieldView';
 import { updateHealthTip, createNewHealthTip, HealthTipRequestObj } from '../../../api/healthTips/requests';
-import CreateOrEditTipConstants from './CreateOrEditTipConstants';
-import CreateOrEditTipDescriptionView from './CreateOrEditTipDescriptionView';
 import CreateOrEditTipYoutubeSection from './CreateOrEditTipYoutubeSection/CreateOrEditTipYoutubeSection';
 import { List, Set } from 'immutable';
 import CreateOrEditTipAudioFilesSection from './CreateOrEditTipAudioFilesSection/CreateOrEditTipAudioFilesSection';
@@ -20,40 +11,11 @@ import { HealthTipAudioFile } from '../../../api/healthTips/HealthTip';
 import { StackScreenProps, StackNavigationProp } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
 import { useNavigation } from '@react-navigation/native';
-import CustomKeyboardAvoidingView from '../../../helpers/Views/CustomKeyboardAvoidingView';
-
-
+import GenericEditingFormScreen from '../../../helpers/Views/GenericEditingFormScreen';
 
 
 
 const CreateOrEditTipScreen = (() => {
-
-    const styles = StyleSheet.create({
-        root: {
-            flex: 1,
-        },
-        scrollView: {
-            flex: 1,
-            zIndex: -1,
-        },
-        scrollViewContentContainer: {
-            padding: LayoutConstants.pageSideInsets,
-        },
-        inputsHolder: {
-            backgroundColor: 'white',
-            borderRadius: LayoutConstants.floatingCellStyles.borderRadius,
-            padding: LayoutConstants.floatingCellStyles.padding,
-            maxWidth: LayoutConstants.floatingCellStyles.maxWidth,
-            alignSelf: 'center',
-            width: '100%',
-        },
-        saveChangesButton: {
-            maxWidth: LayoutConstants.bottomScreenButtonWithGradient.maxWidth,
-            width: '100%',
-            alignSelf: 'center',
-        }
-
-    });
 
     function getInitialFieldValues(tipId: Optional<number>): {
         title: string,
@@ -95,7 +57,6 @@ const CreateOrEditTipScreen = (() => {
         const [audioFilesToAdd, setAudioFilesToAdd] = useState(List<File>());
         const [audioFilesToDelete, setAudioFilesToDelete] = useState(Set<number>());
 
-
         const navigationBarTitle = (() => {
             if (props.route.params.tipIdToEdit == null) {
                 return "Create New Health Tip";
@@ -108,9 +69,9 @@ const CreateOrEditTipScreen = (() => {
 
         function saveChanges() {
 
-            const requestObj: HealthTipRequestObj = { 
-                title: title, 
-                article_text: articleText, 
+            const requestObj: HealthTipRequestObj = {
+                title: title,
+                article_text: articleText,
                 yt_video_ids: ytVideoIds.toArray(),
                 audioFilesToInsert: audioFilesToAdd,
                 audioFilesToDelete: audioFilesToDelete.toList(),
@@ -129,59 +90,45 @@ const CreateOrEditTipScreen = (() => {
                 });
         }
 
-        return <CustomKeyboardAvoidingView style={styles.root}>
-            <NavigationControllerNavigationBar title={navigationBarTitle} />
-            <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
-                
-                <SpacerView style={styles.inputsHolder} space={25}>
-                    <TextFieldView
-                        value={title}
-                        onValueChange={setTitle}
-                        topTitleText="Title"
-                        textInputProps={{ placeholder: CreateOrEditTipConstants.textFieldPlaceholder }}
-                    />
-                    <CreateOrEditTipYoutubeSection
-                        videoIds={ytVideoIds}
-                        onDeleteVideoId={videoId => {
-                            setYtVideoIds(i => i.filter(x => x !== videoId));
-                        }}
-                        onAddVideoId={videoId => {
-                            setYtVideoIds(x => x.filter(x => x !== videoId).push(videoId));
-                        }}
-                    />
-                    <CreateOrEditTipAudioFilesSection
-                        audioFiles={initialFieldValues.audioFiles}
-                        addedAudioFiles={audioFilesToAdd}
-                        deletedAudioFileIds={audioFilesToDelete}
-                        onUserWantsToAddFile={file => setAudioFilesToAdd(x => x.push(file))}
-                        onUserWantsToRemoveAddedFile={file => setAudioFilesToAdd(x => x.filter(y => y !== file))}
-                        onUserWantsToRemoveExistingFile={id => setAudioFilesToDelete(x => x.add(id))}
-                    />
-                    <CreateOrEditTipDescriptionView
-                        value={articleText}
-                        onValueChange={setArticleText}
-                    />
-                </SpacerView>
-                <Space space={15} />
-                <LongTextAndIconButton
-                    isLoading={isLoading}
-                    style={styles.saveChangesButton}
-                    text="Save Changes"
-                    iconSource={AssetImages.saveIcon}
-                    onPress={saveChanges}
-                />
-        
-            </ScrollView>
-            </CustomKeyboardAvoidingView>
+        return <GenericEditingFormScreen
+            navBarTitle={navigationBarTitle}
+            saveChangesButtonProps={{
+                isLoading,
+                onPress: saveChanges,
+            }}
+        >
+            <TextFieldView
+                value={title}
+                onValueChange={setTitle}
+                topTitleText="Title"
+            />
+            <CreateOrEditTipYoutubeSection
+                videoIds={ytVideoIds}
+                onDeleteVideoId={videoId => {
+                    setYtVideoIds(i => i.filter(x => x !== videoId));
+                }}
+                onAddVideoId={videoId => {
+                    setYtVideoIds(x => x.filter(x => x !== videoId).push(videoId));
+                }}
+            />
+            <CreateOrEditTipAudioFilesSection
+                audioFiles={initialFieldValues.audioFiles}
+                addedAudioFiles={audioFilesToAdd}
+                deletedAudioFileIds={audioFilesToDelete}
+                onUserWantsToAddFile={file => setAudioFilesToAdd(x => x.push(file))}
+                onUserWantsToRemoveAddedFile={file => setAudioFilesToAdd(x => x.filter(y => y !== file))}
+                onUserWantsToRemoveExistingFile={id => setAudioFilesToDelete(x => x.add(id))}
+            />
+            <MultilineTextFieldView 
+                topTitleText="Description"
+                value={articleText} 
+                onValueChange={setArticleText}
+            />
+        </GenericEditingFormScreen>
     }
     return CreateOrEditTipScreen;
 })();
 
 export default CreateOrEditTipScreen;
-
-
-
-
-
 
 

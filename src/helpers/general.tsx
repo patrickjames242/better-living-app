@@ -5,6 +5,9 @@ import { CustomColors } from './colors';
 
 export type Optional<Wrapped> = Wrapped | null;
 
+// makes specific properties optional
+export type PartialBy<T, Keys extends keyof T> = Omit<T, Keys> & Partial<Pick<T, Keys>>
+
 export const DEFAULT_NAV_SCREEN_OPTIONS = {headerShown: false, cardStyle: {backgroundColor: CustomColors.mainBackgroundColor.stringValue}};
 
 export function getNumbersList(first: number, last: number): number[] {

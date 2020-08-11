@@ -30,10 +30,7 @@ const TipsListScreen = (() => {
             
         },
         flatListContentContainer: {
-            alignSelf: 'center',
-            width: '100%',
-            maxWidth: 1100,
-            padding: listViewPadding,
+            ...LayoutConstants.maxWidthListContentContainerStyles(1100),
         },
     });
 

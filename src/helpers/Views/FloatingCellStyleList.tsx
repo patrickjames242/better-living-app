@@ -14,7 +14,7 @@ import { Optional } from '../general';
 export interface FloatingCellStyleListProps<ItemType, SectionType extends SectionListData<ItemType>> extends SectionListProps<ItemType> {
     sections: ReadonlyArray<SectionType>
     // if you return null, no header will be rendered for the section.
-    titleForSection: (section: SectionType) => Optional<string>,
+    titleForSection?: (section: SectionType) => Optional<string>,
 }
 
 const FloatingCellStyleList = (() => {
@@ -25,15 +25,12 @@ const FloatingCellStyleList = (() => {
             zIndex: -1,
         },
         contentContainer: {
-            padding: LayoutConstants.pageSideInsets,
-            paddingTop: LayoutConstants.floatingCellStyles.sectionSpacing,
-            width: '100%',
-            alignSelf: 'center',
-            maxWidth: LayoutConstants.floatingCellStyles.maxWidth + (LayoutConstants.pageSideInsets * 2)
+            ...LayoutConstants.maxWidthListContentContainerStyles(LayoutConstants.floatingCellStyles.maxWidth),
+            
         },
         sectionListItemSeparatorLine: {
-            height: StyleSheet.hairlineWidth * 1.5,
-            backgroundColor: Color.gray(0.8).withAdjustedOpacity(0.4).stringValue,
+            height: StyleSheet.hairlineWidth,
+            backgroundColor: Color.gray(0.85).stringValue,
         }
     });
 
@@ -46,7 +43,7 @@ const FloatingCellStyleList = (() => {
         const titleForSection = props.titleForSection;
 
         const renderSectionHeader = useCallback((info: { section: SectionListData<ItemType> }) => {
-            const title = titleForSection(info.section as SectionType);
+            const title = titleForSection?.(info.section as SectionType) ?? null;
             if (typeof title !== 'string'){return null;}
             return <MealCreatorListViewSectionHeader title={title} />
         }, [titleForSection]);
@@ -60,7 +57,7 @@ const FloatingCellStyleList = (() => {
             const isBottomOfHeader = args.leadingItem == undefined;
 
             const space = (() => {
-                if (isBottomOfList || isBottomOfHeader && titleForSection(section) == null) {
+                if (isBottomOfList || isBottomOfHeader && (titleForSection?.(section) ?? null) == null) {
                     return 0;
                 } else if (isTopOfHeader) {
                     return MealCreatorConstants.foodSections.sectionSpacing;
@@ -102,7 +99,9 @@ const FloatingCellStyleList = (() => {
             // renderItem has to be below the user's props because it relies on the user's renderItem prop, which will override our implementation if we place this before
             renderItem={renderItem}
             style={[styles.sectionList, props.style]}
-            contentContainerStyle={[styles.contentContainer, props.contentContainerStyle]}
+            contentContainerStyle={[styles.contentContainer, {
+                paddingTop: props.titleForSection instanceof Function ? LayoutConstants.floatingCellStyles.sectionSpacing : undefined,
+            }, props.contentContainerStyle]}
         />
     }
     return FloatingCellStyleList;

@@ -87,7 +87,7 @@ const GenericSettingsScreen = (() => {
                     })();
                     return (spaceSize != null) ? <Space space={spaceSize}/> : null;
                 }}
-                ItemSeparatorComponent={() => <Space space={15}/>}
+                ItemSeparatorComponent={() => <Space space={12.5}/>}
                 sections={props.sections}
                 renderItem={(args) => {
                     return <SettingsItemView {...args.item}/>

@@ -47,6 +47,20 @@ const LayoutConstants = {
     bottomScreenButtonWithGradient: {
         bottomPadding: 15,
         maxWidth: 450,
+    },
+
+    maxWidthListContentContainerStyles(maxWidth?: number): {
+        alignSelf: 'center',
+        width: string;
+        maxWidth: number;
+        padding: number;
+    }{
+        return {
+            alignSelf: 'center',
+            width: '100%',
+            maxWidth: (maxWidth ?? LayoutConstants.floatingCellStyles.maxWidth) + (LayoutConstants.pageSideInsets * 2),
+            padding: LayoutConstants.pageSideInsets,
+        };
     }
 
 };

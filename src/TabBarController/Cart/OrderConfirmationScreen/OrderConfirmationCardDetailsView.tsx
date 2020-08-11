@@ -5,7 +5,7 @@ import { StyleSheet, Animated } from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import Spacer from '../../../helpers/Spacers/Spacer';
-import TextFieldView, { TextFieldViewProps } from '../../../helpers/Views/TextFieldView';
+import { TextFieldView, TextFieldViewProps } from '../../../helpers/Views/TextFieldView';
 
 
 
