@@ -45,6 +45,7 @@ const CartItemListItemView = (() => {
             width: 90,
             borderRadius: imageBorderRadius,
             ...getShadowStyle(5),
+            backgroundColor: 'white',
         },
         image: {
             width: '100%',

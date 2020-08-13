@@ -13,6 +13,7 @@ interface ProductRequestObj{
     [ProductJsonKeys.title]: string;
     [ProductJsonKeys.description]?: Optional<string>;
     [ProductJsonKeys.individual_price]?: Optional<string>;
+    [ProductJsonKeys.should_be_sold_individually]?: boolean;
     [ProductJsonKeys.info_tag_ids]?: number[];
     setImage?: File | null; // a null value removes the image in the api
 }

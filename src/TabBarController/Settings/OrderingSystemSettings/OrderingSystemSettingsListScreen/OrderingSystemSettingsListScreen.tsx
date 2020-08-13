@@ -22,17 +22,17 @@ const OrderingSystemSettingsListScreen = (props: StackScreenProps<SettingsNavSta
                     {
                         title: 'Menus',
                         imageSource: require('./menus.png'),
-                        onPress: () => {},
+                        onPress: () => {props.navigation.push('MenusList')},
                     },
                     {
                         title: 'Meals',
                         imageSource: require('./meals.png'),
-                        onPress: () => {},
+                        onPress: () => {props.navigation.push('MealsList')},
                     },
                     {
                         title: 'Meal Categories',
                         imageSource: require('./mealCategories.png'),
-                        onPress: () => {},
+                        onPress: () => {props.navigation.push('MealCategoriesList')},
                     },
                 ]
             }

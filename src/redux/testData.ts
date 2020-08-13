@@ -32,6 +32,7 @@ const products: [number, Product][] = [
         description: 'aalksj asdfklj slaks blah blah blah',
         image_url: null,
         individual_price: null,
+        should_be_sold_individually: true,
         info_tag_ids: [1, 2, 3],
     })],
     [2, new Product({
@@ -40,6 +41,7 @@ const products: [number, Product][] = [
         description: 'aalksj asdfklj slaks blah blah blah',
         image_url: null,
         individual_price: null,
+        should_be_sold_individually: true,
         info_tag_ids: [1, 2, 3],
     })],
     [3, new Product({
@@ -48,6 +50,7 @@ const products: [number, Product][] = [
         description: 'aalksj asdfklj slaks blah blah blah',
         image_url: null,
         individual_price: null,
+        should_be_sold_individually: true,
         info_tag_ids: [1, 2, 3],
     })],
 ];
@@ -56,7 +59,7 @@ const menus: [number, Menu][] = [
     [1, new Menu({
         id: 1, 
         title: 'best menu ever',
-        day_of_the_week: new Date(Date.now()).getDay(),
+        days_of_the_week: [new Date(Date.now()).getDay()],
         start_time: '00:00:00',
         end_time: '23:59:59',
         categories: [

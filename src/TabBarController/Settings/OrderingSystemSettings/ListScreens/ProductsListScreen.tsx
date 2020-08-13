@@ -5,9 +5,10 @@ import NavigationControllerNavigationBar from '../../../../helpers/NavigationCon
 import FloatingCellStyleList from '../../../../helpers/Views/FloatingCellStyleList';
 import Product from '../../../../api/orderingSystem/products/Product';
 import { useSelector } from '../../../../redux/store';
-import ListViewProductItemView from '../../../Menu/MealCreaterScreen/ChildComponents/MealCreatorListViewItemInfoBox';
+import ListViewProductItemView from '../../../../helpers/Views/DataSpecificViews/ListViewProductItemView';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../navigationHelpers';
+import PlusButton from '../../../../helpers/Buttons/PlusButton';
 
 
 
@@ -28,14 +29,22 @@ const ProductsListScreen = (() => {
         const products = useSelector(state => state.orderingSystem.products);
         const sections = useMemo(() => {
             const sortedProducts = products.toSet().sortBy(p => p.title).toArray();
-            return [{ title: 'yama', data: sortedProducts }];
+            return [{ data: sortedProducts }];
         }, [products]);
 
         return <View style={styles.root}>
-            <NavigationControllerNavigationBar title="Food Products" />
-
+            <NavigationControllerNavigationBar
+                title="Food Products"
+                rightAlignedView={
+                    <PlusButton
+                        onPress={() => {
+                            props.navigation.push('ProductEditOrCreate', { productId: null });
+                        }}
+                    />
+                } />
             <FloatingCellStyleList<Product, SectionType>
                 sections={sections}
+                keyExtractor={x => String(x.id)}
                 renderItem={item => {
                     return <ListViewProductItemView
                         item={item.item}
@@ -44,9 +53,6 @@ const ProductsListScreen = (() => {
                         }} />
                 }}
             />
-
-
-
         </View>
     }
     return ProductsListScreen;

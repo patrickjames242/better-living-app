@@ -6,7 +6,7 @@ import ajv from "ajv";
 export const MenuJsonKeys: {
     id: 'id',
     title: 'title',
-    day_of_the_week: 'day_of_the_week',
+    days_of_the_week: 'days_of_the_week',
     start_time: 'start_time',
     end_time: 'end_time',
     categories: 'categories',
@@ -17,7 +17,7 @@ export const MenuJsonKeys: {
 } = {
     id: 'id',
     title: 'title',
-    day_of_the_week: 'day_of_the_week',
+    days_of_the_week: 'days_of_the_week',
     start_time: 'start_time',
     end_time: 'end_time',
     categories: 'categories',
@@ -31,7 +31,7 @@ export const MenuJsonKeys: {
 export interface MenuJsonResponseObj{
     [MenuJsonKeys.id]: number;
     [MenuJsonKeys.title]: string;
-    [MenuJsonKeys.day_of_the_week]: Optional<number>;
+    [MenuJsonKeys.days_of_the_week]: number[];
     [MenuJsonKeys.start_time]: Optional<string>;
     [MenuJsonKeys.end_time]: Optional<string>;
     [MenuJsonKeys.categories]: {
@@ -51,7 +51,10 @@ const MenuApiResponseSchema = {
     properties: {
         [MenuJsonKeys.id]: {type: 'number'},
         [MenuJsonKeys.title]: {type: 'string'},
-        [MenuJsonKeys.day_of_the_week]: {enum: [...getNumbersList(0, 6), null]},
+        [MenuJsonKeys.days_of_the_week]: {
+            type: 'array', 
+            items: {enum: [...getNumbersList(0, 6)]},
+        },
         [MenuJsonKeys.start_time]: {'$ref': '#/startEndTimeType'},
         [MenuJsonKeys.end_time]: {'$ref': '#/startEndTimeType'},
         [MenuJsonKeys.categories]: {
@@ -75,7 +78,7 @@ const MenuApiResponseSchema = {
     required: [
         MenuJsonKeys.id,
         MenuJsonKeys.title,
-        MenuJsonKeys.day_of_the_week,
+        MenuJsonKeys.days_of_the_week,
         MenuJsonKeys.start_time,
         MenuJsonKeys.end_time,
         MenuJsonKeys.categories,

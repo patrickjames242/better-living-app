@@ -2,12 +2,9 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TextFieldViewContainer } from '../../../../helpers/Views/TextFieldView';
-import { Color, CustomColors } from '../../../../helpers/colors';
-import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import { Set } from 'immutable';
-import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
 import { useSelector } from '../../../../redux/store';
-import { CustomFont } from '../../../../helpers/fonts/fonts';
+import SelectableRoundedTextButton, { SelectableRoundedTextButtonProps } from '../SelectableRoundedTextButton';
 
 const infoTagViewSpacing = 10;
 
@@ -65,38 +62,21 @@ export default ProductEditOrCreationInfoTagsSelector;
 
 
 
-interface InfoTagItemViewProps {
-    onPress: () => void;
-    title: string;
-    isSelected: boolean;
-}
+interface InfoTagItemViewProps extends SelectableRoundedTextButtonProps { }
 
 const InfoTagItemView = (() => {
 
     const styles = StyleSheet.create({
-        contentContainer: {
-            borderRadius: 10000,
-            padding: 10,
-            paddingLeft: 14,
-            paddingRight: 14,
+        root: {
             marginBottom: infoTagViewSpacing,
             marginRight: infoTagViewSpacing,
         },
-        title: {
-            fontSize: 14,
-            // fontFamily: CustomFont.medium,
-        }
     });
 
     const InfoTagItemView = (props: InfoTagItemViewProps) => {
-        return <BouncyButton onPress={props.onPress} contentViewProps={{ style: [styles.contentContainer, {
-            backgroundColor: props.isSelected ? CustomColors.themeGreen.stringValue : Color.gray(0.95).stringValue,
-        }] }} bounceScaleValue={0.85}>
-            <CustomizedText style={[styles.title, {
-                color: props.isSelected ?  'white' : CustomColors.offBlackTitle.stringValue,
-                fontFamily: props.isSelected ? CustomFont.medium : CustomFont.regular,
-            }]}>{props.title}</CustomizedText>
-        </BouncyButton>
+        return <View style={styles.root}>
+            <SelectableRoundedTextButton {...props}/>
+        </View>
     }
     return InfoTagItemView;
 })();

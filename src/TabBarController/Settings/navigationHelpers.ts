@@ -6,7 +6,10 @@ export type SettingsNavStackParams = {
     SettingsList: undefined;
     OrderingSystemSettingsList: undefined;
     ProductsList: undefined;
-    ProductEditOrCreate: {productId: Optional<number>}
+    ProductEditOrCreate: {productId: Optional<number>};
+    MenusList: undefined;
+    MealsList: undefined;
+    MealCategoriesList: undefined;
 }
 
 export const SettingsNavStack = createStackNavigator<SettingsNavStackParams>();

@@ -12,7 +12,9 @@ export default class Product{
     readonly description: Optional<string>;
     readonly imageUrl: Optional<string>;
     readonly individualPrice: Optional<number>;
+    readonly shouldBeSoldIndividually: boolean;
     readonly infoTagIds: Set<number>;
+
 
     constructor(productJsonResponseObj: ProductJsonResponseObj){
 
@@ -27,6 +29,7 @@ export default class Product{
         this.description = json.description;
         this.imageUrl = json.image_url;
         this.individualPrice = json.individual_price;
+        this.shouldBeSoldIndividually = json.should_be_sold_individually;
         this.infoTagIds = Set(json.info_tag_ids);
 
     }

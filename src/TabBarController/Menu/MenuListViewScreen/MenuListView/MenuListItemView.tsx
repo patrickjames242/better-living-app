@@ -13,6 +13,8 @@ import currency from 'currency.js';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MenuNavStackParams } from '../../navigationHelpers';
+import AssetImages from '../../../../images/AssetImages';
+import SpacerView from '../../../../helpers/Spacers/SpacerView';
 
 
 const MenuListItemView = (() => {
@@ -31,11 +33,29 @@ const MenuListItemView = (() => {
             borderTopLeftRadius: borderRadius,
             borderTopRightRadius: borderRadius,
             ...shadowConfig,
-            backgroundColor: 'white',
+            backgroundColor: Color.gray(0.98).stringValue,
         },
         image: {
             width: '100%',
             height: '100%',
+        },
+        noImageAvailableHolder: {
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: borderRadius,
+            opacity: 0.7
+        },
+        noImageAvailableImage: {
+            height: 50,
+            width: 50,
+            tintColor: CustomColors.themeGreen.stringValue,
+        },
+        noImageAvailableText: {
+            fontSize: 14,
+            fontFamily: CustomFont.medium,
+            // color: CustomColors.offBlackSubtitle.stringValue,
+            color: CustomColors.themeGreen.stringValue
         },
         textBox: {
             backgroundColor: 'white',
@@ -100,14 +120,22 @@ const MenuListItemView = (() => {
         }
 
         return <BouncyButton style={styles.root} bounceScaleValue={0.93} onPress={onPress}>
-
             <AspectRatioView
                 heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}
                 style={styles.imageHolder}
             >
-                <Image style={styles.image} source={{uri: product?.imageUrl ?? undefined}} resizeMode="cover" />
+                {(() => {
+                    const imageUrl = product?.imageUrl ?? undefined;
+                    if (imageUrl){
+                        return <Image style={styles.image} source={{uri: product?.imageUrl ?? undefined}} resizeMode="cover" />
+                    } else {
+                        return <SpacerView style={styles.noImageAvailableHolder} space={5}>
+                            <Image style={styles.noImageAvailableImage} source={AssetImages.imageIcon}/>
+                            <CustomizedText style={styles.noImageAvailableText}>No Image Available</CustomizedText>
+                        </SpacerView>
+                    }
+                })()}
             </AspectRatioView>
-
             <View style={styles.textBox}>
                 <View style={styles.textBox_leftSide}>
                     <CustomizedText style={styles.textBox_productName} numberOfLines={2} ellipsizeMode={'tail'}>

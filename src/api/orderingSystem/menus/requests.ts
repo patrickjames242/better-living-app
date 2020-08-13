@@ -9,7 +9,7 @@ const basePath = 'ordering-system/menus/';
 
 export interface MenuRequestObj{
     [MenuJsonKeys.title]: string;
-    [MenuJsonKeys.day_of_the_week]?: DayOfTheWeek;
+    [MenuJsonKeys.days_of_the_week]?: DayOfTheWeek;
     [MenuJsonKeys.start_time]?: string;
     [MenuJsonKeys.end_time]?: string;
     [MenuJsonKeys.categories]: {[categoryTitle: string]: {

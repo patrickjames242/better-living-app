@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useRef, useState} from 'react';
 import { StyleSheet, Animated, View } from "react-native";
 import { CustomColors } from "../../../../helpers/colors";
 import MealCreatorCheckBoxButton from './MealCreatorCheckBox';
-import ListViewProductItemView from './MealCreatorListViewItemInfoBox';
+import ListViewProductItemView from '../../../../helpers/Views/DataSpecificViews/ListViewProductItemView';
 import { Optional } from '../../../../helpers/general';
 import ValueBox from '../../../../helpers/ValueBox';
 import Product from '../../../../api/orderingSystem/products/Product';

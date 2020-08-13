@@ -2,6 +2,7 @@
 
 import {Optional} from '../../../helpers/general';
 import ajv from 'ajv';
+import Product from './Product';
 
 export const ProductFormDataKeys: {
     json: 'json',
@@ -17,6 +18,7 @@ export const ProductJsonKeys: {
     description: 'description',
     image_url: 'image_url',
     individual_price: 'individual_price',
+    should_be_sold_individually: 'should_be_sold_individually',
     info_tag_ids: 'info_tag_ids'
 } = {
     id: 'id',
@@ -24,6 +26,7 @@ export const ProductJsonKeys: {
     description: 'description',
     image_url: 'image_url',
     individual_price: 'individual_price',
+    should_be_sold_individually: 'should_be_sold_individually',
     info_tag_ids: 'info_tag_ids'
 }
 
@@ -34,6 +37,7 @@ export interface ProductJsonResponseObj{
     [ProductJsonKeys.description]: Optional<string>;
     [ProductJsonKeys.image_url]: Optional<string>;
     [ProductJsonKeys.individual_price]: Optional<number>;
+    [ProductJsonKeys.should_be_sold_individually]: boolean;
     [ProductJsonKeys.info_tag_ids]: number[];
 
 }
@@ -46,6 +50,7 @@ const ProductApiResponseSchema = {
         [ProductJsonKeys.description]: {type: ['string', 'null']},
         [ProductJsonKeys.image_url]: {type: ['string', 'null'], format: 'uri'},
         [ProductJsonKeys.individual_price]: {type: ['number', 'null']},
+        [ProductJsonKeys.should_be_sold_individually]: {type: 'boolean'},
         [ProductJsonKeys.info_tag_ids]: {
             type: 'array',
             items: {type: 'number'}
@@ -57,6 +62,7 @@ const ProductApiResponseSchema = {
         ProductJsonKeys.description,
         ProductJsonKeys.image_url,
         ProductJsonKeys.individual_price,
+        ProductJsonKeys.should_be_sold_individually,
         ProductJsonKeys.info_tag_ids,
     ]
 }

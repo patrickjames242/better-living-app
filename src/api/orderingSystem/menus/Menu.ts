@@ -22,7 +22,7 @@ export default class Menu{
     
     readonly id: number;
     readonly title: string;
-    readonly dayOfTheWeek: Optional<DayOfTheWeek>;
+    readonly daysOfTheWeek: Set<DayOfTheWeek>;
     readonly startTime: Optional<string>;
     readonly endTime: Optional<string>;
     readonly categories: List<MenuCategory>;
@@ -36,13 +36,14 @@ export default class Menu{
 
         this.id = json.id;
         this.title = json.title;
-        this.dayOfTheWeek = menuJsonResponseObj.day_of_the_week;
+        this.daysOfTheWeek = Set(menuJsonResponseObj.days_of_the_week);
         this.startTime = json.start_time;
         this.endTime = json.end_time;
         this.categories = List(json.categories.map<MenuCategory>(x => ({
             title: x.title,
             productIds: Set(x.product_ids),
-        })))
+        })));
+        
     }
 }
 

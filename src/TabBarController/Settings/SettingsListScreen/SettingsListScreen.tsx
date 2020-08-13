@@ -26,7 +26,7 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                 ]
             }
         ]
-    }, []);
+    }, [props.navigation]);
 
     return <GenericSettingsScreen navBarTitle="Settings" sections={sections} navBarType={GenericSettingsScreenNavigationBarType.mainScreenLargeTitle} sectionListProps={{
         ListHeaderComponent: SettingsListScreenHeader,
