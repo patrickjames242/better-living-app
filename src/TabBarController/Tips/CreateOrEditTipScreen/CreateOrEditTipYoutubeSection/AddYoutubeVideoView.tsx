@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import {StyleSheet} from 'react-native';
-import * as QueryString from 'query-string';
 import URLParser from 'url-parse';
 import { TextFieldViewContainer, TextFieldTextInput } from '../../../../helpers/Views/TextFieldView';
 import SpacerView from '../../../../helpers/Spacers/SpacerView';
@@ -33,11 +32,7 @@ const AddYoutubeVideoView = (() => {
                 const videoId = parsedUrl.pathname.split('/').filter(x => x.length >= 1)[0];
                 return (typeof videoId === 'string') ? videoId : null;
             } else {
-                const queryString = parsedUrl?.query;
-                if (typeof queryString !== 'string') { return null; }
-                const videoId = QueryString.parse(queryString)?.v;
-                if (typeof videoId !== 'string' || videoId.trim().length < 1) { return null; }
-                return videoId;
+                return parsedUrl?.query?.v ?? null;
             }
         } catch {
             return null;
@@ -54,8 +49,9 @@ const AddYoutubeVideoView = (() => {
             <SpacerView space={10} style={styles.contentHolderView}>
                 <TextFieldTextInput
                     value={urlText}
-                    onValueChange={setUrlText}
-                    textInputProps={{ placeholder: 'e.g. https://www.youtube.com/watch?v=vMo5R5pLPBE', style: styles.textInput }}
+                    onChangeText={setUrlText}
+                    placeholder="e.g. https://www.youtube.com/watch?v=vMo5R5pLPBE"
+                    style={styles.textInput}
                 />
                 <CreateOrEditTipEditButton isEnabled={shouldAddButtonBeEnabled} buttonType={CreateOrEditTipEditButton_EditButtonType.add} onPress={() => {
                     const videoID = extractVideoId(urlText);

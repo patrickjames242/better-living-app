@@ -9,10 +9,10 @@ import { insertOrUpdateProductAction, deleteProductAction } from "../../../redux
 
 const basePath = 'ordering-system/products/';
 
-interface ProductRequestObj{
+export interface ProductRequestObj{
     [ProductJsonKeys.title]: string;
     [ProductJsonKeys.description]?: Optional<string>;
-    [ProductJsonKeys.individual_price]?: Optional<string>;
+    [ProductJsonKeys.individual_price]?: Optional<number>;
     [ProductJsonKeys.should_be_sold_individually]?: boolean;
     [ProductJsonKeys.info_tag_ids]?: number[];
     setImage?: File | null; // a null value removes the image in the api
@@ -24,6 +24,7 @@ function getBodyForRequestObject(obj: Partial<ProductRequestObj>): FormData{
             ProductJsonKeys.title,
             ProductJsonKeys.description,
             ProductJsonKeys.individual_price,
+            ProductJsonKeys.should_be_sold_individually,
             ProductJsonKeys.info_tag_ids,
         ]);
         return Object.getOwnPropertyNames(filteredObj).length >= 1 ? filteredObj : undefined;
@@ -37,7 +38,8 @@ function getBodyForRequestObject(obj: Partial<ProductRequestObj>): FormData{
         else if (obj.setImage instanceof File){return obj.setImage}
     })();
 
-    setImageValue && formData.append(ProductFormDataKeys.set_image, JSON.stringify(json));
+    setImageValue && formData.append(ProductFormDataKeys.set_image, setImageValue);
+    
     return formData;
 }
 

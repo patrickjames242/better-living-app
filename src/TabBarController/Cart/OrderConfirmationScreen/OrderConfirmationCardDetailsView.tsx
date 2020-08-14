@@ -105,31 +105,23 @@ const OrderConfirmationCardDetailsView = (() => {
                 <NumberTextFieldView
                     topTitleText="Credit Card Number"
                     value={creditCardNumber}
-                    onValueChange={value => setCreditCardNumber(value)}
-                    textInputProps={{
-                        placeholder: "4444 5555 6666 7777"
-                    }}
+                    onChangeText={value => setCreditCardNumber(value)}
+                    placeholder="4444 5555 6666 7777"
                 />
                 <SpacerView space={10} style={styles.bottomRow}>
                     <NumberTextFieldView
                         style={[styles.bottomRowItem]}
                         topTitleText="Expiration"
-                        // value={getDisplayStringForExpirationDate(expirationDate)}
-                        // onValueChange={value => setExpirationDate(parseExpirationDate(value))}
                         value={expirationDate}
-                        onValueChange={value => setExpirationDate(value)}
-                        textInputProps={{
-                            placeholder: "07/20"
-                        }}
+                        onChangeText={value => setExpirationDate(value)}
+                        placeholder="07/20"
                     />
                     <NumberTextFieldView
                         style={[styles.bottomRowItem]}
                         topTitleText="CVV"
                         value={CVV}
-                        onValueChange={value => setCVV(value)}
-                        textInputProps={{
-                            placeholder: "672"
-                        }}
+                        onChangeText={value => setCVV(value)}
+                        placeholder="672"
                     />
                 </SpacerView>
             </Spacer>

@@ -7,15 +7,12 @@ import LongTextAndIconButton, { LongTextAndIconButtonProps } from '../Buttons/Lo
 import NavigationControllerNavigationBar from '../NavigationController/NavigationControllerNavigationBar';
 import SpacerView from '../Spacers/SpacerView';
 import Space from '../Spacers/Space';
-import { PartialBy } from '../general';
-import AssetImages from '../../images/AssetImages';
 
 
 export interface GenericEditingFormScreenProps extends PropsWithChildren<{}> {
     navBarTitle: string;
-    saveChangesButtonProps: PartialBy<LongTextAndIconButtonProps, 'text' | 'iconSource'>,
+    longButtons?: LongTextAndIconButtonProps[],
 }
-
 
 const GenericEditingFormScreen = (() => {
 
@@ -50,12 +47,14 @@ const GenericEditingFormScreen = (() => {
                     {props.children}
                 </SpacerView>
                 <Space space={15} />
-                <LongTextAndIconButton
-                    {...props.saveChangesButtonProps}
-                    iconSource={props.saveChangesButtonProps.iconSource ?? AssetImages.saveIcon}
-                    style={[styles.saveChangesButton, props.saveChangesButtonProps.style]}
-                    text={props.saveChangesButtonProps.text ?? "Save Changes"}
+                {/* eslint-disable react/no-children-prop */}
+                <SpacerView
+                    space={15}
+                    children={props.longButtons?.map((x, index) => {
+                        return <LongTextAndIconButton key={index} {...x} style={[styles.saveChangesButton, x.style]} />
+                    }) ?? []}
                 />
+                {/* eslint-enable react/no-children-prop */}
             </ScrollView>
         </CustomKeyboardAvoidingView>
     }

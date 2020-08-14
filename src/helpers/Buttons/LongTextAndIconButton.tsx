@@ -6,6 +6,30 @@ import LayoutConstants from '../../LayoutConstants';
 import { CustomFont } from '../fonts/fonts';
 import BouncyButton, { BouncyButtonProps } from './BouncyButton';
 import CustomizedText from '../Views/CustomizedText';
+import AssetImages from '../../images/AssetImages';
+
+
+export const DefaultLongButtonsProps: {
+    saveChanges: LongTextAndIconButtonProps,
+    edit: LongTextAndIconButtonProps,
+    delete: LongTextAndIconButtonProps,
+} = {
+    saveChanges: {
+        iconSource: AssetImages.saveIcon,
+        text: 'Save Changes',
+    },
+    edit: {
+        iconSource: AssetImages.editIcon,
+        text: 'Edit',
+    },
+    delete: {
+        iconSource: AssetImages.deleteIcon,
+        text: 'Delete',
+        backgroundColor: CustomColors.redColor,
+    },
+}
+
+
 
 export interface LongTextAndIconButtonRef {
     setLoadingState(isLoading: boolean): void;
@@ -17,6 +41,7 @@ export interface LongTextAndIconButtonProps extends BouncyButtonProps {
     backgroundColor?: Color;
     onPress?: () => void;
     isLoading?: boolean;
+    isEnabled?: boolean;
 }
 
 const LongTextAndIconButton = (() => {
@@ -60,13 +85,14 @@ const LongTextAndIconButton = (() => {
     const LongTextAndIconButton = (props: LongTextAndIconButtonProps) => {
 
         const isLoading = props.isLoading ?? false;
+        const isEnabled = isLoading === false && (props.isEnabled ?? true) === true;
 
         const defaultBackgroundColor = (props.backgroundColor ?? CustomColors.themeGreen);
-        const actualBackgroundColor = isLoading ? defaultBackgroundColor.withAdjustedOpacity(0.5 * defaultBackgroundColor.opacity) : defaultBackgroundColor;
+        const actualBackgroundColor = isEnabled ? defaultBackgroundColor : defaultBackgroundColor.withAdjustedOpacity(0.5 * defaultBackgroundColor.opacity);
 
 
         return <BouncyButton
-            pointerEvents={isLoading ? 'none' : undefined}
+            pointerEvents={isEnabled ? undefined : 'none'}
             onPress={props.onPress}
             bounceScaleValue={0.925}
             {...props}

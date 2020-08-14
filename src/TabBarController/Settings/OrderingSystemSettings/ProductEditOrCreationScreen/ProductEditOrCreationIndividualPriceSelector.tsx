@@ -25,20 +25,19 @@ const ProductEditOrCreationIndividualPriceSelector = (() => {
 
     const ProductEditOrCreationIndividualPriceSelector = (props: ProductEditOrCreationIndividualPriceSelectorProps) => {
 
-        const [,{value: priceStringValue}, {setValue: setPriceStringValue}] = useField<ProductEditOrCreateValues, 'priceString'>('priceString');
+        const [,{value: priceStringValue, error: priceStringError, touched: priceStringTouched}, {setValue: setPriceStringValue, setTouched: setPriceStringTouched}] = useField<ProductEditOrCreateValues, 'priceString'>('priceString');
         const [,{value: shouldBeSoldIndividuallyValue}, {setValue: setShouldBeSoldIndividuallyValue}] = useField<ProductEditOrCreateValues, 'shouldBeSoldIndividually'>('shouldBeSoldIndividually');
 
-        return <TextFieldViewContainer topTitleText="Individual Price">
+        return <TextFieldViewContainer topTitleText="Individual Price" errorMessage={(priceStringError && priceStringTouched) ? priceStringError : undefined}>
             <SpacerView space={10} style={styles.contentHolder}>
                 <TextFieldTextInput
                     value={priceStringValue}
-                    onValueChange={setPriceStringValue}
-                    textInputProps={{
-                        editable: shouldBeSoldIndividuallyValue,
-                        pointerEvents: shouldBeSoldIndividuallyValue ? undefined : 'none',
-                        placeholder: 'e.g. 11.95',
-                        style: [styles.textField, {opacity: shouldBeSoldIndividuallyValue ? 1 : 0.4}],
-                    }}
+                    onChangeText={setPriceStringValue}
+                    editable={shouldBeSoldIndividuallyValue}
+                    pointerEvents={shouldBeSoldIndividuallyValue ? undefined : 'none'}
+                    placeholder="e.g. 11.95"
+                    style={[styles.textField, {opacity: shouldBeSoldIndividuallyValue ? 1 : 0.4}]}
+                    onBlur={() => setPriceStringTouched(true)}
                 />
                 <Switch
                     value={shouldBeSoldIndividuallyValue}

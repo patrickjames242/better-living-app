@@ -27,7 +27,6 @@
     "immutable": "^4.0.0-rc.12",
     "moment-timezone": "^0.5.31",
     "object-encode": "^1.0.2",
-    "query-string": "^6.13.1",
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",

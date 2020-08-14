@@ -12,6 +12,7 @@ import { StackScreenProps, StackNavigationProp } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
 import { useNavigation } from '@react-navigation/native';
 import GenericEditingFormScreen from '../../../helpers/Views/GenericEditingFormScreen';
+import { DefaultLongButtonsProps } from '../../../helpers/Buttons/LongTextAndIconButton';
 
 
 
@@ -92,14 +93,15 @@ const CreateOrEditTipScreen = (() => {
 
         return <GenericEditingFormScreen
             navBarTitle={navigationBarTitle}
-            saveChangesButtonProps={{
-                isLoading,
+            longButtons={[{
+                ...DefaultLongButtonsProps.saveChanges,
                 onPress: saveChanges,
-            }}
+                isLoading,
+            }]}
         >
             <TextFieldView
                 value={title}
-                onValueChange={setTitle}
+                onChangeText={setTitle}
                 topTitleText="Title"
             />
             <CreateOrEditTipYoutubeSection
@@ -122,7 +124,7 @@ const CreateOrEditTipScreen = (() => {
             <MultilineTextFieldView 
                 topTitleText="Description"
                 value={articleText} 
-                onValueChange={setArticleText}
+                onChangeText={setArticleText}
             />
         </GenericEditingFormScreen>
     }
