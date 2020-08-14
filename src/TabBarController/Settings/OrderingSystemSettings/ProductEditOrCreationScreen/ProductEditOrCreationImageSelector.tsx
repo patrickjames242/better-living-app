@@ -5,16 +5,17 @@ import { StyleSheet, Image, Platform } from 'react-native';
 import AspectRatioView from '../../../../helpers/Views/AspectRatioView';
 import LayoutConstants from '../../../../LayoutConstants';
 import { TextFieldViewContainer } from '../../../../helpers/Views/TextFieldView';
-import { Optional, displayErrorMessage } from '../../../../helpers/general';
+import { displayErrorMessage } from '../../../../helpers/general';
 import SpacerView from '../../../../helpers/Spacers/SpacerView';
 import * as DocumentPicker from 'expo-document-picker'
 import * as ImagePicker from 'expo-image-picker';
 import URLParse from 'url-parse';
 import SelectableRoundedTextButton from '../SelectableRoundedTextButton';
+import { useField } from '../../../../helpers/formik';
+import { ProductEditOrCreateValues } from './helpers';
 
 export interface ProductEditOrCreationImageSelectorProps {
-    imageUri: Optional<string>;
-    onImageUpdate: (source: Optional<{ uri: string, file: File }>) => void;
+
 }
 
 const ProductEditOrCreationImageSelector = (() => {
@@ -82,27 +83,29 @@ const ProductEditOrCreationImageSelector = (() => {
 
     const ProductEditOrCreationImageSelector = (props: ProductEditOrCreationImageSelectorProps) => {
 
+        const [,{value}, {setValue}] = useField<ProductEditOrCreateValues, 'imageSource'>('imageSource');
+
         function onUpdateImagePressed(){
             getImageFromUser().then(result => {
-                props.onImageUpdate(result);
+                setValue(result);
             }).catch(error => {
                 displayErrorMessage(error.message);
             });
         }
 
         function onRemoveImage(){
-            props.onImageUpdate(null);
+            setValue(null);
         }
 
         return <TextFieldViewContainer topTitleText="Product Image" >
             <SpacerView style={styles.innerHolder} space={10}>
-                {props.imageUri &&
+                {value?.uri &&
                     <AspectRatioView style={styles.imageHolder} heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}>
-                        <Image style={styles.image} source={{ uri: props.imageUri }} />
+                        <Image style={styles.image} source={{ uri: value.uri }} />
                     </AspectRatioView>}
                 <SpacerView space={10} style={styles.buttonHolder}>
-                    <SelectableRoundedTextButton title={props.imageUri ? 'Update Image' : 'Add Image'} onPress={onUpdateImagePressed}/>
-                    {props.imageUri && <SelectableRoundedTextButton title="Remove Image" onPress={onRemoveImage}/>}
+                    <SelectableRoundedTextButton title={value?.uri ? 'Update Image' : 'Add Image'} onPress={onUpdateImagePressed}/>
+                    {value?.uri && <SelectableRoundedTextButton title="Remove Image" onPress={onRemoveImage}/>}
                 </SpacerView>
             </SpacerView>
         </TextFieldViewContainer>

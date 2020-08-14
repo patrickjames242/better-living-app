@@ -4,12 +4,11 @@ import { StyleSheet, Switch, Platform } from 'react-native';
 import { TextFieldViewContainer, TextFieldTextInput } from '../../../../helpers/Views/TextFieldView';
 import SpacerView from '../../../../helpers/Spacers/SpacerView';
 import { CustomColors } from '../../../../helpers/colors';
+import { useField } from '../../../../helpers/formik';
+import { ProductEditOrCreateValues } from './helpers';
 
 export interface ProductEditOrCreationIndividualPriceSelectorProps {
-    priceString: string;
-    shouldBeSoldIndividually: boolean;
-    onShouldBeSoldIndividuallyDidChange: (newValue: boolean) => void;
-    onPriceDidChange: (newValue: string) => void;
+
 }
 
 const ProductEditOrCreationIndividualPriceSelector = (() => {
@@ -25,25 +24,29 @@ const ProductEditOrCreationIndividualPriceSelector = (() => {
     });
 
     const ProductEditOrCreationIndividualPriceSelector = (props: ProductEditOrCreationIndividualPriceSelectorProps) => {
+
+        const [,{value: priceStringValue}, {setValue: setPriceStringValue}] = useField<ProductEditOrCreateValues, 'priceString'>('priceString');
+        const [,{value: shouldBeSoldIndividuallyValue}, {setValue: setShouldBeSoldIndividuallyValue}] = useField<ProductEditOrCreateValues, 'shouldBeSoldIndividually'>('shouldBeSoldIndividually');
+
         return <TextFieldViewContainer topTitleText="Individual Price">
             <SpacerView space={10} style={styles.contentHolder}>
                 <TextFieldTextInput
-                    value={props.priceString}
-                    onValueChange={props.onPriceDidChange}
+                    value={priceStringValue}
+                    onValueChange={setPriceStringValue}
                     textInputProps={{
-                        editable: props.shouldBeSoldIndividually,
-                        pointerEvents: props.shouldBeSoldIndividually ? undefined : 'none',
+                        editable: shouldBeSoldIndividuallyValue,
+                        pointerEvents: shouldBeSoldIndividuallyValue ? undefined : 'none',
                         placeholder: 'e.g. 11.95',
-                        style: [styles.textField, {opacity: props.shouldBeSoldIndividually ? 1 : 0.4}],
+                        style: [styles.textField, {opacity: shouldBeSoldIndividuallyValue ? 1 : 0.4}],
                     }}
                 />
                 <Switch
-                    value={props.shouldBeSoldIndividually}
+                    value={shouldBeSoldIndividuallyValue}
                     {...(Platform.select({
                         web: {onTintColor: CustomColors.themeGreen.stringValue}, 
                         default: {trackColor: {true: CustomColors.themeGreen.stringValue, false: 'gray'}},
                     }))}
-                    onValueChange={isOn => props.onShouldBeSoldIndividuallyDidChange(isOn)}
+                    onValueChange={isOn => setShouldBeSoldIndividuallyValue(isOn)}
                 />
             </SpacerView>
         </TextFieldViewContainer>

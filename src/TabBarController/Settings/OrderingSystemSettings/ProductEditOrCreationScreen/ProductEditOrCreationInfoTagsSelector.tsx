@@ -5,12 +5,13 @@ import { TextFieldViewContainer } from '../../../../helpers/Views/TextFieldView'
 import { Set } from 'immutable';
 import { useSelector } from '../../../../redux/store';
 import SelectableRoundedTextButton, { SelectableRoundedTextButtonProps } from '../SelectableRoundedTextButton';
+import { useField } from '../../../../helpers/formik';
+import { ProductEditOrCreateValues } from './helpers';
 
 const infoTagViewSpacing = 10;
 
 export interface ProductEditOrCreationInfoTagsSelectorProps {
-    selectedInfoTagIds: Set<number>;
-    onSelectedIdsChanged: (ids: Set<number>) => void;
+
 }
 
 const ProductEditOrCreationInfoTagsSelector = (() => {
@@ -36,18 +37,20 @@ const ProductEditOrCreationInfoTagsSelector = (() => {
 
         const infoTags = useSortedInfoTags();
 
+        const [,{value}, {setValue}] = useField<ProductEditOrCreateValues, 'infoTagIds'>('infoTagIds');
+
         return <TextFieldViewContainer topTitleText="Info Tags">
             <View style={styles.tagsHolder}>
                 {infoTags.map(tag => {
                     return <InfoTagItemView
                         key={tag.id}
                         title={tag.title}
-                        isSelected={props.selectedInfoTagIds.contains(tag.id)}
+                        isSelected={value.contains(tag.id)}
                         onPress={() => { 
-                            if (props.selectedInfoTagIds.contains(tag.id)){
-                                props.onSelectedIdsChanged(props.selectedInfoTagIds.remove(tag.id));
+                            if (value.contains(tag.id)){
+                                setValue(value.remove(tag.id));
                             } else {
-                                props.onSelectedIdsChanged(props.selectedInfoTagIds.add(tag.id));
+                                setValue(value.add(tag.id));
                             }
                         }}
                     />

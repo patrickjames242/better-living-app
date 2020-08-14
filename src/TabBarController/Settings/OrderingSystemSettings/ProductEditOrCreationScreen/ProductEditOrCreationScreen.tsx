@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import GenericEditingFormScreen from '../../../../helpers/Views/GenericEditingFormScreen';
 import { TextFieldView, MultilineTextFieldView } from '../../../../helpers/Views/TextFieldView';
@@ -11,6 +11,8 @@ import { useSelector } from '../../../../redux/store';
 import { mapOptional } from '../../../../helpers/general';
 import ProductEditOrCreationImageSelector from './ProductEditOrCreationImageSelector';
 import ProductEditOrCreationIndividualPriceSelector from './ProductEditOrCreationIndividualPriceSelector';
+import { Formik } from '../../../../helpers/formik';
+import { ProductEditOrCreateValues } from './helpers';
 
 
 
@@ -30,13 +32,6 @@ const ProductEditOrCreationScreen = (() => {
             });
         });
 
-        const [title, setTitle] = useState(product?.title ?? '');
-        const [infoTagIds, setInfoTagIds] = useState(product?.infoTagIds ?? Set<number>());
-        const [imageSource, setImageSource] = useState<{ uri: string, file: File } | null | undefined>(undefined);
-        const [priceString, setPriceString] = useState(mapOptional(product?.individualPrice, x => x.toFixed(2)) ?? '');
-        const [shouldBeSoldIndividually, setShouldBeSoldIndividually] = useState(product?.shouldBeSoldIndividually ?? false);
-        const [description, setDescription] = useState(product?.description ?? '');
-
         const navBarTitle = (() => {
             if (props.route.params.productId == null) {
                 return "Create Product";
@@ -45,41 +40,45 @@ const ProductEditOrCreationScreen = (() => {
             }
         })();
 
-        return <GenericEditingFormScreen
-            navBarTitle={navBarTitle}
-            saveChangesButtonProps={{
-                onPress: () => { },
+        return <Formik<ProductEditOrCreateValues>
+            initialValues={{
+                title: product?.title ?? '',
+                infoTagIds: product?.infoTagIds ?? Set<number>(),
+                imageSource: undefined,
+                priceString: mapOptional(product?.individualPrice, x => x.toFixed(2)) ?? '',
+                shouldBeSoldIndividually: product?.shouldBeSoldIndividually ?? false,
+                description: product?.description ?? '',
             }}
-        >
-            <TextFieldView
-                topTitleText="Title"
-                value={title}
-                onValueChange={setTitle}
-            />
-            <ProductEditOrCreationInfoTagsSelector
-                selectedInfoTagIds={infoTagIds}
-                onSelectedIdsChanged={setInfoTagIds}
-            />
-            <ProductEditOrCreationImageSelector
-                imageUri={(() => {
-                    return (imageSource === undefined) ? (product?.imageUrl ?? null) : (imageSource?.uri ?? null);
-                })()}
-                onImageUpdate={(imageSource) => {
-                    setImageSource(imageSource);
+            onSubmit={values => {
+
+            }}
+        >{formik => (
+            <GenericEditingFormScreen
+                navBarTitle={navBarTitle}
+                saveChangesButtonProps={{
+                    onPress: formik.submitForm,
+                    isLoading: formik.isSubmitting,
                 }}
-            />
-            <ProductEditOrCreationIndividualPriceSelector
-                priceString={priceString}
-                onPriceDidChange={setPriceString}
-                shouldBeSoldIndividually={shouldBeSoldIndividually}
-                onShouldBeSoldIndividuallyDidChange={setShouldBeSoldIndividually}
-            />
-            <MultilineTextFieldView
-                topTitleText="Description"
-                value={description}
-                onValueChange={setDescription}
-            />
-        </GenericEditingFormScreen>
+            >
+                <TextFieldView
+                    topTitleText="Title"
+                    value={formik.values.title}
+                    onValueChange={formik.handleChange('title')}
+                    textInputProps={{onBlur: formik.handleBlur('title')}}
+                />
+                <ProductEditOrCreationInfoTagsSelector/>
+                <ProductEditOrCreationImageSelector/>
+                <ProductEditOrCreationIndividualPriceSelector/>
+                <MultilineTextFieldView
+                    topTitleText="Description"
+                    value={formik.values.description}
+                    onValueChange={formik.handleChange('description')}
+                    textInputProps={{onBlur: formik.handleBlur('description')}}
+                />
+            </GenericEditingFormScreen>
+        )}</Formik>
+
+
     }
     return ProductEditOrCreationScreen;
 })();

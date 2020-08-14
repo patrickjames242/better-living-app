@@ -80,7 +80,7 @@ export const TextFieldViewContainer = (() => {
 export interface TextFieldTextInputProps {
     value?: string;
     onValueChange?: (newValue: string) => void;
-    textInputProps?: Omit<TextInputProps, 'value' | 'onChangeText' | 'onFocus' | 'onBlur' | 'selectionColor'>
+    textInputProps?: Omit<TextInputProps, 'value' | 'onChangeText' | 'selectionColor'>
 }
 
 export const MultilineTextFieldTextInput = (props: TextFieldTextInputProps) => {
@@ -124,8 +124,8 @@ export const TextFieldTextInput = (() => {
             style={[styles.textInput, {
                 borderColor: isActive ? OrderConfirmationLayoutConstants.selectionOutline.color.selected : OrderConfirmationLayoutConstants.selectionOutline.color.unselected,
             }, props.textInputProps?.style]}
-            onFocus={() => setIsActive(true)}
-            onBlur={() => setIsActive(false)}
+            onFocus={e => {setIsActive(true); props.textInputProps?.onFocus?.(e)}}
+            onBlur={e => {setIsActive(false); props.textInputProps?.onBlur?.(e)}}
             value={props.value}
             onChangeText={text => props.onValueChange?.(text)}
         />
