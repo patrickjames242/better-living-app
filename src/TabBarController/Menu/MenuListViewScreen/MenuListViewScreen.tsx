@@ -7,6 +7,7 @@ import { useCurrentMenu } from '../../../api/orderingSystem/menus/helpers';
 import { MenuListViewScreenContextValue, ALL_CATEGORIES_CATEGORY, MenuListViewScreenContext } from './helpers';
 import { List } from 'immutable';
 import { MenuCategory } from '../../../api/orderingSystem/menus/Menu';
+import { caseInsensitiveStringSort } from '../../../helpers/general';
 
 
 const MenuListScreen = (() => {
@@ -30,7 +31,7 @@ const MenuListScreen = (() => {
 
 		const contextValue: MenuListViewScreenContextValue = useMemo(() => {
 			return {
-				allSortedCategories: menu?.categories.sort((a, b) => a.title.localeCompare(b.title)) ?? List(),
+				allSortedCategories: menu?.categories.sort(caseInsensitiveStringSort(x => x.title)) ?? List(),
 				selectedCategory: selectedCategory,
 				setSelectedCategory: (category: MenuCategory) => {
 					setSelectedCategory(category);

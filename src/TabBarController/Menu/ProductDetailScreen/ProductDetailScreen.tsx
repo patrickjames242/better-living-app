@@ -70,6 +70,8 @@ const ProductDetailScreen = (() => {
         const meals = useMealsForProduct(props.route.params.productId);
 
         const productIndividualPrice = product?.individualPrice;
+        const shouldProductBeSoldIndividually = product?.shouldBeSoldIndividually;
+        const productDescription = product?.description?.trim() ?? '';
 
         interface PurchaseOption{
             mealId: Optional<number>;
@@ -80,7 +82,7 @@ const ProductDetailScreen = (() => {
 
         const purchaseOptions = useMemo(() => {
 
-            const allOptions: PurchaseOption[] = mapOptional(productIndividualPrice, price => [{
+            const allOptions: PurchaseOption[] = mapOptional(shouldProductBeSoldIndividually ? productIndividualPrice : null, price => [{
                 mealId: null,
                 title: "Purchase Separately",
                 price: price,
@@ -101,7 +103,7 @@ const ProductDetailScreen = (() => {
             });
             return allOptions;
 
-        }, [meals, productIndividualPrice]);
+        }, [meals, productIndividualPrice, shouldProductBeSoldIndividually]);
 
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title={product?.title ?? ""} />
@@ -116,10 +118,9 @@ const ProductDetailScreen = (() => {
                                     {product.imageUrl && <FoodImageView imageUri={product.imageUrl} />}
                                     <TitleBox product={product} />
                                 </SpacerView>
-
-                                {product.description && <FloatingCellStyleSectionView sectionTitle="Description">
+                                {productDescription.length >= 1 && <FloatingCellStyleSectionView sectionTitle="Description">
                                     <View style={styles.descriptionTextHolder}>
-                                        <CustomizedText style={styles.descriptionText}>{product.description}</CustomizedText>
+                                        <CustomizedText style={styles.descriptionText}>{productDescription}</CustomizedText>
                                     </View>
                                 </FloatingCellStyleSectionView>}
                                 {purchaseOptions.length >= 1 &&

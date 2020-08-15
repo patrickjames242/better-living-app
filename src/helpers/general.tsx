@@ -139,6 +139,15 @@ export function getPropsFromObject<ObjType extends object>(obj: ObjType, include
 
 
 
-
+export function caseInsensitiveStringSort<ItemT>(...args: ItemT extends string ? [] : [(item: ItemT) => string]): (item1: ItemT, item2: ItemT) => number{
+    return (item1, item2) => {
+        const item1String = ((typeof item1 === 'string') ? item1 : args[0]?.(item1));
+        const item2String = ((typeof item2 === 'string') ? item2 : args[0]?.(item2));
+        if (typeof item1String !== 'string' || typeof item2String !== 'string'){
+            throw new Error('caseInsensitiveStringSort could not produce sort value');
+        }
+        return item1String.toLowerCase().localeCompare(item2String.toLowerCase());
+    }
+}
 
 

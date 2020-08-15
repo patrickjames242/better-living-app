@@ -5,6 +5,7 @@ import FloatingCellStyleList from '../../../../helpers/Views/FloatingCellStyleLi
 import MealCategory from '../../../../api/orderingSystem/mealCategories/MealCategory';
 import { useSelector } from '../../../../redux/store';
 import PlainTextListItem from '../PlainTextListItem';
+import { caseInsensitiveStringSort } from '../../../../helpers/general';
 
 
 const MealCategoriesListScreen = (() => {
@@ -23,7 +24,7 @@ const MealCategoriesListScreen = (() => {
 
         const mealCategories = useSelector(state => state.orderingSystem.mealCategories);
         const sections: SectionType[] = useMemo(() => {
-            const categories = mealCategories.toSet().sortBy(x => x.uniqueName).toArray();
+            const categories = mealCategories.toSet().sort(caseInsensitiveStringSort(x => x.uniqueName)).toArray();
             return [{data: categories}];
         }, [mealCategories]);
 

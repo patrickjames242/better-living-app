@@ -9,7 +9,7 @@ import MealCreatorListViewItem from './ChildComponents/MealCreatorListViewItem';
 import { Map, List } from 'immutable';
 import FloatingCellStyleList from '../../../helpers/Views/FloatingCellStyleList';
 import ValueBox from '../../../helpers/ValueBox';
-import { Optional, compactMap } from '../../../helpers/general';
+import { Optional, compactMap, caseInsensitiveStringSort } from '../../../helpers/general';
 import BottomScreenGradientHolder, { BottomScreenGradientHolderRef } from '../../../helpers/Views/BottomScreenGradientHolder';
 import LayoutConstants from '../../../LayoutConstants';
 import { useSelector } from '../../../redux/store';
@@ -85,7 +85,7 @@ const MealCreatorScreen = (() => {
             return mealCategories.map(category => ({
                 id: category.id,
                 title: category.displayName ?? category.uniqueName,
-                data: compactMap(category.productIds.toArray(), id => productsMap.get(id)).sort((a, b) => a.title.localeCompare(b.title)), 
+                data: compactMap(category.productIds.toArray(), id => productsMap.get(id)).sort(caseInsensitiveStringSort(p => p.title)), 
             })).toArray();
         }, [mealCategories, productsMap]);
 

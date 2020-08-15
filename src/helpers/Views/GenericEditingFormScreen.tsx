@@ -49,7 +49,7 @@ const GenericEditingFormScreen = (() => {
                 <Space space={15} />
                 {/* eslint-disable react/no-children-prop */}
                 <SpacerView
-                    space={15}
+                    space={10}
                     children={props.longButtons?.map((x, index) => {
                         return <LongTextAndIconButton key={index} {...x} style={[styles.saveChangesButton, x.style]} />
                     }) ?? []}

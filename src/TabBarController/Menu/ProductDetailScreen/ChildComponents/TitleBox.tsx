@@ -9,7 +9,7 @@ import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import { SpaceDimension } from '../../../../helpers/Spacers/Space';
 import Product from '../../../../api/orderingSystem/products/Product';
 import { useSelector } from '../../../../redux/store';
-import { compactMap } from '../../../../helpers/general';
+import { compactMap, caseInsensitiveStringSort } from '../../../../helpers/general';
 import { useCurrentMenu } from '../../../../api/orderingSystem/menus/helpers';
 import { List } from 'immutable';
 
@@ -60,12 +60,12 @@ const TitleBox = (() => {
         const currentMenu = useCurrentMenu();
 
         const categoryTitles = useMemo(() => {
-            return (currentMenu?.categories.filter(x => x.productIds.contains(props.product.id)).map(x => x.title).sort((a, b) => a.localeCompare(b)) ?? List<string>());
+            return (currentMenu?.categories.filter(x => x.productIds.contains(props.product.id)).map(x => x.title).sort(caseInsensitiveStringSort()) ?? List<string>());
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [currentMenu]);
 
         const infoTags = useMemo(() => {
-            return compactMap(props.product.infoTagIds.toArray(), x => allInfoTagsMap.get(x)).sort((a, b) => a.title.localeCompare(b.title));
+            return compactMap(props.product.infoTagIds.toArray(), x => allInfoTagsMap.get(x)).sort(caseInsensitiveStringSort(x => x.title));
         }, [allInfoTagsMap, props.product.infoTagIds]);
 
         return <SpacerView style={styles.root} space={10}>

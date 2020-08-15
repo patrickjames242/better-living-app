@@ -5,7 +5,7 @@ import MenuListViewHeader from './MenuListViewHeader';
 import MenuListItemView from './MenuListItemView';
 import MenuListViewSectionHeader from './MenuListViewSectionHeader';
 import LayoutConstants from '../../../../LayoutConstants';
-import { computeNumberOfListColumns } from '../../../../helpers/general';
+import { computeNumberOfListColumns, caseInsensitiveStringSort } from '../../../../helpers/general';
 import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../../helpers';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNotificationListener } from '../../../../helpers/Notification';
@@ -117,7 +117,7 @@ const MenuListView = (() => {
                             const product = allProducts.get(productId);
                             product && products.push(product);
                         });
-                        return products.sort((a, b) => a.title.localeCompare(b.title)).map(x => x.id);
+                        return products.sort(caseInsensitiveStringSort(x => x.title)).map(x => x.id);
                     })()
                 }
             }) ?? [];

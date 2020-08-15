@@ -93,7 +93,7 @@ const ProductEditOrCreationScreen = (() => {
             initialValues={initialValues}
             validationSchema={Yup.object({
                 title: Yup.string().required(),
-                priceString: Yup.string().matches(/^[0-9]+(.[0-9]{2})?$/, "price format invalid, must follow format: '15' or '15.99'"),
+                priceString: Yup.string().matches(/^[0-9]+(.[0-9]{2})?$/, "price format is invalid, it must follow the format: '15' or '15.99'"),
             })}
             onSubmit={(values, { setSubmitting }) => {
                 submitForm(values, initialValues, props.route.params.productId).finally(() => {
@@ -116,6 +116,7 @@ const ProductEditOrCreationScreen = (() => {
                     },
                     ...(productId ? [{
                         ...DefaultLongButtonsProps.delete,
+                        text: 'Delete Product',
                         isLoading: isDeleteLoading,
                         isEnabled: formik.isSubmitting === false,
                         onPress: () => {

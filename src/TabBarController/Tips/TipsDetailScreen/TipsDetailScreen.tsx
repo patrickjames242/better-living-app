@@ -45,6 +45,8 @@ const TipsDetailScreen = (() => {
         const healthTip = useSelector(state => state.healthTips.get(props.route.params.healthTipId));
         const healthTipId = healthTip?.id;
 
+        const healthTipArticleText = healthTip?.articleText?.trim() ?? '';
+
 
         useUpdateEffect(() => {
             if (healthTipId == null){
@@ -69,8 +71,8 @@ const TipsDetailScreen = (() => {
                             <TipsDetailTitleView key="title-view" dateString={healthTip.getFormattedDateString()} titleString={healthTip.title} />,
                             ...healthTip?.audioFiles.toArray().map(x => <TipsDetailAudioPlayerView key={x.id} audioFileUrl={x.url}/>) ?? [],
                             ...healthTip?.youtubeVideoIDs.toArray().map(x => <TipsDetailYTVideoView key={x} ytVideoID={x}/>) ?? [],
-                            (typeof healthTip.articleText === 'string') &&
-                                <TipsDetailDescriptionView key='description-view' articleText={healthTip.articleText} />,
+                            (healthTipArticleText.length >= 1) &&
+                                <TipsDetailDescriptionView key='description-view' articleText={healthTipArticleText} />,
                             <TipsDetailBottomButtonsView key='bottom-buttons' healthTipId={props.route.params.healthTipId} />
                         ]}/>
                     </ScrollView>

@@ -7,6 +7,7 @@ import { useSelector } from '../../../../redux/store';
 import SelectableRoundedTextButton, { SelectableRoundedTextButtonProps } from '../SelectableRoundedTextButton';
 import { useField } from '../../../../helpers/formik';
 import { ProductEditOrCreateValues } from './helpers';
+import { caseInsensitiveStringSort } from '../../../../helpers/general';
 
 const infoTagViewSpacing = 10;
 
@@ -29,7 +30,7 @@ const ProductEditOrCreationInfoTagsSelector = (() => {
     function useSortedInfoTags() {
         const infoTagsReduxState = useSelector(state => state.orderingSystem.productInfoTags);
         return useMemo(() => {
-            return infoTagsReduxState.toSet().sortBy(x => x.title).toArray();
+            return infoTagsReduxState.toSet().sort(caseInsensitiveStringSort(x => x.title)).toArray();
         }, [infoTagsReduxState]);
     }
 

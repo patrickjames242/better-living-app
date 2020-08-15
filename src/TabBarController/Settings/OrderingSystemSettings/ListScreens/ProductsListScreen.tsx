@@ -9,6 +9,7 @@ import ListViewProductItemView from '../../../../helpers/Views/DataSpecificViews
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../navigationHelpers';
 import PlusButton from '../../../../helpers/Buttons/PlusButton';
+import { caseInsensitiveStringSort } from '../../../../helpers/general';
 
 
 
@@ -24,11 +25,13 @@ const ProductsListScreen = (() => {
         data: Product[];
     }
 
+    
+
     const ProductsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'ProductsList'>) => {
 
         const products = useSelector(state => state.orderingSystem.products);
         const sections = useMemo(() => {
-            const sortedProducts = products.toSet().sortBy(p => p.title).toArray();
+            const sortedProducts = products.toSet().sort(caseInsensitiveStringSort(x => x.title)).toArray();
             return [{ data: sortedProducts }];
         }, [products]);
 

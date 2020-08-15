@@ -5,6 +5,7 @@ import NavigationControllerNavigationBar from '../../../../helpers/NavigationCon
 import FloatingCellStyleList from '../../../../helpers/Views/FloatingCellStyleList';
 import { useSelector } from '../../../../redux/store';
 import PlainTextListItem from '../PlainTextListItem';
+import { caseInsensitiveStringSort } from '../../../../helpers/general';
 
 
 
@@ -24,7 +25,7 @@ const MealsListScreen = (() => {
         
         const meals = useSelector(state => state.orderingSystem.meals);
         const sections = useMemo(() => {
-            const sortedMeals = meals.toSet().sortBy(x => x.title).toArray();
+            const sortedMeals = meals.toSet().sort(caseInsensitiveStringSort(x => x.title)).toArray();
             return [{data: sortedMeals}];
         }, [meals]);
 

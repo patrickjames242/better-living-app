@@ -6,6 +6,7 @@ import NavigationControllerNavigationBar from '../../../../helpers/NavigationCon
 import FloatingCellStyleList from '../../../../helpers/Views/FloatingCellStyleList';
 import { useSelector } from '../../../../redux/store';
 import PlainTextListItem from '../PlainTextListItem';
+import { caseInsensitiveStringSort } from '../../../../helpers/general';
 
 
 
@@ -25,7 +26,7 @@ const MenusListScreen = (() => {
 
         const allMenusReduxState = useSelector(state => state.orderingSystem.menus);
         const sections: SectionType[] = useMemo(() => {
-            return [{data: allMenusReduxState.toSet().sortBy(x => x.title).toArray()}];
+            return [{data: allMenusReduxState.toSet().sort(caseInsensitiveStringSort(x => x.title)).toArray()}];
         }, [allMenusReduxState]);
 
         return <View style={styles.root}>
