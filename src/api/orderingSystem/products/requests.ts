@@ -1,6 +1,6 @@
 
 import {ProductJsonKeys, ProductFormDataKeys } from "./validation";
-import { getPropsFromObject, Optional } from "../../../helpers/general";
+import { getPropsFromObject, Optional, RNFileForUpload } from "../../../helpers/general";
 import { fetchFromAPI, HttpMethod } from "../../api";
 import Product from "./Product";
 import store from "../../../redux/store";
@@ -15,7 +15,7 @@ export interface ProductRequestObj{
     [ProductJsonKeys.individual_price]?: Optional<number>;
     [ProductJsonKeys.should_be_sold_individually]?: boolean;
     [ProductJsonKeys.info_tag_ids]?: number[];
-    setImage?: File | null; // a null value removes the image in the api
+    setImage?: RNFileForUpload | null; // a null value removes the image in the api
 }
 
 function getBodyForRequestObject(obj: Partial<ProductRequestObj>): FormData{
@@ -33,13 +33,14 @@ function getBodyForRequestObject(obj: Partial<ProductRequestObj>): FormData{
     const formData = new FormData();
     json && formData.append(ProductFormDataKeys.json, JSON.stringify(json));
 
-    const setImageValue: File | 'null' | undefined = (() => {
+
+    const setImageValue: object | 'null' | undefined = (() => {
         if (obj.setImage === null){return 'null';}
-        else if (obj.setImage instanceof File){return obj.setImage}
+        else if (obj.setImage instanceof RNFileForUpload){return obj.setImage.getFormDataValue()}
     })();
 
-    setImageValue && formData.append(ProductFormDataKeys.set_image, setImageValue);
-    
+    setImageValue && formData.append(ProductFormDataKeys.set_image, setImageValue as any);
+
     return formData;
 }
 
@@ -53,7 +54,7 @@ export function createNewProduct(productInfo: ProductRequestObj){
         const product = new Product(response);
         store.dispatch(insertOrUpdateProductAction(product));
         return product;
-    })
+    });
 }
 
 

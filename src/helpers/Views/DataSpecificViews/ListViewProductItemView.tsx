@@ -16,7 +16,7 @@ import { Color, CustomColors } from '../../colors';
 
 export interface ListViewProductItemViewProps extends ViewProps {
     item: Product,
-    onPress: () => void,
+    onPress?: () => void,
 }
 
 
@@ -57,6 +57,7 @@ const ListViewProductItemView = (() => {
         titleText: {
             fontFamily: CustomFont.medium,
             fontSize: MealCreatorConstants.foodSections.rowTitleFontSize,
+            flexShrink: 1,
         },
     });
 
@@ -77,7 +78,7 @@ const ListViewProductItemView = (() => {
                         }
                     })()}
                 </AspectRatioView>
-                <CustomizedText style={styles.titleText}>{props.item.title}</CustomizedText>
+                <CustomizedText style={styles.titleText} numberOfLines={2}>{props.item.title}</CustomizedText>
             </Spacer>
         </BouncyButton>
     }

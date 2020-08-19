@@ -7,16 +7,20 @@ import TabBarController from './TabBarController/TabBarController';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './redux/store';
 import { tryConnectingWebsocketListener } from './api/realtimeUpdates';
+import * as yup from 'yup';
 
-
-YellowBox.ignoreWarnings(["Animated: `useNativeDriver`"]);
+YellowBox.ignoreWarnings([
+	"Animated: `useNativeDriver`", 
+	"Non-serializable values were found in the navigation state."
+]);
 
 store.subscribe(() => {
 	if (Platform.OS === 'web'){
 		console.log(store.getState().realtimeUpdates.connectionState);
-		
 	}
 });
+
+
 
 registerRootComponent(App);
 

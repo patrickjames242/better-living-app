@@ -13,6 +13,8 @@ const AssetImages = {
     reloadIcon: require('./reload.png'),
     audioFileIcon: require('./audioFileIcon.png'),
     imageIcon: require('./imageIcon.png'),
+    checkMarkIcon: require('./checkMarkIcon.png'),
+    xIcon: require('./xIcon.png'),
 };
 
 export default AssetImages;

@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { StyleSheet, Switch, Platform } from 'react-native';
-import { TextFieldViewContainer, TextFieldTextInput } from '../../../../helpers/Views/TextFieldView';
-import SpacerView from '../../../../helpers/Spacers/SpacerView';
-import { CustomColors } from '../../../../helpers/colors';
-import { useField } from '../../../../helpers/formik';
+import { TextFieldViewContainer, TextFieldTextInput } from '../../../../../helpers/Views/TextFieldView';
+import SpacerView from '../../../../../helpers/Spacers/SpacerView';
+import { CustomColors } from '../../../../../helpers/colors';
+import { useField } from '../../../../../helpers/formik';
 import { ProductEditOrCreateValues } from './helpers';
 
 export interface ProductEditOrCreationIndividualPriceSelectorProps {

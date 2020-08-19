@@ -7,6 +7,7 @@ import AssetImages from '../../../../images/AssetImages';
 import Space from '../../../../helpers/Spacers/Space';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import * as DocumentPicker from 'expo-document-picker';
+import RoundedTextAndIconBouncyButton from '../../../../helpers/Buttons/RoundedTextAndIconBouncyButton';
 
 
 export interface AddNewFileButtonProps {
@@ -42,7 +43,6 @@ const AddNewFileButton = (() => {
 
         function onPress() {
             DocumentPicker.getDocumentAsync({ type: 'audio/*' }).then(documentPickerResult => {
-
                 if (documentPickerResult.type !== 'success'){
                     return Promise.reject(new Error("An error occured when trying to pick a document from the document picker."));
                 }
@@ -61,11 +61,7 @@ const AddNewFileButton = (() => {
             });
         }
 
-        return <RoundedBouncyButton style={styles.root} contentViewProps={{ style: styles.contentView }} onPress={onPress}>
-            <Image style={styles.plusIcon} source={AssetImages.plusIcon} />
-            <Space space={10} />
-            <CustomizedText style={styles.text}>Add New File</CustomizedText>
-        </RoundedBouncyButton>
+        return <RoundedTextAndIconBouncyButton iconSource={AssetImages.plusIcon} text="Add New File" onPress={onPress}/>
     }
     return AddNewFileButton;
 })();

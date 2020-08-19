@@ -7,6 +7,7 @@ import CustomizedText from '../../../helpers/Views/CustomizedText';
 
 export interface PlainTextListItemProps {
     title: string;
+    onPress?: () => void;
 }
 
 const PlainTextListItem = (() => {
@@ -25,7 +26,7 @@ const PlainTextListItem = (() => {
     });
 
     const PlainTextListItem = (props: PlainTextListItemProps) => {
-        return <HighlightButton style={styles.listItem}>
+        return <HighlightButton style={styles.listItem} onPress={props.onPress}>
             <CustomizedText style={styles.listItemText}>
                 {props.title}
             </CustomizedText>

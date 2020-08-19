@@ -10,7 +10,7 @@ import { insertOrUpdateMealCategoryAction, deleteMealCategoryAction } from "../.
 const basePath = 'ordering-system/meals/categories/'
 
 
-interface MealCategoriesRequestObj{
+export interface MealCategoriesRequestObj{
     [MealCategoryJsonKeys.unique_name]: string;
     [MealCategoryJsonKeys.display_name]?: Optional<string>;
     [MealCategoryJsonKeys.product_ids]?: number[];

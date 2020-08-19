@@ -1,20 +1,19 @@
 
 import React, { useMemo, useState } from 'react';
-import GenericEditingFormScreen from '../../../../helpers/Views/GenericEditingFormScreen';
-import { SettingsNavStackParams } from '../../navigationHelpers';
+import { SettingsNavStackParams } from '../../../navigationHelpers';
 import { StackScreenProps } from '@react-navigation/stack';
 import ProductEditOrCreationInfoTagsSelector from './ProductEditOrCreationInfoTagsSelector';
 import { Set } from 'immutable';
-import { useSelector } from '../../../../redux/store';
-import { mapOptional, displayErrorMessage, Optional } from '../../../../helpers/general';
+import { useSelector } from '../../../../../redux/store';
+import { mapOptional, displayErrorMessage, Optional, RNFileForUpload } from '../../../../../helpers/general';
 import ProductEditOrCreationImageSelector from './ProductEditOrCreationImageSelector';
 import ProductEditOrCreationIndividualPriceSelector from './ProductEditOrCreationIndividualPriceSelector';
-import { Formik } from '../../../../helpers/formik';
+import { Formik } from '../../../../../helpers/formik';
 import { ProductEditOrCreateValues } from './helpers';
-import { FormikMultilineTextFieldView, FormikTextFieldView } from '../../../../helpers/Views/FormikTextFieldView';
+import { FormikMultilineTextFieldView, FormikTextFieldView } from '../../../../../helpers/Views/FormikTextFieldView';
 import * as Yup from 'yup';
-import { ProductRequestObj, createNewProduct, updateProduct, deleteProduct } from '../../../../api/orderingSystem/products/requests';
-import { DefaultLongButtonsProps } from '../../../../helpers/Buttons/LongTextAndIconButton';
+import { ProductRequestObj, createNewProduct, updateProduct, deleteProduct } from '../../../../../api/orderingSystem/products/requests';
+import OrderingSystemEditingFormScreen from '../OrderingSystemEditingFormScreen';
 
 
 const ProductEditOrCreationScreen = (() => {
@@ -25,10 +24,10 @@ const ProductEditOrCreationScreen = (() => {
             return isNaN(price) ? null : price;
         })();
 
-        const setImage: File | null | undefined = (() => {
-            if (values.imageSource?.file instanceof File) {
-                return values.imageSource.file;
-            } else if (values.imageSource === null && initialValues.imageSource !== null) {
+        const setImage: RNFileForUpload | null | undefined = (() => {
+            if (values.imageSource?.fileToUpload instanceof RNFileForUpload) {
+                return values.imageSource.fileToUpload;
+            } else if (values.imageSource?.fileToUpload === null && initialValues.imageSource !== null) {
                 return null;
             } else {
                 return undefined;
@@ -48,7 +47,7 @@ const ProductEditOrCreationScreen = (() => {
             info_tag_ids: values.infoTagIds.toArray(),
             setImage,
         }
-
+    
         return (() => {
             if (productId == null) {
                 return createNewProduct(requestObj);
@@ -78,10 +77,10 @@ const ProductEditOrCreationScreen = (() => {
             }
         })();
 
-        const initialValues = useMemo(() => ({
+        const initialValues: ProductEditOrCreateValues = useMemo(() => ({
             title: product?.title ?? '',
             infoTagIds: product?.infoTagIds ?? Set<number>(),
-            imageSource: mapOptional(product?.imageUrl, x => ({ uri: x })) ?? null,
+            imageSource: {uriToDisplayInForm: product?.imageUrl ?? undefined},
             priceString: mapOptional(product?.individualPrice, x => x.toFixed(2)) ?? '',
             shouldBeSoldIndividually: product?.shouldBeSoldIndividually ?? false,
             description: product?.description ?? '',
@@ -92,7 +91,7 @@ const ProductEditOrCreationScreen = (() => {
         return <Formik<ProductEditOrCreateValues>
             initialValues={initialValues}
             validationSchema={Yup.object({
-                title: Yup.string().required(),
+                title: Yup.string().trim().required(),
                 priceString: Yup.string().matches(/^[0-9]+(.[0-9]{2})?$/, "price format is invalid, it must follow the format: '15' or '15.99'"),
             })}
             onSubmit={(values, { setSubmitting }) => {
@@ -104,41 +103,42 @@ const ProductEditOrCreationScreen = (() => {
                     displayErrorMessage(error.message);
                 });
             }}
-        >{formik => (
-            <GenericEditingFormScreen
+        >{formik => {
+
+            const shouldButtonsBeEnabled = formik.isSubmitting === false && isDeleteLoading === false;
+
+            return <OrderingSystemEditingFormScreen
                 navBarTitle={navBarTitle}
-                longButtons={[
-                    {
-                        ...DefaultLongButtonsProps.saveChanges,
-                        onPress: formik.submitForm,
-                        isLoading: formik.isSubmitting,
-                        isEnabled: isDeleteLoading === false,
-                    },
-                    ...(productId ? [{
-                        ...DefaultLongButtonsProps.delete,
-                        text: 'Delete Product',
-                        isLoading: isDeleteLoading,
-                        isEnabled: formik.isSubmitting === false,
-                        onPress: () => {
-                            setIsDeleteLoading(true);
-                            deleteProduct(productId).finally(() => {
-                                setIsDeleteLoading(false);
-                            }).then(() => {
-                                props.navigation.goBack();
-                            }).catch(error => {
-                                displayErrorMessage(error.message);
-                            });
-                        }
-                    }] : [])
-                ]}
+                saveButtonProps={{
+                    onPress: formik.submitForm,
+                    isLoading: formik.isSubmitting,
+                    isEnabled: shouldButtonsBeEnabled,
+                }}
+                shouldShowDeleteButton={typeof productId === 'number'}
+                deleteButtonProps={{
+                    text: 'Delete Product',
+                    isLoading: isDeleteLoading,
+                    isEnabled: shouldButtonsBeEnabled,
+                    onPress: () => {
+                        if (typeof productId !== 'number'){return;}
+                        setIsDeleteLoading(true);
+                        deleteProduct(productId).finally(() => {
+                            setIsDeleteLoading(false);
+                        }).then(() => {
+                            props.navigation.goBack();
+                        }).catch(error => {
+                            displayErrorMessage(error.message);
+                        });
+                    }
+                }}
             >
                 <FormikTextFieldView<ProductEditOrCreateValues> formikFieldName="title" topTitleText="Title" />
                 <ProductEditOrCreationInfoTagsSelector />
                 <ProductEditOrCreationImageSelector />
                 <ProductEditOrCreationIndividualPriceSelector />
                 <FormikMultilineTextFieldView<ProductEditOrCreateValues> formikFieldName="description" topTitleText="Description" />
-            </GenericEditingFormScreen>
-        )}</Formik>
+            </OrderingSystemEditingFormScreen>
+        }}</Formik>
 
 
     }

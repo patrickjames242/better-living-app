@@ -2,16 +2,15 @@
 
 import React from 'react';
 import { StyleSheet, Image, Platform } from 'react-native';
-import AspectRatioView from '../../../../helpers/Views/AspectRatioView';
-import LayoutConstants from '../../../../LayoutConstants';
-import { TextFieldViewContainer } from '../../../../helpers/Views/TextFieldView';
-import { displayErrorMessage } from '../../../../helpers/general';
-import SpacerView from '../../../../helpers/Spacers/SpacerView';
+import AspectRatioView from '../../../../../helpers/Views/AspectRatioView';
+import LayoutConstants from '../../../../../LayoutConstants';
+import { TextFieldViewContainer } from '../../../../../helpers/Views/TextFieldView';
+import { displayErrorMessage, RNFileForUpload } from '../../../../../helpers/general';
+import SpacerView from '../../../../../helpers/Spacers/SpacerView';
 import * as DocumentPicker from 'expo-document-picker'
 import * as ImagePicker from 'expo-image-picker';
-import URLParse from 'url-parse';
-import SelectableRoundedTextButton from '../SelectableRoundedTextButton';
-import { useField } from '../../../../helpers/formik';
+import SelectableRoundedTextButton from '../../SelectableRoundedTextButton';
+import { useField } from '../../../../../helpers/formik';
 import { ProductEditOrCreateValues } from './helpers';
 
 export interface ProductEditOrCreationImageSelectorProps {
@@ -42,7 +41,7 @@ const ProductEditOrCreationImageSelector = (() => {
         },
     });
 
-    async function getImageFromUser(): Promise<{uri: string, file: File} | null>{
+    async function getImageFromUser(): Promise<{uri: string, fileToUpload: RNFileForUpload} | null>{
 
         if (Platform.OS === 'ios'){
 
@@ -58,25 +57,25 @@ const ProductEditOrCreationImageSelector = (() => {
     
             if (result.cancelled){return null;}
 
-            const documentName = (() => {
-                const paths = URLParse(result.uri).pathname.split('/').filter(x => x !== '');
-                return paths[paths.length - 1];
-            })();
-        
-            return {uri: result.uri, file: new File([await (await fetch(result.uri)).blob()], documentName)};
+            return {uri: result.uri, fileToUpload: new RNFileForUpload({uri: result.uri})};
         } else {
 
-            const documentPickerResult = await DocumentPicker.getDocumentAsync({ type: 'image/*' });
-    
+            const documentPickerResult = await DocumentPicker.getDocumentAsync({ type: 'audio/*' });
+
             if (documentPickerResult.type !== 'success'){
                 return Promise.reject(new Error("An error occured when trying to pick a document from the document picker."));
             }
-            if (documentPickerResult.file instanceof File){
-                return {uri: documentPickerResult.uri, file: documentPickerResult.file};
+
+            return {
+                uri: documentPickerResult.uri,
+                fileToUpload: (() => {
+                    if (Platform.OS === 'web'){
+                        return new RNFileForUpload({file: documentPickerResult.file!})
+                    } else {
+                        return new RNFileForUpload({uri: documentPickerResult.uri, name: documentPickerResult.name})
+                    }
+                })()
             }
-            
-            const file = new File([await (await fetch(documentPickerResult.uri)).blob()], documentPickerResult.name);
-            return {uri: documentPickerResult.uri, file: file};
         }
 
     }
@@ -87,25 +86,25 @@ const ProductEditOrCreationImageSelector = (() => {
 
         function onUpdateImagePressed(){
             getImageFromUser().then(result => {
-                setValue(result);
+                result && setValue({uriToDisplayInForm: result.uri, fileToUpload: result.fileToUpload});
             }).catch(error => {
                 displayErrorMessage(error.message);
             });
         }
 
         function onRemoveImage(){
-            setValue(null);
+            setValue({fileToUpload: null});
         }
 
         return <TextFieldViewContainer topTitleText="Product Image" >
             <SpacerView style={styles.innerHolder} space={10}>
-                {value?.uri &&
+                {value?.uriToDisplayInForm &&
                     <AspectRatioView style={styles.imageHolder} heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}>
-                        <Image style={styles.image} source={{ uri: value.uri }} />
+                        <Image style={styles.image} source={{ uri: value.uriToDisplayInForm }} />
                     </AspectRatioView>}
                 <SpacerView space={10} style={styles.buttonHolder}>
-                    <SelectableRoundedTextButton title={value?.uri ? 'Update Image' : 'Add Image'} onPress={onUpdateImagePressed}/>
-                    {value?.uri && <SelectableRoundedTextButton title="Remove Image" onPress={onRemoveImage}/>}
+                    <SelectableRoundedTextButton title={value?.uriToDisplayInForm ? 'Update Image' : 'Add Image'} onPress={onUpdateImagePressed}/>
+                    {value?.uriToDisplayInForm && <SelectableRoundedTextButton title="Remove Image" onPress={onRemoveImage}/>}
                 </SpacerView>
             </SpacerView>
         </TextFieldViewContainer>
