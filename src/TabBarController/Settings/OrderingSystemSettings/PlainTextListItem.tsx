@@ -2,21 +2,17 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { CustomFont } from '../../../helpers/fonts/fonts';
-import HighlightButton from '../../../helpers/Buttons/HighlightView';
+import HighlightButton, { HighlightButtonProps } from '../../../helpers/Buttons/HighlightView';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 
-export interface PlainTextListItemProps {
+export interface PlainTextListItemProps extends HighlightButtonProps {
     title: string;
-    onPress?: () => void;
 }
 
 const PlainTextListItem = (() => {
 
     const styles = StyleSheet.create({
         root: {
-
-        },
-        listItem: {
             padding: 20,
         },
         listItemText: {
@@ -26,7 +22,7 @@ const PlainTextListItem = (() => {
     });
 
     const PlainTextListItem = (props: PlainTextListItemProps) => {
-        return <HighlightButton style={styles.listItem} onPress={props.onPress}>
+        return <HighlightButton {...props} style={[styles.root, props.style]}>
             <CustomizedText style={styles.listItemText}>
                 {props.title}
             </CustomizedText>

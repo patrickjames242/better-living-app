@@ -10,6 +10,7 @@ import Product from '../../../../api/orderingSystem/products/Product';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MenuNavStackParams } from '../../navigationHelpers';
+import LayoutConstants from '../../../../LayoutConstants';
 
 
 
@@ -24,6 +25,10 @@ const MealCreatorListViewItem = (() => {
     const styles = StyleSheet.create({
         root: {
             flexDirection: 'row',
+        },
+        productInfoItemView: {
+            padding: LayoutConstants.floatingCellStyles.padding,
+            paddingRight: 0,
         },
         backgroundSelectionView: {
             ...StyleSheet.absoluteFillObject
@@ -70,7 +75,7 @@ const MealCreatorListViewItem = (() => {
                     outputRange: [CustomColors.themeGreen.withAdjustedOpacity(0).stringValue, CustomColors.themeGreen.withAdjustedOpacity(0.15).stringValue],
                 }),
             }]} />
-            <ListViewProductItemView style={{paddingRight: 0}} item={props.item} onPress={onButtonPress} />
+            <ListViewProductItemView style={styles.productInfoItemView} item={props.item} onPress={onButtonPress} />
             <MealCreatorCheckBoxButton onPress={() => {props.sectionSelectionValue.value = props.item.id}} isSelected={shouldBeSelected} />
         </View>
     }

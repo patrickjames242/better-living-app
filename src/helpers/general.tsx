@@ -4,7 +4,7 @@ import { ValidateFunction } from 'ajv';
 import { CustomColors } from './colors';
 import * as mimeTypes from 'react-native-mime-types';
 import URLParse from 'url-parse';
-
+import * as yup from 'yup';
 
 
 
@@ -14,6 +14,8 @@ export type Optional<Wrapped> = Wrapped | null;
 export type PartialBy<T, Keys extends keyof T> = Omit<T, Keys> & Partial<Pick<T, Keys>>
 
 export const DEFAULT_NAV_SCREEN_OPTIONS = {headerShown: false, cardStyle: {backgroundColor: CustomColors.mainBackgroundColor.stringValue}};
+
+export const YUP_EDITING_FORM_PRICE_STRING = yup.string().matches(/^[0-9]+(.[0-9]{2})?$/, "price format is invalid, it must follow the format: '15' or '15.99'");
 
 export function getNumbersList(first: number, last: number): number[] {
     if (first > last) { throw new Error("first cannot be greater than last!!"); }

@@ -11,7 +11,7 @@ const touchUpAnimationLength = 400;
 
 
 
-interface HighlightButtonProps extends ViewProps{
+export interface HighlightButtonProps extends ViewProps{
 	onPress?: () => void,
 	highlightColor?: Color,
 }

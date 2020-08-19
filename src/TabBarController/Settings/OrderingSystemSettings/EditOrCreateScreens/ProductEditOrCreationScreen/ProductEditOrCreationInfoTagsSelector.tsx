@@ -2,7 +2,6 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TextFieldViewContainer } from '../../../../../helpers/Views/TextFieldView';
-
 import { useSelector } from '../../../../../redux/store';
 import SelectableRoundedTextButton, { SelectableRoundedTextButtonProps } from '../../SelectableRoundedTextButton';
 import { useField } from '../../../../../helpers/formik';

@@ -9,7 +9,6 @@ import CustomizedText from "../CustomizedText";
 import {StyleSheet, Image, ViewProps, View} from 'react-native';
 import MealCreatorConstants from '../../../TabBarController/Menu/MealCreaterScreen/MealCreatorConstants';
 import Product from '../../../api/orderingSystem/products/Product';
-import LayoutConstants from '../../../LayoutConstants';
 import AssetImages from '../../../images/AssetImages';
 import { Color, CustomColors } from '../../colors';
 
@@ -27,7 +26,6 @@ const ListViewProductItemView = (() => {
     const styles = StyleSheet.create({
         root: {
             flex: 1,
-            padding: LayoutConstants.floatingCellStyles.padding,
             alignItems: 'flex-start',
         },
         contentView: {

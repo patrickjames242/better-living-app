@@ -14,8 +14,13 @@ export type SettingsNavStackParams = {
     MealCategoryEditOrCreate: {mealCategoryId: Optional<number>};
     ProductsPicker: {
         currentSelectedProductIds: Set<number>, 
-        onFinishedSelectingProducts: (productIds: Set<number>) => void
-    }
+        onFinishedSelectingProducts: (productIds: Set<number>) => void,
+    };
+    MealEditOrCreate: {mealId: Optional<number>};
+    MealCategoriesPicker: {
+        currentSelectedCategoryIds: Set<number>,
+        onFinishedSelectingCategories: (categoryIds: Set<number>) => void,
+    };
 }
 
 export const SettingsNavStack = createStackNavigator<SettingsNavStackParams>();

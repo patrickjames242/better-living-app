@@ -5,7 +5,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import ProductEditOrCreationInfoTagsSelector from './ProductEditOrCreationInfoTagsSelector';
 import { Set } from 'immutable';
 import { useSelector } from '../../../../../redux/store';
-import { mapOptional, displayErrorMessage, Optional, RNFileForUpload } from '../../../../../helpers/general';
+import { mapOptional, displayErrorMessage, Optional, RNFileForUpload, YUP_EDITING_FORM_PRICE_STRING } from '../../../../../helpers/general';
 import ProductEditOrCreationImageSelector from './ProductEditOrCreationImageSelector';
 import ProductEditOrCreationIndividualPriceSelector from './ProductEditOrCreationIndividualPriceSelector';
 import { Formik } from '../../../../../helpers/formik';
@@ -87,12 +87,11 @@ const ProductEditOrCreationScreen = (() => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }), []);
 
-
         return <Formik<ProductEditOrCreateValues>
             initialValues={initialValues}
             validationSchema={Yup.object({
                 title: Yup.string().trim().required(),
-                priceString: Yup.string().matches(/^[0-9]+(.[0-9]{2})?$/, "price format is invalid, it must follow the format: '15' or '15.99'"),
+                priceString: YUP_EDITING_FORM_PRICE_STRING,
             })}
             onSubmit={(values, { setSubmitting }) => {
                 submitForm(values, initialValues, props.route.params.productId).finally(() => {

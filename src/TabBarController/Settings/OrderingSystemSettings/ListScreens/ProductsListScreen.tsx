@@ -10,6 +10,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../navigationHelpers';
 import PlusButton from '../../../../helpers/Buttons/PlusButton';
 import { caseInsensitiveStringSort } from '../../../../helpers/general';
+import LayoutConstants from '../../../../LayoutConstants';
 
 
 
@@ -19,6 +20,9 @@ const ProductsListScreen = (() => {
         root: {
             flex: 1,
         },
+        productItemView: {
+            padding: LayoutConstants.floatingCellStyles.padding,
+        }
     });
 
     interface SectionType {
@@ -51,6 +55,7 @@ const ProductsListScreen = (() => {
                 renderItem={item => {
                     return <ListViewProductItemView
                         item={item.item}
+                        style={styles.productItemView}
                         onPress={() => {
                             props.navigation.push('ProductEditOrCreate', { productId: item.item.id });
                         }} />
