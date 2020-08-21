@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { StatusBar, YellowBox, Platform } from 'react-native';
+import { StatusBar, YellowBox } from 'react-native';
 import { registerRootComponent, AppLoading } from 'expo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loadFonts } from './helpers/fonts/fonts';
@@ -7,18 +8,18 @@ import TabBarController from './TabBarController/TabBarController';
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './redux/store';
 import { tryConnectingWebsocketListener } from './api/realtimeUpdates';
-import * as yup from 'yup';
+
 
 YellowBox.ignoreWarnings([
 	"Animated: `useNativeDriver`", 
 	"Non-serializable values were found in the navigation state."
 ]);
 
-store.subscribe(() => {
-	if (Platform.OS === 'web'){
-		console.log(store.getState().realtimeUpdates.connectionState);
-	}
-});
+// store.subscribe(() => {
+// 	if (Platform.OS === 'web'){
+// 		console.log(store.getState().realtimeUpdates.connectionState);
+// 	}
+// });
 
 
 

@@ -46,7 +46,7 @@ const MealEditOrCreationScreen = (() => {
             initialValues={initialValues}
             validationSchema={yup.object({
                 title: yup.string().trim().required(),
-                priceString: YUP_EDITING_FORM_PRICE_STRING.required("price is a required field"),
+                priceString: YUP_EDITING_FORM_PRICE_STRING('price').required("price is a required field"),
             })}
             onSubmit={(values, {setSubmitting}) => {
                 submitForm(props.route.params.mealId, values).finally(() => {

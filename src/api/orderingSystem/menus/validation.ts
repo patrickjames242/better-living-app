@@ -6,6 +6,7 @@ import ajv from "ajv";
 export const MenuJsonKeys: {
     id: 'id',
     title: 'title',
+    is_active: 'is_active',
     days_of_the_week: 'days_of_the_week',
     start_time: 'start_time',
     end_time: 'end_time',
@@ -17,6 +18,7 @@ export const MenuJsonKeys: {
 } = {
     id: 'id',
     title: 'title',
+    is_active: 'is_active',
     days_of_the_week: 'days_of_the_week',
     start_time: 'start_time',
     end_time: 'end_time',
@@ -31,6 +33,7 @@ export const MenuJsonKeys: {
 export interface MenuJsonResponseObj{
     [MenuJsonKeys.id]: number;
     [MenuJsonKeys.title]: string;
+    [MenuJsonKeys.is_active]: boolean;
     [MenuJsonKeys.days_of_the_week]: number[];
     [MenuJsonKeys.start_time]: Optional<string>;
     [MenuJsonKeys.end_time]: Optional<string>;
@@ -51,6 +54,7 @@ const MenuApiResponseSchema = {
     properties: {
         [MenuJsonKeys.id]: {type: 'number'},
         [MenuJsonKeys.title]: {type: 'string'},
+        [MenuJsonKeys.is_active]: {type: 'boolean'},
         [MenuJsonKeys.days_of_the_week]: {
             type: 'array', 
             items: {enum: [...getNumbersList(0, 6)]},

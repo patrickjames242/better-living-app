@@ -21,6 +21,7 @@ export type SettingsNavStackParams = {
         currentSelectedCategoryIds: Set<number>,
         onFinishedSelectingCategories: (categoryIds: Set<number>) => void,
     };
+    MenuEditOrCreate: {menuId: Optional<number>};
 }
 
 export const SettingsNavStack = createStackNavigator<SettingsNavStackParams>();

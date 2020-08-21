@@ -3,7 +3,7 @@ import AppSettings from "../settings";
 
 
 const API_URL = (() => {
-    const apiProtocol = AppSettings.debugMode ? 'http' : 'https';
+    const apiProtocol = AppSettings.useLocalHostDevServer ? 'http' : 'https';
     return `${apiProtocol}://${AppSettings.apiHostUrl()}/`;
 })();
 

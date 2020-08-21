@@ -5,10 +5,10 @@ import { TabBarSelection } from "./TabBarController/TabBar/helpers";
 
 const AppSettings = {
     defaultTabBarSelection: TabBarSelection.menu,
-    debugMode: false,
+    useLocalHostDevServer: false,
     useTestDatabaseData: false,
     apiHostUrl(){
-        if (this.debugMode){
+        if (this.useLocalHostDevServer){
             return '127.0.0.1:8000';
         } else {
             return 'better-living-backend.herokuapp.com';

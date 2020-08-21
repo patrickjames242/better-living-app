@@ -1,3 +1,4 @@
+
 import { Optional } from "../../../helpers/general";
 import { Set, List } from "immutable";
 import { MenuJsonResponseObj, menuResponseObjValidator } from "./validation";
@@ -22,6 +23,7 @@ export default class Menu{
     
     readonly id: number;
     readonly title: string;
+    readonly isActive: boolean;
     readonly daysOfTheWeek: Set<DayOfTheWeek>;
     readonly startTime: Optional<string>;
     readonly endTime: Optional<string>;
@@ -36,6 +38,7 @@ export default class Menu{
 
         this.id = json.id;
         this.title = json.title;
+        this.isActive = json.is_active;
         this.daysOfTheWeek = Set(menuJsonResponseObj.days_of_the_week);
         this.startTime = json.start_time;
         this.endTime = json.end_time;

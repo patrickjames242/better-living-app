@@ -59,6 +59,7 @@ const menus: [number, Menu][] = [
     [1, new Menu({
         id: 1, 
         title: 'best menu ever',
+        is_active: true,
         days_of_the_week: [new Date(Date.now()).getDay()],
         start_time: '00:00:00',
         end_time: '23:59:59',

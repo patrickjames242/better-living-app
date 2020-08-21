@@ -1,7 +1,7 @@
 
 import { MenuJsonResponseObj } from "./validation";
 import Menu from "./Menu";
-import { Optional, mapOptional } from "../../../helpers/general";
+import { Optional, mapOptional, NASSAU_TIME_ZONE } from "../../../helpers/general";
 import store, { addSelectedStateListener, AppState } from "../../../redux/store";
 import { Map, Set } from "immutable";
 import moment, { Moment } from 'moment-timezone';
@@ -21,11 +21,11 @@ export function getMenuFromJsonResponseObj_orNull(apiResponseObj: MenuJsonRespon
 }
 
 function getCurrentMoment(){
-    return moment.tz('America/Nassau')
+    return moment.tz(NASSAU_TIME_ZONE)
 }
 
 function getMoment(timeString: string){
-    return moment.tz(timeString, 'HH:mm:ss', 'America/Nassau');
+    return moment.tz(timeString, 'HH:mm:ss', NASSAU_TIME_ZONE);
 }
 
 function getSecondsSinceDayBeginning(moment: Moment){

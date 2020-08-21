@@ -15,7 +15,12 @@ export type PartialBy<T, Keys extends keyof T> = Omit<T, Keys> & Partial<Pick<T,
 
 export const DEFAULT_NAV_SCREEN_OPTIONS = {headerShown: false, cardStyle: {backgroundColor: CustomColors.mainBackgroundColor.stringValue}};
 
-export const YUP_EDITING_FORM_PRICE_STRING = yup.string().matches(/^[0-9]+(.[0-9]{2})?$/, "price format is invalid, it must follow the format: '15' or '15.99'");
+export function YUP_EDITING_FORM_PRICE_STRING(fieldName: string){
+    fieldName = fieldName[0].toUpperCase() + fieldName.substring(1);
+    return yup.string().matches(/^[0-9]+(.[0-9]{2})?$/, `${fieldName} format is invalid. It must follow the format: '15' or '15.99'.`);
+}
+
+export const NASSAU_TIME_ZONE = 'America/Nassau';
 
 export function getNumbersList(first: number, last: number): number[] {
     if (first > last) { throw new Error("first cannot be greater than last!!"); }

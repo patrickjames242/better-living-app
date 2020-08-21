@@ -2,7 +2,6 @@
 import React, { useMemo, useState } from 'react';
 import { SettingsNavStackParams } from '../../../navigationHelpers';
 import { StackScreenProps } from '@react-navigation/stack';
-import ProductEditOrCreationInfoTagsSelector from './ProductEditOrCreationInfoTagsSelector';
 import { Set } from 'immutable';
 import { useSelector } from '../../../../../redux/store';
 import { mapOptional, displayErrorMessage, Optional, RNFileForUpload, YUP_EDITING_FORM_PRICE_STRING } from '../../../../../helpers/general';
@@ -14,6 +13,7 @@ import { FormikMultilineTextFieldView, FormikTextFieldView } from '../../../../.
 import * as Yup from 'yup';
 import { ProductRequestObj, createNewProduct, updateProduct, deleteProduct } from '../../../../../api/orderingSystem/products/requests';
 import OrderingSystemEditingFormScreen from '../OrderingSystemEditingFormScreen';
+import ProductEditOrCreationInfoTagsSelector from './ProductEditOrCreationInfoTagsSelector';
 
 
 const ProductEditOrCreationScreen = (() => {
@@ -91,7 +91,7 @@ const ProductEditOrCreationScreen = (() => {
             initialValues={initialValues}
             validationSchema={Yup.object({
                 title: Yup.string().trim().required(),
-                priceString: YUP_EDITING_FORM_PRICE_STRING,
+                priceString: YUP_EDITING_FORM_PRICE_STRING('price'),
             })}
             onSubmit={(values, { setSubmitting }) => {
                 submitForm(values, initialValues, props.route.params.productId).finally(() => {

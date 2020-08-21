@@ -47,7 +47,7 @@ function addInternetReachabilityListener(listener: (isInternetReachable: boolean
 
 function setUpWebsocket() {
     const websocketUrl = (() => {
-        const protocolString = AppSettings.debugMode ? 'ws' : 'wss';
+        const protocolString = AppSettings.useLocalHostDevServer ? 'ws' : 'wss';
         return `${protocolString}://${AppSettings.apiHostUrl()}/realtime-updates`;
     })();
 
@@ -60,8 +60,11 @@ function setUpWebsocket() {
     }
     socket.onmessage = function (event) {
         const data = JSON.parse(event.data);
-        console.log('socket on message', data);
 
+        if (Platform.OS === 'web'){
+            console.log('socket on message', data);
+        }
+        
         store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connectedAndGotInitialUpdates));
 
         if (typeof data !== 'object') { return; }

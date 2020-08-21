@@ -14,6 +14,7 @@ import MealCategoryEditOrCreationScreen from './OrderingSystemSettings/EditOrCre
 import OrderingSystemEditingProductsPickerScreen from './OrderingSystemSettings/EditOrCreateScreens/ItemPickerScreens/OrderingSystemEditingProductsPickerScreen';
 import MealEditOrCreationScreen from './OrderingSystemSettings/EditOrCreateScreens/MealEditOrCreationScreen/MealEditOrCreationScreen';
 import OrderingSystemEditingMealCategoriesPickerScreen from './OrderingSystemSettings/EditOrCreateScreens/ItemPickerScreens/OrderingSystemEditingMealCategoriesPickerScreen';
+import MenuEditOrCreationScreen from './OrderingSystemSettings/EditOrCreateScreens/MenuEditOrCreationScreen/MenuEditOrCreationScreen';
 
 
 export default function Settings(){
@@ -30,6 +31,7 @@ export default function Settings(){
             <SettingsNavStack.Screen name="ProductsPicker" component={OrderingSystemEditingProductsPickerScreen}/>
             <SettingsNavStack.Screen name="MealEditOrCreate" component={MealEditOrCreationScreen}/>
             <SettingsNavStack.Screen name="MealCategoriesPicker" component={OrderingSystemEditingMealCategoriesPickerScreen}/>
+            <SettingsNavStack.Screen name="MenuEditOrCreate" component={MenuEditOrCreationScreen}/>
         </SettingsNavStack.Navigator>
     </NavigationContainer>
 }
