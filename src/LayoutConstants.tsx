@@ -1,7 +1,7 @@
 
 import { getShadowStyle } from "./helpers/general";
 import { CustomFont } from "./helpers/fonts/fonts";
-import { CustomColors } from "./helpers/colors";
+import { CustomColors, Color } from "./helpers/colors";
 
 const LayoutConstants = {
 
@@ -61,7 +61,23 @@ const LayoutConstants = {
             maxWidth: (maxWidth ?? LayoutConstants.floatingCellStyles.maxWidth) + (LayoutConstants.pageSideInsets * 2),
             padding: LayoutConstants.pageSideInsets,
         };
-    }
+    },
+
+    forms: {
+        innerContainer: {
+            borderRadius: 10,
+            backgroundColor: Color.gray(0.965).stringValue,
+        },
+        textFieldSelectionOutline: {
+            color: {
+                unselected: Color.gray(0.94).stringValue,
+                selected: CustomColors.themeGreen.withAdjustedOpacity(0.8).stringValue,
+            },
+            width: 2.5,
+        },
+    },
+
+    
 
 };
 

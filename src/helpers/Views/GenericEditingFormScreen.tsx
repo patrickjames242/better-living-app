@@ -8,6 +8,9 @@ import NavigationControllerNavigationBar from '../NavigationController/Navigatio
 import SpacerView from '../Spacers/SpacerView';
 import Space from '../Spacers/Space';
 
+export const GenericEditingFormScreenConstants = {
+    childrenSpacing: 25,
+}
 
 export interface GenericEditingFormScreenProps extends PropsWithChildren<{}> {
     navBarTitle: string;
@@ -43,7 +46,7 @@ const GenericEditingFormScreen = (() => {
         return <CustomKeyboardAvoidingView style={styles.root}>
             <NavigationControllerNavigationBar title={props.navBarTitle} />
             <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
-                <SpacerView style={styles.inputsHolder} space={25}>
+                <SpacerView style={styles.inputsHolder} space={GenericEditingFormScreenConstants.childrenSpacing}>
                     {props.children}
                 </SpacerView>
                 <Space space={15} />

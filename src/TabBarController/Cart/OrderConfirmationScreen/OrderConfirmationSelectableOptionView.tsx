@@ -26,7 +26,7 @@ const OrderConfirmationSelectableOptionView = (() => {
             flexDirection: 'row',
             backgroundColor: 'white',
             alignItems: 'center',
-            borderWidth: OrderConfirmationLayoutConstants.selectionOutline.width,
+            borderWidth: LayoutConstants.forms.textFieldSelectionOutline.width,
         },
         image: {
             height: 30,
@@ -45,7 +45,7 @@ const OrderConfirmationSelectableOptionView = (() => {
             return { left: x, right: x, top: x, bottom: x };
         })();
         return <SpacerView style={[styles.root, {
-            borderColor: props.isSelected ? OrderConfirmationLayoutConstants.selectionOutline.color.selected : OrderConfirmationLayoutConstants.selectionOutline.color.unselected,
+            borderColor: props.isSelected ? LayoutConstants.forms.textFieldSelectionOutline.color.selected : LayoutConstants.forms.textFieldSelectionOutline.color.unselected,
         }]} space={15}>
             <Image source={props.imageSource} style={styles.image} />
             <CustomizedText style={styles.title}>{props.title}</CustomizedText>

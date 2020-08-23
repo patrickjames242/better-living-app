@@ -9,19 +9,34 @@ import { updateRealtimeUpdatesConnectionStateAction, RealtimeUpdatesConnectionSt
 
 
 export function tryConnectingWebsocketListener() {
-    setUpWebsocket();
+
+    function onCloseAfterSuccessfulOpen(){
+        tryConnectingWebsocketListener();
+    }
+
+    startWebsocketConnection(onCloseAfterSuccessfulOpen).catch(() => {
+        const timeoutId = setTimeout(() => {
+            tryConnectingWebsocketListener();
+        }, 10);
+        addInternetReachabilityListener(isInternetReachable => {
+            if (isInternetReachable){
+                clearTimeout(timeoutId);
+                tryConnectingWebsocketListener();
+            }
+        });
+    });
 }
 
-async function getInternetReachability() {
-    switch (Platform.OS) {
-        case 'web':
-            return Promise.resolve(window.navigator.onLine);
-        default: {
-            const info = await NetInfo.fetch();
-            return info.isInternetReachable;
-        }
-    }
-}
+// async function getInternetReachability() {
+//     switch (Platform.OS) {
+//         case 'web':
+//             return Promise.resolve(window.navigator.onLine);
+//         default: {
+//             const info = await NetInfo.fetch();
+//             return info.isInternetReachable;
+//         }
+//     }
+// }
 
 function addInternetReachabilityListener(listener: (isInternetReachable: boolean) => void){
     switch (Platform.OS){
@@ -45,65 +60,67 @@ function addInternetReachabilityListener(listener: (isInternetReachable: boolean
 }
 
 
-function setUpWebsocket() {
-    const websocketUrl = (() => {
-        const protocolString = AppSettings.useLocalHostDevServer ? 'ws' : 'wss';
-        return `${protocolString}://${AppSettings.apiHostUrl()}/realtime-updates`;
-    })();
+function startWebsocketConnection(onCloseAfterSuccessfulOpen: () => void) {
 
-    store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connecting));
+    let callbackCalled = false;
 
-    const socket = new WebSocket(websocketUrl);
-    socket.onopen = function (event) {
-        console.log(event);
-        store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connected))
-    }
-    socket.onmessage = function (event) {
-        const data = JSON.parse(event.data);
-
-        if (Platform.OS === 'web'){
-            console.log('socket on message', data);
-        }
-        
-        store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connectedAndGotInitialUpdates));
-
-        if (typeof data !== 'object') { return; }
-
-        const Keys = {
-            health_tips: 'health_tips',
-            ordering_system: 'ordering_system',
-        }
-
-        for (const propertyName of Object.getOwnPropertyNames(data)){
-            const value = data[propertyName];
-            if (value === undefined){continue;}
-            switch (propertyName){
-                case Keys.health_tips: 
-                    handleHealthTipsRealtimeUpdate(value);
-                    break;
-                case Keys.ordering_system: 
-                    handleOrderingSystemRealtimeUpdate(value);
-                    break;
+    return new Promise((resolve, reject) => {
+        const websocketUrl = (() => {
+            const protocolString = AppSettings.useLocalHostDevServer ? 'ws' : 'wss';
+            return `${protocolString}://${AppSettings.apiHostUrl()}/realtime-updates`;
+        })();
+    
+        store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connecting));
+    
+        const socket = new WebSocket(websocketUrl);
+        socket.onopen = function () {
+            if (callbackCalled === false){
+                resolve();
+                callbackCalled = true;
             }
+            console.log('websocket opened');
+            store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connected));
         }
-    };
-    socket.onclose = function (event) {
-        console.log(event);
-        store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.disconnected));
-        // getInternetReachability().then(isInternetReachable => {
-        //     if (isInternetReachable) {
-        //         setTimeout(() => {
-        //             setUpWebsocket();
-        //         }, 1000);
-        //     } else {
-        //         let unlisten = addInternetReachabilityListener((isInternetReachable) => {
-        //             if (isInternetReachable) {
-        //                 setUpWebsocket()
-        //                 unlisten?.()
-        //             }
-        //         })
-        //     }
-        // })
-    };
+        socket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+    
+            if (Platform.OS === 'web'){
+                console.log('socket on message', data);
+            }
+            
+            store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connectedAndGotInitialUpdates));
+    
+            if (typeof data !== 'object') { return; }
+    
+            const Keys = {
+                health_tips: 'health_tips',
+                ordering_system: 'ordering_system',
+            }
+    
+            for (const propertyName of Object.getOwnPropertyNames(data)){
+                const value = data[propertyName];
+                if (value === undefined){continue;}
+                switch (propertyName){
+                    case Keys.health_tips: 
+                        handleHealthTipsRealtimeUpdate(value);
+                        break;
+                    case Keys.ordering_system: 
+                        handleOrderingSystemRealtimeUpdate(value);
+                        break;
+                }
+            }
+        };
+        socket.onclose = function () {
+            if (callbackCalled === false){
+                reject();
+                callbackCalled = true;
+            } else {
+                onCloseAfterSuccessfulOpen();
+            }
+            console.log('websocket closed');
+            store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.disconnected));
+        };
+    });
+    
 }
 

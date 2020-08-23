@@ -10,14 +10,14 @@ import { Set } from 'immutable';
 import { MealCategoryEditOrCreateValues } from './helpers';
 import { FormikTextFieldView } from '../../../../../helpers/Views/FormikTextFieldView';
 import * as Yup from 'yup';
-import MealCategoryEditOrCreationProductsSelector from './MealCategoryEditOrCreationProductsSelector';
 import { deleteMealCategory, MealCategoriesRequestObj, createNewMealCategory, updateMealCategory } from '../../../../../api/orderingSystem/mealCategories/requests';
+import OrderingSystemFormChildrenProductsSelector from '../OrderingSystemFormChildrenProductsSelector';
 
 
 
 const MealCategoryEditOrCreationScreen = (() => {
 
-    function submitForm(mealCategoryId: Optional<number>, values: MealCategoryEditOrCreateValues){
+    function submitForm(mealCategoryId: Optional<number>, values: MealCategoryEditOrCreateValues) {
         const displayName = (() => {
             const x = values.displayName.trim();
             return x.length >= 1 ? x : null;
@@ -28,12 +28,12 @@ const MealCategoryEditOrCreationScreen = (() => {
             product_ids: values.productIds.toArray(),
         };
 
-        if (mealCategoryId == null){
+        if (mealCategoryId == null) {
             return createNewMealCategory(requestObj);
         } else {
             return updateMealCategory(mealCategoryId, requestObj);
         }
-        
+
     }
 
     const MealCategoryEditOrCreationScreen = (props: StackScreenProps<SettingsNavStackParams, 'MealCategoryEditOrCreate'>) => {
@@ -54,7 +54,7 @@ const MealCategoryEditOrCreationScreen = (() => {
             displayName: mealCategory?.displayName ?? '',
             uniqueName: mealCategory?.uniqueName ?? '',
             productIds: mealCategory?.productIds ?? Set<number>(),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }), []);
 
         return <Formik
@@ -63,7 +63,7 @@ const MealCategoryEditOrCreationScreen = (() => {
                 displayName: Yup.string(),
                 uniqueName: Yup.string().trim().required('unique name is a required field'),
             })}
-            onSubmit={(values, {setSubmitting}) => {
+            onSubmit={(values, { setSubmitting }) => {
 
                 submitForm(mealCategoryId, values).finally(() => {
                     setSubmitting(false);
@@ -91,7 +91,7 @@ const MealCategoryEditOrCreationScreen = (() => {
                     isLoading: isDeleting,
                     isEnabled: shouldButtonsBeEnabled,
                     onPress: () => {
-                        if (typeof mealCategoryId !== 'number'){return;}
+                        if (typeof mealCategoryId !== 'number') { return; }
                         setIsDeleting(true);
                         deleteMealCategory(mealCategoryId).finally(() => {
                             setIsDeleting(false);
@@ -103,9 +103,9 @@ const MealCategoryEditOrCreationScreen = (() => {
                     },
                 }}
             >
-                <FormikTextFieldView<MealCategoryEditOrCreateValues> formikFieldName="uniqueName" topTitleText="Unique Name"/>
-                <FormikTextFieldView<MealCategoryEditOrCreateValues> formikFieldName="displayName" topTitleText="Display Name"/>
-                <MealCategoryEditOrCreationProductsSelector/>
+                <FormikTextFieldView<MealCategoryEditOrCreateValues>formikFieldName="uniqueName" topTitleText="Unique Name" />
+                <FormikTextFieldView<MealCategoryEditOrCreateValues> formikFieldName="displayName" topTitleText="Display Name" />
+                <OrderingSystemFormChildrenProductsSelector value={formik.values.productIds} onValueChanged={v => formik.setFieldValue('productIds', v)} />
             </OrderingSystemEditingFormScreen>
         }}</Formik>
     }

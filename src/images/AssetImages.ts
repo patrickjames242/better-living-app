@@ -15,6 +15,8 @@ const AssetImages = {
     imageIcon: require('./imageIcon.png'),
     checkMarkIcon: require('./checkMarkIcon.png'),
     xIcon: require('./xIcon.png'),
+    minimizeIcon: require('./minimize.png'),
+    zoomInIcon: require('./zoom-in.png'),
 };
 
 export default AssetImages;

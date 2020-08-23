@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { StyleSheet, Switch, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { TextFieldViewContainer, TextFieldTextInput } from '../../../../../helpers/Views/TextFieldView';
 import SpacerView from '../../../../../helpers/Spacers/SpacerView';
-import { CustomColors } from '../../../../../helpers/colors';
 import { useField } from '../../../../../helpers/formik';
 import { ProductEditOrCreateValues } from './helpers';
+import { CustomSwitch } from '../../../../../helpers/Views/CustomSwitch';
 
 export interface ProductEditOrCreationIndividualPriceSelectorProps {
 
@@ -39,12 +39,8 @@ const ProductEditOrCreationIndividualPriceSelector = (() => {
                     style={[styles.textField, {opacity: shouldBeSoldIndividuallyValue ? 1 : 0.4}]}
                     onBlur={() => setPriceStringTouched(true)}
                 />
-                <Switch
+                <CustomSwitch
                     value={shouldBeSoldIndividuallyValue}
-                    {...(Platform.select({
-                        web: {onTintColor: CustomColors.themeGreen.stringValue}, 
-                        default: {trackColor: {true: CustomColors.themeGreen.stringValue, false: 'gray'}},
-                    }))}
                     onValueChange={isOn => setShouldBeSoldIndividuallyValue(isOn)}
                 />
             </SpacerView>

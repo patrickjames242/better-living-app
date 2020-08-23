@@ -10,7 +10,7 @@ const basePath = 'ordering-system/menus/';
 export interface MenuRequestObj{
     [MenuJsonKeys.title]: string;
     [MenuJsonKeys.is_active]?: boolean;
-    [MenuJsonKeys.days_of_the_week]?: DayOfTheWeek;
+    [MenuJsonKeys.days_of_the_week]?: DayOfTheWeek[];
     [MenuJsonKeys.start_time]?: string;
     [MenuJsonKeys.end_time]?: string;
     [MenuJsonKeys.categories]: {[categoryTitle: string]: {
@@ -33,7 +33,7 @@ export function createNewMenu(requestObj: MenuRequestObj){
 
 export function updateMenu(menuId: number, requestObj: Partial<MenuRequestObj>){
     return fetchFromAPI({
-        method: HttpMethod.post,
+        method: HttpMethod.put,
         path: basePath + menuId + '/',
         jsonBody: requestObj,
     }).then(response => {

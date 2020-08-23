@@ -1,6 +1,17 @@
 
 import { DayOfTheWeek } from "../../../../../api/orderingSystem/menus/Menu";
-import { List, Set } from "immutable";
+import { Set, Map } from "immutable";
+import * as yup from 'yup';
+
+export interface MenuEditOrCreateProductCategory{
+    readonly customId: number;
+    readonly title: string;
+    readonly productIds: Set<number>;
+}
+
+export const menuEditOrCreateProductCategorySchema = yup.object({
+    title: yup.string().trim().required('The title field is required.'),
+});
 
 export interface MenuEditOrCreationValues{
     title: string;
@@ -8,6 +19,8 @@ export interface MenuEditOrCreationValues{
     daysOfTheWeek: Set<DayOfTheWeek>;
     startTime: string;
     endTime: string;
-    productCategories: List<{title: string, productIds: Set<number>}>;
+    productCategories: Map<number, MenuEditOrCreateProductCategory>;
 }
+
+
 

@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { StatusBar, YellowBox } from 'react-native';
 import { registerRootComponent, AppLoading } from 'expo';
@@ -10,20 +11,14 @@ import store from './redux/store';
 import { tryConnectingWebsocketListener } from './api/realtimeUpdates';
 
 
+registerRootComponent(App);
+
+
 YellowBox.ignoreWarnings([
 	"Animated: `useNativeDriver`", 
-	"Non-serializable values were found in the navigation state."
+	"Non-serializable values were found in the navigation state.",
 ]);
 
-// store.subscribe(() => {
-// 	if (Platform.OS === 'web'){
-// 		console.log(store.getState().realtimeUpdates.connectionState);
-// 	}
-// });
-
-
-
-registerRootComponent(App);
 
 
 export default function App() {

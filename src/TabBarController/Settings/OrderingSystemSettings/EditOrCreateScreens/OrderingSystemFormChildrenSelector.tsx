@@ -15,6 +15,7 @@ interface OrderingSystemItem{
 }
 
 export interface OrderingSystemFormChildrenSelectorProps{
+    itemBackgroundColor?: string;
     containerTitleText: string;
     buttonEditText: string;
     buttonAddText: string;
@@ -30,7 +31,7 @@ const OrderingSystemFormChildrenSelector = (() => {
     
         return <TextFieldViewContainer topTitleText={props.containerTitleText}>
             <Spacer space={13}>
-                {itemsNotEmpty && <ChildItemsView childItems={props.value} /> }
+                {itemsNotEmpty && <ChildItemsView childItems={props.value} itemBackgroundColor={props.itemBackgroundColor}/> }
                 <RoundedTextAndIconBouncyButton 
                     text={itemsNotEmpty ? props.buttonEditText : props.buttonAddText} 
                     onPress={props.onEditOrAddButtonPressed} 
@@ -48,6 +49,7 @@ export default OrderingSystemFormChildrenSelector;
 
 interface ChildItemsViewProps {
     childItems: {title: string, id: number}[];
+    itemBackgroundColor?: string;
 }
 
 const ChildItemsView = (() => {
@@ -64,7 +66,6 @@ const ChildItemsView = (() => {
             flexWrap: 'wrap',
         },
         productLabelHolder: {
-            backgroundColor: Color.gray(0.94).stringValue,
             marginBottom: productLabelsSpacing,
             marginRight: productLabelsSpacing,
             borderRadius: 8,
@@ -82,7 +83,7 @@ const ChildItemsView = (() => {
 
         return <View style={styles.root}>
             {props.childItems.map(x => {
-                return <View key={x.id} style={styles.productLabelHolder}>
+                return <View key={x.id} style={[styles.productLabelHolder, {backgroundColor: props.itemBackgroundColor ?? Color.gray(0.94).stringValue}]}>
                     <CustomizedText style={styles.productLabel} numberOfLines={1}>
                         {x.title}
                     </CustomizedText>

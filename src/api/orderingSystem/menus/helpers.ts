@@ -39,6 +39,7 @@ function calculateIsCurrentMenu(menu: Menu){
     const currentTimeSeconds = getSecondsSinceDayBeginning(currentMoment); 
     
     if (
+        menu.isActive === false ||
         menu.daysOfTheWeek.contains(currentDayOfTheWeek) === false || 
         menu.startTime == null || 
         menu.endTime == null

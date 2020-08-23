@@ -4,13 +4,10 @@ import { ViewProps, TextInputProps, StyleSheet, TextInput, Platform, StyleProp, 
 import LayoutConstants from '../../LayoutConstants';
 import { CustomColors, Color } from '../colors';
 import { CustomFont } from '../fonts/fonts';
-import OrderConfirmationLayoutConstants from '../../TabBarController/Cart/OrderConfirmationScreen/OrderConfirmationLayoutConstants';
 import SpacerView from '../Spacers/SpacerView';
 import CustomizedText from './CustomizedText';
 
-export const TextFieldViewConstants = {
-    borderRadius: 10,
-}
+
 
 export interface TextFieldViewProps {
     textFieldContainer?: TextFieldViewContainerProps;
@@ -95,7 +92,7 @@ export const TextFieldViewContainer = (() => {
 
 
 export interface TextFieldTextInputProps extends TextInputProps {
-
+    inactiveBorderColor?: string; 
 }
 
 export const MultilineTextFieldTextInput = (props: TextFieldTextInputProps) => {
@@ -114,16 +111,16 @@ export const TextFieldTextInput = (() => {
 
     const styles = StyleSheet.create({
         textInput: {
-            borderWidth: OrderConfirmationLayoutConstants.selectionOutline.width,
-            borderRadius: 10,
-            padding: TextFieldViewConstants.borderRadius,
+            borderWidth: LayoutConstants.forms.textFieldSelectionOutline.width,
+            borderRadius: LayoutConstants.forms.innerContainer.borderRadius,
+            padding: 10,
             fontSize: 16,
             color: CustomColors.offBlackTitle.stringValue,
             ...(Platform.select({ web: { outlineStyle: 'none' }, default: undefined })),
         },
     });
 
-    const TextFieldTextInput = (props: TextFieldTextInputProps) => {
+    const TextFieldTextInput = ({inactiveBorderColor, ...props}: TextFieldTextInputProps) => {
 
         const [isActive, setIsActive] = useState(false);
 
@@ -134,7 +131,7 @@ export const TextFieldTextInput = (() => {
             placeholderTextColor={props.placeholderTextColor ?? Color.gray(0.7).stringValue}
             placeholder={props.placeholder ?? "Type here..."}
             style={[styles.textInput, {
-                borderColor: isActive ? OrderConfirmationLayoutConstants.selectionOutline.color.selected : OrderConfirmationLayoutConstants.selectionOutline.color.unselected,
+                borderColor: isActive ? LayoutConstants.forms.textFieldSelectionOutline.color.selected : (inactiveBorderColor ?? LayoutConstants.forms.textFieldSelectionOutline.color.unselected),
             }, props.style]}
             onFocus={e => { setIsActive(true); props.onFocus?.(e) }}
             onBlur={e => { setIsActive(false); props.onBlur?.(e) }}

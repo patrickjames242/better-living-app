@@ -13,16 +13,17 @@ interface CustomFieldInputProps<Key extends string, Value> extends Omit<FieldInp
     onBlur: HandleBlur<Key>;
 }
 
-type AdjustedFormikPropsType<Type, Values extends FormikValues = FormikValues> = Omit<Type, 'handleChange' | 'getFieldProps' | 'getFieldMeta' | 'getFieldHelpers' | 'handleBlur'> & {
+type AdjustedFormikPropsType<Type, Values extends FormikValues = FormikValues> = Omit<Type, 'handleChange' | 'getFieldProps' | 'getFieldMeta' | 'getFieldHelpers' | 'handleBlur' | 'setFieldValue' | 'setFieldError' | 'setFieldTouched'> & {
 
     handleChange: HandleChange<keyof Values & string>;
     getFieldProps: <Key extends keyof Values & string>(name: Key) => CustomFieldInputProps<Key, Values[Key]>;
     getFieldMeta: <Key extends keyof Values & string>(name: Key) => FieldMetaProps<Values[Key]>;
     getFieldHelpers: <Key extends keyof Values & string>(name: Key) => FieldHelperProps<Values[Key]>;
     handleBlur: HandleBlur<keyof Values & string>;
-    // setFieldValue: (field: keyof Values & string, value: any, shouldValidate?: boolean) => void;
-    // setFieldError: (field: keyof Values & string) => void;
-    // setFieldTouched: (field: keyof Values & string, isTouched?: boolean, shouldValidate?: boolean) => void;
+
+    setFieldValue: <Key extends keyof Values & string>(field: Key, value: Values[Key], shouldValidate?: boolean) => void;
+    setFieldError: (field: keyof Values & string) => void;
+    setFieldTouched: (field: keyof Values & string, isTouched?: boolean, shouldValidate?: boolean) => void;
 
 }
 
