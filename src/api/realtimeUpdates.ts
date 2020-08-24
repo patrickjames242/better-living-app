@@ -15,14 +15,16 @@ export function tryConnectingWebsocketListener() {
     }
 
     startWebsocketConnection(onCloseAfterSuccessfulOpen).catch(() => {
-        const timeoutId = setTimeout(() => {
-            tryConnectingWebsocketListener();
-        }, 10);
-        addInternetReachabilityListener(isInternetReachable => {
-            if (isInternetReachable){
-                clearTimeout(timeoutId);
+        startWebsocketConnection(onCloseAfterSuccessfulOpen).catch(() => {
+            const timeoutId = setTimeout(() => {
                 tryConnectingWebsocketListener();
-            }
+            }, 10);
+            addInternetReachabilityListener(isInternetReachable => {
+                if (isInternetReachable){
+                    clearTimeout(timeoutId);
+                    tryConnectingWebsocketListener();
+                }
+            });
         });
     });
 }
