@@ -6,7 +6,6 @@ import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import Spacer from '../../../helpers/Spacers/Spacer';
-import AssetImages from '../../../images/AssetImages';
 
 
 

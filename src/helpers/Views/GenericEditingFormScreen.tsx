@@ -7,6 +7,7 @@ import LongTextAndIconButton, { LongTextAndIconButtonProps } from '../Buttons/Lo
 import NavigationControllerNavigationBar from '../NavigationController/NavigationControllerNavigationBar';
 import SpacerView from '../Spacers/SpacerView';
 import Space from '../Spacers/Space';
+import { TextFieldViewContainer } from './TextFieldView';
 
 export const GenericEditingFormScreenConstants = {
     childrenSpacing: 25,
@@ -15,6 +16,7 @@ export const GenericEditingFormScreenConstants = {
 export interface GenericEditingFormScreenProps extends PropsWithChildren<{}> {
     navBarTitle: string;
     longButtons?: LongTextAndIconButtonProps[],
+    formHasErrors?: boolean;
 }
 
 const GenericEditingFormScreen = (() => {
@@ -46,9 +48,11 @@ const GenericEditingFormScreen = (() => {
         return <CustomKeyboardAvoidingView style={styles.root}>
             <NavigationControllerNavigationBar title={props.navBarTitle} />
             <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
-                <SpacerView style={styles.inputsHolder} space={GenericEditingFormScreenConstants.childrenSpacing}>
-                    {props.children}
-                </SpacerView>
+                <TextFieldViewContainer errorMessage={(props.formHasErrors ?? false) ? 'This form has errors above.' : undefined}>
+                    <SpacerView style={styles.inputsHolder} space={GenericEditingFormScreenConstants.childrenSpacing}>
+                        {props.children}
+                    </SpacerView>
+                </TextFieldViewContainer>
                 <Space space={15} />
                 {/* eslint-disable react/no-children-prop */}
                 <SpacerView

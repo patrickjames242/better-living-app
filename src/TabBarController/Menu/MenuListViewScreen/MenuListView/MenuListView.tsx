@@ -22,11 +22,7 @@ export interface MenuListViewProps {
     bottomContentInset?: number;
 }
 
-/*
-    READ ME!!🙋🏽‍♂️🙋🏽‍♂️🙋🏽‍♂️
 
-    Ok, so for some strange, stupid reason, SectionList doesn't support multiple columns like FlatList does. So to make up for this, I'm still using a SectionList, but each item in each section will be a MenuListSectionItemRow that represents a row... and each of these rows will hold multiple MenuListItemView.
-*/
 
 const MenuListView = (() => {
 

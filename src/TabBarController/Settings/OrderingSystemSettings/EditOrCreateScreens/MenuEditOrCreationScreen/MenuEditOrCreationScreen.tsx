@@ -27,7 +27,7 @@ const MenuEditOrCreationScreen = (() => {
 
 
     const timeStringTextFieldMomentFormat = 'h:mm a';
-    const timeStringApiFormat = 'hh:mm:ss'
+    const timeStringApiFormat = 'HH:mm:ss'
 
     function parseTextFieldTimeString(timeString: string) {
         return moment.tz(timeString, timeStringTextFieldMomentFormat, NASSAU_TIME_ZONE);
@@ -144,6 +144,7 @@ const MenuEditOrCreationScreen = (() => {
         }), []);
 
         return <Formik<MenuEditOrCreationValues>
+            
             initialValues={initialValues}
             validationSchema={yup.object({
                 title: yup.string().trim().required(),
@@ -165,6 +166,7 @@ const MenuEditOrCreationScreen = (() => {
             const shouldButtonsBeEnabled = formik.isSubmitting === false && isDeleteLoading === false;
 
             return <OrderingSystemEditingFormScreen
+                formHasErrors={Object.getOwnPropertyNames(formik.errors).length >= 1}
                 navBarTitle={navBarTitle}
                 saveButtonProps={{
                     onPress: formik.submitForm,
