@@ -17,6 +17,7 @@ import { mealsReducer } from "./orderingSystem/meals";
 import { mealCategoriesReducer } from "./orderingSystem/mealCategories";
 import { is } from "immutable";
 import { realtimeUpdatesReducer } from "./realtimeUpdates";
+import { authenticationReducer } from "./authentication";
 
 
 const appReducer = combineReducers({
@@ -30,6 +31,7 @@ const appReducer = combineReducers({
         meals: mealsReducer,
         mealCategories: mealCategoriesReducer,
     }),
+    authentication: authenticationReducer,
 });
 
 export type AppState = ReturnType<typeof appReducer>;

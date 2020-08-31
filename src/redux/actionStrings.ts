@@ -41,6 +41,12 @@ const ActionStrings = nestReduxActionStrings({
             INSERT_OR_UPDATE_MEAL_CATEGORY: 'INSERT_OR_UPDATE_MEAL_CATEGORY',
             DELETE_MEAL_CATEGORY: 'DELETE_MEAL_CATEGORY',
         }
+    },
+    authentication: {
+        SET_AUTH_STATE: 'SET_AUTH_STATE',
+        LOG_IN_OR_SIGN_UP: 'LOG_IN_OR_SIGN_UP',
+        UPDATE_USER_OBJECT: 'UPDATE_USER_OBJECT',
+        LOG_OUT: 'LOG_OUT',
     }
 });
 

@@ -13,3 +13,9 @@ export default function getErrorObjFromApiObjValidateFunction(validator: Validat
     return new Error(errorMessage);
 }
 
+export function assertValidObjFromApi(validator: ValidateFunction, apiObjName: string, json: any){
+    if (validator(json) === false){
+        throw getErrorObjFromApiObjValidateFunction(validator, apiObjName);
+    }
+}
+

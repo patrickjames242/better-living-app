@@ -26,12 +26,12 @@ function getHttpMethodText(method: HttpMethod){
 export type ApiResponse = {isSuccess: true, data: any} | {isSuccess: false, errorMessage: string}
 
 /// jsonBody will automatically be converted to a string using JSON.stringify()
-export async function fetchFromAPI(props: {
+export async function fetchFromAPI<JsonResult = any>(props: {
     method: HttpMethod, 
     path: string, 
     jsonBody?: any, 
     rawBody?: BodyInit, 
-}){
+}): Promise<JsonResult>{
     const headersToSend: {[property: string]: string} = {};
     let bodyToSend: BodyInit | undefined
 
@@ -55,7 +55,6 @@ export async function fetchFromAPI(props: {
     } else {
         return Promise.reject(new Error(json.errorMessage));
     }
-    
 }
 
 

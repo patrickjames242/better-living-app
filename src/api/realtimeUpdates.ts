@@ -6,11 +6,12 @@ import AppSettings from '../settings';
 import { handleOrderingSystemRealtimeUpdate } from './orderingSystem/realtimeUpdates';
 import store from '../redux/store';
 import { updateRealtimeUpdatesConnectionStateAction, RealtimeUpdatesConnectionState } from '../redux/realtimeUpdates';
+import { handleUserAuthRealtimeUpdate } from './authentication/realtimeUpdates';
 
 
 export function tryConnectingWebsocketListener() {
 
-    function onCloseAfterSuccessfulOpen(){
+    function onCloseAfterSuccessfulOpen() {
         tryConnectingWebsocketListener();
     }
 
@@ -20,7 +21,7 @@ export function tryConnectingWebsocketListener() {
                 tryConnectingWebsocketListener();
             }, 10);
             addInternetReachabilityListener(isInternetReachable => {
-                if (isInternetReachable){
+                if (isInternetReachable) {
                     clearTimeout(timeoutId);
                     tryConnectingWebsocketListener();
                 }
@@ -40,8 +41,8 @@ export function tryConnectingWebsocketListener() {
 //     }
 // }
 
-function addInternetReachabilityListener(listener: (isInternetReachable: boolean) => void){
-    switch (Platform.OS){
+function addInternetReachabilityListener(listener: (isInternetReachable: boolean) => void) {
+    switch (Platform.OS) {
         case 'web': {
 
             const offlineListener = () => listener(false);
@@ -56,7 +57,7 @@ function addInternetReachabilityListener(listener: (isInternetReachable: boolean
             }
 
         }
-        default: 
+        default:
             return NetInfo.addEventListener(info => info.isInternetReachable);
     }
 }
@@ -69,14 +70,14 @@ function startWebsocketConnection(onCloseAfterSuccessfulOpen: () => void) {
     return new Promise((resolve, reject) => {
         const websocketUrl = (() => {
             const protocolString = AppSettings.useLocalHostDevServer ? 'ws' : 'wss';
-            return `${protocolString}://${AppSettings.apiHostUrl()}/realtime-updates`;
+            return `${protocolString}://${AppSettings.apiHostUrl()}/realtime-updates/?auth_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MzksInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.N2cDeY-lFgd1UCWjc3tuqtBNp8vwAzpFtxr1drpun7g`;
         })();
-    
+
         store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connecting));
-    
+
         const socket = new WebSocket(websocketUrl);
         socket.onopen = function () {
-            if (callbackCalled === false){
+            if (callbackCalled === false) {
                 resolve();
                 callbackCalled = true;
             }
@@ -85,35 +86,42 @@ function startWebsocketConnection(onCloseAfterSuccessfulOpen: () => void) {
         }
         socket.onmessage = function (event) {
             const data = JSON.parse(event.data);
-    
-            if (Platform.OS === 'web'){
+
+            if (Platform.OS === 'web') {
                 console.log('socket on message', data);
             }
-            
+
             store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connectedAndGotInitialUpdates));
-    
+
             if (typeof data !== 'object') { return; }
-    
+
             const Keys = {
                 health_tips: 'health_tips',
                 ordering_system: 'ordering_system',
+                user_info: 'user_info',
             }
-    
-            for (const propertyName of Object.getOwnPropertyNames(data)){
+
+            for (const propertyName of Object.getOwnPropertyNames(data)) {
                 const value = data[propertyName];
-                if (value === undefined){continue;}
-                switch (propertyName){
-                    case Keys.health_tips: 
-                        handleHealthTipsRealtimeUpdate(value);
-                        break;
-                    case Keys.ordering_system: 
-                        handleOrderingSystemRealtimeUpdate(value);
-                        break;
-                }
+                if (value === undefined) { continue; }
+                try {
+                    switch (propertyName) {
+                        case Keys.health_tips:
+                            handleHealthTipsRealtimeUpdate(value);
+                            break;
+                        case Keys.ordering_system:
+                            handleOrderingSystemRealtimeUpdate(value);
+                            break;
+                        case Keys.user_info:
+                            handleUserAuthRealtimeUpdate(value);
+                            break;
+                    }
+                    // eslint-disable-next-line no-empty
+                } catch { }
             }
         };
         socket.onclose = function () {
-            if (callbackCalled === false){
+            if (callbackCalled === false) {
                 reject();
                 callbackCalled = true;
             } else {
@@ -123,6 +131,6 @@ function startWebsocketConnection(onCloseAfterSuccessfulOpen: () => void) {
             store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.disconnected));
         };
     });
-    
+
 }
 

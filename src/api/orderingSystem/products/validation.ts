@@ -2,7 +2,7 @@
 
 import {Optional} from '../../../helpers/general';
 import ajv from 'ajv';
-import Product from './Product';
+
 
 export const ProductFormDataKeys: {
     json: 'json',
