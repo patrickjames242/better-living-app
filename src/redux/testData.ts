@@ -159,7 +159,8 @@ const testReduxState: AppState = {
     tabBarController: {
         currentSelection: defaultTabBarSelection,
         tabBarPosition: getCurrentDefaultTabBarPosition(),
-    }
+    },
+    authentication: null,
 }
 
 export default testReduxState;

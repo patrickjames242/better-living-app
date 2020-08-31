@@ -7,25 +7,68 @@ import { handleOrderingSystemRealtimeUpdate } from './orderingSystem/realtimeUpd
 import store from '../redux/store';
 import { updateRealtimeUpdatesConnectionStateAction, RealtimeUpdatesConnectionState } from '../redux/realtimeUpdates';
 import { handleUserAuthRealtimeUpdate } from './authentication/realtimeUpdates';
+import { Optional, mapOptional } from '../helpers/general';
+import Notification from '../helpers/Notification';
 
+const isInternetReachableNotification = Notification<boolean>();
 
-export function tryConnectingWebsocketListener() {
+(() => {
+    switch (Platform.OS) {
+        case 'web': {
 
+            const offlineListener = () => isInternetReachableNotification.post(false);
+            const onlineListener = () => isInternetReachableNotification.post(true);
+
+            window.addEventListener('offline', offlineListener);
+            window.addEventListener('online', onlineListener);
+            break;
+        }
+        default:
+            NetInfo.addEventListener(info => {
+                if (typeof info.isInternetReachable === 'boolean'){
+                    isInternetReachableNotification.post(info.isInternetReachable);
+                }
+            });
+    }
+})();
+
+let starterWasCalled = false;
+
+export function tryConnectingWebsocketListener(){
+    if (starterWasCalled === false){
+        _tryConnectingWebsocketListener();
+        starterWasCalled = true;
+    }
+}
+
+function _tryConnectingWebsocketListener() {
+    
     function onCloseAfterSuccessfulOpen() {
-        tryConnectingWebsocketListener();
+        console.log('on close after successful open');
+        _tryConnectingWebsocketListener();
     }
 
     startWebsocketConnection(onCloseAfterSuccessfulOpen).catch(() => {
         startWebsocketConnection(onCloseAfterSuccessfulOpen).catch(() => {
-            const timeoutId = setTimeout(() => {
-                tryConnectingWebsocketListener();
-            }, 10);
-            addInternetReachabilityListener(isInternetReachable => {
+            let timeoutId: Optional<number> = null;
+            let unlisten: Optional<() => void> = null;
+
+            const tryAction = () => {
+                unlisten?.();
+                mapOptional(timeoutId, x => clearTimeout(x));
+                _tryConnectingWebsocketListener();
+            }
+            
+            unlisten = isInternetReachableNotification.addListener(isInternetReachable => {
                 if (isInternetReachable) {
-                    clearTimeout(timeoutId);
-                    tryConnectingWebsocketListener();
+                    console.log('internet reacheable');
+                    tryAction();
                 }
             });
+
+            timeoutId = setTimeout(() => {
+                tryAction();
+            }, 5000);
         });
     });
 }
@@ -41,29 +84,9 @@ export function tryConnectingWebsocketListener() {
 //     }
 // }
 
-function addInternetReachabilityListener(listener: (isInternetReachable: boolean) => void) {
-    switch (Platform.OS) {
-        case 'web': {
-
-            const offlineListener = () => listener(false);
-            const onlineListener = () => listener(true);
-
-            window.addEventListener('offline', offlineListener);
-            window.addEventListener('online', onlineListener);
-
-            return () => {
-                window.removeEventListener('offline', offlineListener);
-                window.removeEventListener('online', onlineListener);
-            }
-
-        }
-        default:
-            return NetInfo.addEventListener(info => info.isInternetReachable);
-    }
-}
-
-
 function startWebsocketConnection(onCloseAfterSuccessfulOpen: () => void) {
+
+    let onCloseAfterSuccessfulOpenCalled = false;
 
     let callbackCalled = false;
 
@@ -124,7 +147,7 @@ function startWebsocketConnection(onCloseAfterSuccessfulOpen: () => void) {
             if (callbackCalled === false) {
                 reject();
                 callbackCalled = true;
-            } else {
+            } else if (onCloseAfterSuccessfulOpenCalled === false){
                 onCloseAfterSuccessfulOpen();
             }
             console.log('websocket closed');
