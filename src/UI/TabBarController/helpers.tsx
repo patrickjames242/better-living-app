@@ -1,10 +1,10 @@
 
 
-import { useRef, useEffect } from 'react';
-import { Optional } from '../helpers/general';
-import Notification from '../helpers/Notification';
+import React, { useRef, useEffect } from 'react';
+import { Optional } from '../../helpers/general';
+import Notification, { useNotificationListener } from '../../helpers/Notification';
 import { ScaledSize, Dimensions, LayoutChangeEvent } from 'react-native';
-import LayoutConstants from '../LayoutConstants';
+import LayoutConstants from '../../LayoutConstants';
 
 
 export enum TabBarPosition{
@@ -19,6 +19,12 @@ export interface WindowDimensions{
 }
 
 export const windowDimensionsDidChangeNotification = Notification<WindowDimensions>();
+
+export function useWindowDimensionsNotificationListener(listener: (dimensions: WindowDimensions) => void, dependencies?: React.DependencyList){
+    useNotificationListener(windowDimensionsDidChangeNotification, dimensions => {
+        listener(dimensions);
+    }, dependencies ?? []);
+}
 
 
 

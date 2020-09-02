@@ -8,7 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 
 const Cart = React.memo(function _InnerCart(){
-    return <NavigationContainer>
+    return <NavigationContainer independent>
         <CartNavStack.Navigator initialRouteName="CartItemList" screenOptions={DEFAULT_NAV_SCREEN_OPTIONS}>
             <CartNavStack.Screen name="OrderingConfirmation" component={OrderConfirmationScreen}/>
             <CartNavStack.Screen name="CartItemList" component={CartItemListScreen}/>

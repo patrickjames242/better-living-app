@@ -1,16 +1,15 @@
 
 
 import React, { useCallback, useRef } from 'react';
-import { CustomColors } from '../helpers/colors';
+import { CustomColors } from '../../helpers/colors';
 import { View, StyleSheet} from 'react-native';
 import SideTabBar from './TabBar/SideTabBar';
 import BottomTabBar from './TabBar/BottomTabBar';
-import {TabBarPosition, windowDimensionsDidChangeNotification, useSetUpWindowDimensionsObserver, calculateCurrentDesiredTabBarPosition } from './helpers';
+import {TabBarPosition, useSetUpWindowDimensionsObserver, calculateCurrentDesiredTabBarPosition, useWindowDimensionsNotificationListener } from './helpers';
 import TabBarControllerContentView from './TabBarControllerContentView';
 import { useSafeArea } from 'react-native-safe-area-context';
-import { useNotificationListener } from '../helpers/Notification';
-import { useDispatch, useSelector } from '../redux/store';
-import { changeTabBarPosition, changeCurrentSelection } from '../redux/tabBarController';
+import { useDispatch, useSelector } from '../../redux/store';
+import { changeTabBarPosition, changeCurrentSelection } from '../../redux/tabBarController';
 import LogInPopUp, { LogInPopUpRef } from './LogInPopUp';
 import { TabBarSelection } from './TabBar/helpers';
 
@@ -57,7 +56,7 @@ const TabBarController = (() => {
 
 		const { rootViewOnLayoutCallback } = useSetUpWindowDimensionsObserver();
 
-		useNotificationListener(windowDimensionsDidChangeNotification, dimensions => {
+		useWindowDimensionsNotificationListener(dimensions => {
 			const newPosition = calculateCurrentDesiredTabBarPosition(dimensions.width);
 			updateTabBarPositionIfNeeded(newPosition);
 		}, [updateTabBarPositionIfNeeded]);

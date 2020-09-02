@@ -18,7 +18,7 @@ import MenuEditOrCreationScreen from './OrderingSystemSettings/EditOrCreateScree
 
 
 export default function Settings(){
-    return <NavigationContainer>
+    return <NavigationContainer independent>
         <SettingsNavStack.Navigator initialRouteName="SettingsList" screenOptions={DEFAULT_NAV_SCREEN_OPTIONS}>
             <SettingsNavStack.Screen name="SettingsList" component={SettingsListScreen}/>
             <SettingsNavStack.Screen name="OrderingSystemSettingsList" component={OrderingSystemSettingsListScreen}/>

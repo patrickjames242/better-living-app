@@ -1,14 +1,15 @@
 
 import React, { useRef, useImperativeHandle, useCallback, useState } from 'react';
 import { StyleSheet, View, Animated, Easing } from 'react-native';
-import { Color } from '../helpers/colors';
+import { Color } from '../../helpers/colors';
 import { TapGestureHandler, State } from 'react-native-gesture-handler';
-import CustomizedText from '../helpers/Views/CustomizedText';
-import { CustomFont } from '../helpers/fonts/fonts';
-import Space from '../helpers/Spacers/Space';
-import LongTextAndIconButton from '../helpers/Buttons/LongTextAndIconButton';
-import AssetImages from '../images/AssetImages';
+import CustomizedText from '../../helpers/Views/CustomizedText';
+import { CustomFont } from '../../helpers/fonts/fonts';
+import Space from '../../helpers/Spacers/Space';
+import LongTextAndIconButton from '../../helpers/Buttons/LongTextAndIconButton';
+import AssetImages from '../../images/AssetImages';
 import { useSafeArea } from 'react-native-safe-area-context';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 
 export interface LogInPopUpRef {
@@ -16,7 +17,7 @@ export interface LogInPopUpRef {
 }
 
 export interface LogInPopUpProps {
-    onDismiss?: () => void;
+    // onDismiss?: () => void;
 }
 
 const LogInPopUp = (() => {
@@ -69,6 +70,8 @@ const LogInPopUp = (() => {
         const animatedValue = useRef(new Animated.Value(0)).current;
         const safeArea = useSafeArea();
 
+        const navigation = useNavigation<NavigationProp<RootNavigationViewParams, 'MainInterface'>>();
+
         const [showViews, setShowViews] = useState(false);
 
         const setPresented = useCallback((isPresented: boolean) => {
@@ -86,7 +89,7 @@ const LogInPopUp = (() => {
         useImperativeHandle(ref, () => ({
             present: () => setPresented(true),
         }), [setPresented]);
-        
+
         if (showViews === false) {
             return <></>
         }
@@ -120,19 +123,34 @@ const LogInPopUp = (() => {
                 <View style={styles.innerPopUpContainer}>
                     <CustomizedText style={styles.titleText}>
                         Log in to continue
-                </CustomizedText>
+                    </CustomizedText>
                     <Space space={20} />
                     <CustomizedText style={styles.subtitleText}>
                         In order to access this feature, you need to create an account or log in.
-                </CustomizedText>
+                    </CustomizedText>
                     <Space space={20} />
-                    <LongTextAndIconButton centerTitleText style={styles.longButtons} iconSource={AssetImages.logInIcon} text="Log In" />
+                    <LongTextAndIconButton
+                        centerTitleText
+                        style={styles.longButtons}
+                        iconSource={AssetImages.logInIcon}
+                        text="Log In"
+                        onPress={() => {
+                            navigation.navigate('LogInSignUpUI', { initialScreen: 'LogIn' });
+                        }}
+                    />
                     <Space space={10} />
-                    <LongTextAndIconButton centerTitleText style={styles.longButtons} iconSource={AssetImages.saveIcon} text="Create An Account" />
+                    <LongTextAndIconButton
+                        centerTitleText
+                        style={styles.longButtons}
+                        iconSource={AssetImages.saveIcon}
+                        text="Create An Account"
+                        onPress={() => {
+                            navigation.navigate('LogInSignUpUI', {initialScreen: 'SignUp'});
+                        }}
+                    />
                 </View>
             </Animated.View>
         </View>
-
     }
     return React.forwardRef(LogInPopUp);
 })();

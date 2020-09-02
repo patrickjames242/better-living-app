@@ -6,7 +6,7 @@ import MenuListItemView from './MenuListItemView';
 import MenuListViewSectionHeader from './MenuListViewSectionHeader';
 import LayoutConstants from '../../../../LayoutConstants';
 import { computeNumberOfListColumns, caseInsensitiveStringSort } from '../../../../helpers/general';
-import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../../helpers';
+import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../../TabBarController/helpers';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNotificationListener } from '../../../../helpers/Notification';
 import { useSelector } from '../../../../redux/store';

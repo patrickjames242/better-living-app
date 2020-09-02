@@ -10,7 +10,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 const Tips = React.memo(
     function _InnerTips() {
-        return <NavigationContainer>
+        return <NavigationContainer independent>
             <TipsNavStack.Navigator initialRouteName="TipsList" screenOptions={DEFAULT_NAV_SCREEN_OPTIONS}>
                 <TipsNavStack.Screen name="TipsList" component={TipsListScreen}/>
                 <TipsNavStack.Screen name="CreateOrEditTip" component={CreateOrEditTipScreen}/>

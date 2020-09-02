@@ -1,6 +1,6 @@
 
 
-import { TabBarSelection } from "./TabBarController/TabBar/helpers";
+import { TabBarSelection } from "./UI/TabBarController/TabBar/helpers";
 
 
 const AppSettings = {

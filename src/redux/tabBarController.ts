@@ -1,10 +1,10 @@
 
 
-import { TabBarSelection } from "../TabBarController/TabBar/helpers";
+import { TabBarSelection } from "../UI/TabBarController/TabBar/helpers";
 import { CustomReduxAction } from "./helpers";
 import { combineReducers } from "redux";
 import ActionStrings from "./actionStrings";
-import { TabBarPosition, calculateCurrentDesiredTabBarPosition } from "../TabBarController/helpers";
+import { TabBarPosition, calculateCurrentDesiredTabBarPosition } from "../UI/TabBarController/helpers";
 import AppSettings from "../settings";
 
 

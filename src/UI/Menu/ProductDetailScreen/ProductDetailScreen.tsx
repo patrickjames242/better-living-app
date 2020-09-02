@@ -13,7 +13,7 @@ import SpacerView from '../../../helpers/Spacers/SpacerView';
 import PurchaseOptionBox from './ChildComponents/PurchaseOptionBox';
 import TitleBox from './ChildComponents/TitleBox';
 import { useNotificationListener } from '../../../helpers/Notification';
-import { windowDimensionsDidChangeNotification } from '../../helpers';
+import { windowDimensionsDidChangeNotification } from '../../TabBarController/helpers';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import { useSelector } from '../../../redux/store';
 import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';

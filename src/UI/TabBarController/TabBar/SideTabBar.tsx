@@ -2,12 +2,12 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { View, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
 import { tabBarItemsData, TabBarSelection } from './helpers';
-import BouncyButton from '../../helpers/Buttons/BouncyButton';
-import { CustomColors } from '../../helpers/colors';
-import LayoutConstants from '../../LayoutConstants';
+import BouncyButton from '../../../helpers/Buttons/BouncyButton';
+import { CustomColors } from '../../../helpers/colors';
+import LayoutConstants from '../../../LayoutConstants';
 import { windowDimensionsDidChangeNotification, WindowDimensions } from '../helpers';
 import { useSafeArea } from 'react-native-safe-area-context';
-import { useNotificationListener } from '../../helpers/Notification';
+import { useNotificationListener } from '../../../helpers/Notification';
 
 
 interface SideTabBarProps{

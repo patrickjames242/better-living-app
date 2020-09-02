@@ -5,7 +5,7 @@ import { StyleSheet, View, ViewProps, NativeScrollEvent, NativeSyntheticEvent } 
 import { useSelector } from '../../redux/store';
 import LayoutConstants from '../../LayoutConstants';
 import { CustomColors } from '../colors';
-import { TabBarPosition } from '../../TabBarController/helpers';
+import { TabBarPosition } from '../../UI/TabBarController/helpers';
 import { LinearGradient } from 'expo-linear-gradient';
 
 

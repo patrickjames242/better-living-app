@@ -8,7 +8,7 @@ import { DEFAULT_NAV_SCREEN_OPTIONS } from '../../helpers/general';
 
 
 export default function Inquiries(){
-    return <NavigationContainer>
+    return <NavigationContainer independent>
         <InquiriesNavStack.Navigator initialRouteName="InquiriesList" screenOptions={DEFAULT_NAV_SCREEN_OPTIONS}>
             <InquiriesNavStack.Screen name="InquiriesList" component={InquiriesListScreen}/>
             <InquiriesNavStack.Screen name="InquiryDetail" component={InquiryDetailScreen}/>

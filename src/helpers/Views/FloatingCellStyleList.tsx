@@ -3,7 +3,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { StyleSheet, SectionList, SectionListProps, View, SectionListData, SectionListRenderItemInfo} from 'react-native';
 import LayoutConstants from '../../LayoutConstants';
-import MealCreatorConstants from '../../TabBarController/Menu/MealCreaterScreen/MealCreatorConstants';
+import MealCreatorConstants from '../../UI/Menu/MealCreaterScreen/MealCreatorConstants';
 import CustomizedText from './CustomizedText';
 import Space from '../Spacers/Space';
 import { Color } from '../colors';

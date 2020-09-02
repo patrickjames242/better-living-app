@@ -7,7 +7,7 @@ import Spacer from "../../Spacers/Spacer";
 import AspectRatioView from "../AspectRatioView";
 import CustomizedText from "../CustomizedText";
 import {StyleSheet, Image, ViewProps, View} from 'react-native';
-import MealCreatorConstants from '../../../TabBarController/Menu/MealCreaterScreen/MealCreatorConstants';
+import MealCreatorConstants from '../../../UI/Menu/MealCreaterScreen/MealCreatorConstants';
 import Product from '../../../api/orderingSystem/products/Product';
 import AssetImages from '../../../images/AssetImages';
 import { Color, CustomColors } from '../../colors';

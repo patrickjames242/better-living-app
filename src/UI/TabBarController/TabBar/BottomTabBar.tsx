@@ -2,9 +2,9 @@
 import React from 'react';
 import { View, StyleSheet, Image, ViewStyle, ViewProps } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
-import BouncyButton from '../../helpers/Buttons/BouncyButton';
-import { CustomColors, Color } from '../../helpers/colors';
-import LayoutConstants from '../../LayoutConstants';
+import BouncyButton from '../../../helpers/Buttons/BouncyButton';
+import { CustomColors, Color } from '../../../helpers/colors';
+import LayoutConstants from '../../../LayoutConstants';
 import { tabBarItemsData, TabBarSelection} from './helpers';
 
 
@@ -17,7 +17,6 @@ interface BottomTabBarProps extends ViewProps{
 export default function BottomTabBar(props: BottomTabBarProps){
 
     const safeAreaInsets = useSafeArea();
-
 
     return <View {...props} style={[tabBarStyles.tabBar, {
         paddingBottom: safeAreaInsets.bottom,

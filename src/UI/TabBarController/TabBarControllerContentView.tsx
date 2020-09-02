@@ -2,13 +2,13 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing} from 'react-native';
 import { TabBarSelection, tabBarItemsData } from './TabBar/helpers';
-import MenuScreen from './Menu/Menu';
-import { useSelector } from '../redux/store';
-import Cart from './Cart/Cart';
-import Tips from './Tips/Tips';
-import Inquiries from './Inquiries/Inquiries';
-import Settings from './Settings/Settings';
-import { useUpdateEffect } from '../helpers/reactHooks';
+import MenuScreen from '../Menu/Menu';
+import { useSelector } from '../../redux/store';
+import Cart from '../Cart/Cart';
+import Tips from '../Tips/Tips';
+import Inquiries from '../Inquiries/Inquiries';
+import Settings from '../Settings/Settings';
+import { useUpdateEffect } from '../../helpers/reactHooks';
 
 
 
