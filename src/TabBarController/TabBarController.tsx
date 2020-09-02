@@ -1,6 +1,6 @@
 
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { CustomColors } from '../helpers/colors';
 import { View, StyleSheet} from 'react-native';
 import SideTabBar from './TabBar/SideTabBar';
@@ -10,7 +10,9 @@ import TabBarControllerContentView from './TabBarControllerContentView';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNotificationListener } from '../helpers/Notification';
 import { useDispatch, useSelector } from '../redux/store';
-import { changeTabBarPosition } from '../redux/tabBarController';
+import { changeTabBarPosition, changeCurrentSelection } from '../redux/tabBarController';
+import LogInPopUp, { LogInPopUpRef } from './LogInPopUp';
+import { TabBarSelection } from './TabBar/helpers';
 
 
 
@@ -34,14 +36,24 @@ const TabBarController = (() => {
 
 		const safeAreaInsets = useSafeArea();
 
+		const logInPopUp = useRef<LogInPopUpRef>(null);
+
 		const dispatch = useDispatch();
-		const currentTabBarPosition = useSelector(state => state.tabBarController.tabBarPosition);
+		const currentTabBarState = useSelector(state => state.tabBarController);
+
+		const onTabPressed = useCallback((selection: TabBarSelection) => {
+			if ([TabBarSelection.cart, TabBarSelection.settings].includes(selection)){
+				logInPopUp.current?.present();
+			} else {
+				dispatch(changeCurrentSelection(selection));
+			}
+		}, [dispatch]);
 
 		const updateTabBarPositionIfNeeded = useCallback((newPosition: TabBarPosition) => {
-			if (currentTabBarPosition !== newPosition){
+			if (currentTabBarState.tabBarPosition !== newPosition){
 				dispatch(changeTabBarPosition(newPosition));
 			}
-		}, [currentTabBarPosition, dispatch])
+		}, [currentTabBarState.tabBarPosition, dispatch]);
 
 		const { rootViewOnLayoutCallback } = useSetUpWindowDimensionsObserver();
 
@@ -55,20 +67,21 @@ const TabBarController = (() => {
 			paddingRight: safeAreaInsets.right,
 		}]}>
 			{(() => {
-				if (currentTabBarPosition === TabBarPosition.side) {
+				if (currentTabBarState.tabBarPosition === TabBarPosition.side) {
 					return <View style={styles.sideBarHolder}>
-						<SideTabBar />
+						<SideTabBar selectedTab={currentTabBarState.currentSelection} onTabPress={onTabPressed} />
 					</View>
 				}
 			})()}
 			<View style={styles.mainInterface}>
 				<TabBarControllerContentView />
 				{(() => {
-					if (currentTabBarPosition === TabBarPosition.bottom) {
-						return <BottomTabBar />
+					if (currentTabBarState.tabBarPosition === TabBarPosition.bottom) {
+						return <BottomTabBar selectedTab={currentTabBarState.currentSelection} onTabPress={onTabPressed} />
 					}
 				})()}
 			</View>
+			<LogInPopUp ref={logInPopUp} />
 		</View>
 	}
 })();

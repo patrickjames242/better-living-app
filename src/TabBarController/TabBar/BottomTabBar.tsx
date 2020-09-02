@@ -5,18 +5,19 @@ import { useSafeArea } from 'react-native-safe-area-context';
 import BouncyButton from '../../helpers/Buttons/BouncyButton';
 import { CustomColors, Color } from '../../helpers/colors';
 import LayoutConstants from '../../LayoutConstants';
-import { tabBarItemsData} from './helpers';
-import { useSelector, useDispatch } from '../../redux/store';
-import { changeCurrentSelection } from '../../redux/tabBarController';
+import { tabBarItemsData, TabBarSelection} from './helpers';
 
 
+interface BottomTabBarProps extends ViewProps{
+    selectedTab: TabBarSelection;
+    onTabPress: (selection: TabBarSelection) => void;
+}
 
-export default function BottomTabBar(props: ViewProps){
+
+export default function BottomTabBar(props: BottomTabBarProps){
 
     const safeAreaInsets = useSafeArea();
 
-    const currentSelection = useSelector(state => state.tabBarController.currentSelection);
-    const dispatch = useDispatch();
 
     return <View {...props} style={[tabBarStyles.tabBar, {
         paddingBottom: safeAreaInsets.bottom,
@@ -24,8 +25,8 @@ export default function BottomTabBar(props: ViewProps){
         <View style={tabBarStyles.contentView}>
             {tabBarItemsData.map((obj, index) => {
 
-                const isSelected = obj.selection === currentSelection;
-                const onPress = () => dispatch(changeCurrentSelection(obj.selection));
+                const isSelected = obj.selection === props.selectedTab;
+                const onPress = () => props.onTabPress(obj.selection);
                 const imageTintColor = (isSelected ? CustomColors.themeGreen : Color.gray(0.75)).stringValue;
 
                 return <BouncyButton key={index} style={tabBarStyles.tabBarButton} onPress={onPress} bounceScaleValue={1.3}>

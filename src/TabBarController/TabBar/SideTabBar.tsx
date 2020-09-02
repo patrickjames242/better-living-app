@@ -1,15 +1,19 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 import { View, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
-import { tabBarItemsData } from './helpers';
+import { tabBarItemsData, TabBarSelection } from './helpers';
 import BouncyButton from '../../helpers/Buttons/BouncyButton';
 import { CustomColors } from '../../helpers/colors';
 import LayoutConstants from '../../LayoutConstants';
 import { windowDimensionsDidChangeNotification, WindowDimensions } from '../helpers';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNotificationListener } from '../../helpers/Notification';
-import { useSelector, useDispatch } from '../../redux/store';
-import { changeCurrentSelection } from '../../redux/tabBarController';
+
+
+interface SideTabBarProps{
+	selectedTab: TabBarSelection;
+	onTabPress: (selection: TabBarSelection) => void;
+}
 
 
 const SideTabBar = (() => {
@@ -53,10 +57,8 @@ const SideTabBar = (() => {
 	}
 
 
-	return function SideTabBar() {
+	return function SideTabBar(props: SideTabBarProps) {
 		const safeAreaInsets = useSafeArea();
-		const currentSelection = useSelector(state => state.tabBarController.currentSelection);
-		const dispatch = useDispatch();
 
 		const itemMarginSize = useItemMarginSize();
 
@@ -70,11 +72,12 @@ const SideTabBar = (() => {
 					return tabBarItemsData.map((item, index) => {
 						return <SideBarItem
 							marginSize={itemMarginSize}
-							isSelected={currentSelection === item.selection}
-							onPress={() => dispatch(changeCurrentSelection(item.selection))}
+							isSelected={props.selectedTab === item.selection}
+							onPress={() => props.onTabPress(item.selection)}
 							key={index}
 							imageSource={item.url}
-							isFirstInList={index === 0} />
+							isFirstInList={index === 0} 
+						/>
 					})
 				})()}
 			</ScrollView>

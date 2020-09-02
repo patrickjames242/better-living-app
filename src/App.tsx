@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { StatusBar, YellowBox } from 'react-native';
+import { StatusBar, YellowBox, View } from 'react-native';
 import { registerRootComponent, AppLoading } from 'expo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loadFonts } from './helpers/fonts/fonts';
@@ -42,6 +42,7 @@ export default function App() {
 			</SafeAreaProvider>
 		</ReduxProvider>
 	}
+
 	
 }
 

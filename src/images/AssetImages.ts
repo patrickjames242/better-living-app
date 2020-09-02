@@ -17,6 +17,7 @@ const AssetImages = {
     xIcon: require('./xIcon.png'),
     minimizeIcon: require('./minimize.png'),
     zoomInIcon: require('./zoom-in.png'),
+    logInIcon: require('./login.png'),
 };
 
 export default AssetImages;

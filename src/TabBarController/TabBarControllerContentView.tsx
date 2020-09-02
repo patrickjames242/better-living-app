@@ -32,7 +32,7 @@ const TabBarControllerContentView = (() => {
 		[TabBarSelection.settings]: Settings,
 	}
 
-	return function TabBarControllerContentView() {
+	const TabBarControllerContentView = function () {
 
 		const currentSelection = useSelector(state => state.tabBarController.currentSelection);
 
@@ -146,6 +146,8 @@ const TabBarControllerContentView = (() => {
 			})()}
 		</View>
 	};
+
+	return React.memo(TabBarControllerContentView);
 
 })();
 

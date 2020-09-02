@@ -36,7 +36,7 @@ const BottomScreenButtonWithGradient = (() => {
         
         useImperativeHandle(ref, () => ({
             gradientHolder: gradientHolderRef.current,
-        }), [])
+        }), []);
 
         return <BottomScreenGradientHolder
             ref={gradientHolderRef}

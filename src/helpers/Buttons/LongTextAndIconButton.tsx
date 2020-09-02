@@ -42,6 +42,7 @@ export interface LongTextAndIconButtonProps extends BouncyButtonProps {
     onPress?: () => void;
     isLoading?: boolean;
     isEnabled?: boolean;
+    centerTitleText?: boolean;
 }
 
 const LongTextAndIconButton = (() => {
@@ -61,6 +62,7 @@ const LongTextAndIconButton = (() => {
             marginLeft: LayoutConstants.pageSideInsets,
             fontSize: 17,
             fontFamily: CustomFont.medium,
+            flex: 1,
         },
         iconHolder: {
             margin: 7,
@@ -106,7 +108,7 @@ const LongTextAndIconButton = (() => {
                 ]
             }}
         >
-            <CustomizedText style={styles.text}>{props.text}</CustomizedText>
+            <CustomizedText style={[styles.text, {textAlign: (props.centerTitleText ?? false) ? 'center' : undefined}]}>{props.text}</CustomizedText>
             <View style={styles.iconHolder}>
                 <Image style={[styles.icon, {opacity: isLoading ? 0 : 1}]} source={props.iconSource} />
                 <View style={[styles.activityIndicatorHolder, {opacity: isLoading ? 1 : 0}]}>
