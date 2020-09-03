@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import NavigationControllerNavigationBar from '../../../../helpers/NavigationController/NavigationControllerNavigationBar';
+import NavigationControllerNavigationBar from '../../../../helpers/Views/NavigationControllerNavigationBar';
 import FloatingCellStyleList from '../../../../helpers/Views/FloatingCellStyleList';
 import MealCategory from '../../../../api/orderingSystem/mealCategories/MealCategory';
 import { useSelector } from '../../../../redux/store';

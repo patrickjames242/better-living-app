@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo, useRef } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
+import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import { MealConfig} from './helpers';
 import MealCreatorConstants from './MealCreatorConstants';
 import MealCreatorScreenAddToCartButton from './ChildComponents/MealCreatorScreenAddToCartButton';

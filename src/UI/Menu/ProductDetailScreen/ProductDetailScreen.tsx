@@ -1,7 +1,7 @@
 
 import React, { useRef, useCallback, useLayoutEffect, useMemo } from 'react';
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
-import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
+import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import { ScrollView } from 'react-native-gesture-handler';
 import LayoutConstants from '../../../LayoutConstants';
 import AspectRatioView from '../../../helpers/Views/AspectRatioView';

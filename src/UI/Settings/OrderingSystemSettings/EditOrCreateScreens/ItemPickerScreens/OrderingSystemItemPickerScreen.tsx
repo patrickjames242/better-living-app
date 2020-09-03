@@ -8,7 +8,7 @@ import AssetImages from '../../../../../images/AssetImages';
 import { CustomColors } from '../../../../../helpers/colors';
 import { Set } from 'immutable';
 import BottomScreenButtonWithGradient, { BottomScreenButtonWithGradientRef } from '../../../../../helpers/Views/BottomScreenButtonWithGradient';
-import NavigationControllerNavigationBar from '../../../../../helpers/NavigationController/NavigationControllerNavigationBar';
+import NavigationControllerNavigationBar from '../../../../../helpers/Views/NavigationControllerNavigationBar';
 import FloatingCellStyleList from '../../../../../helpers/Views/FloatingCellStyleList';
 import { DefaultLongButtonsProps } from '../../../../../helpers/Buttons/LongTextAndIconButton';
 

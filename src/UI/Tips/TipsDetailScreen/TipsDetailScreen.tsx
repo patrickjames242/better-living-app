@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
+import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import LayoutConstants from '../../../LayoutConstants';
 import Spacer from '../../../helpers/Spacers/Spacer';
 import TipsDetailAudioPlayerView from './TipsDetailAudioPlayerView/TipsDetailAudioPlayerView';

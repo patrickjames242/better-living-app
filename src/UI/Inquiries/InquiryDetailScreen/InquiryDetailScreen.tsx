@@ -1,7 +1,7 @@
 
 import React, { useMemo } from 'react';
 import { StyleSheet, View, SectionList } from 'react-native';
-import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
+import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import LayoutConstants from '../../../LayoutConstants';
 import InquiryPostView from './InquiryPostView';
 import { getNumbersList } from '../../../helpers/general';

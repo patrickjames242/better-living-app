@@ -4,7 +4,7 @@ import { StyleSheet, ScrollView } from 'react-native';
 import CustomKeyboardAvoidingView from './CustomKeyboardAvoidingView';
 import LayoutConstants from '../../LayoutConstants';
 import LongTextAndIconButton, { LongTextAndIconButtonProps } from '../Buttons/LongTextAndIconButton';
-import NavigationControllerNavigationBar from '../NavigationController/NavigationControllerNavigationBar';
+import NavigationControllerNavigationBar from './NavigationControllerNavigationBar';
 import SpacerView from '../Spacers/SpacerView';
 import Space from '../Spacers/Space';
 import { TextFieldViewContainer } from './TextFieldView';

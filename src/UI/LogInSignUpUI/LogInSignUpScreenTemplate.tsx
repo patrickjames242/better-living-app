@@ -1,30 +1,51 @@
-import React from 'react';
-import {StyleSheet, View, Button, TouchableOpacity, ScrollView} from 'react-native';
-import { StackScreenProps } from '@react-navigation/stack';
+
+import React, { useRef, useState } from 'react';
+import { StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
 import IconButton from '../../helpers/Buttons/IconButton';
 import AssetImages from '../../images/AssetImages';
 import { useNavigation, CompositeNavigationProp, NavigationProp } from '@react-navigation/native';
-import { CustomColors } from '../../helpers/colors';
+import { CustomColors, Color } from '../../helpers/colors';
 import CustomizedText from '../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../helpers/fonts/fonts';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeArea, SafeAreaView } from 'react-native-safe-area-context';
 import LayoutConstants from '../../LayoutConstants';
-import { TextFieldView } from '../../helpers/Views/TextFieldView';
 import Spacer from '../../helpers/Spacers/Spacer';
+import BottomScreenButtonWithGradient, { BottomScreenButtonWithGradientRef } from '../../helpers/Views/BottomScreenButtonWithGradient';
+import CustomKeyboardAvoidingView from '../../helpers/Views/CustomKeyboardAvoidingView';
+import { Optional } from '../../helpers/general';
 import Space from '../../helpers/Spacers/Space';
 
-export interface LogInSignUpScreenTemplateProps{
-    
+
+export enum ExitOrBackButton {
+    exit, back
+}
+
+export interface LogInSignUpScreenTemplateProps extends React.PropsWithChildren<{}> {
+    title: string;
+    subtitle: string;
+
+    isContinueButtonLoading?: boolean;
+    onContinueButtonPress?: () => void;
+
+    topRightButtonText: Optional<string>;
+    onTopRightButtonPressed?: () => void;
+
+    topLeftButtonType: ExitOrBackButton;
+
 }
 
 const LogInSignUpScreenTemplate = (() => {
 
     const screenPadding = 20;
-    
+
     const styles = StyleSheet.create({
         root: {
             flex: 1,
             backgroundColor: 'white',
+
+        },
+        innerRootView: {
+            flex: 1,
         },
         header: {
             flexDirection: 'row',
@@ -38,7 +59,7 @@ const LogInSignUpScreenTemplate = (() => {
             fontSize: 18,
         },
         scrollView: {
-        
+
         },
         scrollViewContentView: {
             ...LayoutConstants.maxWidthListContentContainerStyles(600),
@@ -50,41 +71,86 @@ const LogInSignUpScreenTemplate = (() => {
         },
         subtitleText: {
             fontSize: 15,
-
         },
     });
 
-    
-    const LogInSignUpScreenTemplate = () => {
+
+    const LogInSignUpScreenTemplate = (props: LogInSignUpScreenTemplateProps) => {
 
         const navigation = useNavigation<CompositeNavigationProp<NavigationProp<LogInSignUpUIParams>, NavigationProp<RootNavigationViewParams>>>();
 
-        const safeArea = useSafeArea();
+        // const safeArea = useSafeArea();
 
-        return <View style={styles.root}>
-            <View style={[styles.header, {
-                
-                paddingTop: safeArea.top + screenPadding,
-            }]}>
-                <IconButton iconSource={AssetImages.xIcon} iconSize={17} onPress={() => {
-                    navigation.navigate('MainInterface');
-                }}/>
-                <TouchableOpacity onPress={() => {}}>
-                    <CustomizedText style={styles.headerRightText}>Log In</CustomizedText>
-                </TouchableOpacity>
-            </View>
-            <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentView}>
-                <Spacer space={15}>
-                    <CustomizedText style={styles.titleText}>Create An Account</CustomizedText>
-                    <CustomizedText style={styles.subtitleText}>By continuing, you agree to our User Agreement and Privacy Policy.</CustomizedText>
-                </Spacer>
-                <Space space={20}/>
-                <Spacer space={15}>
-                    <TextFieldView placeholder="Email..."/>
-                    <TextFieldView placeholder="Password..."/>
-                </Spacer>
-            </ScrollView>
-        </View>
+        const bottomScreenButtonRef = useRef<BottomScreenButtonWithGradientRef>(null);
+        const [bottomButtonHolderHeight, setBottomButtonHolderHeight] = useState(0);
+
+        return <SafeAreaView style={styles.root }>
+            <CustomKeyboardAvoidingView style={styles.innerRootView}>
+                <View style={{flex: 1}}>
+                <View style={[styles.header, {
+                    // paddingTop: safeArea.top + screenPadding,
+                }]}>
+                    <IconButton
+                        iconSource={(() => {
+                            switch (props.topLeftButtonType) {
+                                case ExitOrBackButton.back: return AssetImages.backArrowIcon;
+                                case ExitOrBackButton.exit: return AssetImages.xIcon;
+                            }
+                        })()}
+                        iconSize={17}
+                        onPress={() => {
+                            switch (props.topLeftButtonType) {
+                                case ExitOrBackButton.back:
+                                    navigation.goBack();
+                                    break;
+                                case ExitOrBackButton.exit:
+                                    navigation.navigate('MainInterface');
+                                    break;
+                            }
+                        }}
+                    />
+                    {props.topRightButtonText &&
+                        <TouchableOpacity onPress={props.onTopRightButtonPressed}>
+                            <CustomizedText style={styles.headerRightText}>{
+                                props.topRightButtonText
+                            }</CustomizedText>
+                        </TouchableOpacity>}
+                </View>
+                <ScrollView
+                    scrollEventThrottle={50}
+                    onScroll={x => bottomScreenButtonRef.current?.gradientHolder?.notifyThatScrollViewScrolled(x)}
+                    style={styles.scrollView}
+                    contentContainerStyle={[styles.scrollViewContentView, {
+                        paddingBottom: screenPadding + bottomButtonHolderHeight,
+                    }]}
+                >
+                    <Spacer space={15}>
+                        <CustomizedText style={styles.titleText}>{props.title}</CustomizedText>
+                        <CustomizedText style={styles.subtitleText}>{props.subtitle}</CustomizedText>
+                    </Spacer>
+                    <Space space={30} />
+                    {props.children}
+                </ScrollView>
+                <BottomScreenButtonWithGradient
+                    ref={bottomScreenButtonRef}
+                    // bottomSafeAreaSize={safeArea.bottom}
+                    gradientHolderProps={{
+                        gradientColor: Color.gray(1),
+                        onLayout: event => {
+                            setBottomButtonHolderHeight(event.nativeEvent.layout.height);
+                        }
+                    }}
+                    buttonProps={{
+                        iconSource: AssetImages.continueIcon,
+                        text: "Continue",
+                        centerTitleText: true,
+                        onPress: props.onContinueButtonPress,
+                        isLoading: props.isContinueButtonLoading
+                    }}
+                />
+                </View>
+            </CustomKeyboardAvoidingView>
+        </SafeAreaView>
     }
     return LogInSignUpScreenTemplate;
 })();

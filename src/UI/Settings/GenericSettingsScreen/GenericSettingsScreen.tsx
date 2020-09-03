@@ -8,7 +8,7 @@ import LayoutConstants from '../../../LayoutConstants';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 import Space from '../../../helpers/Spacers/Space';
 import SettingsItemView, { SettingsItemViewProps } from './SettingsItemView';
-import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
+import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 
 
 export interface GenericSettingsScreenSection{

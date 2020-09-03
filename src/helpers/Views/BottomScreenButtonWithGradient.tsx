@@ -9,10 +9,11 @@ import { Optional } from '../general';
 export interface BottomScreenButtonWithGradientProps {
     buttonProps: LongTextAndIconButtonProps;
     gradientHolderProps?: BottomScreenGradientHolderProps;
+    bottomSafeAreaSize?: number;
 }
 
 export interface BottomScreenButtonWithGradientRef{
-    gradientHolder: Optional<BottomScreenGradientHolderRef>
+    gradientHolder: Optional<BottomScreenGradientHolderRef>,
 }
 
 const BottomScreenButtonWithGradient = (() => {
@@ -21,7 +22,6 @@ const BottomScreenButtonWithGradient = (() => {
         root: {
             paddingLeft: LayoutConstants.pageSideInsets,
             paddingRight: LayoutConstants.pageSideInsets,
-            paddingBottom: LayoutConstants.bottomScreenButtonWithGradient.bottomPadding,
         },
         button: {
             maxWidth: LayoutConstants.bottomScreenButtonWithGradient.maxWidth,
@@ -41,7 +41,9 @@ const BottomScreenButtonWithGradient = (() => {
         return <BottomScreenGradientHolder
             ref={gradientHolderRef}
             {...props.gradientHolderProps}
-            style={[styles.root, props.gradientHolderProps?.style]}
+            style={[styles.root, props.gradientHolderProps?.style, {
+                paddingBottom: LayoutConstants.bottomScreenButtonWithGradient.bottomPadding + (props.bottomSafeAreaSize ?? 0),
+            }]}
         >
             <LongTextAndIconButton
                 {...props.buttonProps}

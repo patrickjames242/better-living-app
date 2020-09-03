@@ -5,6 +5,7 @@ import CenteredTitleNavigationBar from '../NavigationBar/CenteredTitleNavigation
 import BouncyButton from '../Buttons/BouncyButton';
 import { CustomColors } from '../colors';
 import { useNavigation } from '@react-navigation/native';
+import AssetImages from '../../images/AssetImages';
 
 
 export interface NavigationControllerNavigationBarProps {
@@ -45,7 +46,7 @@ const NavigationControllerNavigationBar = (() => {
                     style={styles.backArrowButton}
                     hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
                 >
-                    <Image source={require('./backArrow.png')} style={styles.backArrowImage} />
+                    <Image source={AssetImages.backArrowIcon} style={styles.backArrowImage} />
                 </BouncyButton>
             }
         />

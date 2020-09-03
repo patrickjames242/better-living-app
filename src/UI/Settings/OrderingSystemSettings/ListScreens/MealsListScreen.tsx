@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Meal from '../../../../api/orderingSystem/meals/Meal';
-import NavigationControllerNavigationBar from '../../../../helpers/NavigationController/NavigationControllerNavigationBar';
+import NavigationControllerNavigationBar from '../../../../helpers/Views/NavigationControllerNavigationBar';
 import FloatingCellStyleList from '../../../../helpers/Views/FloatingCellStyleList';
 import { useSelector } from '../../../../redux/store';
 import PlainTextListItem from '../PlainTextListItem';

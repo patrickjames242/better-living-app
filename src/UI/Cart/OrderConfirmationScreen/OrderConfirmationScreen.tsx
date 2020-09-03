@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react';
 import { StyleSheet, KeyboardAvoidingView, View } from 'react-native';
-import NavigationControllerNavigationBar from '../../../helpers/NavigationController/NavigationControllerNavigationBar';
+import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import { CartItemListTotalSummaryView } from '../CartItemListScreen/CartItemListTotalSummaryView';
 import LayoutConstants from '../../../LayoutConstants';
