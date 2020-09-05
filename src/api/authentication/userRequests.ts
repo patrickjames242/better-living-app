@@ -37,15 +37,11 @@ export function changePassword(currentPassword: string, newPassword: string){
     });
 }
 
-export function changePasswordWithVerificationCode(verificationCode: string, email: string, newPassword: string){
+export function changePasswordWithVerificationCode(props: {verification_code: string, email: string, new_password: string}){
     return fetchFromAPI<null>({
         method: HttpMethod.put,
         path: basePath + 'forgot-password/',
-        jsonBody: {
-            verification_code: verificationCode,
-            email: email,
-            new_password: newPassword,
-        }
+        jsonBody: props,
     });
 }
 

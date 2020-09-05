@@ -2,7 +2,7 @@
 
 type RootNavigationViewParams = {
     MainInterface: undefined;
-    LogInSignUpUI: {initialScreen: InitialLogInSignUpScreen};
+    LogInSignUpUI: {initialScreen: keyof LogInSignUpUIParams};
 }
 
 

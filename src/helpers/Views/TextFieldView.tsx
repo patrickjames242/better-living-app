@@ -49,18 +49,20 @@ export interface TextFieldViewContainerProps extends React.PropsWithChildren<Vie
 
 export const TextFieldViewContainer = (() => {
 
-    const titleLeftInset = LayoutConstants.floatingCellStyles.padding * 0.5;
+    const titleInsets = LayoutConstants.forms.textFieldTitleInset;
 
     const styles = StyleSheet.create({
         root: {
 
         },
         topTitleText: {
-            marginLeft: titleLeftInset,
+            marginLeft: titleInsets,
+            marginRight: titleInsets,
             fontFamily: CustomFont.medium
         },
         errorText: {
-            marginLeft: titleLeftInset,
+            marginLeft: titleInsets,
+            marginRight: titleInsets,
             color: CustomColors.redColor.stringValue,
             fontFamily: CustomFont.medium,
         },

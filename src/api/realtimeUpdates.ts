@@ -4,7 +4,7 @@ import { handleHealthTipsRealtimeUpdate } from './healthTips/realtimeUpdates';
 import { Platform } from 'react-native';
 import AppSettings from '../settings';
 import { handleOrderingSystemRealtimeUpdate } from './orderingSystem/realtimeUpdates';
-import store from '../redux/store';
+import store, { addSelectedStateListener, AppState } from '../redux/store';
 import { updateRealtimeUpdatesConnectionStateAction, RealtimeUpdatesConnectionState } from '../redux/realtimeUpdates';
 import { handleUserAuthRealtimeUpdate } from './authentication/realtimeUpdates';
 import { Optional, mapOptional } from '../helpers/general';
@@ -32,6 +32,8 @@ const isInternetReachableNotification = Notification<boolean>();
     }
 })();
 
+
+
 let starterWasCalled = false;
 
 export function tryConnectingWebsocketListener(){
@@ -44,12 +46,25 @@ export function tryConnectingWebsocketListener(){
 function _tryConnectingWebsocketListener() {
     
     function onCloseAfterSuccessfulOpen() {
-        console.log('on close after successful open');
         _tryConnectingWebsocketListener();
     }
 
-    startWebsocketConnection(onCloseAfterSuccessfulOpen).catch(() => {
-        startWebsocketConnection(onCloseAfterSuccessfulOpen).catch(() => {
+    const getCurrentAuthToken = (state: AppState) => state.authentication?.authToken ?? null;
+    const authTokenToUseInWebsocket = getCurrentAuthToken(store.getState());
+
+    function onSuccessfulOpen(ws: WebSocket){
+        if (authTokenToUseInWebsocket === getCurrentAuthToken(store.getState())){
+            const removeReduxListener = addSelectedStateListener(getCurrentAuthToken, () => {    
+                removeReduxListener?.()
+                ws.close();
+            });
+        } else {
+            ws.close();
+        }
+    }
+
+    startWebsocketConnection(authTokenToUseInWebsocket, onCloseAfterSuccessfulOpen).then(onSuccessfulOpen).catch(() => {
+        startWebsocketConnection(authTokenToUseInWebsocket, onCloseAfterSuccessfulOpen).then(onSuccessfulOpen).catch(() => {
             let timeoutId: Optional<number> = null;
             let unlisten: Optional<() => void> = null;
 
@@ -61,7 +76,6 @@ function _tryConnectingWebsocketListener() {
             
             unlisten = isInternetReachableNotification.addListener(isInternetReachable => {
                 if (isInternetReachable) {
-                    console.log('internet reacheable');
                     tryAction();
                 }
             });
@@ -73,27 +87,18 @@ function _tryConnectingWebsocketListener() {
     });
 }
 
-// async function getInternetReachability() {
-//     switch (Platform.OS) {
-//         case 'web':
-//             return Promise.resolve(window.navigator.onLine);
-//         default: {
-//             const info = await NetInfo.fetch();
-//             return info.isInternetReachable;
-//         }
-//     }
-// }
 
-function startWebsocketConnection(onCloseAfterSuccessfulOpen: () => void) {
+function startWebsocketConnection(authToken: Optional<string>, onCloseAfterSuccessfulOpen: () => void): Promise<WebSocket> {
 
-    let onCloseAfterSuccessfulOpenCalled = false;
-
+    let websocketHasAlreadyClosed = false;
     let callbackCalled = false;
 
     return new Promise((resolve, reject) => {
         const websocketUrl = (() => {
             const protocolString = AppSettings.useLocalHostDevServer ? 'ws' : 'wss';
-            return `${protocolString}://${AppSettings.apiHostUrl()}/realtime-updates/?auth_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MzksInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.N2cDeY-lFgd1UCWjc3tuqtBNp8vwAzpFtxr1drpun7g`;
+            let url = `${protocolString}://${AppSettings.apiHostUrl()}/realtime-updates/`
+            authToken && (url += '?auth_token=' + authToken);
+            return url;
         })();
 
         store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connecting));
@@ -101,7 +106,7 @@ function startWebsocketConnection(onCloseAfterSuccessfulOpen: () => void) {
         const socket = new WebSocket(websocketUrl);
         socket.onopen = function () {
             if (callbackCalled === false) {
-                resolve();
+                resolve(socket);
                 callbackCalled = true;
             }
             console.log('websocket opened');
@@ -147,9 +152,10 @@ function startWebsocketConnection(onCloseAfterSuccessfulOpen: () => void) {
             if (callbackCalled === false) {
                 reject();
                 callbackCalled = true;
-            } else if (onCloseAfterSuccessfulOpenCalled === false){
+            } else if (websocketHasAlreadyClosed === false){
                 onCloseAfterSuccessfulOpen();
             }
+            websocketHasAlreadyClosed = true;
             console.log('websocket closed');
             store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.disconnected));
         };

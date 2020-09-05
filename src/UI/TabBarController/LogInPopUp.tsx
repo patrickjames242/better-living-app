@@ -136,16 +136,18 @@ const LogInPopUp = (() => {
                         text="Log In"
                         onPress={() => {
                             navigation.navigate('LogInSignUpUI', { initialScreen: 'LogIn' });
+                            setPresented(false);
                         }}
                     />
                     <Space space={10} />
                     <LongTextAndIconButton
                         centerTitleText
                         style={styles.longButtons}
-                        iconSource={AssetImages.saveIcon}
+                        iconSource={AssetImages.createNewAccountIcon}
                         text="Create An Account"
                         onPress={() => {
                             navigation.navigate('LogInSignUpUI', {initialScreen: 'SignUp'});
+                            setPresented(false);
                         }}
                     />
                 </View>

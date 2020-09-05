@@ -22,6 +22,12 @@ export function YUP_EDITING_FORM_PRICE_STRING(fieldName: string){
 
 export const NASSAU_TIME_ZONE = 'America/Nassau';
 
+export function YUP_PASSWORD_VALIDATOR(fieldName: string){
+    const minCharacters = 6;
+    const capitalizedFieldName = fieldName.substr(0, 1).toUpperCase() + fieldName.substr(1);
+    return yup.string().min(minCharacters, `${capitalizedFieldName} must be at least ${minCharacters} characters long.`).required(`${capitalizedFieldName} is a required field.`);
+}
+
 export function getNumbersList(first: number, last: number): number[] {
     if (first > last) { throw new Error("first cannot be greater than last!!"); }
     let numbers: number[] = [];

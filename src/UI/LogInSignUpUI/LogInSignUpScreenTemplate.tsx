@@ -7,7 +7,7 @@ import { useNavigation, CompositeNavigationProp, NavigationProp } from '@react-n
 import { CustomColors, Color } from '../../helpers/colors';
 import CustomizedText from '../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../helpers/fonts/fonts';
-import { useSafeArea, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import LayoutConstants from '../../LayoutConstants';
 import Spacer from '../../helpers/Spacers/Spacer';
 import BottomScreenButtonWithGradient, { BottomScreenButtonWithGradientRef } from '../../helpers/Views/BottomScreenButtonWithGradient';
@@ -27,7 +27,7 @@ export interface LogInSignUpScreenTemplateProps extends React.PropsWithChildren<
     isContinueButtonLoading?: boolean;
     onContinueButtonPress?: () => void;
 
-    topRightButtonText: Optional<string>;
+    topRightButtonText?: Optional<string>;
     onTopRightButtonPressed?: () => void;
 
     topLeftButtonType: ExitOrBackButton;
@@ -42,7 +42,6 @@ const LogInSignUpScreenTemplate = (() => {
         root: {
             flex: 1,
             backgroundColor: 'white',
-
         },
         innerRootView: {
             flex: 1,
@@ -51,7 +50,9 @@ const LogInSignUpScreenTemplate = (() => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             padding: screenPadding,
+            paddingTop: 20,
             paddingBottom: 10,
+            alignItems: 'center',
         },
         headerRightText: {
             color: CustomColors.themeGreen.stringValue,
@@ -71,6 +72,7 @@ const LogInSignUpScreenTemplate = (() => {
         },
         subtitleText: {
             fontSize: 15,
+            lineHeight: 18,
         },
     });
 
@@ -79,17 +81,13 @@ const LogInSignUpScreenTemplate = (() => {
 
         const navigation = useNavigation<CompositeNavigationProp<NavigationProp<LogInSignUpUIParams>, NavigationProp<RootNavigationViewParams>>>();
 
-        // const safeArea = useSafeArea();
-
         const bottomScreenButtonRef = useRef<BottomScreenButtonWithGradientRef>(null);
         const [bottomButtonHolderHeight, setBottomButtonHolderHeight] = useState(0);
 
-        return <SafeAreaView style={styles.root }>
+        return <SafeAreaView style={styles.root}>
             <CustomKeyboardAvoidingView style={styles.innerRootView}>
                 <View style={{flex: 1}}>
-                <View style={[styles.header, {
-                    // paddingTop: safeArea.top + screenPadding,
-                }]}>
+                <View style={styles.header}>
                     <IconButton
                         iconSource={(() => {
                             switch (props.topLeftButtonType) {
@@ -133,7 +131,6 @@ const LogInSignUpScreenTemplate = (() => {
                 </ScrollView>
                 <BottomScreenButtonWithGradient
                     ref={bottomScreenButtonRef}
-                    // bottomSafeAreaSize={safeArea.bottom}
                     gradientHolderProps={{
                         gradientColor: Color.gray(1),
                         onLayout: event => {
@@ -156,7 +153,6 @@ const LogInSignUpScreenTemplate = (() => {
 })();
 
 export default LogInSignUpScreenTemplate;
-
 
 
 

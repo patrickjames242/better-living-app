@@ -39,14 +39,15 @@ const TabBarController = (() => {
 
 		const dispatch = useDispatch();
 		const currentTabBarState = useSelector(state => state.tabBarController);
+		const authentication = useSelector(state => state.authentication);
 
 		const onTabPressed = useCallback((selection: TabBarSelection) => {
-			if ([TabBarSelection.cart, TabBarSelection.settings].includes(selection)){
+			if (authentication == null && [TabBarSelection.cart, TabBarSelection.settings].includes(selection)){
 				logInPopUp.current?.present();
 			} else {
 				dispatch(changeCurrentSelection(selection));
 			}
-		}, [dispatch]);
+		}, [authentication, dispatch]);
 
 		const updateTabBarPositionIfNeeded = useCallback((newPosition: TabBarPosition) => {
 			if (currentTabBarState.tabBarPosition !== newPosition){

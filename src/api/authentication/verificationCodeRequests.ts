@@ -18,7 +18,7 @@ function _sendVerificationCode(codeType: VerificationCodeType, email: string): P
                 case VerificationCodeType.signUp: return 'send-email-code';
                 case VerificationCodeType.forgotMyPassword: return 'send-password-code';
             }
-        })(),
+        })() + '/',
         method: HttpMethod.post,
         jsonBody: {
             email,

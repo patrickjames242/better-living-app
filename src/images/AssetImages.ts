@@ -20,6 +20,7 @@ const AssetImages = {
     logInIcon: require('./login.png'),
     continueIcon: require('./continueIcon.png'),
     backArrowIcon: require('./backArrow.png'),
+    createNewAccountIcon: require('./createNewAccount.png'),
 };
 
 export default AssetImages;

@@ -21,8 +21,8 @@ const IconButton = (() => {
         },
         iconImage: {
             tintColor: CustomColors.themeGreen.stringValue,
-            marginLeft: 5,
-            marginRight: 5,
+            // marginLeft: 5,
+            // marginRight: 5,
         },
     });
 

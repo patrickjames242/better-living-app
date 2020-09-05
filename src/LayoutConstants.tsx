@@ -68,6 +68,9 @@ const LayoutConstants = {
             borderRadius: 10,
             backgroundColor: Color.gray(0.965).stringValue,
         },
+        get textFieldTitleInset(){
+            return LayoutConstants.floatingCellStyles.padding * 0.5;
+        },
         textFieldSelectionOutline: {
             color: {
                 unselected: Color.gray(0.94).stringValue,

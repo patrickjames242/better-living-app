@@ -9,14 +9,15 @@ import { logInOrSignUpAction } from "../../redux/authentication";
 
 const baseUrl = 'auth/users/'
 
-export async function signUpUser(info: {
+export interface SignUpInfo {
     first_name: string,
     last_name: string,
     phone_number: string,
     email: string,
     password: string,
-    verification_code: string,
-}){
+}
+
+export async function signUpUser(info: SignUpInfo) {
     const response = await fetchFromAPI<LogInSignUpJsonResponseObj>({
         path: baseUrl + 'sign-up/',
         method: HttpMethod.post,
@@ -31,12 +32,16 @@ export async function signUpUser(info: {
     }
 }
 
+interface LogInInfo{
+    email: string;
+    password: string;
+}
 
-export async function logInUser(email: string, password: string){
+export async function logInUser(info: LogInInfo) {
     const response = await fetchFromAPI<LogInSignUpJsonResponseObj>({
         path: baseUrl + "log-in/",
         method: HttpMethod.post,
-        jsonBody: { email, password },
+        jsonBody: { email: info.email, password: info.password, },
     });
     assertValidObjFromApi(logInSignUpResponseObjValidator, 'LogInSignUp', response);
     const user = new User(response.user_object);

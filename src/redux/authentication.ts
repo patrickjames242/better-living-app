@@ -40,6 +40,7 @@ export function updateUserObjectAction(user: User): UpdateUserObjectAction {
 export type LogOutAction = CustomReduxAction<{}>;
 
 export function logOutAction(): LogOutAction {
+    console.log('log out called');
     return {
         type: ActionStrings.authentication.LOG_OUT,
     }
@@ -74,7 +75,7 @@ export function authenticationReducer(state: AuthenticationState = null, action:
         case strings.LOG_OUT: {
             return null;
         }
-        default: return null;
+        default: return state;
     }
 }
 
