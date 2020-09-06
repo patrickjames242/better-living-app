@@ -2,9 +2,9 @@
 import React from 'react';
 import { CustomColors } from "../colors";
 import BouncyButton from "./BouncyButton";
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, ViewProps } from 'react-native';
 
-export interface IconButtonProps {
+export interface IconButtonProps extends ViewProps{
     onPress?: () => void;
     iconSource: any;
     iconSize?: number;
@@ -20,29 +20,28 @@ const IconButton = (() => {
 
         },
         iconImage: {
-            tintColor: CustomColors.themeGreen.stringValue,
-            // marginLeft: 5,
-            // marginRight: 5,
+            tintColor: CustomColors.themeGreen.stringValue
         },
     });
 
     const hitSlopVal = 20;
     const hitSlop = { left: hitSlopVal, right: hitSlopVal, top: hitSlopVal, bottom: hitSlopVal };
 
-    const IconButton = (props: IconButtonProps) => {
+    const IconButton = ({iconSource, iconSize: propsIconSize, onPress, ...viewProps}: IconButtonProps) => {
         
-        const iconSize = props.iconSize ?? 20;
+        const iconSize = propsIconSize ?? 20;
         
         return <BouncyButton
+            {...viewProps}
             contentViewProps={{ style: styles.buttonContentView }}
-            style={styles.root}
+            style={[styles.root, viewProps?.style]}
             hitSlop={hitSlop}
-            onPress={props.onPress}
+            onPress={onPress}
         >
             <Image style={[styles.iconImage, {
                 height: iconSize,
                 width: iconSize,
-            }]} source={props.iconSource} />
+            }]} source={iconSource} />
         </BouncyButton>
     }
     return IconButton;

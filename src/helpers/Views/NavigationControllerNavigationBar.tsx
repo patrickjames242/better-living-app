@@ -6,6 +6,7 @@ import BouncyButton from '../Buttons/BouncyButton';
 import { CustomColors } from '../colors';
 import { useNavigation } from '@react-navigation/native';
 import AssetImages from '../../images/AssetImages';
+import IconButton from '../Buttons/IconButton';
 
 
 export interface NavigationControllerNavigationBarProps {
@@ -16,24 +17,27 @@ export interface NavigationControllerNavigationBarProps {
 const NavigationControllerNavigationBar = (() => {
 
     const styles = StyleSheet.create({
-        backArrowButton: {
-            padding: 4,
-            paddingLeft: 6,
-            paddingRight: 6,
-        },
-        backArrowImage: (() => {
-            const size = 18;
-            const styles: ImageStyle = {
-                width: size,
-                height: size,
-                tintColor: CustomColors.themeGreen.stringValue,
-            };
-            return styles;
-        })()
+        // backArrowButton: {
+        //     padding: 4,
+        //     paddingLeft: 6,
+        //     paddingRight: 6,
+        // },
+        // backArrowImage: (() => {
+        //     const size = 18;
+        //     const styles: ImageStyle = {
+        //         width: size,
+        //         height: size,
+        //         tintColor: CustomColors.themeGreen.stringValue,
+        //     };
+        //     return styles;
+        // })()
+        iconButton: {
+            marginLeft: 6,
+            marginRight: 6,
+        }
     });
 
     return function NavigationControllerNavigationBar(props: NavigationControllerNavigationBarProps) {
-
 
         const navigation = useNavigation();
 
@@ -41,13 +45,12 @@ const NavigationControllerNavigationBar = (() => {
             title={props.title}
             rightAlignedView={props.rightAlignedView}
             leftAlignedView={
-                <BouncyButton
+                <IconButton
+                    iconSource={AssetImages.backArrowIcon}
+                    iconSize={18}
                     onPress={() => navigation.goBack()}
-                    style={styles.backArrowButton}
-                    hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
-                >
-                    <Image source={AssetImages.backArrowIcon} style={styles.backArrowImage} />
-                </BouncyButton>
+                    style={styles.iconButton}
+                />
             }
         />
     }

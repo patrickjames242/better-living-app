@@ -43,13 +43,15 @@ const TabBarController = (() => {
 		const currentTabBarState = useSelector(state => state.tabBarController);
 		const authentication = useSelector(state => state.authentication);
 
+		const screensThatRequireUserLoggedIn = [TabBarSelection.cart, TabBarSelection.settings];
+
 		useEffect(() => {
 			return addSelectedStateListener(state => state.authentication == null, isUserLoggedOut => {
-				if (isUserLoggedOut === true) {
+				if (isUserLoggedOut === true && screensThatRequireUserLoggedIn.includes(currentTabBarState.currentSelection)) {
 					dispatch(changeCurrentSelection(TabBarSelection.menu));
 				}
 			});
-		}, [dispatch]);
+		}, [currentTabBarState.currentSelection, dispatch, screensThatRequireUserLoggedIn]);
 
 		const onTabPressed = useCallback((selection: TabBarSelection) => {
 			if (authentication == null && [TabBarSelection.cart, TabBarSelection.settings].includes(selection)) {

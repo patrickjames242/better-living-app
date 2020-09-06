@@ -46,7 +46,7 @@ const VerifyPasswordScreen = () => {
     >{formik => {
         return <LogInSignUpScreenTemplate
             title="Enter Your Password"
-            subtitle="In order to complete this action, please enter your current password."
+            subtitle="In order to complete this action, you must first enter your current password."
             isContinueButtonLoading={formik.isSubmitting}
             onContinueButtonPress={formik.submitForm}
             topLeftButtonType={ExitOrBackButton.exit}

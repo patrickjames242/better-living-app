@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import { CustomFont } from "../fonts/fonts";
 import { View, StyleSheet, LayoutChangeEvent, Text, LayoutRectangle } from "react-native";
