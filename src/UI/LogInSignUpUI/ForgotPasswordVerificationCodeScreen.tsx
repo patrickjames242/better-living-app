@@ -1,13 +1,13 @@
 
 import React, { useMemo } from 'react';
 import LogInSignUpScreenTemplate, { ExitOrBackButton } from './LogInSignUpScreenTemplate';
-import { TextFieldView } from '../../helpers/Views/TextFieldView';
 import { StackScreenProps } from '@react-navigation/stack';
 import { Formik } from '../../helpers/formik';
 import { testVerificationCodeValidity } from '../../api/authentication/verificationCodeRequests';
 import * as yup from 'yup';
-import { displayErrorMessage } from '../../helpers/general';
 import { FormikTextFieldView } from '../../helpers/Views/FormikTextFieldView';
+import { displayErrorMessage } from '../../helpers/Alerts';
+import { LogInSignUpUIParams } from './helpers';
 
 interface VerificationCodeFormValues{
     verificationCode: string;
@@ -27,7 +27,7 @@ const ForgotPasswordVerificationCodeScreen = (props: StackScreenProps<LogInSignU
             testVerificationCodeValidity(props.route.params.email, verificationCode).finally(() => {
                 setSubmitting(false);
             }).then(() => {
-                props.navigation.push('ForgotPasswordCreateNewPassword', {email: props.route.params.email, verificationCode: verificationCode});
+                props.navigation.push('ForgotPasswordCreateNewPassword', {email: props.route.params.email, verificationCode: verificationCode, onPasswordChanged: props.route.params.onPasswordChanged});
             }).catch(error => {
                 displayErrorMessage(error.message);
             })

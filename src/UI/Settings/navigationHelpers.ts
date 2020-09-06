@@ -22,6 +22,11 @@ export type SettingsNavStackParams = {
         onFinishedSelectingCategories: (categoryIds: Set<number>) => void,
     };
     MenuEditOrCreate: {menuId: Optional<number>};
+    NameEditing: undefined;
+    EmailEditing: {password: string};
+    PhoneNumberEditing: undefined;
+    ChangePassword: {currentPassword: string};
+    
 }
 
 export const SettingsNavStack = createStackNavigator<SettingsNavStackParams>();

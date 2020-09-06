@@ -1,8 +1,9 @@
+import { LogInSignUpUIContainerParams } from "../LogInSignUpUI/helpers";
 
 
-type RootNavigationViewParams = {
+export type RootNavigationViewParams = {
     MainInterface: undefined;
-    LogInSignUpUI: {initialScreen: keyof LogInSignUpUIParams};
+    LogInSignUpUI: LogInSignUpUIContainerParams;
 }
 
 

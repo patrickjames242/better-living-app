@@ -6,7 +6,8 @@ import { Formik } from '../../helpers/formik';
 import * as yup from 'yup';
 import { FormikTextFieldView } from '../../helpers/Views/FormikTextFieldView';
 import { sendForgotMyPasswordVerificationCode } from '../../api/authentication/verificationCodeRequests';
-import { displayErrorMessage } from '../../helpers/general';
+import { displayErrorMessage } from '../../helpers/Alerts';
+import { LogInSignUpUIParams } from './helpers';
 
 interface ForgotPasswordFormValues {
     email: string;
@@ -28,7 +29,7 @@ const ForgotPasswordScreen = (props: StackScreenProps<LogInSignUpUIParams, 'Forg
             sendForgotMyPasswordVerificationCode(email).finally(() => {
                 setSubmitting(false);
             }).then(() => {
-                props.navigation.push('ForgotPasswordVerificationCode', { email: email });
+                props.navigation.push('ForgotPasswordVerificationCode', { email: email, onPasswordChanged: props.route.params?.onPasswordChanged });
             }).catch((error) => {
                 displayErrorMessage(error.message)
             });

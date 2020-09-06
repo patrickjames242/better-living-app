@@ -1,4 +1,5 @@
 import AppSettings from "../settings";
+import store from "../redux/store";
 
 
 
@@ -44,10 +45,15 @@ export async function fetchFromAPI<JsonResult = any>(props: {
         bodyToSend = undefined;
     }
 
+    const authToken = store.getState().authentication?.authToken ?? undefined;
+
     const response = await fetch(API_URL + props.path, {
         method: getHttpMethodText(props.method),
         body: bodyToSend,
-        headers: headersToSend,
+        headers: {
+            ...(authToken ? {'Auth-Token': authToken} : {}),
+            ...headersToSend
+        },
     });
     const json = await (response.json() as Promise<ApiResponse>);
     if (json.isSuccess) {

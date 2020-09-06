@@ -4,7 +4,7 @@ import { SettingsNavStackParams } from '../../../navigationHelpers';
 import { StackScreenProps } from '@react-navigation/stack';
 import { Set } from 'immutable';
 import { useSelector } from '../../../../../redux/store';
-import { mapOptional, displayErrorMessage, Optional, RNFileForUpload, YUP_EDITING_FORM_PRICE_STRING } from '../../../../../helpers/general';
+import { mapOptional, Optional, RNFileForUpload, YUP_EDITING_FORM_PRICE_STRING } from '../../../../../helpers/general';
 import ProductEditOrCreationImageSelector from './ProductEditOrCreationImageSelector';
 import ProductEditOrCreationIndividualPriceSelector from './ProductEditOrCreationIndividualPriceSelector';
 import { Formik } from '../../../../../helpers/formik';
@@ -14,6 +14,7 @@ import * as Yup from 'yup';
 import { ProductRequestObj, createNewProduct, updateProduct, deleteProduct } from '../../../../../api/orderingSystem/products/requests';
 import OrderingSystemEditingFormScreen from '../OrderingSystemEditingFormScreen';
 import ProductEditOrCreationInfoTagsSelector from './ProductEditOrCreationInfoTagsSelector';
+import { displayErrorMessage } from '../../../../../helpers/Alerts';
 
 
 const ProductEditOrCreationScreen = (() => {

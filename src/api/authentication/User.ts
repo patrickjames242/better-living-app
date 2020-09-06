@@ -27,6 +27,11 @@ export class User{
 
     }
 
+    getFullName(){
+        const capitalizedName = (s: string) => s.substring(0, 1).toUpperCase() + s.substring(1);
+        return capitalizedName(this.firstName) + ' ' + capitalizedName(this.lastName);
+    }
+
 }
 
 

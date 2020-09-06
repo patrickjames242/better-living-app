@@ -1,10 +1,12 @@
 
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import { Optional } from '../../helpers/general';
 import Notification, { useNotificationListener } from '../../helpers/Notification';
 import { ScaledSize, Dimensions, LayoutChangeEvent } from 'react-native';
 import LayoutConstants from '../../LayoutConstants';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootNavigationViewParams } from '../RootNavigationView/helpers';
 
 
 export enum TabBarPosition{
@@ -71,4 +73,17 @@ export function calculateCurrentDesiredTabBarPosition(screenWidth?: number): Tab
     }
 }
 
+export interface TabBarControllerContextValue{
+    navigation: StackNavigationProp<RootNavigationViewParams, 'MainInterface'>;
+}
+
+export const TabBarControllerContext = React.createContext<Optional<TabBarControllerContextValue>>(null);
+
+export function useTabBarControllerNavigation(){
+    const context = useContext(TabBarControllerContext);
+    if (context == null){
+        throw new Error("you cannot call useTabBarControllerNavigation outside of a TabBarControllerContext provider");
+    }
+    return context.navigation;
+}
 

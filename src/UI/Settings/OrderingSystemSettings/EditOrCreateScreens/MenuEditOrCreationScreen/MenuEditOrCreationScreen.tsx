@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../../navigationHelpers';
 import { useSelector } from '../../../../../redux/store';
-import { mapOptional, displayErrorMessage, NASSAU_TIME_ZONE, Optional } from '../../../../../helpers/general';
+import { mapOptional, NASSAU_TIME_ZONE, Optional } from '../../../../../helpers/general';
 import { MenuEditOrCreationValues, MenuEditOrCreateProductCategory, menuEditOrCreateProductCategorySchema } from './helpers';
 import { Set, Map } from 'immutable';
 import { Formik } from '../../../../../helpers/formik';
@@ -19,6 +19,7 @@ import MenuEditOrCreationIsEnabledView from './IsEnabledView';
 import MenuEditOrCreationProductCategoriesEditor from './ProductCategoriesEditor/ProductCategoriesEditor';
 import Spacer from '../../../../../helpers/Spacers/Spacer';
 import { GenericEditingFormScreenConstants } from '../../../../../helpers/Views/GenericEditingFormScreen';
+import { displayErrorMessage } from '../../../../../helpers/Alerts';
 
 
 const MenuEditOrCreationScreen = (() => {

@@ -117,13 +117,7 @@ export interface SectionSeparatorComponentInfo<
 
 
 
-export function displayErrorMessage(message: string){
-    if (Platform.OS === 'web'){
-        alert("Oops! " + message);
-    } else {
-        Alert.alert('Oops!', message, [{text: 'Ok'}]);
-    }
-}
+
 
 
 export function getJsonValidatorErrorsText(validator: ValidateFunction): Optional<string>{

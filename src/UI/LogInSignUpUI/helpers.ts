@@ -1,15 +1,22 @@
 
+export type ForgottenPasswordChangedCallback = {onPasswordChanged?: (email: string, newPassword: string) => void};
 
-
-
-type LogInSignUpUIParams = {
-    LogIn: undefined;
+export type LogInSignUpUIParams = {
+    LogIn?: {email?: string, password?: string};
     SignUp: undefined;
-    ForgotPassword: undefined;
-    ForgotPasswordVerificationCode: {email: string},
-    ForgotPasswordCreateNewPassword: {email: string, verificationCode: string}
+
+    ForgotPassword?: ForgottenPasswordChangedCallback;
+    ForgotPasswordVerificationCode: {email: string} & ForgottenPasswordChangedCallback,
+    ForgotPasswordCreateNewPassword: {email: string, verificationCode: string} & ForgottenPasswordChangedCallback,
+    
+    VerifyPassword: {onPasswordVerified: (password: string) => void}
 }
 
-type InitialLogInSignUpScreen = keyof Pick<LogInSignUpUIParams, 'LogIn' | 'SignUp'>;
+type Params<Key extends keyof LogInSignUpUIParams> = Key extends any ? {initialScreen: Key} & (LogInSignUpUIParams[Key] extends undefined ? {initialScreenParams?: undefined} : {initialScreenParams: LogInSignUpUIParams[Key]}) : never;
+
+
+export type LogInSignUpUIContainerParams = Params<keyof LogInSignUpUIParams>;
+
+
 
 

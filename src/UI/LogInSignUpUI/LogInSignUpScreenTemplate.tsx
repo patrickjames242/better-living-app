@@ -14,6 +14,8 @@ import BottomScreenButtonWithGradient, { BottomScreenButtonWithGradientRef } fro
 import CustomKeyboardAvoidingView from '../../helpers/Views/CustomKeyboardAvoidingView';
 import { Optional } from '../../helpers/general';
 import Space from '../../helpers/Spacers/Space';
+import { LogInSignUpUIParams } from './helpers';
+import { RootNavigationViewParams } from '../RootNavigationView/helpers';
 
 
 export enum ExitOrBackButton {

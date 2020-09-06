@@ -5,11 +5,13 @@ import Spacer from '../../helpers/Spacers/Spacer';
 import SpacerView from '../../helpers/Spacers/SpacerView';
 import { Formik } from '../../helpers/formik';
 import * as yup from 'yup';
-import { YUP_PASSWORD_VALIDATOR, displayErrorMessage } from '../../helpers/general';
+import { YUP_PASSWORD_VALIDATOR } from '../../helpers/general';
 import { SignUpInfo, signUpUser } from '../../api/authentication/authRequests';
 import { useNavigation, CompositeNavigationProp, NavigationProp } from '@react-navigation/native';
 import { FormikTextFieldView } from '../../helpers/Views/FormikTextFieldView';
 import { StyleSheet } from 'react-native';
+import { displayErrorMessage } from '../../helpers/Alerts';
+import { LogInSignUpUIParams } from './helpers';
 
 interface SignUpScreenValues{
     firstName: string;

@@ -1,6 +1,6 @@
 
 import React, { useMemo, useState } from 'react';
-import { Optional, mapOptional, displayErrorMessage } from '../../../helpers/general';
+import { Optional, mapOptional } from '../../../helpers/general';
 import store from '../../../redux/store';
 import { TextFieldView, MultilineTextFieldView } from '../../../helpers/Views/TextFieldView';
 import { updateHealthTip, createNewHealthTip, HealthTipRequestObj } from '../../../api/healthTips/requests';
@@ -13,6 +13,7 @@ import { TipsNavStackParamList } from '../navigationHelpers';
 import { useNavigation } from '@react-navigation/native';
 import GenericEditingFormScreen from '../../../helpers/Views/GenericEditingFormScreen';
 import { DefaultLongButtonsProps } from '../../../helpers/Buttons/LongTextAndIconButton';
+import { displayErrorMessage } from '../../../helpers/Alerts';
 
 
 

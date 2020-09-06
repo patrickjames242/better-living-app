@@ -5,13 +5,14 @@ import { MealEditOrCreationValues } from './helpers';
 import { useSelector } from '../../../../../redux/store';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../../navigationHelpers';
-import { mapOptional, YUP_EDITING_FORM_PRICE_STRING, Optional, displayErrorMessage } from '../../../../../helpers/general';
+import { mapOptional, YUP_EDITING_FORM_PRICE_STRING, Optional } from '../../../../../helpers/general';
 import { Set } from 'immutable';
 import * as yup from 'yup';
 import OrderingSystemEditingFormScreen from '../OrderingSystemEditingFormScreen';
 import { FormikTextFieldView } from '../../../../../helpers/Views/FormikTextFieldView';
 import MealEditOrCreationCategoriesSelector from './MealEditOrCreationCategoriesSelector';
 import { MealRequestObj, createNewMeal, updateMeal, deleteMeal } from '../../../../../api/orderingSystem/meals/requests';
+import { displayErrorMessage } from '../../../../../helpers/Alerts';
 
 
 const MealEditOrCreationScreen = (() => {

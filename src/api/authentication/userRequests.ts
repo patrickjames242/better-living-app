@@ -26,14 +26,11 @@ export async function updateUserInfo(
 }
 
 
-export function changePassword(currentPassword: string, newPassword: string){
+export function changePassword(props: {current_password: string, new_password: string}){
     return fetchFromAPI<null>({
         method: HttpMethod.put,
         path: basePath + 'change-password/',
-        jsonBody: {
-            current_password: currentPassword, 
-            new_password: newPassword,
-        }
+        jsonBody: props,
     });
 }
 
@@ -43,5 +40,16 @@ export function changePasswordWithVerificationCode(props: {verification_code: st
         path: basePath + 'forgot-password/',
         jsonBody: props,
     });
+}
+
+export async function changeEmail(props: {password: string, new_email: string}){
+    const result = await fetchFromAPI<UserJsonResponseObj>({
+        method: HttpMethod.put,
+        path: basePath + 'update-email/',
+        jsonBody: props,
+    });
+    const user = new User(result);
+    store.dispatch(updateUserObjectAction(user));
+    return user;
 }
 

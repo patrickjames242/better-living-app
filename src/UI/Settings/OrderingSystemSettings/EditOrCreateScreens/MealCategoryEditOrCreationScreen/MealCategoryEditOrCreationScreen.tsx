@@ -5,13 +5,14 @@ import { SettingsNavStackParams } from '../../../navigationHelpers';
 import OrderingSystemEditingFormScreen from '../OrderingSystemEditingFormScreen';
 import { Formik } from '../../../../../helpers/formik';
 import { useSelector } from '../../../../../redux/store';
-import { mapOptional, displayErrorMessage, Optional } from '../../../../../helpers/general';
+import { mapOptional, Optional } from '../../../../../helpers/general';
 import { Set } from 'immutable';
 import { MealCategoryEditOrCreateValues } from './helpers';
 import { FormikTextFieldView } from '../../../../../helpers/Views/FormikTextFieldView';
 import * as Yup from 'yup';
 import { deleteMealCategory, MealCategoriesRequestObj, createNewMealCategory, updateMealCategory } from '../../../../../api/orderingSystem/mealCategories/requests';
 import OrderingSystemFormChildrenProductsSelector from '../OrderingSystemFormChildrenProductsSelector';
+import { displayErrorMessage } from '../../../../../helpers/Alerts';
 
 
 

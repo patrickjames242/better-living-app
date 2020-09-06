@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import TabBarController from '../TabBarController/TabBarController';
 import LogInSignUpUI from '../LogInSignUpUI/LogInSignUpUI';
 import { NavigationContainer } from '@react-navigation/native';
+import { RootNavigationViewParams } from './helpers';
 
 
 

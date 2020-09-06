@@ -5,8 +5,10 @@ import LogInSignUpScreenTemplate, { ExitOrBackButton } from './LogInSignUpScreen
 import { FormikTextFieldView } from '../../helpers/Views/FormikTextFieldView';
 import { Formik } from '../../helpers/formik';
 import * as yup from 'yup';
-import { YUP_PASSWORD_VALIDATOR, displayErrorMessage } from '../../helpers/general';
+import { YUP_PASSWORD_VALIDATOR } from '../../helpers/general';
 import { changePasswordWithVerificationCode } from '../../api/authentication/userRequests';
+import { displayErrorMessage } from '../../helpers/Alerts';
+import { LogInSignUpUIParams } from './helpers';
 
 interface ForgotPasswordCreatePasswordValues {
     password: string;
@@ -31,13 +33,8 @@ const ForgotPasswordCreatePasswordScreen = (props: StackScreenProps<LogInSignUpU
             }).finally(() => {
                 setSubmitting(false);
             }).then(() => {
-                const route: keyof LogInSignUpUIParams = 'LogIn';
-                props.navigation.reset({
-                    index: 0,
-                    routes: [
-                        {name: route}
-                    ]
-                })
+                props.route.params.onPasswordChanged?.(props.route.params.email, values.password);
+                
             }).catch(error => {
                 displayErrorMessage(error.message);
             });

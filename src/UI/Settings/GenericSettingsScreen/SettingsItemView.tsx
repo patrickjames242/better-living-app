@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Image, ImageSourcePropType } from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
-import { Color } from '../../../helpers/colors';
+import { Color, CustomColors } from '../../../helpers/colors';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
@@ -13,6 +13,7 @@ export interface SettingsItemViewProps {
     title: string;
     imageSource: ImageSourcePropType;
     onPress: () => void;
+    rightSubtitleText?: string;
 }
 
 const SettingsItemView = (() => {
@@ -35,10 +36,16 @@ const SettingsItemView = (() => {
             width: 25,
             height: 25,
         },
-        text: {
+        titleText: {
             fontFamily: CustomFont.medium,
             fontSize: 17,
+        },
+        subtitleText: {
+            fontSize: 15,
+            color: CustomColors.offBlackSubtitle.stringValue,
+            fontFamily: CustomFont.medium,
             flex: 1,
+            textAlign: 'right',
         },
         chevronIcon: {
             height: 12.5,
@@ -56,7 +63,8 @@ const SettingsItemView = (() => {
         >
             <Spacer space={10}>
                 <Image style={styles.iconImage} source={props.imageSource} />
-                <CustomizedText style={styles.text}>{props.title}</CustomizedText>
+                <CustomizedText style={styles.titleText}>{props.title}</CustomizedText>
+                <CustomizedText numberOfLines={1} style={styles.subtitleText}>{props.rightSubtitleText ?? ''}</CustomizedText>
                 <Image style={styles.chevronIcon} source={require('./arrow.png')} />
             </Spacer>
         </BouncyButton>

@@ -4,14 +4,68 @@ import GenericSettingsScreen, { GenericSettingsScreenSection, GenericSettingsScr
 import SettingsListScreenHeader from './SettingsListScreenHeader';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../navigationHelpers';
+import store, { useSelector } from '../../../redux/store';
+import { logOutAction } from '../../../redux/authentication';
+import { displayTwoDecisionAlert } from '../../../helpers/Alerts';
+import { useTabBarControllerNavigation } from '../../TabBarController/helpers';
 
 
 const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'SettingsList'>) => {
 
+    const authentication = useSelector(state => state.authentication);
+
+    const tabBarControllerNavigation = useTabBarControllerNavigation();
+
     const sections: GenericSettingsScreenSection[] = useMemo(() => {
         return [
+            ...(authentication ? [{
+                title: 'Profile Info',
+                data: [
+                    {
+                        title: 'Email',
+                        imageSource: require('./email.png'),
+                        rightSubtitleText: authentication.userObject.email,
+                        onPress: () => {
+                            tabBarControllerNavigation.navigate('LogInSignUpUI', {
+                                initialScreen: 'VerifyPassword',
+                                initialScreenParams: {
+                                    onPasswordVerified: (password) => {
+                                        props.navigation.push('EmailEditing', { password })
+                                    }
+                                }
+                            })
+                        },
+                    },
+                    {
+                        title: 'Name',
+                        rightSubtitleText: authentication.userObject.getFullName(),
+                        imageSource: require('./name.png'),
+                        onPress: () => { props.navigation.push('NameEditing') },
+                    },
+                    {
+                        title: 'Phone Number',
+                        rightSubtitleText: authentication.userObject.phoneNumber,
+                        imageSource: require('./phone.png'),
+                        onPress: () => { props.navigation.push('PhoneNumberEditing') },
+                    },
+                    {
+                        title: 'Change Password',
+                        imageSource: require('./password.png'),
+                        onPress: () => {
+                            tabBarControllerNavigation.navigate('LogInSignUpUI', {
+                                initialScreen: 'VerifyPassword',
+                                initialScreenParams: {
+                                    onPasswordVerified: (password) => {
+                                        props.navigation.push('ChangePassword', { currentPassword: password })
+                                    }
+                                }
+                            })
+                        },
+                    },
+                ]
+            }] : []),
             {
-                title: null,
+                title: "General",
                 data: [
                     {
                         title: 'Ordering System',
@@ -21,18 +75,34 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                     {
                         title: 'Notifications',
                         imageSource: require('./notification.png'),
-                        onPress: () => {},
+                        onPress: () => { },
                     },
+                    {
+                        title: 'Log Out',
+                        imageSource: require('./logout.png'),
+                        onPress: () => {
+                            displayTwoDecisionAlert('Are you sure?', 'Are you sure you want to log out?', 'Log Out', () => {
+                                store.dispatch(logOutAction())
+                            });
+                        },
+                    }
                 ]
             }
         ]
-    }, [props.navigation]);
+    }, [authentication, props.navigation, tabBarControllerNavigation]);
 
-    return <GenericSettingsScreen navBarTitle="Settings" sections={sections} navBarType={GenericSettingsScreenNavigationBarType.mainScreenLargeTitle} sectionListProps={{
-        ListHeaderComponent: SettingsListScreenHeader,
-    }}/>
+    return <GenericSettingsScreen
+        navBarTitle="Settings"
+        sections={sections}
+        navBarType={GenericSettingsScreenNavigationBarType.mainScreenLargeTitle}
+        sectionListProps={{
+            ListHeaderComponent: authentication ? () => <SettingsListScreenHeader
+                userObject={authentication.userObject}
+            /> : undefined,
+        }}
+    />
 }
 
-    
+
 export default SettingsListScreen;
 

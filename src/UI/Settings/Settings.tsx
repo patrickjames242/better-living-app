@@ -15,6 +15,10 @@ import OrderingSystemEditingProductsPickerScreen from './OrderingSystemSettings/
 import MealEditOrCreationScreen from './OrderingSystemSettings/EditOrCreateScreens/MealEditOrCreationScreen/MealEditOrCreationScreen';
 import OrderingSystemEditingMealCategoriesPickerScreen from './OrderingSystemSettings/EditOrCreateScreens/ItemPickerScreens/OrderingSystemEditingMealCategoriesPickerScreen';
 import MenuEditOrCreationScreen from './OrderingSystemSettings/EditOrCreateScreens/MenuEditOrCreationScreen/MenuEditOrCreationScreen';
+import SettingsNameEditingScreen from './ProfileEditingScreens/SettingsNameEditingScreen';
+import SettingsPhoneNumberEditingScreen from './ProfileEditingScreens/SettingsPhoneNumberEditingScreen';
+import SettingsEmailEditingScreen from './ProfileEditingScreens/SettingsEmailEditingScreen';
+import SettingsChangePasswordScreen from './ProfileEditingScreens/SettingsChangePasswordScreen';
 
 
 export default function Settings(){
@@ -32,6 +36,10 @@ export default function Settings(){
             <SettingsNavStack.Screen name="MealEditOrCreate" component={MealEditOrCreationScreen}/>
             <SettingsNavStack.Screen name="MealCategoriesPicker" component={OrderingSystemEditingMealCategoriesPickerScreen}/>
             <SettingsNavStack.Screen name="MenuEditOrCreate" component={MenuEditOrCreationScreen}/>
+            <SettingsNavStack.Screen name="NameEditing" component={SettingsNameEditingScreen}/>
+            <SettingsNavStack.Screen name="PhoneNumberEditing" component={SettingsPhoneNumberEditingScreen}/>
+            <SettingsNavStack.Screen name="EmailEditing" component={SettingsEmailEditingScreen}/>
+            <SettingsNavStack.Screen name="ChangePassword" component={SettingsChangePasswordScreen}/>
         </SettingsNavStack.Navigator>
     </NavigationContainer>
 }

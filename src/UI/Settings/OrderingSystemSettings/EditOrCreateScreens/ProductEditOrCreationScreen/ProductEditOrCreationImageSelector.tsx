@@ -5,13 +5,14 @@ import { StyleSheet, Image, Platform } from 'react-native';
 import AspectRatioView from '../../../../../helpers/Views/AspectRatioView';
 import LayoutConstants from '../../../../../LayoutConstants';
 import { TextFieldViewContainer } from '../../../../../helpers/Views/TextFieldView';
-import { displayErrorMessage, RNFileForUpload } from '../../../../../helpers/general';
+import { RNFileForUpload } from '../../../../../helpers/general';
 import SpacerView from '../../../../../helpers/Spacers/SpacerView';
 import * as DocumentPicker from 'expo-document-picker'
 import * as ImagePicker from 'expo-image-picker';
 import SelectableRoundedTextButton from '../../SelectableRoundedTextButton';
 import { useField } from '../../../../../helpers/formik';
 import { ProductEditOrCreateValues } from './helpers';
+import { displayErrorMessage } from '../../../../../helpers/Alerts';
 
 export interface ProductEditOrCreationImageSelectorProps {
 

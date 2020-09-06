@@ -37,21 +37,28 @@ interface LogInInfo{
     password: string;
 }
 
-export async function logInUser(info: LogInInfo) {
+export async function logInUser(info: LogInInfo, updateReduxState: boolean = true) {
     const response = await fetchFromAPI<LogInSignUpJsonResponseObj>({
-        path: baseUrl + "log-in/",
+        path: baseUrl + 'log-in/',
         method: HttpMethod.post,
-        jsonBody: { email: info.email, password: info.password, },
+        jsonBody: info,
     });
     assertValidObjFromApi(logInSignUpResponseObjValidator, 'LogInSignUp', response);
     const user = new User(response.user_object);
-    store.dispatch(logInOrSignUpAction(response.access_token, user));
+    if (updateReduxState){
+        store.dispatch(logInOrSignUpAction(response.access_token, user));
+    }
     return {
         accessToken: response.access_token,
         userObject: user,
     }
 }
 
-
+export function testPasswordValidity(password: string){
+    return fetchFromAPI({
+        path: baseUrl + 'test-password-validity/?password=' + password,
+        method: HttpMethod.get,
+    });
+}
 
 
