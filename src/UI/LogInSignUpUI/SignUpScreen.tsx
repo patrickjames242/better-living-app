@@ -12,6 +12,7 @@ import { FormikTextFieldView } from '../../helpers/Views/FormikTextFieldView';
 import { StyleSheet } from 'react-native';
 import { displayErrorMessage } from '../../helpers/Alerts';
 import { LogInSignUpUIParams } from './helpers';
+import { RootNavigationViewParams } from '../RootNavigationView/helpers';
 
 interface SignUpScreenValues{
     firstName: string;

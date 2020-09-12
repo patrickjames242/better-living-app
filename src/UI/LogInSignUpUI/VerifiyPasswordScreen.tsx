@@ -10,8 +10,10 @@ import { testPasswordValidity } from '../../api/authentication/authRequests';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, CompositeNavigationProp, useRoute, RouteProp } from '@react-navigation/native';
 import { displayErrorMessage } from '../../helpers/Alerts';
-import { LogInSignUpUIParams } from './helpers';
+import { LogInSignUpUIParams, VerifyPasswordPurpose } from './helpers';
 import { RootNavigationViewParams } from '../RootNavigationView/helpers';
+
+
 
 
 interface VerifyPasswordValues{
@@ -54,7 +56,12 @@ const VerifyPasswordScreen = () => {
             <FormikTextFieldView<VerifyPasswordValues> topTitleText="Password" textInputProps={{secureTextEntry: true}} formikFieldName="password"/>
             <Space space={15}/>
             <ForgotPasswordButton onForgottenPasswordChanged={(_, password) => {
-                route.params.onPasswordVerified(password);
+                switch (route.params.purpose){
+                    case VerifyPasswordPurpose.forPasswordChange:break;
+                    default: 
+                        route.params.onPasswordVerified(password);
+                        break;
+                }
                 navigation.navigate('MainInterface');
             }}/>
         </LogInSignUpScreenTemplate>

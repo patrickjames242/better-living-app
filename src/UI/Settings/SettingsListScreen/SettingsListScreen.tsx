@@ -8,6 +8,7 @@ import store, { useSelector } from '../../../redux/store';
 import { logOutAction } from '../../../redux/authentication';
 import { displayTwoDecisionAlert } from '../../../helpers/Alerts';
 import { useTabBarControllerNavigation } from '../../TabBarController/helpers';
+import { VerifyPasswordPurpose } from '../../LogInSignUpUI/helpers';
 
 
 const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'SettingsList'>) => {
@@ -17,8 +18,9 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
     const tabBarControllerNavigation = useTabBarControllerNavigation();
 
     const sections: GenericSettingsScreenSection[] = useMemo(() => {
+        if (authentication == null) { return []; }
         return [
-            ...(authentication ? [{
+            {
                 title: 'Profile Info',
                 data: [
                     {
@@ -29,6 +31,7 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                             tabBarControllerNavigation.navigate('LogInSignUpUI', {
                                 initialScreen: 'VerifyPassword',
                                 initialScreenParams: {
+                                    purpose: VerifyPasswordPurpose.other,
                                     onPasswordVerified: (password) => {
                                         props.navigation.push('EmailEditing', { password })
                                     }
@@ -55,6 +58,7 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                             tabBarControllerNavigation.navigate('LogInSignUpUI', {
                                 initialScreen: 'VerifyPassword',
                                 initialScreenParams: {
+                                    purpose: VerifyPasswordPurpose.forPasswordChange,
                                     onPasswordVerified: (password) => {
                                         props.navigation.push('ChangePassword', { currentPassword: password })
                                     }
@@ -63,7 +67,7 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                         },
                     },
                 ]
-            }] : []),
+            },
             {
                 title: "General",
                 data: [
@@ -91,16 +95,22 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
         ]
     }, [authentication, props.navigation, tabBarControllerNavigation]);
 
-    return <GenericSettingsScreen
-        navBarTitle="Settings"
-        sections={sections}
-        navBarType={GenericSettingsScreenNavigationBarType.mainScreenLargeTitle}
-        sectionListProps={{
-            ListHeaderComponent: authentication ? () => <SettingsListScreenHeader
-                userObject={authentication.userObject}
-            /> : undefined,
-        }}
-    />
+    if (authentication == null) {
+        return <></>;
+    } else {
+        return <GenericSettingsScreen
+            navBarTitle="Settings"
+            sections={sections}
+            navBarType={GenericSettingsScreenNavigationBarType.mainScreenLargeTitle}
+            sectionListProps={{
+                ListHeaderComponent: authentication ? () => <SettingsListScreenHeader
+                    userObject={authentication.userObject}
+                /> : undefined,
+            }}
+        />
+    }
+
+
 }
 
 

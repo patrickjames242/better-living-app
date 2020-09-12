@@ -10,6 +10,7 @@ import LongTextAndIconButton from '../../helpers/Buttons/LongTextAndIconButton';
 import AssetImages from '../../images/AssetImages';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootNavigationViewParams } from '../RootNavigationView/helpers';
 
 
 export interface LogInPopUpRef {

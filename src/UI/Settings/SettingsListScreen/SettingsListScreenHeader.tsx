@@ -17,7 +17,7 @@ const SettingsListScreenHeader = (() => {
         root: {
             alignItems: 'center',
             paddingTop: 50,
-            paddingBottom: 30,
+            paddingBottom: 40,
         },
         initialsViewHolder: {
             borderWidth: 4,

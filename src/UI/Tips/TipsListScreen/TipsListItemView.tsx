@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { TipsNavStackParamList } from '../navigationHelpers';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-interface TipsListItemViewProps{
+interface TipsListItemViewProps {
     id: number,
 }
 
@@ -41,7 +41,7 @@ const TipsListItemView = (() => {
         },
     });
 
-    
+
 
     const TipsListItemView = (props: TipsListItemViewProps) => {
 
@@ -50,11 +50,11 @@ const TipsListItemView = (() => {
         const navigation = useNavigation<StackNavigationProp<TipsNavStackParamList, 'TipsList'>>();
 
 
-        function onPress(){
+        function onPress() {
             const healthTipId = healthTip?.id;
-            if (healthTipId == null){return;}
+            if (healthTipId == null) { return; }
 
-            navigation.push('TipDetail', {healthTipId})
+            navigation.push('TipDetail', { healthTipId })
 
         }
 
@@ -71,9 +71,10 @@ const TipsListItemView = (() => {
                 <CustomizedText style={styles.titleLabel} numberOfLines={2}>
                     {healthTip?.title}
                 </CustomizedText>
-                <CustomizedText style={styles.descriptionLabel} numberOfLines={2}>
-                    {healthTip?.articleText}
-                </CustomizedText>
+                {(healthTip?.articleText ?? '').trim().length >= 1 &&
+                    <CustomizedText style={styles.descriptionLabel} numberOfLines={2}>
+                        {healthTip?.articleText}
+                    </CustomizedText>}
             </Spacer>
         </BouncyButton>
     }

@@ -52,8 +52,8 @@ const LogInSignUpScreenTemplate = (() => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             padding: screenPadding,
-            paddingTop: 17,
-            paddingBottom: 17,
+            paddingTop: 15,
+            paddingBottom: 10,
             alignItems: 'center',
         },
         headerRightText: {
