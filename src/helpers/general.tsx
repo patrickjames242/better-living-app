@@ -9,6 +9,8 @@ import * as yup from 'yup';
 
 
 export type Optional<Wrapped> = Wrapped | null;
+export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
+
 
 // makes specific properties optional
 export type PartialBy<T, Keys extends keyof T> = Omit<T, Keys> & Partial<Pick<T, Keys>>

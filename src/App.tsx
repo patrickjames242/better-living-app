@@ -6,7 +6,7 @@ import { registerRootComponent, AppLoading } from 'expo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loadFonts } from './helpers/fonts/fonts';
 import { Provider as ReduxProvider } from 'react-redux';
-import store from './redux/store';
+import store, { addSelectedStateListener } from './redux/store';
 import { tryConnectingWebsocketListener } from './api/realtimeUpdates';
 import RootNavigationView from './UI/RootNavigationView/RootNavigationView';
 
@@ -18,6 +18,10 @@ YellowBox.ignoreWarnings([
 	"Animated: `useNativeDriver`", 
 	"Non-serializable values were found in the navigation state.",
 ]);
+
+addSelectedStateListener(state => state.cart, cart => {
+	console.log(cart);
+});
 
 
 
@@ -45,5 +49,6 @@ export default function App() {
 
 	
 }
+
 
 

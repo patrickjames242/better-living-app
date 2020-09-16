@@ -9,6 +9,8 @@ import { updateRealtimeUpdatesConnectionStateAction, RealtimeUpdatesConnectionSt
 import { handleUserAuthRealtimeUpdate } from './authentication/realtimeUpdates';
 import { Optional, mapOptional } from '../helpers/general';
 import Notification from '../helpers/Notification';
+import { handleCartRealtimeUpdate } from './cart/realtimeUpdates';
+import { batch } from 'react-redux';
 
 const isInternetReachableNotification = Notification<boolean>();
 
@@ -127,26 +129,35 @@ function startWebsocketConnection(authToken: Optional<string>, onCloseAfterSucce
                 health_tips: 'health_tips',
                 ordering_system: 'ordering_system',
                 user_info: 'user_info',
+                cart: 'cart',
             }
 
-            for (const propertyName of Object.getOwnPropertyNames(data)) {
-                const value = data[propertyName];
-                if (value === undefined) { continue; }
-                try {
-                    switch (propertyName) {
-                        case Keys.health_tips:
-                            handleHealthTipsRealtimeUpdate(value);
-                            break;
-                        case Keys.ordering_system:
-                            handleOrderingSystemRealtimeUpdate(value);
-                            break;
-                        case Keys.user_info:
-                            handleUserAuthRealtimeUpdate(value);
-                            break;
+            batch(() => {
+                for (const propertyName of Object.getOwnPropertyNames(data)) {
+                    const value = data[propertyName];
+                    if (value === undefined) { continue; }
+                    try {
+                        switch (propertyName) {
+                            case Keys.health_tips:
+                                handleHealthTipsRealtimeUpdate(value);
+                                break;
+                            case Keys.ordering_system:
+                                handleOrderingSystemRealtimeUpdate(value);
+                                break;
+                            case Keys.user_info:
+                                handleUserAuthRealtimeUpdate(value);
+                                break;
+                            case Keys.cart:
+                                handleCartRealtimeUpdate(value);
+                        }
+                        // eslint-disable-next-line no-empty
+                    } catch (error){
+                        console.log(error);
                     }
-                    // eslint-disable-next-line no-empty
-                } catch { }
-            }
+                }
+            })
+
+            
         };
         socket.onclose = function () {
             if (callbackCalled === false) {

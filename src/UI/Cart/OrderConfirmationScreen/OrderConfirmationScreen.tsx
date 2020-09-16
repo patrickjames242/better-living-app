@@ -1,6 +1,6 @@
 
-import React, { useRef } from 'react';
-import { StyleSheet, KeyboardAvoidingView, View } from 'react-native';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import { CartItemListTotalSummaryView } from '../CartItemListScreen/CartItemListTotalSummaryView';
@@ -10,7 +10,7 @@ import OrderConfirmationPickUpOrDeliveryView from './OrderConfirmationPickUpOrDe
 import OrderConfirmationHowToPayView from './OrderConfirmationHowToPayView';
 import LongTextAndIconButton from '../../../helpers/Buttons/LongTextAndIconButton';
 import Space from '../../../helpers/Spacers/Space';
-import { ScrollView, NativeViewGestureHandler } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import CustomKeyboardAvoidingView from '../../../helpers/Views/CustomKeyboardAvoidingView';
 
 

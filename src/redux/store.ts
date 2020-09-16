@@ -18,6 +18,7 @@ import { mealCategoriesReducer } from "./orderingSystem/mealCategories";
 import { is } from "immutable";
 import { realtimeUpdatesReducer } from "./realtimeUpdates";
 import { authenticationReducer } from "./authentication";
+import { cartReducer } from "./cart";
 
 
 const appReducer = combineReducers({
@@ -31,6 +32,7 @@ const appReducer = combineReducers({
         meals: mealsReducer,
         mealCategories: mealCategoriesReducer,
     }),
+    cart: cartReducer,
     authentication: authenticationReducer,
 });
 

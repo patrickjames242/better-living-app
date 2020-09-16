@@ -1,8 +1,9 @@
 
-import { Optional, getJsonValidatorErrorsText } from "../../helpers/general";
+import { Optional } from "../../helpers/general";
 import { List } from "immutable";
 import { HealthTipJsonResponseObj, healthTipResponseObjValidator } from "./validation";
 import moment from 'moment-timezone';
+import { assertValidObjFromApi } from "../helpers";
 
 
 export interface HealthTipAudioFile {
@@ -24,16 +25,7 @@ export default class HealthTip {
 
     constructor(apiResponseObj: HealthTipJsonResponseObj) {     
 
-        if (healthTipResponseObjValidator(apiResponseObj) === false){
-            const errorsString = (() => {
-                const errorsText = getJsonValidatorErrorsText(healthTipResponseObjValidator);
-                const beginningString = 'The apiResponseObj submitted to a HealthTip object is invalid.';
-                if (errorsText == null){return beginningString;}
-                return [beginningString, 'Here are the errors ->', errorsText].join(' ');
-            })();
-            
-            throw new Error(errorsString);
-        }
+        assertValidObjFromApi(healthTipResponseObjValidator, 'HealthTip', apiResponseObj);
 
         this.id = apiResponseObj.id;
         this.title = apiResponseObj.title;
