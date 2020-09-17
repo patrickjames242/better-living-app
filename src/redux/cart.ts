@@ -3,49 +3,53 @@
 import { List, Map } from "immutable";
 import { CartMealEntry } from "../api/cart/CartMealEntry";
 import { CartProductEntry } from "../api/cart/CartProductEntry";
+import { Optional } from "../helpers/general";
 import ActionStrings from "./actionStrings";
 import { LogOutAction } from "./authentication";
 import { CustomReduxAction } from "./helpers";
 
+export type CartEntry = CartProductEntry | CartMealEntry;
 
 
-export type ReplaceCartProductAndMealEntries = CustomReduxAction<{
-    productEntries: List<CartProductEntry>;
-    mealEntries: List<CartMealEntry>;
+
+
+export type ReplaceCartEntriesAction = CustomReduxAction<{
+    entries: List<CartEntry>;
 }>;
 
-export function updateEntireCartState(productEntries: List<CartProductEntry>, mealEntries: List<CartMealEntry>): ReplaceCartProductAndMealEntries {
+export function updateEntireCartState(entries: List<CartEntry>): ReplaceCartEntriesAction {
     return {
-        type: ActionStrings.cart.REPLACE_CART_PRODUCT_AND_MEAL_ENTRIES,
-        productEntries,
-        mealEntries,
+        type: ActionStrings.cart.REPLACE_CART_ENTRIES,
+        entries,
     }
 }
 
 
 
 
-export type InsertOrUpdateCartProductEntryAction = CustomReduxAction<{
-    entry: CartProductEntry
+export type InsertOrUpdateCartEntryAction = CustomReduxAction<{
+    entry: CartEntry;
 }>;
 
-export function insertOrUpdateCartProductEntryAction(entry: CartProductEntry): InsertOrUpdateCartProductEntryAction {
+export function insertOrUpdateCartEntryAction(entry: CartEntry): InsertOrUpdateCartEntryAction {
     return {
-        type: ActionStrings.cart.INSERT_OR_UPDATE_PRODUCT_ENTRY,
+        type: ActionStrings.cart.INSERT_OR_UPDATE_ENTRY,
         entry,
     }
 }
 
 
-export type IncrementCartProductEntryPendingQuantityChangeAction = CustomReduxAction<{
+
+
+export type IncrementCartEntryPendingQuantityChangeAction = CustomReduxAction<{
     entryId: string;
     incrementAmount: number;
 }>;
 
 
-export function incrementCartProductEntryPendingQuantityChangeAction(entryId: string, incrementAmount: number): IncrementCartProductEntryPendingQuantityChangeAction{
+export function incrementCartEntryPendingQuantityChangeAction(entryId: string, incrementAmount: number): IncrementCartEntryPendingQuantityChangeAction {
     return {
-        type: ActionStrings.cart.INCREMENT_PRODUCT_ENTRY_PENDING_QUANTITY_CHANGE,
+        type: ActionStrings.cart.INCREMENT_ENTRY_PENDING_QUANTITY_CHANGE,
         entryId,
         incrementAmount,
     }
@@ -53,13 +57,14 @@ export function incrementCartProductEntryPendingQuantityChangeAction(entryId: st
 
 
 
-export type DeleteCartProductEntryAction = CustomReduxAction<{
+
+export type DeleteCartEntryAction = CustomReduxAction<{
     entryId: string;
 }>;
 
-export function deleteCartProductEntryAction(entryId: string): DeleteCartProductEntryAction {
+export function deleteCartEntryAction(entryId: string): DeleteCartEntryAction {
     return {
-        type: ActionStrings.cart.DELETE_PRODUCT_ENTRY,
+        type: ActionStrings.cart.DELETE_ENTRY,
         entryId,
     }
 }
@@ -67,157 +72,63 @@ export function deleteCartProductEntryAction(entryId: string): DeleteCartProduct
 
 
 
-export type InsertOrUpdateCartMealEntryAction = CustomReduxAction<{
-    entry: CartMealEntry;
-}>;
+export type CartReduxActions = ReplaceCartEntriesAction | InsertOrUpdateCartEntryAction | IncrementCartEntryPendingQuantityChangeAction | DeleteCartEntryAction | LogOutAction;
 
-export function insertOrUpdateCartMealEntryAction(entry: CartMealEntry): InsertOrUpdateCartMealEntryAction {
-    return {
-        type: ActionStrings.cart.INSERT_OR_UPDATE_MEAL_ENTRY,
-        entry,
-    }
+
+export type CartEntriesMapValue = {
+    readonly entry: CartEntry;
+    readonly pendingQuantityChangesInfo: Optional<{
+        readonly originalQuantity: number;
+        readonly pendingChange: number;
+    }>;
 }
 
+export type CartReduxState = Map<string, CartEntriesMapValue>;
 
 
-export type IncrementCartMealEntryPendingQuantityChangeAction = CustomReduxAction<{
-    incrementAmount: number;
-    entryId: string;
-}>;
+export function cartReducer(state: CartReduxState = Map(), action: CartReduxActions): CartReduxState {
 
-
-export function incrementCartMealEntryPendingQuantityChangeAction(entryId: string, incrementAmount: number): IncrementCartMealEntryPendingQuantityChangeAction{
-    return {
-        type: ActionStrings.cart.INCREMENT_MEAL_ENTRY_PENDING_QUANTITY_CHANGE,
-        incrementAmount,
-        entryId,
+    const getUpdatedEntryMapValue = (newEntry: CartEntry) => {
+        const x: CartEntriesMapValue = {
+            entry: newEntry, 
+            pendingQuantityChangesInfo: state.get(newEntry.id)?.pendingQuantityChangesInfo ?? null,
+        }
+        return x;
     }
-}
 
-
-
-
-export type DeleteCartMealEntryAction = CustomReduxAction<{
-    entryId: string;
-}>;
-
-export function deleteCartMealEntryAction(entryId: string): DeleteCartMealEntryAction {
-    return {
-        type: ActionStrings.cart.DELETE_MEAL_ENTRY,
-        entryId,
-    }
-}
-
-
-export type CartReduxActions = ReplaceCartProductAndMealEntries | InsertOrUpdateCartProductEntryAction | IncrementCartProductEntryPendingQuantityChangeAction | DeleteCartProductEntryAction | InsertOrUpdateCartMealEntryAction | IncrementCartMealEntryPendingQuantityChangeAction | DeleteCartMealEntryAction | LogOutAction;
-
-
-export type CartReduxState = {
-    readonly productEntries: {
-        readonly entries: Map<string, CartProductEntry>,
-        readonly pendingQuantityChanges: Map<string, number>,
-    };
-    readonly mealEntries: {
-        readonly entries: Map<string, CartMealEntry>;
-        readonly pendingQuantityChanges: Map<string, number>;
-    };
-};
-
-const emptyCartReduxState: CartReduxState = {
-    productEntries: {
-        entries: Map(),
-        pendingQuantityChanges: Map(),
-    },
-    mealEntries: {
-        entries: Map(),
-        pendingQuantityChanges: Map(),
-    }
-}
-
-export function cartReducer(state: CartReduxState = emptyCartReduxState, action: CartReduxActions): CartReduxState {
     switch (action.type) {
         case ActionStrings.authentication.LOG_OUT:
-            return emptyCartReduxState;
-        case ActionStrings.cart.REPLACE_CART_PRODUCT_AND_MEAL_ENTRIES: {
-            const { productEntries, mealEntries } = action as ReplaceCartProductAndMealEntries;
-            return {
-                productEntries: {
-                    ...state.productEntries,
-                    entries: Map<string, CartProductEntry>().withMutations(map => {
-                        productEntries.forEach(x => {
-                            map.set(x.id, x);
-                        })
-                    }),
-                },
-                mealEntries: {
-                    ...state.mealEntries,
-                    entries: Map<string, CartMealEntry>().withMutations(map => {
-                        mealEntries.forEach(x => {
-                            map.set(x.id, x);
-                        })
-                    }),
-                }
-            }
+            return Map();
+        case ActionStrings.cart.REPLACE_CART_ENTRIES: {
+            const { entries } = action as ReplaceCartEntriesAction;
+            return Map<string, CartEntriesMapValue>().withMutations(map => {
+                entries.forEach(entry => {
+                    map.set(entry.id, getUpdatedEntryMapValue(entry));
+                })
+            });
         }
-        case ActionStrings.cart.INSERT_OR_UPDATE_PRODUCT_ENTRY: {
-            const { entry } = action as InsertOrUpdateCartProductEntryAction;
-            return {
-                ...state,
-                productEntries: {
-                    ...state.productEntries,
-                    entries: state.productEntries.entries.set(entry.id, entry)
-                },
-            }
+        case ActionStrings.cart.INSERT_OR_UPDATE_ENTRY: {
+            const { entry } = action as InsertOrUpdateCartEntryAction;
+            return state.set(entry.id, getUpdatedEntryMapValue(entry));
         }
-        case ActionStrings.cart.INCREMENT_PRODUCT_ENTRY_PENDING_QUANTITY_CHANGE: {
-            const {entryId, incrementAmount} = action as IncrementCartProductEntryPendingQuantityChangeAction;
-            return {
-                ...state,
-                productEntries: {
-                    ...state.productEntries,
-                    pendingQuantityChanges: state.productEntries.pendingQuantityChanges.set(entryId, (state.productEntries.pendingQuantityChanges.get(entryId) ?? 0) + incrementAmount),
-                }
-            }
+        case ActionStrings.cart.INCREMENT_ENTRY_PENDING_QUANTITY_CHANGE: {
+            const { entryId, incrementAmount } = action as IncrementCartEntryPendingQuantityChangeAction;
+            const oldEntry = state.get(entryId);   
+            if (!oldEntry){return state;}
+            return state.set(entryId, {
+                ...oldEntry,
+                pendingQuantityChangesInfo: (() => {
+                    const newQuantityChangeAmount = (oldEntry.pendingQuantityChangesInfo?.pendingChange ?? 0) + incrementAmount;
+                    return newQuantityChangeAmount === 0 ? null : {
+                        originalQuantity: oldEntry.pendingQuantityChangesInfo?.originalQuantity ?? oldEntry.entry.quantity,
+                        pendingChange: newQuantityChangeAmount,
+                    }
+                })()
+            });
         }
-        case ActionStrings.cart.DELETE_PRODUCT_ENTRY: {
-            const { entryId } = action as DeleteCartProductEntryAction;
-            return {
-                ...state,
-                productEntries: {
-                    ...state.productEntries,
-                    entries: state.productEntries.entries.remove(entryId)
-                },
-            }
-        }
-        case ActionStrings.cart.INSERT_OR_UPDATE_MEAL_ENTRY: {
-            const { entry } = action as InsertOrUpdateCartMealEntryAction;
-            return {
-                ...state,
-                mealEntries: {
-                    ...state.mealEntries,
-                    entries: state.mealEntries.entries.set(entry.id, entry),
-                },
-            }
-        }
-        case ActionStrings.cart.INCREMENT_MEAL_ENTRY_PENDING_QUANTITY_CHANGE: {
-            const {entryId, incrementAmount} = action as IncrementCartMealEntryPendingQuantityChangeAction;
-            return {
-                ...state,
-                mealEntries: {
-                    ...state.mealEntries,
-                    pendingQuantityChanges: state.mealEntries.pendingQuantityChanges.set(entryId, (state.mealEntries.pendingQuantityChanges.get(entryId) ?? 0) + incrementAmount),
-                }
-            }
-        }
-        case ActionStrings.cart.DELETE_MEAL_ENTRY: {
-            const { entryId } = action as DeleteCartMealEntryAction;
-            return {
-                ...state,
-                mealEntries: {
-                    ...state.mealEntries,
-                    entries: state.mealEntries.entries.remove(entryId),
-                },
-            }
+        case ActionStrings.cart.DELETE_ENTRY: {
+            const { entryId } = action as DeleteCartEntryAction;
+            return state.remove(entryId);
         }
         default:
             return state;

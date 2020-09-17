@@ -11,6 +11,7 @@ import MealCreatorConstants from '../../../UI/Menu/MealCreaterScreen/MealCreator
 import Product from '../../../api/orderingSystem/products/Product';
 import AssetImages from '../../../images/AssetImages';
 import { Color, CustomColors } from '../../colors';
+import ProductImageThumbnailView from './ProductImageThumbnailView';
 
 
 export interface ListViewProductItemViewProps extends ViewProps {
@@ -21,7 +22,6 @@ export interface ListViewProductItemViewProps extends ViewProps {
 
 const ListViewProductItemView = (() => {
 
-    const imageBorderRadius = 8;
 
     const styles = StyleSheet.create({
         root: {
@@ -32,26 +32,7 @@ const ListViewProductItemView = (() => {
             flexDirection: 'row',
             alignItems: 'center',
         },
-        imageHolder: {
-            width: MealCreatorConstants.foodSections.imageWidth,
-            borderRadius: imageBorderRadius,            
-        },
-        image: {
-            width: '100%',
-            height: '100%',
-            borderRadius: imageBorderRadius,
-        },
-        noImageIconHolder:{
-            alignItems: 'center',
-            justifyContent: 'center',
-            flex: 1,
-            opacity: 0.8,
-        },
-        noImageIcon: {
-            height: 30,
-            width: 30,
-            tintColor: CustomColors.themeGreen.stringValue,
-        },
+        
         titleText: {
             fontFamily: CustomFont.medium,
             fontSize: MealCreatorConstants.foodSections.rowTitleFontSize,
@@ -62,20 +43,7 @@ const ListViewProductItemView = (() => {
     const ListViewProductItemView = (props: ListViewProductItemViewProps) => {
         return <BouncyButton {...props} style={[styles.root, props.style]} bounceScaleValue={0.9} onPress={props.onPress} contentViewProps={{style: styles.contentView}}>
             <Spacer space={MealCreatorConstants.foodSections.contentViewPadding}>
-                <AspectRatioView style={[styles.imageHolder, {
-                    ...(props.item.imageUrl ? getShadowStyle(10) : {}),
-                    backgroundColor: props.item.imageUrl ? 'white' : Color.gray(0.97).stringValue,
-                }]} heightPercentageOfWidth={MealCreatorConstants.foodSections.imageHeightPercentageOfWidth}>
-                    {(() => {
-                        if (props.item.imageUrl){
-                            return <Image style={styles.image} source={{uri: props.item.imageUrl}} resizeMode="cover" />
-                        } else {
-                            return <View style={styles.noImageIconHolder}>
-                                <Image style={styles.noImageIcon} source={AssetImages.imageIcon}/>
-                            </View>
-                        }
-                    })()}
-                </AspectRatioView>
+                <ProductImageThumbnailView imageUrl={props.item.imageUrl}/>
                 <CustomizedText style={styles.titleText} numberOfLines={2}>{props.item.title}</CustomizedText>
             </Spacer>
         </BouncyButton>

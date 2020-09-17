@@ -1,13 +1,11 @@
 
 
-import React, { useState, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { StyleSheet, Image, Animated } from 'react-native';
-import { MenuListItem } from '../../Menu/MenuListViewScreen/MenuListView/helpers';
-import AspectRatioView from '../../../helpers/Views/AspectRatioView';
 import LayoutConstants from '../../../LayoutConstants';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
-import { getShadowStyle, Optional } from '../../../helpers/general';
+import { Optional } from '../../../helpers/general';
 import { CustomColors, Color } from '../../../helpers/colors';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import QuantityPickerView from './QuantityPickerView';
@@ -17,20 +15,29 @@ import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import ValueBox from '../../../helpers/ValueBox';
 import { useNotificationListener } from '../../../helpers/Notification';
 import AssetImages from '../../../images/AssetImages';
-
+import store, { useSelector } from '../../../redux/store';
+import { changeMealEntryQuantity, changeProductEntryQuantity, IncrememntOrDecrement, removeMealFromCart, removeProductFromCart } from '../../../api/cart/requests';
+import ProductImageThumbnailView from '../../../helpers/Views/DataSpecificViews/ProductImageThumbnailView';
+import { CartProductEntry } from '../../../api/cart/CartProductEntry';
+import { CartMealEntry } from '../../../api/cart/CartMealEntry';
+import Product from '../../../api/orderingSystem/products/Product';
+import Meal from '../../../api/orderingSystem/meals/Meal';
+import currency from 'currency.js';
+import { CartEntry, deleteCartEntryAction } from '../../../redux/cart';
+import { displayErrorMessage } from '../../../helpers/Alerts';
 
 
 export interface CartItemListItemViewProps {
-    item: MenuListItem,
-    // the number refers to the id of the item
-    currentlyOpenDrawerID: ValueBox<Optional<number>>
+    entry: CartProductEntry | CartMealEntry,
+    // the string refers to the id of the item
+    currentlyOpenDrawerID: ValueBox<Optional<string>>
 }
 
 
 
 const CartItemListItemView = (() => {
 
-    const imageBorderRadius = 10;
+    // const imageBorderRadius = 10;
 
     const styles = StyleSheet.create({
         root: {
@@ -40,17 +47,6 @@ const CartItemListItemView = (() => {
             padding: LayoutConstants.floatingCellStyles.padding,
             flexDirection: 'row',
             alignItems: 'center',
-        },
-        imageHolder: {
-            width: 90,
-            borderRadius: imageBorderRadius,
-            ...getShadowStyle(5),
-            backgroundColor: 'white',
-        },
-        image: {
-            width: '100%',
-            height: '100%',
-            borderRadius: imageBorderRadius,
         },
         center: {
             alignItems: 'flex-start',
@@ -75,19 +71,55 @@ const CartItemListItemView = (() => {
         },
     });
 
-    const minQuantity = 1;
-    const maxQuantity = 10;
-
     const CartItemListItemView = (props: CartItemListItemViewProps) => {
 
-        const [quantity, setQuantity] = useState(minQuantity);
+        const productOrMeal = useSelector(state => {
+            if (props.entry instanceof CartProductEntry) {
+                return state.orderingSystem.products.get(props.entry.productId);
+            } else if (props.entry instanceof CartMealEntry) {
+                return state.orderingSystem.meals.get(props.entry.mealId);
+            }
+        });
 
-        function increment() {
-            setQuantity(x => Math.min(x + 1, maxQuantity));
-        }
+        const quantity = useSelector(state => {
+            const entry = state.cart.get(props.entry.id);
+            if (entry?.pendingQuantityChangesInfo) {
+                return entry.pendingQuantityChangesInfo.originalQuantity + entry.pendingQuantityChangesInfo.pendingChange;
+            } else {
+                return entry?.entry.quantity ?? 0;
+            }
+        });
 
-        function decrement() {
-            setQuantity(x => Math.max(x - 1, minQuantity))
+        const individualPrice = useMemo(() => {
+            if (productOrMeal instanceof Product) {
+                return productOrMeal.shouldBeSoldIndividually ? (productOrMeal.individualPrice ?? 0) : 0;
+            } else if (productOrMeal instanceof Meal) {
+                return productOrMeal.price
+            } else { return 0; }
+        }, [productOrMeal]);
+
+        const latestIncrementDecrementPromise = useRef<Optional<Promise<CartEntry>>>(null);
+
+        function incrementOrDecrement(incrementOrDecrement: IncrememntOrDecrement) {
+            switch (incrementOrDecrement) {
+                case IncrememntOrDecrement.increment:
+                    if (quantity >= 50) return; break;
+                case IncrememntOrDecrement.decrement:
+                    if (quantity <= 1) return; break;
+            }
+            const promise: Promise<CartEntry> = (() => {
+                if (props.entry instanceof CartProductEntry) {
+                    return changeProductEntryQuantity(props.entry.id, incrementOrDecrement);
+                } else {
+                    return changeMealEntryQuantity(props.entry.id, incrementOrDecrement)
+                }
+            })();
+            if (promise !== latestIncrementDecrementPromise.current){
+                promise.catch(error => {
+                    displayErrorMessage(error.message);
+                });
+                latestIncrementDecrementPromise.current = promise;
+            }
         }
 
         const swipeableRef = useRef<Swipeable>(null);
@@ -95,14 +127,18 @@ const CartItemListItemView = (() => {
         const swipeableIsOpen = useRef(false);
 
         useNotificationListener(props.currentlyOpenDrawerID.observer, newValue => {
-            if (newValue !== props.item.id && swipeableIsOpen.current){
+            if (newValue !== props.entry.id && swipeableIsOpen.current) {
                 swipeableRef.current?.close();
             }
-        }, [props.item.id]);
+        }, [props.entry.id]);
 
 
         function presentMenuItemDetailView() {
-            
+
+        }
+
+        if (productOrMeal == null) {
+            return <></>
         }
 
         return <HighlightButton style={styles.root} onPress={presentMenuItemDetailView}>
@@ -113,30 +149,49 @@ const CartItemListItemView = (() => {
                 overshootFriction={3}
                 onSwipeableWillOpen={() => {
                     swipeableIsOpen.current = true;
-                    props.currentlyOpenDrawerID.value = props.item.id;
+                    props.currentlyOpenDrawerID.value = props.entry.id;
                 }}
                 onSwipeableWillClose={() => {
                     swipeableIsOpen.current = false;
                 }}
                 onSwipeableClose={() => {
-                    if (props.currentlyOpenDrawerID.value !== props.item.id){return;}
+                    if (props.currentlyOpenDrawerID.value !== props.entry.id) { return; }
                     props.currentlyOpenDrawerID.value = null;
                 }}
                 renderRightActions={(_, dragValue) => {
-                    return <SwipableButtonActions dragAnimatedValue={dragValue} />
+                    return <SwipableButtonActions dragAnimatedValue={dragValue} onDeleteButtonPressed={() => {
+                        (() => {
+                            if (props.entry instanceof CartProductEntry){
+                                return removeProductFromCart(props.entry.id);
+                            } else {
+                                return removeMealFromCart(props.entry.id);
+                            }
+                        })().catch(error => {
+                            displayErrorMessage(error.message);
+                        });
+                    }}/>
                 }}
             >
                 <SpacerView space={15} style={styles.contentView}>
-                    <AspectRatioView style={styles.imageHolder} heightPercentageOfWidth={LayoutConstants.productImageHeightPercentageOfWidth}>
-                        <Image style={styles.image} source={props.item.imageSource} />
-                    </AspectRatioView>
+                    {productOrMeal instanceof Product &&
+                        <ProductImageThumbnailView imageUrl={productOrMeal.imageUrl} />}
                     <SpacerView style={styles.center} space={9}>
-                        <CustomizedText style={styles.title}>{props.item.name}</CustomizedText>
-                        <QuantityPickerView increment={increment} decrement={decrement} value={quantity} />
+                        <CustomizedText style={styles.title}>{productOrMeal.title}</CustomizedText>
+                        <QuantityPickerView
+                            increment={() => incrementOrDecrement(IncrememntOrDecrement.increment)}
+                            decrement={() => incrementOrDecrement(IncrememntOrDecrement.decrement)}
+                            value={quantity}
+                        />
                     </SpacerView>
                     <SpacerView style={styles.rightSide} space={7}>
-                        {quantity > 1 && <CustomizedText style={styles.quantityTimesPriceText}>{quantity + " × $5.47"}</CustomizedText>}
-                        <CustomizedText style={styles.totalPriceText}>$5.47</CustomizedText>
+                        {quantity > 1 &&
+                            <CustomizedText style={styles.quantityTimesPriceText}>{
+                                quantity + " × " + currency(individualPrice).format()
+                            }</CustomizedText>
+                        }
+                        <CustomizedText style={styles.totalPriceText}>{
+                            currency(individualPrice * quantity).format()
+                        }</CustomizedText>
                     </SpacerView>
                 </SpacerView>
             </Swipeable>

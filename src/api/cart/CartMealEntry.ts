@@ -4,12 +4,16 @@ import moment from 'moment-timezone';
 import { assertValidObjFromApi } from '../helpers';
 import { CartMealEntryJsonResponseObj, cartMealEntryResponseObjValidator } from './validation';
 
+
 interface CartMealEntryChoice {
     mealProductCategoryId: number;
     chosenProductId: number;
 }
 
 export class CartMealEntry {
+
+    // to force users to create an instance of this class in order to use this type
+    private readonly dummyVariable = '';
 
     readonly id: string;
     readonly dateCreated: moment.Moment;

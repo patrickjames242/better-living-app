@@ -40,7 +40,6 @@ export function updateUserObjectAction(user: User): UpdateUserObjectAction {
 export type LogOutAction = CustomReduxAction<{}>;
 
 export function logOutAction(): LogOutAction {
-    console.log('log out called');
     return {
         type: ActionStrings.authentication.LOG_OUT,
     }

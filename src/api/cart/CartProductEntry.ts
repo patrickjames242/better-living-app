@@ -5,6 +5,9 @@ import { CartProductEntryResponseObj, cartProductEntryResponseObjValidator } fro
 
 export class CartProductEntry{
 
+    // to force users to create an instance of this class in order to use this type
+    private readonly dummyVariable = '';
+
     readonly id: string;
     readonly productId: number;
     readonly dateCreated: moment.Moment;

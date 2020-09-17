@@ -61,6 +61,7 @@ export async function fetchFromAPI<JsonResult = any>(props: {
     } else {
         return Promise.reject(new Error(json.errorMessage));
     }
+        
 }
 
 

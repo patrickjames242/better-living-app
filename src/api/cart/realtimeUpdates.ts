@@ -1,6 +1,6 @@
 import ajv from "ajv";
 import { List } from "immutable";
-import { deleteCartMealEntryAction, deleteCartProductEntryAction, insertOrUpdateCartMealEntryAction, insertOrUpdateCartProductEntryAction, updateEntireCartState } from "../../redux/cart";
+import { CartEntry, deleteCartEntryAction, insertOrUpdateCartEntryAction, updateEntireCartState } from "../../redux/cart";
 import store from "../../redux/store";
 import { assertValidObjFromApi } from "../helpers";
 import { CartMealEntry } from "./CartMealEntry";
@@ -52,17 +52,16 @@ const initialObjectsValidator = (new ajv({allErrors: true})).compile(InitialObje
 
 export function handleCartRealtimeUpdate(jsonData: any){
     if (typeof jsonData !== 'object'){return;}
+
     const initial_objects: InitialObjects | undefined = jsonData.initial_objects;
 
     if (initial_objects != undefined){
         assertValidObjFromApi(initialObjectsValidator, 'Cart Initial Objects', initial_objects);
-        const productEntries = List<CartProductEntry>().withMutations(list => {
+        const entries = List<CartEntry>().withMutations(list => {
             initial_objects.product_entries.forEach(x => list.push(CartProductEntry.parse(x)));
-        });
-        const mealEntries = List<CartMealEntry>().withMutations(list => {
             initial_objects.meal_entries.forEach(x => list.push(CartMealEntry.parse(x)));
         });
-        store.dispatch(updateEntireCartState(productEntries, mealEntries));
+        store.dispatch(updateEntireCartState(entries));
     }
 
     const change_type: ChangeUpdateType | undefined = jsonData.change_type;
@@ -74,10 +73,10 @@ export function handleCartRealtimeUpdate(jsonData: any){
             switch (change_type){
                 case ChangeUpdateType.insert:
                 case ChangeUpdateType.update:
-                    store.dispatch(insertOrUpdateCartProductEntryAction(CartProductEntry.parse(changed_object)))
+                    store.dispatch(insertOrUpdateCartEntryAction(CartProductEntry.parse(changed_object)))
                     break;
                 case ChangeUpdateType.delete:
-                    store.dispatch(deleteCartProductEntryAction(changed_object.id))
+                    store.dispatch(deleteCartEntryAction(changed_object.id))
                     break;
             }
             break;
@@ -85,10 +84,10 @@ export function handleCartRealtimeUpdate(jsonData: any){
             switch (change_type){
                 case ChangeUpdateType.insert:
                 case ChangeUpdateType.update:
-                    store.dispatch(insertOrUpdateCartMealEntryAction(CartMealEntry.parse(changed_object)));
+                    store.dispatch(insertOrUpdateCartEntryAction(CartMealEntry.parse(changed_object)));
                     break;
                 case ChangeUpdateType.delete:
-                    store.dispatch(deleteCartMealEntryAction(changed_object.id))
+                    store.dispatch(deleteCartEntryAction(changed_object.id))
                     break;
             }
             break;

@@ -160,16 +160,7 @@ const testReduxState: AppState = {
         currentSelection: defaultTabBarSelection,
         tabBarPosition: getCurrentDefaultTabBarPosition(),
     },
-    cart: {
-        productEntries: {
-            entries: Map(),
-            pendingQuantityChanges: Map(),
-        },
-        mealEntries: {
-            entries: Map(),
-            pendingQuantityChanges: Map(),
-        },
-    },
+    cart: Map(),
     authentication: null,
 }
 
