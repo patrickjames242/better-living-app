@@ -5,7 +5,7 @@ import { StyleSheet, Image, Animated } from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
-import { Optional } from '../../../helpers/general';
+import { compactMap, Optional } from '../../../helpers/general';
 import { CustomColors, Color } from '../../../helpers/colors';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import QuantityPickerView from './QuantityPickerView';
@@ -15,7 +15,7 @@ import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import ValueBox from '../../../helpers/ValueBox';
 import { useNotificationListener } from '../../../helpers/Notification';
 import AssetImages from '../../../images/AssetImages';
-import store, { useSelector } from '../../../redux/store';
+import { useSelector } from '../../../redux/store';
 import { changeMealEntryQuantity, changeProductEntryQuantity, IncrememntOrDecrement, removeMealFromCart, removeProductFromCart } from '../../../api/cart/requests';
 import ProductImageThumbnailView from '../../../helpers/Views/DataSpecificViews/ProductImageThumbnailView';
 import { CartProductEntry } from '../../../api/cart/CartProductEntry';
@@ -23,8 +23,12 @@ import { CartMealEntry } from '../../../api/cart/CartMealEntry';
 import Product from '../../../api/orderingSystem/products/Product';
 import Meal from '../../../api/orderingSystem/meals/Meal';
 import currency from 'currency.js';
-import { CartEntry, deleteCartEntryAction } from '../../../redux/cart';
+import { CartEntry } from '../../../redux/cart';
 import { displayErrorMessage } from '../../../helpers/Alerts';
+import MealEntryThumbnailView from '../../../helpers/Views/DataSpecificViews/MealEntryThumbnailView';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { CartNavStackParamList } from '../navigationHelpers';
 
 
 export interface CartItemListItemViewProps {
@@ -81,14 +85,25 @@ const CartItemListItemView = (() => {
             }
         });
 
-        const quantity = useSelector(state => {
-            const entry = state.cart.get(props.entry.id);
-            if (entry?.pendingQuantityChangesInfo) {
-                return entry.pendingQuantityChangesInfo.originalQuantity + entry.pendingQuantityChangesInfo.pendingChange;
+        const allProdutsReduxState = useSelector(state => state.orderingSystem.products);
+
+        const allMealEntryImageUrls = useMemo(() => {
+            if (props.entry instanceof CartMealEntry){
+                return compactMap(props.entry.choices.toArray(), x => allProdutsReduxState.get(x.chosenProductId)?.imageUrl);
             } else {
-                return entry?.entry.quantity ?? 0;
+                return [];
             }
-        });
+        }, [allProdutsReduxState, props.entry]);
+
+        const entryInfo = useSelector(state => state.cart.get(props.entry.id));
+
+        const quantity = useMemo(() => {
+            if (entryInfo?.pendingQuantityChangesInfo) {
+                return entryInfo.pendingQuantityChangesInfo.originalQuantity + entryInfo.pendingQuantityChangesInfo.pendingChange;
+            } else {
+                return entryInfo?.entry.quantity ?? 0;
+            }
+        }, [entryInfo?.entry.quantity, entryInfo?.pendingQuantityChangesInfo]);
 
         const individualPrice = useMemo(() => {
             if (productOrMeal instanceof Product) {
@@ -132,9 +147,14 @@ const CartItemListItemView = (() => {
             }
         }, [props.entry.id]);
 
+        const navigation = useNavigation<StackNavigationProp<CartNavStackParamList, 'ProductDetail'>>();
 
         function presentMenuItemDetailView() {
-
+            if (productOrMeal instanceof Product){
+                navigation.push('ProductDetail', {productId: productOrMeal.id});
+            } else if (productOrMeal instanceof Meal){
+                navigation.push('MealCreator', {defaultMealConfig: {mealId: productOrMeal.id}});
+            }
         }
 
         if (productOrMeal == null) {
@@ -173,8 +193,13 @@ const CartItemListItemView = (() => {
                 }}
             >
                 <SpacerView space={15} style={styles.contentView}>
-                    {productOrMeal instanceof Product &&
-                        <ProductImageThumbnailView imageUrl={productOrMeal.imageUrl} />}
+                    {(() => {
+                        if (productOrMeal instanceof Product){
+                            return <ProductImageThumbnailView imageUrl={productOrMeal.imageUrl} />;
+                        } else {
+                            return <MealEntryThumbnailView imageUrls={allMealEntryImageUrls}/>
+                        }
+                    })()}
                     <SpacerView style={styles.center} space={9}>
                         <CustomizedText style={styles.title}>{productOrMeal.title}</CustomizedText>
                         <QuantityPickerView

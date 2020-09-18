@@ -7,6 +7,7 @@ import RoundedBouncyButton, { RoundedBouncyButtonProps } from './RoundedBouncyBu
 
 export interface RoundedTextBouncyButtonProps extends RoundedBouncyButtonProps {
     text: string,
+    isEnabled?: boolean;
 }
 
 const RoundedTextBouncyButton = (() => {
@@ -28,9 +29,11 @@ const RoundedTextBouncyButton = (() => {
     });
 
     const RoundedTextBouncyButton: React.FC<RoundedTextBouncyButtonProps> = props => {
+        const isEnabled = (props.isEnabled ?? true);
         return <RoundedBouncyButton
             {...props}
-            style={[styles.root, props.style]}
+            pointerEvents={isEnabled ? 'auto' : 'none'}
+            style={[styles.root, props.style, {opacity: isEnabled ? 1 : 0.5}]}
             contentViewProps={{
                 style: [styles.contentView, props.contentViewProps?.style]
             }}

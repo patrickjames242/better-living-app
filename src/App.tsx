@@ -17,6 +17,7 @@ registerRootComponent(App);
 YellowBox.ignoreWarnings([
 	"Animated: `useNativeDriver`", 
 	"Non-serializable values were found in the navigation state.",
+	"[SECURITY] node-uuid: crypto not usable, falling back to insecure Math.random()"
 ]);
 
 

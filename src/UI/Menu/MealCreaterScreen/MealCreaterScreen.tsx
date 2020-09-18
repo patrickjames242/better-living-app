@@ -22,9 +22,7 @@ import { useCurrentMenuProductIds } from '../../../api/orderingSystem/menus/help
 import Meal from '../../../api/orderingSystem/meals/Meal';
 
 
-export interface MealCreatorScreenProps{
-    defaultMealConfig: MealConfig
-}
+
 
 const MealCreatorScreen = (() => {
 

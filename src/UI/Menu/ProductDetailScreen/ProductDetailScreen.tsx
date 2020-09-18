@@ -1,5 +1,5 @@
 
-import React, { useRef, useCallback, useLayoutEffect, useMemo } from 'react';
+import React, { useRef, useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -10,7 +10,7 @@ import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { Color } from '../../../helpers/colors';
 import Spacer from '../../../helpers/Spacers/Spacer';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
-import PurchaseOptionBox from './ChildComponents/PurchaseOptionBox';
+import PurchaseOptionBox, {PurchaseOptionBoxProps} from './ChildComponents/PurchaseOptionBox';
 import TitleBox from './ChildComponents/TitleBox';
 import { useNotificationListener } from '../../../helpers/Notification';
 import { windowDimensionsDidChangeNotification } from '../../TabBarController/helpers';
@@ -21,6 +21,9 @@ import { useMealsForProduct } from '../../../api/orderingSystem/productsToMealsH
 import currency from 'currency.js';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MenuNavStackParams } from '../navigationHelpers';
+import { CartProductEntry } from '../../../api/cart/CartProductEntry';
+import { addProductToCart } from '../../../api/cart/requests';
+import { displayErrorMessage } from '../../../helpers/Alerts';
 
 
 
@@ -59,13 +62,31 @@ const ProductDetailScreen = (() => {
 
         const product = useSelector(state => state.orderingSystem.products.get(props.route.params.productId));
 
-        function onMealButtonPressed(mealId: number) {
-            props.navigation.push('MealCreator', {defaultMealConfig: {mealId}});
-        }
+        const onMealButtonPressed = useCallback((mealId: number) => {
+            props.navigation.push('MealCreator', { defaultMealConfig: { mealId } });
+        }, [props.navigation]);
 
-        function onAddToCartButtonPressed(){
+        const allCartEntriesReduxState = useSelector(state => state.cart);
 
-        }
+        const isProductInCart = useMemo(() => {
+            return allCartEntriesReduxState.some(value => {
+                if (value.entry instanceof CartProductEntry){
+                    return value.entry.productId === product?.id;
+                } else {return false;}
+            })
+        }, [allCartEntriesReduxState, product?.id]);
+
+        const [addToCartIsLoading, setAddToCartIsLoading] = useState(false);
+
+        const onAddToCartButtonPressed = useCallback(() => {
+            if (!product){return;}
+            setAddToCartIsLoading(true);
+            addProductToCart(product.id).finally(() => {
+                setAddToCartIsLoading(false);
+            }).catch(error => {
+                displayErrorMessage(error.message);
+            });
+        }, [product]);
 
         const meals = useMealsForProduct(props.route.params.productId);
 
@@ -73,37 +94,31 @@ const ProductDetailScreen = (() => {
         const shouldProductBeSoldIndividually = product?.shouldBeSoldIndividually;
         const productDescription = product?.description?.trim() ?? '';
 
-        interface PurchaseOption{
-            mealId: Optional<number>;
-            title: string;
-            price: number;
-            buttonText: string;
-        }
-
         const purchaseOptions = useMemo(() => {
 
-            const allOptions: PurchaseOption[] = mapOptional(shouldProductBeSoldIndividually ? productIndividualPrice : null, price => [{
-                mealId: null,
-                title: "Purchase Separately",
-                price: price,
-                buttonText: 'Add to Cart',
+            const allOptions: PurchaseOptionBoxProps[] = mapOptional(shouldProductBeSoldIndividually ? productIndividualPrice : null, price => [{
+                price: currency(price).format(),
+                title: 'Purchase Separately',
+                buttonText: addToCartIsLoading ? 'Loading' : (isProductInCart ? 'Added to Cart' : 'Add to Cart'),
+                onButtonPress: onAddToCartButtonPressed,
+                isButtonEnabled: isProductInCart === false && addToCartIsLoading === false,
             }]) ?? [];
 
             meals.sort((a, b) => {
-                if (a.price === b.price) return 0; 
-                else if (a.price < b.price) return -1; 
+                if (a.price === b.price) return 0;
+                else if (a.price < b.price) return -1;
                 else return 1;
             }).forEach(meal => {
                 allOptions.push({
-                    mealId: meal.id,
+                    price: currency(meal.price).format(),
+                    onButtonPress: () => onMealButtonPressed(meal.id),
                     title: meal.title,
-                    price: meal.price,
-                    buttonText: 'Create Meal'
+                    buttonText: 'Create Meal',
                 })
             });
             return allOptions;
 
-        }, [meals, productIndividualPrice, shouldProductBeSoldIndividually]);
+        }, [addToCartIsLoading, isProductInCart, meals, onAddToCartButtonPressed, onMealButtonPressed, productIndividualPrice, shouldProductBeSoldIndividually]);
 
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title={product?.title ?? ""} />
@@ -125,10 +140,15 @@ const ProductDetailScreen = (() => {
                                 </FloatingCellStyleSectionView>}
                                 {purchaseOptions.length >= 1 &&
                                     <FloatingCellStyleSectionView sectionTitle="Purchase Options">
-                                        {/* eslint-disable-next-line react/no-children-prop */}
-                                        <SpacerView space={15} children={
-                                            purchaseOptions.map((x, index) => <PurchaseOptionBox key={index} price={currency(x.price).format()} title={x.title} buttonText={x.buttonText} onButtonPress={() => x.mealId ? onMealButtonPressed(x.mealId) : onAddToCartButtonPressed()}/>)
-                                        } />
+                                        <SpacerView
+                                            space={15}
+                                            /* eslint-disable-next-line react/no-children-prop */
+                                            children={
+                                                purchaseOptions.map((x, index) => {
+                                                    return <PurchaseOptionBox key={index} {...x}/>
+                                                })
+                                            }
+                                        />
                                     </FloatingCellStyleSectionView>}
                             </Spacer>
                         </View>

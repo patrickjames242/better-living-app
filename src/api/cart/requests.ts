@@ -1,6 +1,6 @@
 
 import { fetchFromAPI, HttpMethod } from "../api";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'react-native-uuid';
 import { CartProductEntry } from "./CartProductEntry";
 import moment from 'moment-timezone';
 import store from "../../redux/store";
@@ -19,27 +19,15 @@ const baseProductEntriesUrl = baseCartUrl + 'product-entries/';
 
 export function addProductToCart(productId: number) {
 
-    const placeholderProductEntry = new CartProductEntry(uuidv4(), productId, moment(), 1);
-    store.dispatch(insertOrUpdateCartEntryAction(placeholderProductEntry));
-
-    const removePlaceholderProductEntry = () => {
-        store.dispatch(deleteCartEntryAction(placeholderProductEntry.id))
-    }
-
     return fetchFromAPI<CartProductEntryResponseObj>({
         path: baseProductEntriesUrl + 'add/',
         method: HttpMethod.post,
         jsonBody: {
             product_id: productId,
+            quantity: 1,
         }
     }).then(result => {
-        batch(() => {
-            store.dispatch(insertOrUpdateCartEntryAction(CartProductEntry.parse(result)));
-            removePlaceholderProductEntry();
-        });
-    }).catch(error => {
-        removePlaceholderProductEntry();
-        throw error;
+        store.dispatch(insertOrUpdateCartEntryAction(CartProductEntry.parse(result)));
     });
 
 }
@@ -226,25 +214,29 @@ function batchQuantityUpdates<Result>(getHandlers: (entryId: string) => BatchQua
 
         if (currentCacheInfo.taskHasStarted === false){
             currentCacheInfo.timerId = setTimeout(() => {
+
                 currentCacheInfo.timerId = null;
                 currentCacheInfo.taskHasStarted = true;
-                const getNewFetch: () => Promise<Result> = async () => {
-                    const quantityChangeToUse = currentCacheInfo.cachedQuantityChange;
+                const getNewFetch: (totalPriorQuantityChanges?: number) => Promise<Result> = async (totalPriorQuantityChanges) => {
+                    const currentQuantityChange = currentCacheInfo.cachedQuantityChange;
+                    const totalAccumulatedQuantityChanges = (totalPriorQuantityChanges ?? 0) + currentQuantityChange
                     currentCacheInfo.cachedQuantityChange = 0;
                     let response: Result;
                     try{ 
-                        response = await handlers.quantityChangeTask(quantityChangeToUse);
+                        response = await handlers.quantityChangeTask(currentQuantityChange);
                     } catch (error) {
-                        const quantityToSubtract = quantityChangeToUse + currentCacheInfo.cachedQuantityChange;
-                        handlers.incrementReduxPendingQuantityChange(-quantityToSubtract);
+                        handlers.incrementReduxPendingQuantityChange(-totalAccumulatedQuantityChanges);
                         throw error;
                     }
-                    batch(() => {
-                        handlers.incrementReduxPendingQuantityChange(-quantityChangeToUse);
-                        handlers.updateReduxWithResult(response);
-                    });
+                    
                     if (currentCacheInfo.cachedQuantityChange !== 0) {
-                        return getNewFetch();
+                        handlers.updateReduxWithResult(response);
+                        return getNewFetch(totalAccumulatedQuantityChanges);
+                    } else {
+                        batch(() => {
+                            handlers.incrementReduxPendingQuantityChange(-totalAccumulatedQuantityChanges);
+                            handlers.updateReduxWithResult(response);
+                        });
                     }
                     return response;   
                 }

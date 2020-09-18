@@ -39,8 +39,6 @@ export function insertOrUpdateCartEntryAction(entry: CartEntry): InsertOrUpdateC
 }
 
 
-
-
 export type IncrementCartEntryPendingQuantityChangeAction = CustomReduxAction<{
     entryId: string;
     incrementAmount: number;
@@ -90,7 +88,7 @@ export function cartReducer(state: CartReduxState = Map(), action: CartReduxActi
 
     const getUpdatedEntryMapValue = (newEntry: CartEntry) => {
         const x: CartEntriesMapValue = {
-            entry: newEntry, 
+            entry: newEntry,
             pendingQuantityChangesInfo: state.get(newEntry.id)?.pendingQuantityChangesInfo ?? null,
         }
         return x;

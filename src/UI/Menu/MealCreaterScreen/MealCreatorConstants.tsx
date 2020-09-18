@@ -13,7 +13,7 @@ const MealCreatorConstants = {
         sectionHeaderBottomSpacing: LayoutConstants.floatingCellStyles.sectionHeaderBottomSpacing,
         contentViewPadding: LayoutConstants.floatingCellStyles.padding,
         imageHeightPercentageOfWidth: LayoutConstants.productImageHeightPercentageOfWidth,
-        imageWidth: 80,
+        imageWidth: LayoutConstants.productThumbnailImageWidth,
         sectionHeaderTextStyles: LayoutConstants.floatingCellStyles.sectionHeaderTextStyles,
         rowTitleFontSize: 16,
 

@@ -7,6 +7,7 @@ const LayoutConstants = {
 
     pageSideInsets: 20,
     productImageHeightPercentageOfWidth: 0.55,
+    productThumbnailImageWidth: 80,
 
     navBar: {
         cornerRadius: 25,

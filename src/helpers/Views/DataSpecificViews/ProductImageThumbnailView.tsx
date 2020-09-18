@@ -17,7 +17,7 @@ const ProductImageThumbnailView = (() => {
     const styles = StyleSheet.create({
         imageHolder: {
             width: MealCreatorConstants.foodSections.imageWidth,
-            borderRadius: imageBorderRadius,            
+            borderRadius: imageBorderRadius,
         },
         image: {
             width: '100%',

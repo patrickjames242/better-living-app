@@ -9,6 +9,13 @@ import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import RoundedTextBouncyButton from '../../../../helpers/Buttons/RoundedTextBouncyButton';
 import LayoutConstants from '../../../../LayoutConstants';
 
+export interface PurchaseOptionBoxProps{
+    price: string, 
+    title: string, 
+    buttonText: string, 
+    onButtonPress?: () => void, 
+    isButtonEnabled?: boolean
+}
 
 const PurchaseOptionBox = (() => {
 
@@ -37,13 +44,13 @@ const PurchaseOptionBox = (() => {
         },
     });
 
-    return function PurchaseOptionBox(props: { price: string, title: string, buttonText: string, onButtonPress?: () => void}) {
+    return function PurchaseOptionBox(props: PurchaseOptionBoxProps) {
         return <SpacerView space={20} style={styles.root}>
             <SpacerView space={5} style={styles.leftSide}>
                 <CustomizedText style={styles.priceText}>{props.price}</CustomizedText>
                 <CustomizedText style={styles.titleText}>{props.title}</CustomizedText>
             </SpacerView>
-            <RoundedTextBouncyButton text={props.buttonText} onPress={props.onButtonPress}/>
+            <RoundedTextBouncyButton text={props.buttonText} onPress={props.onButtonPress} isEnabled={props.isButtonEnabled}/>
         </SpacerView>
     }
 
