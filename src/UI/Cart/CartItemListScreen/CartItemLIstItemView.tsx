@@ -23,7 +23,7 @@ import { CartMealEntry } from '../../../api/cart/CartMealEntry';
 import Product from '../../../api/orderingSystem/products/Product';
 import Meal from '../../../api/orderingSystem/meals/Meal';
 import currency from 'currency.js';
-import { CartEntry } from '../../../redux/cart';
+import { CartEntriesMapValue, CartEntry } from '../../../redux/cart';
 import { displayErrorMessage } from '../../../helpers/Alerts';
 import MealEntryThumbnailView from '../../../helpers/Views/DataSpecificViews/MealEntryThumbnailView';
 import { useNavigation } from '@react-navigation/native';
@@ -32,7 +32,7 @@ import { CartNavStackParamList } from '../navigationHelpers';
 
 
 export interface CartItemListItemViewProps {
-    entry: CartProductEntry | CartMealEntry,
+    entry: CartEntriesMapValue,
     // the string refers to the id of the item
     currentlyOpenDrawerID: ValueBox<Optional<string>>
 }
@@ -78,32 +78,30 @@ const CartItemListItemView = (() => {
     const CartItemListItemView = (props: CartItemListItemViewProps) => {
 
         const productOrMeal = useSelector(state => {
-            if (props.entry instanceof CartProductEntry) {
-                return state.orderingSystem.products.get(props.entry.productId);
-            } else if (props.entry instanceof CartMealEntry) {
-                return state.orderingSystem.meals.get(props.entry.mealId);
+            if (props.entry.entry instanceof CartProductEntry) {
+                return state.orderingSystem.products.get(props.entry.entry.productId);
+            } else if (props.entry.entry instanceof CartMealEntry) {
+                return state.orderingSystem.meals.get(props.entry.entry.mealId);
             }
         });
 
         const allProdutsReduxState = useSelector(state => state.orderingSystem.products);
 
         const allMealEntryImageUrls = useMemo(() => {
-            if (props.entry instanceof CartMealEntry){
-                return compactMap(props.entry.choices.toArray(), x => allProdutsReduxState.get(x.chosenProductId)?.imageUrl);
+            if (props.entry.entry instanceof CartMealEntry){
+                return compactMap(props.entry.entry.choices.toArray(), x => allProdutsReduxState.get(x.chosenProductId)?.imageUrl);
             } else {
                 return [];
             }
         }, [allProdutsReduxState, props.entry]);
 
-        const entryInfo = useSelector(state => state.cart.get(props.entry.id));
-
         const quantity = useMemo(() => {
-            if (entryInfo?.pendingQuantityChangesInfo) {
-                return entryInfo.pendingQuantityChangesInfo.originalQuantity + entryInfo.pendingQuantityChangesInfo.pendingChange;
+            if (props.entry.pendingQuantityChangesInfo) {
+                return props.entry.pendingQuantityChangesInfo.originalQuantity + props.entry.pendingQuantityChangesInfo.pendingChange;
             } else {
-                return entryInfo?.entry.quantity ?? 0;
+                return props.entry.entry.quantity ?? 0;
             }
-        }, [entryInfo?.entry.quantity, entryInfo?.pendingQuantityChangesInfo]);
+        }, [props.entry.entry.quantity, props.entry.pendingQuantityChangesInfo]);
 
         const individualPrice = useMemo(() => {
             if (productOrMeal instanceof Product) {
@@ -123,10 +121,10 @@ const CartItemListItemView = (() => {
                     if (quantity <= 1) return; break;
             }
             const promise: Promise<CartEntry> = (() => {
-                if (props.entry instanceof CartProductEntry) {
-                    return changeProductEntryQuantity(props.entry.id, incrementOrDecrement);
+                if (props.entry.entry instanceof CartProductEntry) {
+                    return changeProductEntryQuantity(props.entry.entry.id, incrementOrDecrement);
                 } else {
-                    return changeMealEntryQuantity(props.entry.id, incrementOrDecrement)
+                    return changeMealEntryQuantity(props.entry.entry.id, incrementOrDecrement)
                 }
             })();
             if (promise !== latestIncrementDecrementPromise.current){
@@ -142,10 +140,10 @@ const CartItemListItemView = (() => {
         const swipeableIsOpen = useRef(false);
 
         useNotificationListener(props.currentlyOpenDrawerID.observer, newValue => {
-            if (newValue !== props.entry.id && swipeableIsOpen.current) {
+            if (newValue !== props.entry.entry.id && swipeableIsOpen.current) {
                 swipeableRef.current?.close();
             }
-        }, [props.entry.id]);
+        }, [props.entry.entry.id]);
 
         const navigation = useNavigation<StackNavigationProp<CartNavStackParamList, 'ProductDetail'>>();
 
@@ -153,8 +151,8 @@ const CartItemListItemView = (() => {
             if (swipeableIsOpen.current){return;}
             if (productOrMeal instanceof Product){
                 navigation.push('ProductDetail', {productId: productOrMeal.id});
-            } else if (props.entry instanceof CartMealEntry){
-                navigation.push('MealCreator', {mealEntryToEdit: props.entry});
+            } else if (props.entry.entry instanceof CartMealEntry){
+                navigation.push('MealCreator', {mealEntryToEdit: props.entry.entry});
             }
         }
 
@@ -170,22 +168,22 @@ const CartItemListItemView = (() => {
                 overshootFriction={3}
                 onSwipeableWillOpen={() => {
                     swipeableIsOpen.current = true;
-                    props.currentlyOpenDrawerID.value = props.entry.id;
+                    props.currentlyOpenDrawerID.value = props.entry.entry.id;
                 }}
                 onSwipeableWillClose={() => {
                 }}
                 onSwipeableClose={() => {
                     swipeableIsOpen.current = false;
-                    if (props.currentlyOpenDrawerID.value !== props.entry.id) { return; }
+                    if (props.currentlyOpenDrawerID.value !== props.entry.entry.id) { return; }
                     props.currentlyOpenDrawerID.value = null;
                 }}
                 renderRightActions={(_, dragValue) => {
                     return <SwipableButtonActions dragAnimatedValue={dragValue} onDeleteButtonPressed={() => {
                         (() => {
-                            if (props.entry instanceof CartProductEntry){
-                                return removeProductFromCart(props.entry.id);
+                            if (props.entry.entry instanceof CartProductEntry){
+                                return removeProductFromCart(props.entry.entry.id);
                             } else {
-                                return removeMealFromCart(props.entry.id);
+                                return removeMealFromCart(props.entry.entry.id);
                             }
                         })().catch(error => {
                             displayErrorMessage(error.message);

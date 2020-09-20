@@ -7,7 +7,7 @@ import SideTabBar from './TabBar/SideTabBar';
 import BottomTabBar from './TabBar/BottomTabBar';
 import { TabBarPosition, useSetUpWindowDimensionsObserver, calculateCurrentDesiredTabBarPosition, useWindowDimensionsNotificationListener, TabBarControllerContext, TabBarControllerContextValue } from './helpers';
 import TabBarControllerContentView from './TabBarControllerContentView';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeArea, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector, addSelectedStateListener } from '../../redux/store';
 import { changeTabBarPosition, changeCurrentSelection } from '../../redux/tabBarController';
 import LogInPopUp, { LogInPopUpRef } from './LogInPopUp';
@@ -35,7 +35,8 @@ const TabBarController = (() => {
 
 	return function TabBarController(props: StackScreenProps<RootNavigationViewParams, 'MainInterface'>) {
 
-		const safeAreaInsets = useSafeArea();
+
+		const safeAreaInsets = useSafeAreaInsets();
 
 		const logInPopUp = useRef<LogInPopUpRef>(null);
 
@@ -76,6 +77,7 @@ const TabBarController = (() => {
 
 		const tabBarControllerContextValue: TabBarControllerContextValue = useMemo(() => ({
 			navigation: props.navigation,
+			presentLogInSignUpPopUp: () => {logInPopUp.current?.present()}
 		}), [props.navigation])
 
 		return <TabBarControllerContext.Provider value={tabBarControllerContextValue}>

@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
-import { CartItemListTotalSummaryView } from '../CartItemListScreen/CartItemListTotalSummaryView';
+import CartTotalSummaryView from '../CartItemListTotalSummaryView';
 import LayoutConstants from '../../../LayoutConstants';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import OrderConfirmationPickUpOrDeliveryView from './OrderConfirmationPickUpOrDeliveryView';
@@ -59,7 +59,7 @@ const OrderConfirmationScreen = (() => {
                 >
                     <SpacerView style={styles.scrollViewContentHolder} space={LayoutConstants.floatingCellStyles.sectionSpacing}>
                         <FloatingCellStyleSectionView sectionTitle="Order Total">
-                            <CartItemListTotalSummaryView />
+                            <CartTotalSummaryView entries={[]} />
                         </FloatingCellStyleSectionView>
                         <OrderConfirmationPickUpOrDeliveryView />
                         <OrderConfirmationHowToPayView />

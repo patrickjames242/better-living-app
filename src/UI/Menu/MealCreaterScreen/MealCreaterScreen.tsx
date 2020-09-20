@@ -139,10 +139,11 @@ const MealCreatorScreen = (() => {
         }, []);
 
         // key is the section id. value is the item id.
-        const selectedItemsForEachSection = useRef(initialSelectedItemsForEachSection);
+        const selectedItemsForEachSectionRef = useRef(initialSelectedItemsForEachSection);
+        const selectedItemsForEachSection = selectedItemsForEachSectionRef;
 
         useMemo(() => {
-            const selectedItems = selectedItemsForEachSection;
+            const selectedItems = selectedItemsForEachSectionRef;
             selectedItems.current = selectedItems.current.withMutations(map => {
                 listViewSections.forEach(section => {
                     map.set(section.categoryId, map.get(section.categoryId) ?? new ValueBox(null));
@@ -156,7 +157,7 @@ const MealCreatorScreen = (() => {
                 return (allReduxMealCategories.get(key)?.productIds.contains(value.value) ?? false) === false;
             });
             return areSelectionsInvalid === false;
-        }, [allReduxMealCategories, selectedItemsForEachSection.current]);
+        }, [allReduxMealCategories, selectedItemsForEachSection]);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
         const initialShouldSubmitButtonBeEnabled = useMemo(() => calculateShouldSubmitButtonBeEnabled(), []);
@@ -174,7 +175,7 @@ const MealCreatorScreen = (() => {
                 unlistens.push(x.observer.addListener(listener));
             })
             return () => unlistens.forEach(x => x());
-        }, [allReduxMealCategories, calculateShouldSubmitButtonBeEnabled, selectedItemsForEachSection.current])
+        }, [allReduxMealCategories, calculateShouldSubmitButtonBeEnabled, selectedItemsForEachSection])
 
 
 

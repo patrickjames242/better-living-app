@@ -1,5 +1,5 @@
 
-import React, { useRef, useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useRef, useCallback, useLayoutEffect, useMemo, useState, useContext } from 'react';
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -10,10 +10,10 @@ import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { Color } from '../../../helpers/colors';
 import Spacer from '../../../helpers/Spacers/Spacer';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
-import PurchaseOptionBox, {PurchaseOptionBoxProps} from './ChildComponents/PurchaseOptionBox';
+import PurchaseOptionBox, { PurchaseOptionBoxProps } from './ChildComponents/PurchaseOptionBox';
 import TitleBox from './ChildComponents/TitleBox';
 import { useNotificationListener } from '../../../helpers/Notification';
-import { windowDimensionsDidChangeNotification } from '../../TabBarController/helpers';
+import { TabBarControllerContext, windowDimensionsDidChangeNotification } from '../../TabBarController/helpers';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import { useSelector } from '../../../redux/store';
 import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
@@ -61,34 +61,46 @@ const ProductDetailScreen = (() => {
     return function ProductDetailScreen(props: StackScreenProps<MenuNavStackParams, 'ProductDetail'>) {
 
         const product = useSelector(state => state.orderingSystem.products.get(props.route.params.productId));
+        const meals = useMealsForProduct(props.route.params.productId);
+        const isUserLoggedIn = useSelector(state => state.authentication != null);
+        const tabBarControllerContext = useContext(TabBarControllerContext);
 
-        const onMealButtonPressed = useCallback((mealId: number) => {
-            props.navigation.push('MealCreator', {mealIdToCreateEntryFor: mealId});
-        }, [props.navigation]);
+
 
         const allCartEntriesReduxState = useSelector(state => state.cart);
 
         const isProductInCart = useMemo(() => {
             return allCartEntriesReduxState.some(value => {
-                if (value.entry instanceof CartProductEntry){
+                if (value.entry instanceof CartProductEntry) {
                     return value.entry.productId === product?.id;
-                } else {return false;}
+                } else { return false; }
             })
         }, [allCartEntriesReduxState, product?.id]);
 
         const [addToCartIsLoading, setAddToCartIsLoading] = useState(false);
 
-        const onAddToCartButtonPressed = useCallback(() => {
-            if (!product){return;}
-            setAddToCartIsLoading(true);
-            addProductToCart(product.id).finally(() => {
-                setAddToCartIsLoading(false);
-            }).catch(error => {
-                displayErrorMessage(error.message);
-            });
-        }, [product]);
+        const onPurchaseOptionButtonPressed = useCallback((mealId: Optional<number>) => {
 
-        const meals = useMealsForProduct(props.route.params.productId);
+            if (isUserLoggedIn === false){
+                tabBarControllerContext?.presentLogInSignUpPopUp();
+                return;
+            }
+            
+            if (mealId == null) {
+                if (!product) { return; }
+                setAddToCartIsLoading(true);
+                addProductToCart(product.id).finally(() => {
+                    setAddToCartIsLoading(false);
+                }).catch(error => {
+                    displayErrorMessage(error.message);
+                });
+            } else {
+                props.navigation.push('MealCreator', { mealIdToCreateEntryFor: mealId });
+            }
+            
+        }, [isUserLoggedIn, product, props.navigation, tabBarControllerContext]);
+
+
 
         const productIndividualPrice = product?.individualPrice;
         const shouldProductBeSoldIndividually = product?.shouldBeSoldIndividually;
@@ -99,8 +111,8 @@ const ProductDetailScreen = (() => {
             const allOptions: PurchaseOptionBoxProps[] = mapOptional(shouldProductBeSoldIndividually ? productIndividualPrice : null, price => [{
                 price: currency(price).format(),
                 title: 'Purchase Separately',
-                buttonText: addToCartIsLoading ? 'Loading' : (isProductInCart ? 'Added to Cart' : 'Add to Cart'),
-                onButtonPress: onAddToCartButtonPressed,
+                buttonText: addToCartIsLoading ? 'Adding...' : (isProductInCart ? 'Added to Cart' : 'Add to Cart'),
+                onButtonPress: () => onPurchaseOptionButtonPressed(null),
                 isButtonEnabled: isProductInCart === false && addToCartIsLoading === false,
             }]) ?? [];
 
@@ -111,14 +123,14 @@ const ProductDetailScreen = (() => {
             }).forEach(meal => {
                 allOptions.push({
                     price: currency(meal.price).format(),
-                    onButtonPress: () => onMealButtonPressed(meal.id),
+                    onButtonPress: () => onPurchaseOptionButtonPressed(meal.id),
                     title: meal.title,
                     buttonText: 'Create Meal',
                 })
             });
             return allOptions;
 
-        }, [addToCartIsLoading, isProductInCart, meals, onAddToCartButtonPressed, onMealButtonPressed, productIndividualPrice, shouldProductBeSoldIndividually]);
+        }, [addToCartIsLoading, isProductInCart, meals, onPurchaseOptionButtonPressed, productIndividualPrice, shouldProductBeSoldIndividually]);
 
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title={product?.title ?? ""} />
@@ -145,7 +157,7 @@ const ProductDetailScreen = (() => {
                                             /* eslint-disable-next-line react/no-children-prop */
                                             children={
                                                 purchaseOptions.map((x, index) => {
-                                                    return <PurchaseOptionBox key={index} {...x}/>
+                                                    return <PurchaseOptionBox key={index} {...x} />
                                                 })
                                             }
                                         />

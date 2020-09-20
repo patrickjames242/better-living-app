@@ -75,6 +75,7 @@ export function calculateCurrentDesiredTabBarPosition(screenWidth?: number): Tab
 
 export interface TabBarControllerContextValue{
     navigation: StackNavigationProp<RootNavigationViewParams, 'MainInterface'>;
+    presentLogInSignUpPopUp: () => void;
 }
 
 export const TabBarControllerContext = React.createContext<Optional<TabBarControllerContextValue>>(null);

@@ -8,7 +8,6 @@ import LayoutConstants from "../../../LayoutConstants";
 const MealCreatorConstants = {
 
     foodSections: {
-
         sectionSpacing: LayoutConstants.floatingCellStyles.sectionSpacing,
         sectionHeaderBottomSpacing: LayoutConstants.floatingCellStyles.sectionHeaderBottomSpacing,
         contentViewPadding: LayoutConstants.floatingCellStyles.padding,

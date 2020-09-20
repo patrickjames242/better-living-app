@@ -106,11 +106,11 @@ const MenuListItemView = (() => {
         const productIndividualPrice = product?.individualPrice;
         
         const cheapestPrice = useMemo(() => {
-            const allPrices = productIndividualPrice ? [productIndividualPrice] : [];
+            const allPrices: number[] = productIndividualPrice && product?.shouldBeSoldIndividually ? [productIndividualPrice] : [];
             allPrices.push(...mealsForProduct.toArray().map(x => x.price));
             if (allPrices.length === 0){return null;}
             return Math.min(...allPrices);
-        }, [mealsForProduct, productIndividualPrice]);
+        }, [mealsForProduct, product?.shouldBeSoldIndividually, productIndividualPrice]);
 
         
         const navigation = useNavigation<StackNavigationProp<MenuNavStackParams, 'MenuListView'>>();
