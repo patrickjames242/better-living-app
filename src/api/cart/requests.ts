@@ -1,14 +1,12 @@
 
 import { fetchFromAPI, HttpMethod } from "../api";
-import { v4 as uuidv4 } from 'react-native-uuid';
 import { CartProductEntry } from "./CartProductEntry";
-import moment from 'moment-timezone';
 import store from "../../redux/store";
 import { deleteCartEntryAction, incrementCartEntryPendingQuantityChangeAction, insertOrUpdateCartEntryAction } from "../../redux/cart";
 import { CartMealEntryJsonResponseObj, CartProductEntryResponseObj } from "./validation";
 import { batch } from "react-redux";
 import { Optional } from "../../helpers/general";
-import { List, Map } from "immutable";
+import { Map } from "immutable";
 import { CartMealEntry } from "./CartMealEntry";
 
 
@@ -74,21 +72,15 @@ export function removeProductFromCart(productEntryId: string) {
 
 const baseMealEntriesUrl = baseCartUrl + 'meal-entries/';
 
+export interface MealEntryRequestChoice{
+    chosen_product_id: number,
+    meal_product_category_id: number,
+}
+
 export function addMealEntryToCart(info: {
     meal_id: number,
-    choices: {
-        chosen_product_id: number,
-        meal_product_category_id: number,
-    }[],
+    choices: MealEntryRequestChoice[],
 }){
-    const placeholderMealEntry = new CartMealEntry(uuidv4(), moment(), 1, info.meal_id, List(info.choices.map(x => ({
-        chosenProductId: x.chosen_product_id,
-        mealProductCategoryId: x.meal_product_category_id,
-    }))));
-    const deletePlaceholderMealEntry = () => {
-        store.dispatch(deleteCartEntryAction(placeholderMealEntry.id));
-    }
-    store.dispatch(insertOrUpdateCartEntryAction(placeholderMealEntry));
     return fetchFromAPI<CartMealEntryJsonResponseObj>({
         path: baseMealEntriesUrl + 'create/',
         method: HttpMethod.post,
@@ -98,14 +90,22 @@ export function addMealEntryToCart(info: {
         },
     }).then(response => {
         const parsedObject = CartMealEntry.parse(response);
-        batch(() => {
-            store.dispatch(insertOrUpdateCartEntryAction(parsedObject));
-            deletePlaceholderMealEntry();
-        });
+        store.dispatch(insertOrUpdateCartEntryAction(parsedObject));
         return parsedObject;
-    }).catch(error => {
-        deletePlaceholderMealEntry();
-        throw error;
+    });
+}
+
+export function updateMealEntryChoices(entryId: string, choices: MealEntryRequestChoice[]){
+    return fetchFromAPI<CartMealEntryJsonResponseObj>({
+        path: baseMealEntriesUrl + entryId + '/',
+        method: HttpMethod.put,
+        jsonBody: {
+            choices,
+        }
+    }).then(response => {
+        const parsedObject = CartMealEntry.parse(response);
+        store.dispatch(insertOrUpdateCartEntryAction(parsedObject));
+        return parsedObject;
     });
 }
 

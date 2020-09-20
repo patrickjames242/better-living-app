@@ -150,10 +150,11 @@ const CartItemListItemView = (() => {
         const navigation = useNavigation<StackNavigationProp<CartNavStackParamList, 'ProductDetail'>>();
 
         function presentMenuItemDetailView() {
+            if (swipeableIsOpen.current){return;}
             if (productOrMeal instanceof Product){
                 navigation.push('ProductDetail', {productId: productOrMeal.id});
-            } else if (productOrMeal instanceof Meal){
-                navigation.push('MealCreator', {defaultMealConfig: {mealId: productOrMeal.id}});
+            } else if (props.entry instanceof CartMealEntry){
+                navigation.push('MealCreator', {mealEntryToEdit: props.entry});
             }
         }
 
@@ -172,9 +173,9 @@ const CartItemListItemView = (() => {
                     props.currentlyOpenDrawerID.value = props.entry.id;
                 }}
                 onSwipeableWillClose={() => {
-                    swipeableIsOpen.current = false;
                 }}
                 onSwipeableClose={() => {
+                    swipeableIsOpen.current = false;
                     if (props.currentlyOpenDrawerID.value !== props.entry.id) { return; }
                     props.currentlyOpenDrawerID.value = null;
                 }}
@@ -222,7 +223,7 @@ const CartItemListItemView = (() => {
             </Swipeable>
         </HighlightButton>
     }
-    return CartItemListItemView;
+    return React.memo(CartItemListItemView);
 })();
 
 export default CartItemListItemView;

@@ -63,7 +63,7 @@ const ProductDetailScreen = (() => {
         const product = useSelector(state => state.orderingSystem.products.get(props.route.params.productId));
 
         const onMealButtonPressed = useCallback((mealId: number) => {
-            props.navigation.push('MealCreator', { defaultMealConfig: { mealId } });
+            props.navigation.push('MealCreator', {mealIdToCreateEntryFor: mealId});
         }, [props.navigation]);
 
         const allCartEntriesReduxState = useSelector(state => state.cart);
