@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import LayoutConstants from '../../../LayoutConstants';
-import { Color } from '../../../helpers/colors';
-import CustomizedText from '../../../helpers/Views/CustomizedText';
+import LayoutConstants from '../../src/LayoutConstants';
+import { Color } from '../../src/helpers/colors';
+import CustomizedText from '../../src/helpers/Views/CustomizedText';
 
 export interface TipsDetailDescriptionViewProps{
     articleText: string

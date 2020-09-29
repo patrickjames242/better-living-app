@@ -5,7 +5,7 @@ import { TabBarSelection, tabBarItemsData } from './TabBar/helpers';
 import MenuScreen from '../Menu/Menu';
 import { useSelector } from '../../redux/store';
 import Cart from '../Cart/Cart';
-import Tips from '../Tips/Tips';
+import Tips from '../../../Tips/Tips';
 import Inquiries from '../Inquiries/Inquiries';
 import Settings from '../Settings/Settings';
 import { useUpdateEffect } from '../../helpers/reactHooks';

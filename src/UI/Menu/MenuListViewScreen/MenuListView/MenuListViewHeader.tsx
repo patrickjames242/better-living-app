@@ -71,9 +71,9 @@ const MenuCategoriesListView = (() => {
         }
     });
 
- 
 
-    return function MenuCategoriesListView(props: MenuCategoriesListViewProps) {
+
+    return function MenuCategoriesListView() {
 
         const listViewContext = useMenulistViewScreenContext();
 

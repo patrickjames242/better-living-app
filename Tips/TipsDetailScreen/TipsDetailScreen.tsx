@@ -2,19 +2,19 @@
 
 import React from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
-import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
-import LayoutConstants from '../../../LayoutConstants';
-import Spacer from '../../../helpers/Spacers/Spacer';
+import NavigationControllerNavigationBar from '../../src/helpers/Views/NavigationControllerNavigationBar';
+import LayoutConstants from '../../src/LayoutConstants';
+import Spacer from '../../src/helpers/Spacers/Spacer';
 import TipsDetailAudioPlayerView from './TipsDetailAudioPlayerView/TipsDetailAudioPlayerView';
 import TipsDetailYTVideoView from './TipsDetailYTVideoView';
-import { useSelector } from '../../../redux/store';
+import { useSelector } from '../../src/redux/store';
 import TipsDetailTitleView from './TipsDetailTitleView';
 import TipsDetailDescriptionView from './TipsDetailDescriptionView';
 import TipsDetailBottomButtonsView from './TipsDetailBottomButtonsView';
-import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
+import ResourceNotFoundView from '../../src/helpers/Views/ResourceNotFoundView';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
-import { useUpdateEffect } from '../../../helpers/reactHooks';
+import { useUpdateEffect } from '../../src/helpers/reactHooks';
 
 
 

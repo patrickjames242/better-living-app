@@ -1,13 +1,13 @@
 
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import CustomizedText from '../../../../helpers/Views/CustomizedText';
-import RoundedBouncyButton from '../../../../helpers/Buttons/RoundedBouncyButton';
-import AssetImages from '../../../../images/AssetImages';
-import Space from '../../../../helpers/Spacers/Space';
-import { CustomFont } from '../../../../helpers/fonts/fonts';
+import CustomizedText from '../../../src/helpers/Views/CustomizedText';
+import RoundedBouncyButton from '../../../src/helpers/Buttons/RoundedBouncyButton';
+import AssetImages from '../../../src/images/AssetImages';
+import Space from '../../../src/helpers/Spacers/Space';
+import { CustomFont } from '../../../src/helpers/fonts/fonts';
 import * as DocumentPicker from 'expo-document-picker';
-import RoundedTextAndIconBouncyButton from '../../../../helpers/Buttons/RoundedTextAndIconBouncyButton';
+import RoundedTextAndIconBouncyButton from '../../../src/helpers/Buttons/RoundedTextAndIconBouncyButton';
 
 
 export interface AddNewFileButtonProps {

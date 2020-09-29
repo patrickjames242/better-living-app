@@ -1,9 +1,9 @@
 
 import React from 'react';
 import {StyleSheet, ActivityIndicator, Image} from 'react-native';
-import { Color } from '../../../../helpers/colors';
-import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
-import AssetImages from '../../../../images/AssetImages';
+import { Color } from '../../../src/helpers/colors';
+import BouncyButton from '../../../src/helpers/Buttons/BouncyButton';
+import AssetImages from '../../../src/images/AssetImages';
 
 
 export enum PlayPauseButtonState {

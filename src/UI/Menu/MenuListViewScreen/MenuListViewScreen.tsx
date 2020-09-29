@@ -1,13 +1,13 @@
 
 import React, { useMemo, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import TopBar from './TopBar/TopBar';
 import MenuListView from './MenuListView/MenuListView';
 import { useCurrentMenu } from '../../../api/orderingSystem/menus/helpers';
 import { MenuListViewScreenContextValue, ALL_CATEGORIES_CATEGORY, MenuListViewScreenContext } from './helpers';
 import { List } from 'immutable';
 import { MenuCategory } from '../../../api/orderingSystem/menus/Menu';
 import { caseInsensitiveStringSort } from '../../../helpers/general';
+import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 
 
 const MenuListScreen = (() => {
@@ -42,14 +42,12 @@ const MenuListScreen = (() => {
 
 		return <MenuListViewScreenContext.Provider value={contextValue}>
 			<View style={styles.root}>
-				<TopBar />
+				<LargeHeadingNavigationBar title={"Today's Menu"}/>
 				<View style={styles.contentView}>
 					<MenuListView />
 				</View>
 			</View>
 		</MenuListViewScreenContext.Provider>
-
-
 	};
 })();
 

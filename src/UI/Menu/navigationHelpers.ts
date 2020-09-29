@@ -1,3 +1,4 @@
+
 import { createStackNavigator } from "@react-navigation/stack";
 import { CartMealEntry } from "../../api/cart/CartMealEntry";
 

@@ -1,17 +1,17 @@
 
 import React, { useState, useEffect } from "react";
 import { Image, StyleSheet } from 'react-native';
-import { CustomColors } from "../../../../helpers/colors";
-import { CustomFont } from "../../../../helpers/fonts/fonts";
-import { Optional } from "../../../../helpers/general";
-import { YoutubeVideo, fetchYoutubeVideo } from "../../../../api/youtube";
-import SpacerView from "../../../../helpers/Spacers/SpacerView";
-import AspectRatioView from "../../../../helpers/Views/AspectRatioView";
-import AssetImages from "../../../../images/AssetImages";
-import CustomizedText from "../../../../helpers/Views/CustomizedText";
+import { CustomColors } from "../../../src/helpers/colors";
+import { CustomFont } from "../../../src/helpers/fonts/fonts";
+import { Optional } from "../../../src/helpers/general";
+import { YoutubeVideo, fetchYoutubeVideo } from "../../../src/api/youtube";
+import SpacerView from "../../../src/helpers/Spacers/SpacerView";
+import AspectRatioView from "../../../src/helpers/Views/AspectRatioView";
+import AssetImages from "../../../src/images/AssetImages";
+import CustomizedText from "../../../src/helpers/Views/CustomizedText";
 import CreateOrEditTipEditButton, { CreateOrEditTipEditButton_EditButtonType } from "../CreateOrEditTipEditButton";
 import CreateOrEditTipAttachmentContainer from "../CreateOrEditTipAttachmentContainer";
-import Spacer from "../../../../helpers/Spacers/Spacer";
+import Spacer from "../../../src/helpers/Spacers/Spacer";
 
 
 interface YoutubeVideoViewProps {

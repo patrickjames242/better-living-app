@@ -44,9 +44,7 @@ const OrderConfirmationScreen = (() => {
 
     const OrderConfirmationScreen = () => {
 
-        // const scrollView = useRef<ScrollView>(null);
-    
-        // const scrollViewRef = useRef<NativeViewGestureHandler>(null);
+
 
         return <CustomKeyboardAvoidingView style={styles.root}>
             <NavigationControllerNavigationBar title="Confirm Order" />
