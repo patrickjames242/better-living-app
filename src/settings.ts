@@ -5,7 +5,7 @@ import { TabBarSelection } from "./UI/TabBarController/TabBar/helpers";
 
 const AppSettings = {
     defaultTabBarSelection: TabBarSelection.menu,
-    useLocalHostDevServer: false,
+    useLocalHostDevServer: true,
     useTestDatabaseData: false,
     vatPercentage: 0.12,
     apiHostUrl(){

@@ -19,6 +19,7 @@ import { is } from "immutable";
 import { realtimeUpdatesReducer } from "./realtimeUpdates";
 import { authenticationReducer } from "./authentication";
 import { cartReducer } from "./cart";
+import { todaysOrdersReducer } from "./todaysOrders";
 
 
 const appReducer = combineReducers({
@@ -34,6 +35,7 @@ const appReducer = combineReducers({
     }),
     cart: cartReducer,
     authentication: authenticationReducer,
+    todaysOrders: todaysOrdersReducer,
 });
 
 export type AppState = ReturnType<typeof appReducer>;

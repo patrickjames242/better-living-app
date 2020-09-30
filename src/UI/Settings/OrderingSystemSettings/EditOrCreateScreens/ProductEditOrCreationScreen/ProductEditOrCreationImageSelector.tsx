@@ -5,7 +5,7 @@ import { StyleSheet, Image, Platform } from 'react-native';
 import AspectRatioView from '../../../../../helpers/Views/AspectRatioView';
 import LayoutConstants from '../../../../../LayoutConstants';
 import { TextFieldViewContainer } from '../../../../../helpers/Views/TextFieldView';
-import { RNFileForUpload } from '../../../../../helpers/general';
+import { RNFileForUpload } from '../../../../../helpers/RNFileForUpload';
 import SpacerView from '../../../../../helpers/Spacers/SpacerView';
 import * as DocumentPicker from 'expo-document-picker'
 import * as ImagePicker from 'expo-image-picker';

@@ -162,6 +162,7 @@ const testReduxState: AppState = {
     },
     cart: Map(),
     authentication: null,
+    todaysOrders: Map(),
 }
 
 export default testReduxState;

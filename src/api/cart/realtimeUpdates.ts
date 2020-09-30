@@ -41,7 +41,7 @@ const InitialObjectsSchema = {
 }
 
 
-interface InitialObjects{
+interface AllObjects{
     [ChangeModelType.product_entries]: CartProductEntryResponseObj[];
     [ChangeModelType.meal_entries]: CartMealEntryJsonResponseObj[];
 }
@@ -51,15 +51,15 @@ const initialObjectsValidator = (new ajv({allErrors: true})).compile(InitialObje
 
 
 export function handleCartRealtimeUpdate(jsonData: any){
-    if (typeof jsonData !== 'object'){return;}
+    if (jsonData == null || typeof jsonData !== 'object'){return;}
 
-    const initial_objects: InitialObjects | undefined = jsonData.initial_objects;
+    const all_objects: AllObjects | undefined = jsonData.all_objects;
 
-    if (initial_objects != undefined){
-        assertValidObjFromApi(initialObjectsValidator, 'Cart Initial Objects', initial_objects);
+    if (all_objects != undefined){
+        assertValidObjFromApi(initialObjectsValidator, 'Cart Initial Objects', all_objects);
         const entries = List<CartEntry>().withMutations(list => {
-            initial_objects.product_entries.forEach(x => list.push(CartProductEntry.parse(x)));
-            initial_objects.meal_entries.forEach(x => list.push(CartMealEntry.parse(x)));
+            all_objects.product_entries.forEach(x => list.push(CartProductEntry.parse(x)));
+            all_objects.meal_entries.forEach(x => list.push(CartMealEntry.parse(x)));
         });
         store.dispatch(updateEntireCartState(entries));
     }

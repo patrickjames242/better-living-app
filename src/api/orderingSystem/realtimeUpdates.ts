@@ -7,7 +7,7 @@ import { handleMealCategoriesRealtimeUpdates } from "./mealCategories/realtimeUp
 
 
 export function handleOrderingSystemRealtimeUpdate(json: any){
-    if (typeof json !== 'object'){return;}
+    if (json == null || typeof json !== 'object'){return;}
 
     const Keys = {
         meal_product_categories: 'meal_product_categories',

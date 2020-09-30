@@ -4,7 +4,7 @@ import { User } from "./User";
 
 
 export function handleUserAuthRealtimeUpdate(json: any){
-    if (typeof json !== 'object'){return;}
+    if (json == null || typeof json !== 'object'){return;}
     const user_object = json.user_object;
 
     if (json.change_type === 'delete'){

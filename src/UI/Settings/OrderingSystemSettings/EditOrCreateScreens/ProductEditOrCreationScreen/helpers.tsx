@@ -1,5 +1,5 @@
 import { Set } from "immutable";
-import { Optional, RNFileForUpload } from "../../../../../helpers/general";
+import { RNFileForUpload } from "../../../../../helpers/RNFileForUpload";
 
 export interface ProductEditOrCreateValues{
     title: string;

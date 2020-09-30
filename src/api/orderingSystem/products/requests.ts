@@ -1,11 +1,11 @@
 
 import {ProductJsonKeys, ProductFormDataKeys } from "./validation";
-import { getPropsFromObject, Optional, RNFileForUpload } from "../../../helpers/general";
+import { getPropsFromObject, Optional } from "../../../helpers/general";
+import { RNFileForUpload } from "../../../helpers/RNFileForUpload";
 import { fetchFromAPI, HttpMethod } from "../../api";
 import Product from "./Product";
 import store from "../../../redux/store";
 import { insertOrUpdateProductAction, deleteProductAction } from "../../../redux/orderingSystem/products";
-
 
 const basePath = 'ordering-system/products/';
 

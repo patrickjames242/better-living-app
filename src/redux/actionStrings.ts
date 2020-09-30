@@ -53,6 +53,10 @@ const ActionStrings = nestReduxActionStrings({
         LOG_IN_OR_SIGN_UP: 'LOG_IN_OR_SIGN_UP',
         UPDATE_USER_OBJECT: 'UPDATE_USER_OBJECT',
         LOG_OUT: 'LOG_OUT',
+    },
+    todaysOrders: {
+        UPDATE_ALL_ORDERS: 'UPDATE_ALL_ORDERS',
+        INSERT_OR_UPDATE_ORDER: 'INERT_OR_UPDATE_ORDER',
     }
 });
 
