@@ -18,6 +18,8 @@ import { CustomFont } from '../../../helpers/fonts/fonts';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 import Space from '../../../helpers/Spacers/Space';
 import { CustomColors } from '../../../helpers/colors';
+import { checkOrderValidity, getRequestOrderItemsFromCartEntries } from '../../../api/orders/requests';
+import { displayErrorMessage } from '../../../helpers/Alerts';
 
 
 
@@ -68,9 +70,22 @@ const CartItemListScreen = (() => {
             }]
         }, [sortedCartEntries]);
 
+        const [validationIsLoading, setValidationIsLoading] = useState(false);
+
         function onCheckOutButtonPressed() {
-            props.navigation.push('OrderingConfirmation');
+            setValidationIsLoading(true);
+            checkOrderValidity(getRequestOrderItemsFromCartEntries(sortedCartEntries))
+                .finally(() => {
+                    setValidationIsLoading(false);
+                })
+                .then(() => {
+                    props.navigation.push('OrderingConfirmation', {cartEntries: sortedCartEntries});
+                }).catch(error => {
+                    displayErrorMessage(error.message);
+                });
         }
+
+
         const listView = useMemo(() => {
 
             return <FloatingCellStyleList<CartEntriesMapValue, Section>
@@ -95,7 +110,6 @@ const CartItemListScreen = (() => {
         }, [bottomButtonHolderHeight, currentlyOpenDrawerID, sections, sortedCartEntries]);
 
 
-
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Your Cart" />
             {(() => {
@@ -109,25 +123,22 @@ const CartItemListScreen = (() => {
                             gradientHolderProps={{
                                 onLayout: event => {
                                     setBottomButtonHolderHeight(event.nativeEvent.layout.height);
-                                }
+                                },
                             }}
                             buttonProps={{
                                 iconSource: require('../../TabBarController/TabBar/icons/shopping-cart.png'),
                                 text: "Confirm Order",
                                 onPress: onCheckOutButtonPressed,
+                                isLoading: validationIsLoading,
                             }}
                         />
                     </>
                 }
-
             })()}
-
-
         </View>
     }
     return React.memo(CartItemListScreen);
 })();
-
 
 
 export default CartItemListScreen;
@@ -151,7 +162,7 @@ const CartIsEmptyView = (() => {
         cartIcon: {
             height: cartIconSize,
             width: cartIconSize,
-            transform: [{translateX: cartIconSize * -0.1}]
+            transform: [{ translateX: cartIconSize * -0.1 }]
         },
         titleText: {
             fontFamily: CustomFont.bold,
@@ -173,9 +184,9 @@ const CartIsEmptyView = (() => {
         return <View style={styles.root}>
             <View style={styles.centerContent}>
                 <Image style={styles.cartIcon} source={require('./shopping-cart.png')} />
-                <Space space={20}/>
+                <Space space={20} />
                 <CustomizedText style={styles.titleText}>Empty Cart</CustomizedText>
-                <Space space={9}/>
+                <Space space={9} />
                 <CustomizedText style={styles.subtitleText}>{"Looks like you havn't made any choices yet"}</CustomizedText>
             </View>
         </View>

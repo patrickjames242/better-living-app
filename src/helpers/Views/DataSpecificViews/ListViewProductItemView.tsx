@@ -48,7 +48,7 @@ const ListViewProductItemView = (() => {
             </Spacer>
         </BouncyButton>
     }
-    return ListViewProductItemView;
+    return React.memo(ListViewProductItemView);
 })();
 
 

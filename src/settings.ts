@@ -1,11 +1,11 @@
 
 
-import { TabBarSelection } from "./UI/TabBarController/TabBar/helpers";
+// import { TabBarSelection } from "./UI/TabBarController/TabBar/helpers";
+
 
 
 const AppSettings = {
-    defaultTabBarSelection: TabBarSelection.menu,
-    useLocalHostDevServer: true,
+    useLocalHostDevServer: false,
     useTestDatabaseData: false,
     vatPercentage: 0.12,
     apiHostUrl(){

@@ -55,7 +55,7 @@ const MealEntryThumbnailView = (() => {
 
         </>
     }
-    return MealEntryThumbnailView;
+    return React.memo(MealEntryThumbnailView);
 })();
 
 export default MealEntryThumbnailView;

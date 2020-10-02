@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
 import { Optional } from '../../../helpers/general';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
@@ -9,9 +9,14 @@ import OrderConfirmationSelectableOptionView from './OrderConfirmationSelectable
 import OrderConfirmationCardDetailsView from './OrderConfirmationCardDetailsView';
 
 
-enum HowToPay {
+export enum HowToPay {
     inPerson,
     online
+}
+
+export interface OrderConfirmationHowToPayViewProps{
+    value: Optional<HowToPay>;
+    onValueChange: (value: Optional<HowToPay>) => void;
 }
 
 
@@ -23,25 +28,23 @@ const OrderConfirmationHowToPayView = (() => {
         },
     });
 
-    const OrderConfirmationHowToPayView = () => {
-
-        const [howToPay, setHowToPay] = useState<Optional<HowToPay>>(null);
+    const OrderConfirmationHowToPayView = (props: OrderConfirmationHowToPayViewProps) => {
 
         return <FloatingCellStyleSectionView sectionTitle="Pay In Person or Online" style={styles.root}>
             <Spacer space={OrderConfirmationLayoutConstants.selectableOptionViewSpacing}>
                 <OrderConfirmationSelectableOptionView
                     imageSource={require('./icons/buy.png')}
                     title="Pay on arrival (in person)"
-                    isSelected={howToPay === HowToPay.inPerson}
-                    onCheckMarkPressed={() => setHowToPay(HowToPay.inPerson)}
+                    isSelected={props.value === HowToPay.inPerson}
+                    onCheckMarkPressed={() => props.onValueChange(HowToPay.inPerson)}
                 />
                 <OrderConfirmationSelectableOptionView
                     imageSource={require('./icons/pay.png')}
                     title="Pay online"
-                    isSelected={howToPay === HowToPay.online}
-                    onCheckMarkPressed={() => setHowToPay(HowToPay.online)}
+                    isSelected={props.value === HowToPay.online}
+                    onCheckMarkPressed={() => props.onValueChange(HowToPay.online)}
                 />
-                <OrderConfirmationCardDetailsView isEnabled={howToPay === HowToPay.online} />
+                <OrderConfirmationCardDetailsView isEnabled={props.value === HowToPay.online} />
             </Spacer>
         </FloatingCellStyleSectionView>
     }

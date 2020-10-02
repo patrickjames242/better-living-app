@@ -1,19 +1,19 @@
 
 
-import React, { useCallback, useRef, useEffect, useMemo } from 'react';
+import React, { useCallback, useRef, useEffect, useMemo, useState } from 'react';
 import { CustomColors } from '../../helpers/colors';
 import { View, StyleSheet } from 'react-native';
 import SideTabBar from './TabBar/SideTabBar';
 import BottomTabBar from './TabBar/BottomTabBar';
 import { TabBarPosition, useSetUpWindowDimensionsObserver, calculateCurrentDesiredTabBarPosition, useWindowDimensionsNotificationListener, TabBarControllerContext, TabBarControllerContextValue } from './helpers';
 import TabBarControllerContentView from './TabBarControllerContentView';
-import { useSafeArea, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector, addSelectedStateListener } from '../../redux/store';
-import { changeTabBarPosition, changeCurrentSelection } from '../../redux/tabBarController';
+import { changeTabBarPosition } from '../../redux/tabBarController';
 import LogInPopUp, { LogInPopUpRef } from './LogInPopUp';
-import { TabBarSelection } from './TabBar/helpers';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigationViewParams } from '../RootNavigationView/helpers';
+import { getInfoForTabBarSelection, TabBarSelection, useDefaultTabBarSelectionForCurrentUser } from './tabBarSelectionsHelpers';
 
 
 
@@ -43,24 +43,29 @@ const TabBarController = (() => {
 		const dispatch = useDispatch();
 		const currentTabBarState = useSelector(state => state.tabBarController);
 		const authentication = useSelector(state => state.authentication);
+		const defaultTabBarSelection = useDefaultTabBarSelectionForCurrentUser();
 
-		const screensThatRequireUserLoggedIn = [TabBarSelection.cart, TabBarSelection.settings];
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		const initialCurrentTabBarSelection = useMemo(() => defaultTabBarSelection, []);
+
+		const [currentTabBarSelection, setCurrentTabBarSelection] = useState(initialCurrentTabBarSelection);
 
 		useEffect(() => {
 			return addSelectedStateListener(state => state.authentication == null, isUserLoggedOut => {
-				if (isUserLoggedOut === true && screensThatRequireUserLoggedIn.includes(currentTabBarState.currentSelection)) {
-					dispatch(changeCurrentSelection(TabBarSelection.menu));
+				if (isUserLoggedOut === true && currentTabBarSelection) {
+					setCurrentTabBarSelection(defaultTabBarSelection);
 				}
 			});
-		}, [currentTabBarState.currentSelection, dispatch, screensThatRequireUserLoggedIn]);
+		}, [currentTabBarSelection, defaultTabBarSelection]);
 
 		const onTabPressed = useCallback((selection: TabBarSelection) => {
-			if (authentication == null && [TabBarSelection.cart, TabBarSelection.settings].includes(selection)) {
+			const tabBarSelectionInfo = getInfoForTabBarSelection(selection);
+			if (authentication == null && tabBarSelectionInfo.requiresAuthentication) {
 				logInPopUp.current?.present();
 			} else {
-				dispatch(changeCurrentSelection(selection));
+				setCurrentTabBarSelection(selection);
 			}
-		}, [authentication, dispatch]);
+		}, [authentication]);
 
 		const updateTabBarPositionIfNeeded = useCallback((newPosition: TabBarPosition) => {
 			if (currentTabBarState.tabBarPosition !== newPosition) {
@@ -77,8 +82,10 @@ const TabBarController = (() => {
 
 		const tabBarControllerContextValue: TabBarControllerContextValue = useMemo(() => ({
 			navigation: props.navigation,
-			presentLogInSignUpPopUp: () => {logInPopUp.current?.present()}
-		}), [props.navigation])
+			presentLogInSignUpPopUp: () => {logInPopUp.current?.present()},
+			currentTabBarSelection: currentTabBarSelection,
+			changeTabBarSelection: setCurrentTabBarSelection,
+		}), [currentTabBarSelection, props.navigation]);
 
 		return <TabBarControllerContext.Provider value={tabBarControllerContextValue}>
 			<View onLayout={rootViewOnLayoutCallback} style={[styles.root, {
@@ -88,7 +95,7 @@ const TabBarController = (() => {
 				{(() => {
 					if (currentTabBarState.tabBarPosition === TabBarPosition.side) {
 						return <View style={styles.sideBarHolder}>
-							<SideTabBar selectedTab={currentTabBarState.currentSelection} onTabPress={onTabPressed} />
+							<SideTabBar selectedTab={currentTabBarSelection} onTabPress={onTabPressed} />
 						</View>
 					}
 				})()}
@@ -96,7 +103,7 @@ const TabBarController = (() => {
 					<TabBarControllerContentView />
 					{(() => {
 						if (currentTabBarState.tabBarPosition === TabBarPosition.bottom) {
-							return <BottomTabBar selectedTab={currentTabBarState.currentSelection} onTabPress={onTabPressed} />
+							return <BottomTabBar selectedTab={currentTabBarSelection} onTabPress={onTabPressed} />
 						}
 					})()}
 				</View>

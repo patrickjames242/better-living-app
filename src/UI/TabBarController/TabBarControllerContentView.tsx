@@ -1,14 +1,15 @@
 
 import React, { useState, useMemo, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing} from 'react-native';
-import { TabBarSelection, tabBarItemsData } from './TabBar/helpers';
 import MenuScreen from '../Menu/Menu';
-import { useSelector } from '../../redux/store';
 import Cart from '../Cart/Cart';
 import Tips from '../../../Tips/Tips';
 import Inquiries from '../Inquiries/Inquiries';
 import Settings from '../Settings/Settings';
 import { useUpdateEffect } from '../../helpers/reactHooks';
+import TodaysOrders from '../TodaysOrders/TodaysOrders';
+import { useTabBarControllerContext } from './helpers';
+import { TabBarSelection, useTabBarSelectionsForCurrentUser } from './tabBarSelectionsHelpers';
 
 
 
@@ -25,6 +26,7 @@ const TabBarControllerContentView = (() => {
 	});
 
 	const selectionComponents = {
+		[TabBarSelection.todaysOrders]: TodaysOrders,
 		[TabBarSelection.menu]: MenuScreen,
 		[TabBarSelection.cart]: Cart,
 		[TabBarSelection.tips]: Tips,
@@ -34,7 +36,8 @@ const TabBarControllerContentView = (() => {
 
 	const TabBarControllerContentView = function () {
 
-		const currentSelection = useSelector(state => state.tabBarController.currentSelection);
+		const currentSelection = useTabBarControllerContext().currentTabBarSelection;
+		const allCurrentSelections = useTabBarSelectionsForCurrentUser();
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		const initialScreensSelectionsValue = useMemo(() => [currentSelection], []);
@@ -45,9 +48,9 @@ const TabBarControllerContentView = (() => {
 			[selection: number]: { translateX: Animated.Value, opacity: Animated.Value }
 		}
 
-		const animatedValues = useRef(tabBarItemsData.reduce<AnimatedValues>((previousValue, currentValue) => {
-			const isCurrentSelection = currentValue.selection === currentSelection;
-			previousValue[currentValue.selection] = { translateX: new Animated.Value(0), opacity: new Animated.Value(isCurrentSelection ? 1 : 0) }
+		const animatedValues = useRef(allCurrentSelections.reduce<AnimatedValues>((previousValue, currentValue) => {
+			const isCurrentSelection = currentValue === currentSelection;
+			previousValue[currentValue] = { translateX: new Animated.Value(0), opacity: new Animated.Value(isCurrentSelection ? 1 : 0) }
 			return previousValue;
 		}, {})).current;
 

@@ -7,7 +7,7 @@ import ProductInfoTag from "../api/orderingSystem/productInfoTags/ProductInfoTag
 import Menu from "../api/orderingSystem/menus/Menu";
 import Meal from "../api/orderingSystem/meals/Meal";
 import MealCategory from "../api/orderingSystem/mealCategories/MealCategory";
-import { getCurrentDefaultTabBarPosition, defaultTabBarSelection } from "./tabBarController";
+import { getCurrentDefaultTabBarPosition } from "./tabBarController";
 import { defaultRealtimeUpdatesState } from "./realtimeUpdates";
 
 const productInfoTags: [number, ProductInfoTag][] = [
@@ -157,7 +157,6 @@ const testReduxState: AppState = {
         mealCategories: Map<number, MealCategory>(mealCategories),
     },
     tabBarController: {
-        currentSelection: defaultTabBarSelection,
         tabBarPosition: getCurrentDefaultTabBarPosition(),
     },
     cart: Map(),

@@ -1,13 +1,14 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 import { View, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
-import { tabBarItemsData, TabBarSelection } from './helpers';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import { CustomColors } from '../../../helpers/colors';
 import LayoutConstants from '../../../LayoutConstants';
 import { windowDimensionsDidChangeNotification, WindowDimensions } from '../helpers';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNotificationListener } from '../../../helpers/Notification';
+import { getInfoForTabBarSelection, TabBarSelection, useTabBarSelectionsForCurrentUser } from '../tabBarSelectionsHelpers';
+
 
 
 interface SideTabBarProps{
@@ -58,9 +59,10 @@ const SideTabBar = (() => {
 
 
 	return function SideTabBar(props: SideTabBarProps) {
-		const safeAreaInsets = useSafeArea();
+		const safeAreaInsets = useSafeAreaInsets();
 
 		const itemMarginSize = useItemMarginSize();
+		const tabBarSelections = useTabBarSelectionsForCurrentUser();
 
 		return <View style={styles.root}>
 			<ScrollView
@@ -69,13 +71,14 @@ const SideTabBar = (() => {
 					paddingTop: safeAreaInsets.top + LayoutConstants.sideMenuBar.padding
 				}]}>
 				{(() => {
-					return tabBarItemsData.map((item, index) => {
+					return tabBarSelections.map((item, index) => {
+						const info = getInfoForTabBarSelection(item);
 						return <SideBarItem
 							marginSize={itemMarginSize}
-							isSelected={props.selectedTab === item.selection}
-							onPress={() => props.onTabPress(item.selection)}
+							isSelected={props.selectedTab === item}
+							onPress={() => props.onTabPress(item)}
 							key={index}
-							imageSource={item.url}
+							imageSource={info.url}
 							isFirstInList={index === 0} 
 						/>
 					})

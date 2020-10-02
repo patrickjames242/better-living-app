@@ -1,11 +1,12 @@
 
 import React from 'react';
 import { View, StyleSheet, Image, ViewStyle, ViewProps } from 'react-native';
-import { useSafeArea } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import { CustomColors, Color } from '../../../helpers/colors';
 import LayoutConstants from '../../../LayoutConstants';
-import { tabBarItemsData, TabBarSelection} from './helpers';
+import { getInfoForTabBarSelection, TabBarSelection, useTabBarSelectionsForCurrentUser } from '../tabBarSelectionsHelpers';
+
 
 
 interface BottomTabBarProps extends ViewProps{
@@ -16,20 +17,23 @@ interface BottomTabBarProps extends ViewProps{
 
 export default function BottomTabBar(props: BottomTabBarProps){
 
-    const safeAreaInsets = useSafeArea();
+    const safeAreaInsets = useSafeAreaInsets();
+
+    const currentTabBarSelections = useTabBarSelectionsForCurrentUser();
 
     return <View {...props} style={[tabBarStyles.tabBar, {
         paddingBottom: safeAreaInsets.bottom,
      }]}>
         <View style={tabBarStyles.contentView}>
-            {tabBarItemsData.map((obj, index) => {
+            {currentTabBarSelections.map((selection, index) => {
 
-                const isSelected = obj.selection === props.selectedTab;
-                const onPress = () => props.onTabPress(obj.selection);
+                const isSelected = selection === props.selectedTab;
+                const onPress = () => props.onTabPress(selection);
                 const imageTintColor = (isSelected ? CustomColors.themeGreen : Color.gray(0.75)).stringValue;
+                const info = getInfoForTabBarSelection(selection);
 
                 return <BouncyButton key={index} style={tabBarStyles.tabBarButton} onPress={onPress} bounceScaleValue={1.3}>
-                    <Image source={obj.url} style={[tabBarStyles.tabBarButtonImage, {tintColor: imageTintColor}]}/>
+                    <Image source={info.url} style={[tabBarStyles.tabBarButtonImage, {tintColor: imageTintColor}]}/>
                 </BouncyButton>
             })}
         </View>
@@ -64,7 +68,7 @@ const tabBarStyles = StyleSheet.create({
         const size = 28;
         return {
             width: size,
-            height: size,            
+            height: size,
         }
     })(),
 })

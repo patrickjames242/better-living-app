@@ -53,7 +53,7 @@ const ProductImageThumbnailView = (() => {
             })()}
         </AspectRatioView>
     }
-    return ProductImageThumbnailView;
+    return React.memo(ProductImageThumbnailView);
 })();
 
 export default ProductImageThumbnailView;

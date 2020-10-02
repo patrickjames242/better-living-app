@@ -7,13 +7,13 @@ import { ScaledSize, Dimensions, LayoutChangeEvent } from 'react-native';
 import LayoutConstants from '../../LayoutConstants';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootNavigationViewParams } from '../RootNavigationView/helpers';
+import { TabBarSelection } from './tabBarSelectionsHelpers';
 
 
 export enum TabBarPosition{
     side,
     bottom
 }
-
 
 export interface WindowDimensions{
     width: number,
@@ -73,18 +73,37 @@ export function calculateCurrentDesiredTabBarPosition(screenWidth?: number): Tab
     }
 }
 
+
+
+
+
 export interface TabBarControllerContextValue{
     navigation: StackNavigationProp<RootNavigationViewParams, 'MainInterface'>;
     presentLogInSignUpPopUp: () => void;
+ 
+    currentTabBarSelection: TabBarSelection;
+    changeTabBarSelection: (newSelection: TabBarSelection) => void;
 }
+
 
 export const TabBarControllerContext = React.createContext<Optional<TabBarControllerContextValue>>(null);
 
-export function useTabBarControllerNavigation(){
+
+export function useTabBarControllerContext(){
     const context = useContext(TabBarControllerContext);
     if (context == null){
         throw new Error("you cannot call useTabBarControllerNavigation outside of a TabBarControllerContext provider");
     }
+    return context;
+}
+
+
+export function useTabBarControllerNavigation(){
+    const context = useTabBarControllerContext();
     return context.navigation;
 }
+
+
+
+
 
