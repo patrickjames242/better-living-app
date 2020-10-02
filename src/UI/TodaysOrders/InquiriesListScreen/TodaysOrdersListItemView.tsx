@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 import LayoutConstants from '../../../LayoutConstants';
@@ -10,17 +10,13 @@ import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodaysOrdersNavStackParams } from '../navigationHelpers';
+import Order from '../../../api/orders/Order';
 
 
-export enum TodaysOrdersUnreadStatus {
-    unread,
-    unreadReplies,
-    none,
-}
 
 
 export interface InquiriesListItemViewProps {
-    unreadStatus: TodaysOrdersUnreadStatus;
+    order: Order;
 }
 
 const InquiriesListItemView = (() => {
@@ -44,9 +40,18 @@ const InquiriesListItemView = (() => {
             color: CustomColors.themeGreen.stringValue,
             fontFamily: CustomFont.medium,
         },
+        topLabels: {
+            flexDirection: 'row',
+        },
         subjectTitle: {
             fontSize: 18,
             fontFamily: CustomFont.bold,
+            flex: 1,
+        },
+        orderNumberLabel: {
+            fontFamily: CustomFont.bold,
+            color: CustomColors.themeGreen.stringValue,
+            fontSize: 17,
         },
         subtitle: {
             color: Color.gray(0.7).stringValue,
@@ -61,31 +66,41 @@ const InquiriesListItemView = (() => {
 
         const navigation = useNavigation<StackNavigationProp<TodaysOrdersNavStackParams, 'TodaysOrdersList'>>();
 
+        const detailsText = useMemo(() => {
+            return props.order.detailsJson.map(x => {
+                return (x.quantity > 1 ? x.quantity + ' × ' : '') + (() => {
+                    if (x.entry_type === 'product'){
+                        return x.product_name;
+                    } else {
+                        return x.meal_name;
+                    }
+                })();
+                
+            }).join(' • ');
+        }, [props.order.detailsJson]);
+
         function respondToButtonPressed(){
             // navigation.push('InquiryDetail');
         }
 
         return <BouncyButton bounceScaleValue={0.9} contentViewProps={{style: styles.root}} onPress={respondToButtonPressed}>
             {
-                (props.unreadStatus !== TodaysOrdersUnreadStatus.none) &&
-                <View style={styles.unreadSideBar} />
+                (props.order.isCompleted === false) && <View style={styles.unreadSideBar} />
             }
             <SpacerView style={styles.content} space={8}>
-                <CustomizedText style={styles.subjectTitle}>
-                    The effectiveness of Neem soap
-                </CustomizedText>
+                <SpacerView style={styles.topLabels} space={10}>
+                    <CustomizedText style={styles.subjectTitle}>
+                        {props.order.user.firstName + ' ' + props.order.user.lastName}
+                    </CustomizedText>
+                    <CustomizedText style={styles.orderNumberLabel}>{'#' + props.order.orderNum}</CustomizedText>
+                </SpacerView>
                 <CustomizedText style={styles.subtitle}>
                     5 hours ago • 5 replies
                 </CustomizedText>
                 <CustomizedText numberOfLines={2} style={styles.description}>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, laborum enim. Illo maiores sapiente sint possimus esse sequi quaerat, optio vel quam voluptatem minima, tempore earum qui? Fuga, libero illum.
+                    {detailsText}
                 </CustomizedText>
-                {
-                    (props.unreadStatus === TodaysOrdersUnreadStatus.unreadReplies) &&
-                    <CustomizedText style={styles.unreadRepliesLabel}>
-                        Unread replies
-                    </CustomizedText>
-                }
+
             </SpacerView>
         </BouncyButton>
     }

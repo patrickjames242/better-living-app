@@ -126,7 +126,7 @@ const CartItemListScreen = (() => {
                                 },
                             }}
                             buttonProps={{
-                                iconSource: require('../../TabBarController/TabBar/icons/shopping-cart.png'),
+                                iconSource: require('../../TabBarController/icons/shopping-cart.png'),
                                 text: "Confirm Order",
                                 onPress: onCheckOutButtonPressed,
                                 isLoading: validationIsLoading,

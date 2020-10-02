@@ -266,7 +266,8 @@ const MealCreatorScreen = (() => {
                                     } else {
                                         return {
                                             text: 'Add to Cart',
-                                            iconSource: require('../../TabBarController/TabBar/icons/shopping-cart.png'),
+                                            // iconSource: require('../../TabBarController/TabBar/icons/shopping-cart.png'),
+                                            iconSource: require('../../TabBarController/icons/shopping-cart.png'),
                                         }
                                     }
                                 })()),
