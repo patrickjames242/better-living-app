@@ -1,7 +1,9 @@
 
 
 import { useMemo } from "react";
+import { User } from "../../api/authentication/User";
 import { UserType } from "../../api/authentication/validation";
+import { Optional } from "../../helpers/general";
 import { useSelector } from "../../redux/store";
 
 export enum TabBarSelection {
@@ -67,16 +69,20 @@ const employeeAndManagerSelections = [
     TabBarSelection.settings
 ];
 
-export function useDefaultTabBarSelectionForCurrentUser(){
-    const userType = useSelector(state => state.authentication?.userObject.userType ?? UserType.customer);
-    switch (userType){
-        case UserType.customer:
-            return TabBarSelection.menu;
+export function getDefaultTabBarSelectionForUserObject(userObj: Optional<User>){
+    switch (userObj?.userType){
         case UserType.employee:
         case UserType.manager:
             return TabBarSelection.todaysOrders;
+        default: 
+            return TabBarSelection.menu;
     }
 }
+
+// export function useDefaultTabBarSelectionForCurrentUser(){
+//     const userObject = useSelector(state => state.authentication?.userObject ?? null);
+//     return getDefaultTabBarSelectionForUserObject(userObject);
+// }
 
 export function useTabBarSelectionsForCurrentUser(){
     const userType = useSelector(state => state.authentication?.userObject.userType ?? UserType.customer);

@@ -13,7 +13,7 @@ import { changeTabBarPosition } from '../../redux/tabBarController';
 import LogInPopUp, { LogInPopUpRef } from './LogInPopUp';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigationViewParams } from '../RootNavigationView/helpers';
-import { getInfoForTabBarSelection, TabBarSelection, useDefaultTabBarSelectionForCurrentUser } from './tabBarSelectionsHelpers';
+import { getDefaultTabBarSelectionForUserObject, getInfoForTabBarSelection, TabBarSelection,  } from './tabBarSelectionsHelpers';
 
 
 
@@ -43,20 +43,21 @@ const TabBarController = (() => {
 		const dispatch = useDispatch();
 		const currentTabBarState = useSelector(state => state.tabBarController);
 		const authentication = useSelector(state => state.authentication);
-		const defaultTabBarSelection = useDefaultTabBarSelectionForCurrentUser();
 
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		const initialCurrentTabBarSelection = useMemo(() => defaultTabBarSelection, []);
+		const initialCurrentTabBarSelection = useMemo(() => {
+			return getDefaultTabBarSelectionForUserObject(authentication?.userObject ?? null);
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
 
 		const [currentTabBarSelection, setCurrentTabBarSelection] = useState(initialCurrentTabBarSelection);
 
 		useEffect(() => {
-			return addSelectedStateListener(state => state.authentication == null, isUserLoggedOut => {
-				if (isUserLoggedOut === true && currentTabBarSelection) {
-					setCurrentTabBarSelection(defaultTabBarSelection);
+			return addSelectedStateListener(state => state.authentication, authentication => {
+				if (authentication == null && getInfoForTabBarSelection(currentTabBarSelection).requiresAuthentication) {
+					setCurrentTabBarSelection(getDefaultTabBarSelectionForUserObject(null));
 				}
 			});
-		}, [currentTabBarSelection, defaultTabBarSelection]);
+		}, [currentTabBarSelection]);
 
 		const onTabPressed = useCallback((selection: TabBarSelection) => {
 			const tabBarSelectionInfo = getInfoForTabBarSelection(selection);

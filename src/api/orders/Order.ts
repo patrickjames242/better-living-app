@@ -30,6 +30,7 @@ export default class Order{
         const json = orderJsonResponseObj;
 
         this.id = json.id;
+
         this.user = {
             firstName: json.user.first_name,
             lastName: json.user.last_name,

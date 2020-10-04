@@ -45,7 +45,8 @@ export function useIsUnmounted(){
 export function useForceUpdate() {
     // eslint-disable-next-line react-hooks/rules-of-hooks,  @typescript-eslint/no-unused-vars
     const [_, setRandomState] = useState({});
-    return () => setRandomState({});
+    const _forceUpdate = useRef(() => setRandomState({}));
+    return _forceUpdate.current;
 }
 
 

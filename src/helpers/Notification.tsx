@@ -9,7 +9,7 @@ export interface Notification<InfoType> {
     removeListener(listener: NotificationListener<InfoType>): void;
 }
 
-export default function Notification<InfoType = {}>(): Notification<InfoType> {
+export default function Notification<InfoType = undefined>(): Notification<InfoType> {
 
     const listeners = new Set<NotificationListener<InfoType>>();
 

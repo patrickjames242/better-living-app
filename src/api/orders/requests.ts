@@ -6,7 +6,7 @@ import { fetchFromAPI, HttpMethod } from "../api";
 import { CartProductEntry } from "../cart/CartProductEntry";
 import Order from "./Order";
 import { OrderJsonResponseObj } from "./validation";
-
+import {v4 as uuidv4} from 'react-native-uuid';
 
 const basePath = 'orders/';
 
@@ -61,15 +61,26 @@ export function getRequestOrderItemsFromCartEntries(cartEntries: CartEntriesMapV
     });
 }
 
-export function submitOrder(requestInfo: OrderRequestObj){
-    return fetchFromAPI<OrderJsonResponseObj>({
-        method: HttpMethod.post,
-        path: basePath + 'submit-order/?emptyCartOnComplete=true',
-        jsonBody: requestInfo,
-    }).then(result => {
-        return new Order(result);
-    });
-}
+export const submitOrder = (() => {
+
+    let _nextUnusedUuid = uuidv4();
+    
+    return function (requestInfo: OrderRequestObj){
+        return fetchFromAPI<OrderJsonResponseObj>({
+            method: HttpMethod.post,
+            path: basePath + 'submit-order/?emptyCartOnComplete=true',
+            jsonBody: {
+                user_provided_uuid: _nextUnusedUuid,
+                ...requestInfo,
+            },
+        }).then(result => {
+            _nextUnusedUuid = uuidv4();
+            return new Order(result);
+        });
+    }
+})();
+
+
 
 
 export function checkOrderValidity(orderItems: OrderItemRequestObj[]){
@@ -81,5 +92,6 @@ export function checkOrderValidity(orderItems: OrderItemRequestObj[]){
         }
     });
 }
+
 
 

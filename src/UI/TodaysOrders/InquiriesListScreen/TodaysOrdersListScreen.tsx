@@ -10,6 +10,7 @@ import MultiColumnSectionList from '../../../helpers/Views/MultipleColumnLists/M
 import Order from '../../../api/orders/Order';
 import { useSelector } from '../../../redux/store';
 import Space from '../../../helpers/Spacers/Space';
+import BoldSectionListHeader from '../../../helpers/Views/BoldSectionListHeader';
 
 
 
@@ -29,6 +30,7 @@ const TodaysOrdersListScreen = (() => {
         },
         flatListContentContainer: {
             padding: sideInsets,
+            paddingTop: 32.5,
         }
     });
 
@@ -40,6 +42,8 @@ const TodaysOrdersListScreen = (() => {
         title: string;
         data: Order[];
     }
+
+    
     
     const TodaysOrdersListScreen = () => {
 
@@ -54,7 +58,7 @@ const TodaysOrdersListScreen = (() => {
                 } else if (va.creationDate.isAfter(vb.creationDate)){
                     return -1;
                 } else {return 0;}
-            }).forEach(value => {
+            }).forEach((value) => {
                 if (value.isCompleted){
                     completedOrders.push(value);
                 } else {
@@ -62,19 +66,19 @@ const TodaysOrdersListScreen = (() => {
                 }
             });
             return [
-                {
+                ...(incompleteOrders.length >= 1 ? [{
                     title: 'Incomplete Orders',
                     data: incompleteOrders,
-                },
-                {
+                }] : []),
+                ...(completedOrders.length >= 1 ? [{
                     title: 'Completed Orders',
                     data: completedOrders,
-                },
+                }] : []),
             ]
         }, [ordersReduxState]);
 
         return <View style={styles.root}>
-            <LargeHeadingNavigationBar title="Todays Orders" rightAlignedView={<PlusButton/>}/>
+            <LargeHeadingNavigationBar title="Todays Orders" />
             <MultiColumnSectionList<Order, SectionType>
                 contentContainerStyle={styles.flatListContentContainer}
                 style={styles.flatList}
@@ -82,7 +86,22 @@ const TodaysOrdersListScreen = (() => {
                 numberOfColumns={calculateNumberOfColumns}
                 itemSpacing={itemSpacing}
                 sections={orderSections}
-                keyExtractor={item => String(item)}
+                stickySectionHeadersEnabled={false}
+                SectionSeparatorComponent={(leadingTrailingInfo) => {
+                    const size = (() => {
+                        if (leadingTrailingInfo.trailingItem !== undefined) {
+                            return 20;
+                        } else if (leadingTrailingInfo.trailingSection !== undefined) {
+                            return 30;
+                        } else {
+                            return 0;
+                        }
+                    })()
+                    return <View style={{ height: size, width: size }} />
+                }}
+                renderSectionHeader={(info) => {
+                    return <BoldSectionListHeader title={(info.section.realSection as SectionType).title} sideInsets={15} fontSize={21}/>
+                }}
                 renderItem={item => {
                     return <TodaysOrdersListItemView order={item}/>
                 }}

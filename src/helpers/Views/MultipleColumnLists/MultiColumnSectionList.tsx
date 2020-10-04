@@ -38,6 +38,7 @@ const MultiColumnSectionList = (() => {
             {...props as any}
             onLayout={onListViewLayout}
             sections={fakeSections}
+            keyExtractor={(x, y) => String(x + y)}
             renderItem={({item, section}) => {
                 return <MultiColumnListRow
                     numberOfColumns={calculatedNumberOfColumns}

@@ -3,7 +3,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { StyleSheet, View, LayoutChangeEvent, Dimensions } from 'react-native';
 import MenuListViewHeader from './MenuListViewHeader';
 import MenuListItemView from './MenuListItemView';
-import MenuListViewSectionHeader from './MenuListViewSectionHeader';
+import BoldSectionListHeader from '../../../../helpers/Views/BoldSectionListHeader';
 import LayoutConstants from '../../../../LayoutConstants';
 import { computeNumberOfListColumns, caseInsensitiveStringSort } from '../../../../helpers/general';
 import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../../TabBarController/helpers';
@@ -149,9 +149,9 @@ const MenuListView = (() => {
                         return <View style={{ height: size, width: size }} />
                     }}
                     renderSectionHeader={info => {
-                        return <MenuListViewSectionHeader
-                            section={info.section.realSection.menuCategory as MenuCategory}
-                            sideInsets={sideInsets} />
+                        return <BoldSectionListHeader
+                            title={(info.section.realSection.menuCategory as MenuCategory).title}
+                            sideInsets={sideInsets + 10} />
                     }}
                     stickySectionHeadersEnabled={false}
                     sections={listViewSections}
