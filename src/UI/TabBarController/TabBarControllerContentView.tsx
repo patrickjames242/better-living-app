@@ -48,11 +48,16 @@ const TabBarControllerContentView = (() => {
 			[selection: number]: { translateX: Animated.Value, opacity: Animated.Value }
 		}
 
-		const animatedValues = useRef(allCurrentSelections.reduce<AnimatedValues>((previousValue, currentValue) => {
-			const isCurrentSelection = currentValue === currentSelection;
-			previousValue[currentValue] = { translateX: new Animated.Value(0), opacity: new Animated.Value(isCurrentSelection ? 1 : 0) }
-			return previousValue;
-		}, {})).current;
+		const animatedValues = useRef<AnimatedValues>({});
+
+		useMemo(() => {
+			for (const selection of allCurrentSelections){
+				if (animatedValues.current[selection] != undefined){continue;}
+				const isCurrentSelection = selection === currentSelection;
+				animatedValues.current[selection] = { translateX: new Animated.Value(0), opacity: new Animated.Value(isCurrentSelection ? 1 : 0) }
+			}
+		}, [allCurrentSelections, currentSelection]);
+
 
 		useUpdateEffect(() => {
 			setCurrentScreensSelections(oldState => {
@@ -88,11 +93,11 @@ const TabBarControllerContentView = (() => {
 			}, duration);
 			previousTimeouts.current.push(timeoutID);
 
-			const oldViewTranslateX = animatedValues[oldSelection].translateX;
-			const newViewTranslateX = animatedValues[newSelection].translateX;
+			const oldViewTranslateX = animatedValues.current[oldSelection].translateX;
+			const newViewTranslateX = animatedValues.current[newSelection].translateX;
 
-			const oldViewOpacity = animatedValues[oldSelection].opacity;
-			const newViewOpacity = animatedValues[newSelection].opacity;
+			const oldViewOpacity = animatedValues.current[oldSelection].opacity;
+			const newViewOpacity = animatedValues.current[newSelection].opacity;
 
 			Animated.timing(newViewOpacity, {
 				toValue: 1,
@@ -137,8 +142,8 @@ const TabBarControllerContentView = (() => {
 				return currentScreensSelections.map(selection => {
 
 					const Component = selectionComponents[selection];
-					const opacity = animatedValues[selection].opacity;
-					const translateX = animatedValues[selection].translateX;
+					const opacity = animatedValues.current[selection].opacity;
+					const translateX = animatedValues.current[selection].translateX;
 
 					return <Animated.View key={selection} style={[styles.childContainer, {
 						opacity, transform: [{ translateX }]

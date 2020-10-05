@@ -5,12 +5,12 @@ import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadi
 import TodaysOrdersListItemView  from './TodaysOrdersListItemView';
 import { computeNumberOfListColumns } from '../../../helpers/general';
 import LayoutConstants from '../../../LayoutConstants';
-import PlusButton from '../../../helpers/Buttons/PlusButton';
 import MultiColumnSectionList from '../../../helpers/Views/MultipleColumnLists/MultiColumnSectionList';
 import Order from '../../../api/orders/Order';
 import { useSelector } from '../../../redux/store';
 import Space from '../../../helpers/Spacers/Space';
-import BoldSectionListHeader from '../../../helpers/Views/BoldSectionListHeader';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
+import { CustomFont } from '../../../helpers/fonts/fonts';
 
 
 
@@ -31,6 +31,12 @@ const TodaysOrdersListScreen = (() => {
         flatListContentContainer: {
             padding: sideInsets,
             paddingTop: 32.5,
+        },
+        sectionHeaderText: {
+            fontSize: 21,
+            fontFamily: CustomFont.bold,
+            marginLeft: 15,
+            marginRight: 15,
         }
     });
 
@@ -100,7 +106,7 @@ const TodaysOrdersListScreen = (() => {
                     return <View style={{ height: size, width: size }} />
                 }}
                 renderSectionHeader={(info) => {
-                    return <BoldSectionListHeader title={(info.section.realSection as SectionType).title} sideInsets={15} fontSize={21}/>
+                    return <CustomizedText style={styles.sectionHeaderText}>{(info.section.realSection as SectionType).title}</CustomizedText>
                 }}
                 renderItem={item => {
                     return <TodaysOrdersListItemView order={item}/>

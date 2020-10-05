@@ -3,7 +3,6 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { StyleSheet, View, LayoutChangeEvent, Dimensions } from 'react-native';
 import MenuListViewHeader from './MenuListViewHeader';
 import MenuListItemView from './MenuListItemView';
-import BoldSectionListHeader from '../../../../helpers/Views/BoldSectionListHeader';
 import LayoutConstants from '../../../../LayoutConstants';
 import { computeNumberOfListColumns, caseInsensitiveStringSort } from '../../../../helpers/general';
 import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../../TabBarController/helpers';
@@ -15,6 +14,8 @@ import MultiColumnSectionList from '../../../../helpers/Views/MultipleColumnList
 import Product from '../../../../api/orderingSystem/products/Product';
 import { List } from 'immutable';
 import { useMenulistViewScreenContext, ALL_CATEGORIES_CATEGORY } from '../helpers';
+import CustomizedText from '../../../../helpers/Views/CustomizedText';
+import { CustomFont } from '../../../../helpers/fonts/fonts';
 
 
 export interface MenuListViewProps {
@@ -25,6 +26,12 @@ export interface MenuListViewProps {
 
 
 const MenuListView = (() => {
+    
+    const sideInsets = LayoutConstants.pageSideInsets;
+    const itemSpacing = 20;
+    const sectionBottomSpacing = 40;
+
+    const maxItemWidth = 450;
 
     const styles = StyleSheet.create({
         root: {
@@ -33,13 +40,14 @@ const MenuListView = (() => {
         listView: {
             overflow: 'visible',
         },
+        sectionHeaderText: {
+            fontFamily: CustomFont.bold,
+            fontSize: 23,
+            marginLeft: sideInsets + 10,
+            marginRight: sideInsets + 10,
+        }
     });
 
-    const sideInsets = LayoutConstants.pageSideInsets;
-    const itemSpacing = 20;
-    const sectionBottomSpacing = 40;
-
-    const maxItemWidth = 450;
 
     function getNumberOfColumnsBasedOnListViewWidth(listViewWidth: number): number {
         return computeNumberOfListColumns({
@@ -149,9 +157,7 @@ const MenuListView = (() => {
                         return <View style={{ height: size, width: size }} />
                     }}
                     renderSectionHeader={info => {
-                        return <BoldSectionListHeader
-                            title={(info.section.realSection.menuCategory as MenuCategory).title}
-                            sideInsets={sideInsets + 10} />
+                        return <CustomizedText  style={styles.sectionHeaderText}>{(info.section.realSection.menuCategory as MenuCategory).title}</CustomizedText>
                     }}
                     stickySectionHeadersEnabled={false}
                     sections={listViewSections}
