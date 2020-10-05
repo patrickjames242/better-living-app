@@ -40,6 +40,7 @@ const MenuListScreen = (() => {
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [menu?.categories, selectedCategory]);
 
+
 		return <MenuListViewScreenContext.Provider value={contextValue}>
 			<View style={styles.root}>
 				<LargeHeadingNavigationBar title={"Today's Menu"}/>

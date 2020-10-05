@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
-import { StyleSheet, View, LayoutChangeEvent, Dimensions } from 'react-native';
+import { StyleSheet, View, LayoutChangeEvent, Dimensions, LayoutRectangle } from 'react-native';
 import MenuListViewHeader from './MenuListViewHeader';
 import MenuListItemView from './MenuListItemView';
 import LayoutConstants from '../../../../LayoutConstants';
@@ -49,9 +49,9 @@ const MenuListView = (() => {
     });
 
 
-    function getNumberOfColumnsBasedOnListViewWidth(listViewWidth: number): number {
+    function sectionListNumberOfRows(layout: LayoutRectangle): number {
         return computeNumberOfListColumns({
-            listWidth: listViewWidth, 
+            listWidth: layout.width, 
             maxItemWidth, sideInsets, 
             horizontalItemSpacing: itemSpacing
         });
@@ -59,49 +59,11 @@ const MenuListView = (() => {
 
 
 
-    function useNumberOfColumns() {
-
-        const isSideBarShowing = useSelector(state => state.tabBarController.tabBarPosition) === TabBarPosition.side;
-        const safeAreaInsets = useSafeArea();
-
-        const intialNumberOfColumns = useMemo(() => {
-            let listViewWidth = Dimensions.get('window').width;
-            listViewWidth -= (safeAreaInsets.left + safeAreaInsets.right);
-            if (isSideBarShowing) {
-                listViewWidth -= LayoutConstants.sideMenuBar.totalWidth;
-            }
-            return getNumberOfColumnsBasedOnListViewWidth(listViewWidth);
-        }, [isSideBarShowing, safeAreaInsets.left, safeAreaInsets.right]);
-
-        const [numberOfColumns, setNumberOfColumns] = useState(intialNumberOfColumns);
-
-        const estimateNumberOfColumsnBasedOn = useCallback((windowDimensions: WindowDimensions) => {
-            let width = windowDimensions.width;
-            width -= (safeAreaInsets.left + safeAreaInsets.right);
-            width -= isSideBarShowing ? LayoutConstants.sideMenuBar.totalWidth : 0;
-            return getNumberOfColumnsBasedOnListViewWidth(width);
-        }, [isSideBarShowing, safeAreaInsets.left, safeAreaInsets.right]);
-
-        useNotificationListener(windowDimensionsDidChangeNotification, dimensions => {
-            setNumberOfColumns(estimateNumberOfColumsnBasedOn(dimensions));
-        }, [estimateNumberOfColumsnBasedOn])
-
-        const rootViewOnLayoutCallback = useCallback(function (event: LayoutChangeEvent) {
-            setNumberOfColumns(getNumberOfColumnsBasedOnListViewWidth(event.nativeEvent.layout.width));
-        }, []);
-
-        return { numberOfColumns, rootViewOnLayoutCallback };
-
-    }
+   
 
     return function MenuListView(props: MenuListViewProps) {
         
-        const { numberOfColumns, rootViewOnLayoutCallback } = useNumberOfColumns();
-
-        // for each menuListSection this returns a fake section where each item in the data array represents one of the row indices of the section in order starting from 0
-
         
-
         const allProducts = useSelector(state => state.orderingSystem.products);
 
         const menuListViewContext = useMenulistViewScreenContext();
@@ -130,12 +92,11 @@ const MenuListView = (() => {
 
         return useMemo(() => (
             <View
-                onLayout={rootViewOnLayoutCallback}
                 style={[styles.root]}>
                 <MultiColumnSectionList<number, {data: number[]}>
                     itemSpacing={itemSpacing}
                     sideInsets={sideInsets}
-                    numberOfColumns={numberOfColumns}
+                    numberOfColumns={sectionListNumberOfRows}
                     style={styles.listView}
                     contentContainerStyle={{
                         paddingTop: props.topContentInset ?? 0,
@@ -168,7 +129,7 @@ const MenuListView = (() => {
                     }}
                 />
             </View>
-        ), [listViewSections, numberOfColumns, props.bottomContentInset, props.topContentInset, rootViewOnLayoutCallback]);
+        ), [listViewSections, props.bottomContentInset, props.topContentInset]);
     }
 })();
 

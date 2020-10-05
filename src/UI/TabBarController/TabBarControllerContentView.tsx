@@ -150,7 +150,7 @@ const TabBarControllerContentView = (() => {
 					}]}>
 						<Component />
 					</Animated.View>
-				})
+				});
 			})()}
 		</View>
 	};

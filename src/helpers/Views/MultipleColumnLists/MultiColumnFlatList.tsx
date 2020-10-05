@@ -31,10 +31,12 @@ const MultiColumnFlatList = (() => {
             const amountOfRows = Math.ceil(dataLength / calculatedNumberOfColumns);
             return getNumbersList(0, Math.max(amountOfRows - 1, 0));
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [propsData, propsData?.length, calculatedNumberOfColumns]);
+        }, [propsData, propsData?.length, calculatedNumberOfColumns ]);
+
 
         return <FlatList
             {...props as any}
+            // onLayout={onListViewLayout}
             onLayout={onListViewLayout}
             data={fakeItems}
             renderItem={(args) => {

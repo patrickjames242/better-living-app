@@ -36,6 +36,13 @@ export function useMultipleColumnFunctionality(listViewProps: {
     return {
         calculatedNumberOfColumns,
         onListViewLayout: (layout: LayoutChangeEvent) => {
+            if (
+                // prevents update on 0 height and width layout update when new screen is presented in a navigation stack
+                layout.nativeEvent.layout.width === 0 && 
+                layout.nativeEvent.layout.height === 0
+            ){
+                return;
+            }
             latestLayout.current = layout.nativeEvent.layout;
             const newNumberOfColumns = calculateNumberOfColumns(propsNumberOfColumns, latestLayout.current);
             if (newNumberOfColumns !== calculatedNumberOfColumns) forceRerender();
