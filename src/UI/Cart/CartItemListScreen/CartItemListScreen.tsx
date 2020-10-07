@@ -1,7 +1,7 @@
 
 
 import React, { useMemo, useRef, useState } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import FloatingCellStyleList from '../../../helpers/Views/FloatingCellStyleList';
 import CartItemListItemView from './CartItemLIstItemView';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
@@ -14,16 +14,17 @@ import { CartNavStackParamList } from '../navigationHelpers';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useSelector } from '../../../redux/store';
 import { CartEntriesMapValue } from '../../../redux/cart';
-import { CustomFont } from '../../../helpers/fonts/fonts';
-import CustomizedText from '../../../helpers/Views/CustomizedText';
-import Space from '../../../helpers/Spacers/Space';
-import { CustomColors } from '../../../helpers/colors';
 import { checkOrderValidity, getRequestOrderItemsFromCartEntries } from '../../../api/orders/requests';
 import { displayErrorMessage } from '../../../helpers/Alerts';
+import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
+import ListLoadingHolderView from '../../../helpers/Views/ListLoadingView';
 
 
 
 const CartItemListScreen = (() => {
+
+    const cartIconSize = 150;
+
 
     const styles = StyleSheet.create({
         root: {
@@ -38,6 +39,11 @@ const CartItemListScreen = (() => {
             width: '100%',
             alignSelf: 'center',
         },
+        emptyCartImage: {
+            height: cartIconSize,
+            width: cartIconSize,
+            transform: [{ translateX: cartIconSize * -0.14 }]
+        }
     });
 
 
@@ -112,29 +118,31 @@ const CartItemListScreen = (() => {
 
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Your Cart" />
-            {(() => {
-                if (sortedCartEntries.length <= 0) {
-                    return <CartIsEmptyView />
-                } else {
-                    return <>
-                        {listView}
-                        <BottomScreenButtonWithGradient
-                            ref={bottomGradientViewRef}
-                            gradientHolderProps={{
-                                onLayout: event => {
-                                    setBottomButtonHolderHeight(event.nativeEvent.layout.height);
-                                },
-                            }}
-                            buttonProps={{
-                                iconSource: require('../../TabBarController/icons/shopping-cart.png'),
-                                text: "Confirm Order",
-                                onPress: onCheckOutButtonPressed,
-                                isLoading: validationIsLoading,
-                            }}
-                        />
-                    </>
-                }
-            })()}
+            <ListLoadingHolderView>
+                {(() => {
+                    if (sortedCartEntries.length <= 0) {
+                        return <NoItemsToShowView title="Empty Cart" subtitle="Looks like you havn't made any choices yet." imageSource={require('./shopping-cart.png')} imageStyle={styles.emptyCartImage}/>
+                    } else {
+                        return <>
+                            {listView}
+                            <BottomScreenButtonWithGradient
+                                ref={bottomGradientViewRef}
+                                gradientHolderProps={{
+                                    onLayout: event => {
+                                        setBottomButtonHolderHeight(event.nativeEvent.layout.height);
+                                    },
+                                }}
+                                buttonProps={{
+                                    iconSource: require('../../TabBarController/icons/shopping-cart.png'),
+                                    text: "Confirm Order",
+                                    onPress: onCheckOutButtonPressed,
+                                    isLoading: validationIsLoading,
+                                }}
+                            />
+                        </>
+                    }
+                })()}
+            </ListLoadingHolderView>
         </View>
     }
     return React.memo(CartItemListScreen);
@@ -145,51 +153,3 @@ export default CartItemListScreen;
 
 
 
-
-const CartIsEmptyView = (() => {
-
-    const cartIconSize = 120;
-
-    const styles = StyleSheet.create({
-        root: {
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        centerContent: {
-            alignItems: 'center',
-        },
-        cartIcon: {
-            height: cartIconSize,
-            width: cartIconSize,
-            transform: [{ translateX: cartIconSize * -0.1 }]
-        },
-        titleText: {
-            fontFamily: CustomFont.bold,
-            fontSize: 22,
-            textAlign: 'center',
-            maxWidth: 170,
-        },
-        subtitleText: {
-            color: CustomColors.offBlackSubtitle.stringValue,
-            fontFamily: CustomFont.medium,
-            fontSize: 15,
-            textAlign: 'center',
-            maxWidth: 200,
-            lineHeight: 20
-        }
-    });
-
-    const CartIsEmptyView = () => {
-        return <View style={styles.root}>
-            <View style={styles.centerContent}>
-                <Image style={styles.cartIcon} source={require('./shopping-cart.png')} />
-                <Space space={20} />
-                <CustomizedText style={styles.titleText}>Empty Cart</CustomizedText>
-                <Space space={9} />
-                <CustomizedText style={styles.subtitleText}>{"Looks like you havn't made any choices yet"}</CustomizedText>
-            </View>
-        </View>
-    }
-    return CartIsEmptyView;
-})();

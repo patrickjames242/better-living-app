@@ -1,13 +1,10 @@
 
-import React, { useState, useMemo, useCallback } from 'react';
-import { StyleSheet, View, LayoutChangeEvent, Dimensions, LayoutRectangle } from 'react-native';
+import React, { useMemo } from 'react';
+import { StyleSheet, View, LayoutRectangle } from 'react-native';
 import MenuListViewHeader from './MenuListViewHeader';
 import MenuListItemView from './MenuListItemView';
 import LayoutConstants from '../../../../LayoutConstants';
 import { computeNumberOfListColumns, caseInsensitiveStringSort } from '../../../../helpers/general';
-import { TabBarPosition, WindowDimensions, windowDimensionsDidChangeNotification } from '../../../TabBarController/helpers';
-import { useSafeArea } from 'react-native-safe-area-context';
-import { useNotificationListener } from '../../../../helpers/Notification';
 import { useSelector } from '../../../../redux/store';
 import { MenuCategory } from '../../../../api/orderingSystem/menus/Menu';
 import MultiColumnSectionList from '../../../../helpers/Views/MultipleColumnLists/MultiColumnSectionList';
@@ -16,6 +13,7 @@ import { List } from 'immutable';
 import { useMenulistViewScreenContext, ALL_CATEGORIES_CATEGORY } from '../helpers';
 import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
+import ListLoadingHolderView from '../../../../helpers/Views/ListLoadingView';
 
 
 export interface MenuListViewProps {
@@ -26,7 +24,7 @@ export interface MenuListViewProps {
 
 
 const MenuListView = (() => {
-    
+
     const sideInsets = LayoutConstants.pageSideInsets;
     const itemSpacing = 20;
     const sectionBottomSpacing = 40;
@@ -51,26 +49,26 @@ const MenuListView = (() => {
 
     function sectionListNumberOfRows(layout: LayoutRectangle): number {
         return computeNumberOfListColumns({
-            listWidth: layout.width, 
-            maxItemWidth, sideInsets, 
+            listWidth: layout.width,
+            maxItemWidth, sideInsets,
             horizontalItemSpacing: itemSpacing
         });
     }
 
 
 
-   
+
 
     return function MenuListView(props: MenuListViewProps) {
-        
-        
+
+
         const allProducts = useSelector(state => state.orderingSystem.products);
 
         const menuListViewContext = useMenulistViewScreenContext();
-    
+
         const selectedCategory = menuListViewContext.selectedCategory;
         const sortedCategories = menuListViewContext.allSortedCategories;
-        
+
 
         const listViewSections = useMemo(() => {
             const categoriesToDisplay = selectedCategory === ALL_CATEGORIES_CATEGORY ? sortedCategories : List([selectedCategory]);
@@ -93,41 +91,43 @@ const MenuListView = (() => {
         return useMemo(() => (
             <View
                 style={[styles.root]}>
-                <MultiColumnSectionList<number, {data: number[]}>
-                    itemSpacing={itemSpacing}
-                    sideInsets={sideInsets}
-                    numberOfColumns={sectionListNumberOfRows}
-                    style={styles.listView}
-                    contentContainerStyle={{
-                        paddingTop: props.topContentInset ?? 0,
-                        paddingBottom: props.bottomContentInset ?? 0,
-                    }}
-                    ItemSeparatorComponent={() => {
-                        return <View style={{ height: itemSpacing, width: itemSpacing }} />
-                    }}
-                    SectionSeparatorComponent={(leadingTrailingInfo) => {
-                        const size = (() => {
-                            if (leadingTrailingInfo.trailingItem !== undefined) {
-                                return itemSpacing;
-                            } else if (leadingTrailingInfo.trailingSection !== undefined) {
-                                return sectionBottomSpacing;
-                            } else {
-                                return LayoutConstants.pageSideInsets;
-                            }
-                        })()
-                        return <View style={{ height: size, width: size }} />
-                    }}
-                    renderSectionHeader={info => {
-                        return <CustomizedText  style={styles.sectionHeaderText}>{(info.section.realSection.menuCategory as MenuCategory).title}</CustomizedText>
-                    }}
-                    stickySectionHeadersEnabled={false}
-                    sections={listViewSections}
-                    keyExtractor={(item, index) => item + "," + index} // so react can shut up
-                    ListHeaderComponent={MenuListViewHeader}
-                    renderItem={item => {
-                        return <MenuListItemView productId={item} />
-                    }}
-                />
+                <ListLoadingHolderView>
+                    <MultiColumnSectionList<number, { data: number[] }>
+                        itemSpacing={itemSpacing}
+                        sideInsets={sideInsets}
+                        numberOfColumns={sectionListNumberOfRows}
+                        style={styles.listView}
+                        contentContainerStyle={{
+                            paddingTop: props.topContentInset ?? 0,
+                            paddingBottom: props.bottomContentInset ?? 0,
+                        }}
+                        ItemSeparatorComponent={() => {
+                            return <View style={{ height: itemSpacing, width: itemSpacing }} />
+                        }}
+                        SectionSeparatorComponent={(leadingTrailingInfo) => {
+                            const size = (() => {
+                                if (leadingTrailingInfo.trailingItem !== undefined) {
+                                    return itemSpacing;
+                                } else if (leadingTrailingInfo.trailingSection !== undefined) {
+                                    return sectionBottomSpacing;
+                                } else {
+                                    return LayoutConstants.pageSideInsets;
+                                }
+                            })()
+                            return <View style={{ height: size, width: size }} />
+                        }}
+                        renderSectionHeader={info => {
+                            return <CustomizedText style={styles.sectionHeaderText}>{(info.section.realSection.menuCategory as MenuCategory).title}</CustomizedText>
+                        }}
+                        stickySectionHeadersEnabled={false}
+                        sections={listViewSections}
+                        keyExtractor={(item, index) => item + "," + index} // so react can shut up
+                        ListHeaderComponent={MenuListViewHeader}
+                        renderItem={item => {
+                            return <MenuListItemView productId={item} />
+                        }}
+                    />
+                </ListLoadingHolderView>
             </View>
         ), [listViewSections, props.bottomContentInset, props.topContentInset]);
     }

@@ -11,6 +11,7 @@ import { useAllHealthTipsArray } from '../../src/api/healthTips/helpers';
 import PlusButton from '../../src/helpers/Buttons/PlusButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
+import ListLoadingHolderView from '../../src/helpers/Views/ListLoadingView';
 
 
 const TipsListScreen = (() => {
@@ -26,8 +27,7 @@ const TipsListScreen = (() => {
         flatList: {
             zIndex: -1,
             overflow: 'visible',
-            flex: 1, 
-            
+            flex: 1,
         },
         flatListContentContainer: {
             ...LayoutConstants.maxWidthListContentContainerStyles(1100),
@@ -48,21 +48,25 @@ const TipsListScreen = (() => {
         }
         
         return <View style={styles.root}>
-            <LargeHeadingNavigationBar title="Health Tips" rightAlignedView={<PlusButton onPress={onPlusButtonPressed}/>}/>
-            <MultiColumnFlatList
-                contentContainerStyle={styles.flatListContentContainer}
-                numberOfColumns={calculateListColumns}
-                style={styles.flatList}
-                ItemSeparatorComponent={() => {
-                    return <Space space={itemSpacing} />
-                }}
-                columnSpacing={itemSpacing}
-                data={healthTips}
-                keyExtractor={item => String(item)}
-                renderItem={(item) => {
-                    return <TipsListItemView id={item.id}/>
-                }}
-            />
+            <LargeHeadingNavigationBar title="Health Tips" rightAlignedView={
+                <PlusButton onPress={onPlusButtonPressed}/>
+            }/>
+            <ListLoadingHolderView>
+                <MultiColumnFlatList
+                    contentContainerStyle={styles.flatListContentContainer}
+                    numberOfColumns={calculateListColumns}
+                    style={styles.flatList}
+                    ItemSeparatorComponent={() => {
+                        return <Space space={itemSpacing} />
+                    }}
+                    columnSpacing={itemSpacing}
+                    data={healthTips}
+                    keyExtractor={item => String(item)}
+                    renderItem={(item) => {
+                        return <TipsListItemView id={item.id}/>
+                    }}
+                />
+            </ListLoadingHolderView>
         </View>
     }
 
