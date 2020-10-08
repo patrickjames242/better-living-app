@@ -4,10 +4,11 @@ import { Platform, Alert } from "react-native";
 
 
 export function displayErrorMessage(message: string) {
+    const oops = "Oops! 😨";
     if (Platform.OS === 'web') {
-        alert("Oops! " + message);
+        alert(oops + message);
     } else {
-        Alert.alert('Oops!', message, [{ text: 'Ok' }]);
+        Alert.alert(oops, message, [{ text: 'Ok' }]);
     }
 }
 

@@ -111,7 +111,7 @@ const TodaysOrdersListScreen = (() => {
                                 } else {
                                     return 0;
                                 }
-                            })()
+                            })();
                             return <View style={{ height: size, width: size }} />
                         }}
                         renderSectionHeader={(info) => {

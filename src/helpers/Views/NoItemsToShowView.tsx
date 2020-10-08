@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {Image, ImageStyle, StyleProp, StyleSheet, View} from 'react-native';
 import AssetImages from '../../images/AssetImages';
@@ -31,14 +32,14 @@ const NoItemsToShowView = (() => {
             fontFamily: CustomFont.bold,
             fontSize: 22,
             textAlign: 'center',
-            maxWidth: 170,
+            maxWidth: 190,
         },
         subtitle: {
             color: CustomColors.offBlackSubtitle.stringValue,
             fontFamily: CustomFont.medium,
             fontSize: 15,
             textAlign: 'center',
-            maxWidth: 200,
+            maxWidth: 240,
             lineHeight: 20
         }
     });

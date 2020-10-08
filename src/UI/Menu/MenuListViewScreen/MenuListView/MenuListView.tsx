@@ -13,7 +13,7 @@ import { List } from 'immutable';
 import { useMenulistViewScreenContext, ALL_CATEGORIES_CATEGORY } from '../helpers';
 import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
-import ListLoadingHolderView from '../../../../helpers/Views/ListLoadingView';
+
 
 
 export interface MenuListViewProps {
@@ -69,7 +69,6 @@ const MenuListView = (() => {
         const selectedCategory = menuListViewContext.selectedCategory;
         const sortedCategories = menuListViewContext.allSortedCategories;
 
-
         const listViewSections = useMemo(() => {
             const categoriesToDisplay = selectedCategory === ALL_CATEGORIES_CATEGORY ? sortedCategories : List([selectedCategory]);
             return categoriesToDisplay.toArray().map(category => {
@@ -91,43 +90,41 @@ const MenuListView = (() => {
         return useMemo(() => (
             <View
                 style={[styles.root]}>
-                <ListLoadingHolderView>
-                    <MultiColumnSectionList<number, { data: number[] }>
-                        itemSpacing={itemSpacing}
-                        sideInsets={sideInsets}
-                        numberOfColumns={sectionListNumberOfRows}
-                        style={styles.listView}
-                        contentContainerStyle={{
-                            paddingTop: props.topContentInset ?? 0,
-                            paddingBottom: props.bottomContentInset ?? 0,
-                        }}
-                        ItemSeparatorComponent={() => {
-                            return <View style={{ height: itemSpacing, width: itemSpacing }} />
-                        }}
-                        SectionSeparatorComponent={(leadingTrailingInfo) => {
-                            const size = (() => {
-                                if (leadingTrailingInfo.trailingItem !== undefined) {
-                                    return itemSpacing;
-                                } else if (leadingTrailingInfo.trailingSection !== undefined) {
-                                    return sectionBottomSpacing;
-                                } else {
-                                    return LayoutConstants.pageSideInsets;
-                                }
-                            })()
-                            return <View style={{ height: size, width: size }} />
-                        }}
-                        renderSectionHeader={info => {
-                            return <CustomizedText style={styles.sectionHeaderText}>{(info.section.realSection.menuCategory as MenuCategory).title}</CustomizedText>
-                        }}
-                        stickySectionHeadersEnabled={false}
-                        sections={listViewSections}
-                        keyExtractor={(item, index) => item + "," + index} // so react can shut up
-                        ListHeaderComponent={MenuListViewHeader}
-                        renderItem={item => {
-                            return <MenuListItemView productId={item} />
-                        }}
-                    />
-                </ListLoadingHolderView>
+                <MultiColumnSectionList<number, { data: number[] }>
+                    itemSpacing={itemSpacing}
+                    sideInsets={sideInsets}
+                    numberOfColumns={sectionListNumberOfRows}
+                    style={styles.listView}
+                    contentContainerStyle={{
+                        paddingTop: props.topContentInset ?? 0,
+                        paddingBottom: props.bottomContentInset ?? 0,
+                    }}
+                    ItemSeparatorComponent={() => {
+                        return <View style={{ height: itemSpacing, width: itemSpacing }} />
+                    }}
+                    SectionSeparatorComponent={(leadingTrailingInfo) => {
+                        const size = (() => {
+                            if (leadingTrailingInfo.trailingItem !== undefined) {
+                                return itemSpacing;
+                            } else if (leadingTrailingInfo.trailingSection !== undefined) {
+                                return sectionBottomSpacing;
+                            } else {
+                                return LayoutConstants.pageSideInsets;
+                            }
+                        })()
+                        return <View style={{ height: size, width: size }} />
+                    }}
+                    renderSectionHeader={info => {
+                        return <CustomizedText style={styles.sectionHeaderText}>{(info.section.realSection.menuCategory as MenuCategory).title}</CustomizedText>
+                    }}
+                    stickySectionHeadersEnabled={false}
+                    sections={listViewSections}
+                    keyExtractor={(item, index) => item + "," + index} // so react can shut up
+                    ListHeaderComponent={MenuListViewHeader}
+                    renderItem={item => {
+                        return <MenuListItemView productId={item} />
+                    }}
+                />
             </View>
         ), [listViewSections, props.bottomContentInset, props.topContentInset]);
     }

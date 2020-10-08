@@ -8,6 +8,8 @@ import { List } from 'immutable';
 import { MenuCategory } from '../../../api/orderingSystem/menus/Menu';
 import { caseInsensitiveStringSort } from '../../../helpers/general';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
+import ListLoadingHolderView from '../../../helpers/Views/ListLoadingView';
+import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
 
 
 const MenuListScreen = (() => {
@@ -40,13 +42,20 @@ const MenuListScreen = (() => {
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [menu?.categories, selectedCategory]);
 
-
 		return <MenuListViewScreenContext.Provider value={contextValue}>
 			<View style={styles.root}>
-				<LargeHeadingNavigationBar title={"Today's Menu"}/>
-				<View style={styles.contentView}>
-					<MenuListView />
-				</View>
+				<LargeHeadingNavigationBar title={"Today's Menu"} />
+				<ListLoadingHolderView>
+					{(() => {
+						if (contextValue.allSortedCategories.size < 1) {
+							return <NoItemsToShowView imageSource={require('./shop-closed.png')} title="Nothing Available 😞" subtitle="Nothing is available for purchase at this time. Try again later." />
+						} else {
+							return <View style={styles.contentView}>
+								<MenuListView />
+							</View>
+						}
+					})()}
+				</ListLoadingHolderView>
 			</View>
 		</MenuListViewScreenContext.Provider>
 	};

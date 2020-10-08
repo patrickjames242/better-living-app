@@ -1,9 +1,9 @@
+
 import React from 'react';
-import TodaysOrdersListScreen from './InquiriesListScreen/TodaysOrdersListScreen';
+import TodaysOrdersListScreen from './TodaysOrdersListScreen/TodaysOrdersListScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { TodaysOrdersNavStack } from './navigationHelpers';
 import { DEFAULT_NAV_SCREEN_OPTIONS } from '../../helpers/general';
-
 
 
 export default function TodaysOrders(){
