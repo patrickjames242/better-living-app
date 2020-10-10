@@ -1,10 +1,10 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import LayoutConstants from "../../src/LayoutConstants";
-import { CustomFont } from "../../src/helpers/fonts/fonts";
-import { CustomColors } from "../../src/helpers/colors";
-import SpacerView from "../../src/helpers/Spacers/SpacerView";
-import CustomizedText from "../../src/helpers/Views/CustomizedText";
+import LayoutConstants from "../../../LayoutConstants";
+import { CustomFont } from "../../../helpers/fonts/fonts";
+import { CustomColors } from "../../../helpers/colors";
+import SpacerView from "../../../helpers/Spacers/SpacerView";
+import CustomizedText from "../../../helpers/Views/CustomizedText";
 
 export interface TipsDetailTitleViewProps{
     dateString?: string;

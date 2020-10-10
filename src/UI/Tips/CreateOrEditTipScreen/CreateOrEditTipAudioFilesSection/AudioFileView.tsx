@@ -2,11 +2,11 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 import CreateOrEditTipAttachmentContainer from '../CreateOrEditTipAttachmentContainer';
-import CustomizedText from '../../../src/helpers/Views/CustomizedText';
-import AssetImages from '../../../src/images/AssetImages';
+import CustomizedText from '../../../../helpers/Views/CustomizedText';
+import AssetImages from '../../../../images/AssetImages';
 import CreateOrEditTipEditButton, { CreateOrEditTipEditButton_EditButtonType } from '../CreateOrEditTipEditButton';
-import Spacer from '../../../src/helpers/Spacers/Spacer';
-import { CustomFont } from '../../../src/helpers/fonts/fonts';
+import Spacer from '../../../../helpers/Spacers/Spacer';
+import { CustomFont } from '../../../../helpers/fonts/fonts';
 
 export interface AudioFileViewProps {
     audioFileName: string;

@@ -1,4 +1,4 @@
-import { Optional } from "../src/helpers/general";
+import { Optional } from "../../helpers/general";
 import { createStackNavigator } from '@react-navigation/stack';
 
 

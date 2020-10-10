@@ -1,8 +1,8 @@
 import React from 'react';
 import {StyleSheet, View, ViewProps} from 'react-native';
 
-import { Color } from '../../src/helpers/colors';
-import LayoutConstants from '../../src/LayoutConstants';
+import { Color } from '../../../helpers/colors';
+import LayoutConstants from '../../../LayoutConstants';
 
 export interface CreateOrEditTipAttachmentContainerProps extends ViewProps{
     

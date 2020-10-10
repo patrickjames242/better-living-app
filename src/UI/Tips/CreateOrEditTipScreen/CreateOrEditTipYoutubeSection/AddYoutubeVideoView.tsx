@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import {StyleSheet} from 'react-native';
 import URLParser from 'url-parse';
-import { TextFieldViewContainer, TextFieldTextInput } from '../../../src/helpers/Views/TextFieldView';
-import SpacerView from '../../../src/helpers/Spacers/SpacerView';
+import { TextFieldViewContainer, TextFieldTextInput } from '../../../../helpers/Views/TextFieldView';
+import SpacerView from '../../../../helpers/Spacers/SpacerView';
 import CreateOrEditTipEditButton, { CreateOrEditTipEditButton_EditButtonType } from '../CreateOrEditTipEditButton';
 
 

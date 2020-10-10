@@ -1,13 +1,13 @@
 
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import BouncyButton from '../../src/helpers/Buttons/BouncyButton';
-import CustomizedText from '../../src/helpers/Views/CustomizedText';
-import LayoutConstants from '../../src/LayoutConstants';
-import { CustomFont } from '../../src/helpers/fonts/fonts';
-import { CustomColors } from '../../src/helpers/colors';
-import Spacer from '../../src/helpers/Spacers/Spacer';
-import { useSelector } from '../../src/redux/store';
+import BouncyButton from '../../../helpers/Buttons/BouncyButton';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
+import LayoutConstants from '../../../LayoutConstants';
+import { CustomFont } from '../../../helpers/fonts/fonts';
+import { CustomColors } from '../../../helpers/colors';
+import Spacer from '../../../helpers/Spacers/Spacer';
+import { useSelector } from '../../../redux/store';
 import { useNavigation } from '@react-navigation/native';
 import { TipsNavStackParamList } from '../navigationHelpers';
 import { StackNavigationProp } from '@react-navigation/stack';

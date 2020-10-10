@@ -1,9 +1,9 @@
 
 import React from 'react';
 import {Image, StyleSheet} from 'react-native';
-import { CustomColors } from '../../src/helpers/colors';
-import BouncyButton from '../../src/helpers/Buttons/BouncyButton';
-import AssetImages from '../../src/images/AssetImages';
+import { CustomColors } from '../../../helpers/colors';
+import BouncyButton from '../../../helpers/Buttons/BouncyButton';
+import AssetImages from '../../../images/AssetImages';
 
 
 export enum CreateOrEditTipEditButton_EditButtonType {

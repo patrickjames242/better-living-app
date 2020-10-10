@@ -1,19 +1,19 @@
 
 import React, { useMemo, useState } from 'react';
-import { Optional, mapOptional } from '../../src/helpers/general';
-import store from '../../src/redux/store';
-import { TextFieldView, MultilineTextFieldView } from '../../src/helpers/Views/TextFieldView';
-import { updateHealthTip, createNewHealthTip, HealthTipRequestObj } from '../../src/api/healthTips/requests';
+import { Optional, mapOptional } from '../../../helpers/general';
+import store from '../../../redux/store';
+import { TextFieldView, MultilineTextFieldView } from '../../../helpers/Views/TextFieldView';
+import { updateHealthTip, createNewHealthTip, HealthTipRequestObj } from '../../../api/healthTips/requests';
 import CreateOrEditTipYoutubeSection from './CreateOrEditTipYoutubeSection/CreateOrEditTipYoutubeSection';
 import { List, Set } from 'immutable';
 import CreateOrEditTipAudioFilesSection from './CreateOrEditTipAudioFilesSection/CreateOrEditTipAudioFilesSection';
-import { HealthTipAudioFile } from '../../src/api/healthTips/HealthTip';
+import { HealthTipAudioFile } from '../../../api/healthTips/HealthTip';
 import { StackScreenProps, StackNavigationProp } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
 import { useNavigation } from '@react-navigation/native';
-import GenericEditingFormScreen from '../../src/helpers/Views/GenericEditingFormScreen';
-import { DefaultLongButtonsProps } from '../../src/helpers/Buttons/LongTextAndIconButton';
-import { displayErrorMessage } from '../../src/helpers/Alerts';
+import GenericEditingFormScreen from '../../../helpers/Views/GenericEditingFormScreen';
+import { DefaultLongButtonsProps } from '../../../helpers/Buttons/LongTextAndIconButton';
+import { displayErrorMessage } from '../../../helpers/Alerts';
 
 
 

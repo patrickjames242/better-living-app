@@ -1,17 +1,17 @@
 
 import React from 'react';
 import { StyleSheet, View, LayoutRectangle } from 'react-native';
-import LargeHeadingNavigationBar from '../../src/helpers/NavigationBar/LargeHeadingNavigationBar';
-import { computeNumberOfListColumns } from '../../src/helpers/general';
+import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
+import { computeNumberOfListColumns } from '../../../helpers/general';
 import TipsListItemView from './TipsListItemView';
-import LayoutConstants from '../../src/LayoutConstants';
-import Space from '../../src/helpers/Spacers/Space';
-import MultiColumnFlatList from '../../src/helpers/Views/MultipleColumnLists/MultiColumnFlatList';
-import { useAllHealthTipsArray } from '../../src/api/healthTips/helpers';
-import PlusButton from '../../src/helpers/Buttons/PlusButton';
+import LayoutConstants from '../../../LayoutConstants';
+import Space from '../../../helpers/Spacers/Space';
+import MultiColumnFlatList from '../../../helpers/Views/MultipleColumnLists/MultiColumnFlatList';
+import { useAllHealthTipsArray } from '../../../api/healthTips/helpers';
+import PlusButton from '../../../helpers/Buttons/PlusButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
-import ListLoadingHolderView from '../../src/helpers/Views/ListLoadingView';
+import ListLoadingHolderView from '../../../helpers/Views/ListLoadingView';
 
 
 const TipsListScreen = (() => {

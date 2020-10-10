@@ -1,17 +1,17 @@
 
 import React, { useState } from 'react';
 import {StyleSheet} from 'react-native';
-import LongTextAndIconButton from '../../src/helpers/Buttons/LongTextAndIconButton';
-import AssetImages from '../../src/images/AssetImages';
-import SpacerView from '../../src/helpers/Spacers/SpacerView';
-import LayoutConstants from '../../src/LayoutConstants';
-import { CustomColors } from '../../src/helpers/colors';
-import { deleteHealthTip } from '../../src/api/healthTips/requests';
+import LongTextAndIconButton from '../../../helpers/Buttons/LongTextAndIconButton';
+import AssetImages from '../../../images/AssetImages';
+import SpacerView from '../../../helpers/Spacers/SpacerView';
+import LayoutConstants from '../../../LayoutConstants';
+import { CustomColors } from '../../../helpers/colors';
+import { deleteHealthTip } from '../../../api/healthTips/requests';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
-import { useIsUnmounted } from '../../src/helpers/reactHooks';
-import { displayErrorMessage } from '../../src/helpers/Alerts';
+import { useIsUnmounted } from '../../../helpers/reactHooks';
+import { displayErrorMessage } from '../../../helpers/Alerts';
 
 export interface TipsDetailBottomButtonsViewProps{
     healthTipId: number;

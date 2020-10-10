@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { TextFieldViewContainer } from '../../../src/helpers/Views/TextFieldView';
+import { TextFieldViewContainer } from '../../../../helpers/Views/TextFieldView';
 import AddNewFileButton from './AddNewFileButton';
-import { HealthTipAudioFile } from '../../../src/api/healthTips/HealthTip';
+import { HealthTipAudioFile } from '../../../../api/healthTips/HealthTip';
 import { List, Set } from 'immutable';
-import Spacer from '../../../src/helpers/Spacers/Spacer';
+import Spacer from '../../../../helpers/Spacers/Spacer';
 import AudioFileView from './AudioFileView';
 
 export interface CreateOrEditTipAudioFilesSectionProps {

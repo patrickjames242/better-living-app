@@ -1,16 +1,16 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Image } from 'react-native';
-import LayoutConstants from '../../../src/LayoutConstants';
-import { Color, CustomColors } from '../../../src/helpers/colors';
-import SpacerView from '../../../src/helpers/Spacers/SpacerView';
-import { CustomFont } from '../../../src/helpers/fonts/fonts';
+import LayoutConstants from '../../../../LayoutConstants';
+import { Color, CustomColors } from '../../../../helpers/colors';
+import SpacerView from '../../../../helpers/Spacers/SpacerView';
+import { CustomFont } from '../../../../helpers/fonts/fonts';
 import Scrubber from 'react-native-scrubber';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import PlayPauseButton, { PlayPauseButtonState } from './TipsDetailAudioPlayerViewPlayPauseButton';
 import TipsDetailAudioPlayer, { TipsDetailAudioPlayerPlayableState } from './TipsDetailAudioPlayer';
-import AssetImages from '../../../src/images/AssetImages';
-import CustomizedText from '../../../src/helpers/Views/CustomizedText';
+import AssetImages from '../../../../images/AssetImages';
+import CustomizedText from '../../../../helpers/Views/CustomizedText';
 
 
 interface TipsDetailAudioPlayerViewProps {

@@ -2,8 +2,8 @@
 import React from 'react';
 import { StyleSheet, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
-import AspectRatioView from '../../src/helpers/Views/AspectRatioView';
-import LayoutConstants from '../../src/LayoutConstants';
+import AspectRatioView from '../../../helpers/Views/AspectRatioView';
+import LayoutConstants from '../../../LayoutConstants';
 
 interface TipsDetailYTVideoViewProps{
     ytVideoID: string

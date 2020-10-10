@@ -4,7 +4,7 @@ import TipsListScreen from './TipsListScreen/TipsListScreen';
 import { TipsNavStack } from './navigationHelpers';
 import CreateOrEditTipScreen from './CreateOrEditTipScreen/CreateOrEditTipScreen';
 import TipsDetailScreen from './TipsDetailScreen/TipsDetailScreen';
-import { DEFAULT_NAV_SCREEN_OPTIONS } from '../src/helpers/general';
+import { DEFAULT_NAV_SCREEN_OPTIONS } from '../../helpers/general';
 import { NavigationContainer } from '@react-navigation/native';
 
 

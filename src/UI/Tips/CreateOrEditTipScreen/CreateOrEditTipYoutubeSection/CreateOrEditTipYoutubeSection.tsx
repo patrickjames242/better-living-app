@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { TextFieldViewContainer } from '../../../src/helpers/Views/TextFieldView';
+import { TextFieldViewContainer } from '../../../../helpers/Views/TextFieldView';
 import { List } from 'immutable';
-import SpacerView from '../../../src/helpers/Spacers/SpacerView';
+import SpacerView from '../../../../helpers/Spacers/SpacerView';
 import YoutubeVideoView from './YoutubeVideoView';
 import AddYoutubeVideoView from './AddYoutubeVideoView';
 
