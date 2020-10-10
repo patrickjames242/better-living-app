@@ -11,6 +11,8 @@ import { SettingsNavStackParams } from '../../navigationHelpers';
 import PlusButton from '../../../../helpers/Buttons/PlusButton';
 import { caseInsensitiveStringSort } from '../../../../helpers/general';
 import LayoutConstants from '../../../../LayoutConstants';
+import ListLoadingHolderView from '../../../../helpers/Views/ListLoadingView';
+import NoItemsToShowView from '../../../../helpers/Views/NoItemsToShowView';
 
 
 
@@ -29,7 +31,7 @@ const ProductsListScreen = (() => {
         data: Product[];
     }
 
-    
+
 
     const ProductsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'ProductsList'>) => {
 
@@ -49,18 +51,28 @@ const ProductsListScreen = (() => {
                         }}
                     />
                 } />
-            <FloatingCellStyleList<Product, SectionType>
-                sections={sections}
-                keyExtractor={x => String(x.id)}
-                renderItem={item => {
-                    return <ListViewProductItemView
-                        item={item.item}
-                        style={styles.productItemView}
-                        onPress={() => {
-                            props.navigation.push('ProductEditOrCreate', { productId: item.item.id });
-                        }} />
-                }}
-            />
+            <ListLoadingHolderView>
+                {(() => {
+                    if (products.size <= 0) {
+                        return <NoItemsToShowView />
+                    } else {
+                        return <FloatingCellStyleList<Product, SectionType>
+                            sections={sections}
+                            keyExtractor={x => String(x.id)}
+                            renderItem={item => {
+                                return <ListViewProductItemView
+                                    item={item.item}
+                                    style={styles.productItemView}
+                                    onPress={() => {
+                                        props.navigation.push('ProductEditOrCreate', { productId: item.item.id });
+                                    }} />
+                            }}
+                        />
+                    }
+                })()}
+
+            </ListLoadingHolderView>
+
         </View>
     }
     return ProductsListScreen;

@@ -9,6 +9,8 @@ import { caseInsensitiveStringSort } from '../../../../helpers/general';
 import { SettingsNavStackParams } from '../../navigationHelpers';
 import { StackScreenProps } from '@react-navigation/stack';
 import PlusButton from '../../../../helpers/Buttons/PlusButton';
+import ListLoadingHolderView from '../../../../helpers/Views/ListLoadingView';
+import NoItemsToShowView from '../../../../helpers/Views/NoItemsToShowView';
 
 
 const MealCategoriesListScreen = (() => {
@@ -36,19 +38,28 @@ const MealCategoriesListScreen = (() => {
                 title="Meal Categories"
                 rightAlignedView={
                     <PlusButton onPress={() => {
-                        props.navigation.push('MealCategoryEditOrCreate', {mealCategoryId: null});
-                   }} />
+                        props.navigation.push('MealCategoryEditOrCreate', { mealCategoryId: null });
+                    }} />
                 }
             />
-            <FloatingCellStyleList<MealCategory, SectionType>
-                sections={sections}
-                keyExtractor={x => String(x.id)}
-                renderItem={x => {
-                    return <PlainTextListItem title={x.item.uniqueName} onPress={() => {
-                        props.navigation.push('MealCategoryEditOrCreate', { mealCategoryId: x.item.id })
-                    }} />
-                }}
-            />
+            <ListLoadingHolderView>
+                {(() => {
+                    if (mealCategories.size <= 0) {
+                        return <NoItemsToShowView />
+                    } else {
+                        return <FloatingCellStyleList<MealCategory, SectionType>
+                            sections={sections}
+                            keyExtractor={x => String(x.id)}
+                            renderItem={x => {
+                                return <PlainTextListItem title={x.item.uniqueName} onPress={() => {
+                                    props.navigation.push('MealCategoryEditOrCreate', { mealCategoryId: x.item.id })
+                                }} />
+                            }}
+                        />
+                    }
+                })()}
+            </ListLoadingHolderView>
+
         </View>
     }
     return MealCategoriesListScreen;

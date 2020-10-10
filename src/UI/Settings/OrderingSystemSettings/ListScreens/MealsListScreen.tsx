@@ -10,6 +10,8 @@ import { caseInsensitiveStringSort } from '../../../../helpers/general';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../navigationHelpers';
 import PlusButton from '../../../../helpers/Buttons/PlusButton';
+import ListLoadingHolderView from '../../../../helpers/Views/ListLoadingView';
+import NoItemsToShowView from '../../../../helpers/Views/NoItemsToShowView';
 
 
 
@@ -36,18 +38,28 @@ const MealsListScreen = (() => {
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Meals" rightAlignedView={
                 <PlusButton onPress={
-                    () => props.navigation.push('MealEditOrCreate', {mealId: null})
+                    () => props.navigation.push('MealEditOrCreate', { mealId: null })
                 } />
             } />
-            <FloatingCellStyleList<Meal, SectionType>
-                sections={sections}
-                keyExtractor={x => String(x.id)}
-                renderItem={item => {
-                    return <PlainTextListItem title={item.item.title} onPress={() => {
-                        props.navigation.push('MealEditOrCreate', { mealId: item.item.id });
-                    }} />
-                }}
-            />
+            <ListLoadingHolderView>
+                {(() => {
+                    if (meals.size <= 0) {
+                        return <NoItemsToShowView />
+                    } else {
+                        return <FloatingCellStyleList<Meal, SectionType>
+                            sections={sections}
+                            keyExtractor={x => String(x.id)}
+                            renderItem={item => {
+                                return <PlainTextListItem title={item.item.title} onPress={() => {
+                                    props.navigation.push('MealEditOrCreate', { mealId: item.item.id });
+                                }} />
+                            }}
+                        />
+                    }
+                })()}
+
+            </ListLoadingHolderView>
+
         </View>
     }
     return MealsListScreen;
