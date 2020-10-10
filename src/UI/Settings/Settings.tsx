@@ -19,6 +19,7 @@ import SettingsNameEditingScreen from './ProfileEditingScreens/SettingsNameEditi
 import SettingsPhoneNumberEditingScreen from './ProfileEditingScreens/SettingsPhoneNumberEditingScreen';
 import SettingsEmailEditingScreen from './ProfileEditingScreens/SettingsEmailEditingScreen';
 import SettingsChangePasswordScreen from './ProfileEditingScreens/SettingsChangePasswordScreen';
+import UserProfileSettingsScreen from './OrderingSystemSettings/UserProfileSettingsScreen';
 
 
 export default function Settings(){
@@ -39,6 +40,7 @@ export default function Settings(){
             <SettingsNavStack.Screen name="MealCategoriesPicker" component={OrderingSystemEditingMealCategoriesPickerScreen}/>
             <SettingsNavStack.Screen name="MenuEditOrCreate" component={MenuEditOrCreationScreen}/>
             
+            <SettingsNavStack.Screen name="UserProfileSettings" component={UserProfileSettingsScreen}/>
             <SettingsNavStack.Screen name="NameEditing" component={SettingsNameEditingScreen}/>
             <SettingsNavStack.Screen name="PhoneNumberEditing" component={SettingsPhoneNumberEditingScreen}/>
             <SettingsNavStack.Screen name="EmailEditing" component={SettingsEmailEditingScreen}/>

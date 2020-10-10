@@ -12,6 +12,7 @@ import PlusButton from '../../../helpers/Buttons/PlusButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
 import ListLoadingHolderView from '../../../helpers/Views/ListLoadingView';
+import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
 
 
 const TipsListScreen = (() => {
@@ -22,7 +23,7 @@ const TipsListScreen = (() => {
     const styles = StyleSheet.create({
         root: {
             flex: 1,
-            
+
         },
         flatList: {
             zIndex: -1,
@@ -34,38 +35,44 @@ const TipsListScreen = (() => {
         },
     });
 
-    function calculateListColumns(layout: LayoutRectangle){
-        const num = computeNumberOfListColumns({listWidth: layout.width, sideInsets: listViewPadding, horizontalItemSpacing: itemSpacing, maxItemWidth: 600})
+    function calculateListColumns(layout: LayoutRectangle) {
+        const num = computeNumberOfListColumns({ listWidth: layout.width, sideInsets: listViewPadding, horizontalItemSpacing: itemSpacing, maxItemWidth: 600 })
         return Math.min(num, 2);
-    }    
-    
+    }
+
     const TipsListScreen = (props: StackScreenProps<TipsNavStackParamList, 'TipsList'>) => {
 
         const healthTips = useAllHealthTipsArray();
 
-        function onPlusButtonPressed(){
-            props.navigation.push('CreateOrEditTip', {tipIdToEdit: null});
+        function onPlusButtonPressed() {
+            props.navigation.push('CreateOrEditTip', { tipIdToEdit: null });
         }
-        
+
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Health Tips" rightAlignedView={
-                <PlusButton onPress={onPlusButtonPressed}/>
-            }/>
+                <PlusButton onPress={onPlusButtonPressed} />
+            } />
             <ListLoadingHolderView>
-                <MultiColumnFlatList
-                    contentContainerStyle={styles.flatListContentContainer}
-                    numberOfColumns={calculateListColumns}
-                    style={styles.flatList}
-                    ItemSeparatorComponent={() => {
-                        return <Space space={itemSpacing} />
-                    }}
-                    columnSpacing={itemSpacing}
-                    data={healthTips}
-                    keyExtractor={item => String(item)}
-                    renderItem={(item) => {
-                        return <TipsListItemView id={item.id}/>
-                    }}
-                />
+                {(() => {
+                    if (healthTips.length < 1) {
+                        return <NoItemsToShowView title="No Tips" subtitle="No health tips are available at this time."/>
+                    } else {
+                        return <MultiColumnFlatList
+                            contentContainerStyle={styles.flatListContentContainer}
+                            numberOfColumns={calculateListColumns}
+                            style={styles.flatList}
+                            ItemSeparatorComponent={() => {
+                                return <Space space={itemSpacing} />
+                            }}
+                            columnSpacing={itemSpacing}
+                            data={healthTips}
+                            keyExtractor={item => String(item)}
+                            renderItem={(item) => {
+                                return <TipsListItemView id={item.id} />
+                            }}
+                        />
+                    }
+                })()}
             </ListLoadingHolderView>
         </View>
     }

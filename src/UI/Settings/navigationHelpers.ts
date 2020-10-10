@@ -26,7 +26,7 @@ export type SettingsNavStackParams = {
     EmailEditing: {password: string};
     PhoneNumberEditing: undefined;
     ChangePassword: {currentPassword: string};
-    
+    UserProfileSettings: undefined;
 }
 
 export const SettingsNavStack = createStackNavigator<SettingsNavStackParams>();

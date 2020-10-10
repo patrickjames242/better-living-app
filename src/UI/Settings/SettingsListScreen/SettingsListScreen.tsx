@@ -7,83 +7,68 @@ import { SettingsNavStackParams } from '../navigationHelpers';
 import store, { useSelector } from '../../../redux/store';
 import { logOutAction } from '../../../redux/authentication';
 import { displayTwoDecisionAlert } from '../../../helpers/Alerts';
-import { useTabBarControllerNavigation } from '../../TabBarController/helpers';
-import { VerifyPasswordPurpose } from '../../LogInSignUpUI/helpers';
+import { useUserProfileSettingsItems } from '../helpers';
+import { UserType } from '../../../api/authentication/validation';
 
 
 const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'SettingsList'>) => {
 
     const authentication = useSelector(state => state.authentication);
-
-    const tabBarControllerNavigation = useTabBarControllerNavigation();
+    const isEmployeeOrManager = [UserType.employee, UserType.manager].includes((authentication?.userObject.userType ?? UserType.customer));
+    const profileSettingsItems = useUserProfileSettingsItems();
 
     const sections: GenericSettingsScreenSection[] = useMemo(() => {
         if (authentication == null) { return []; }
         return [
-            {
-                title: 'Profile Info',
+            ...(isEmployeeOrManager ? [{
+                title: "Ordering System",
                 data: [
                     {
-                        title: 'Email',
-                        imageSource: require('./email.png'),
-                        rightSubtitleText: authentication.userObject.email,
-                        onPress: () => {
-                            tabBarControllerNavigation.navigate('LogInSignUpUI', {
-                                initialScreen: 'VerifyPassword',
-                                initialScreenParams: {
-                                    purpose: VerifyPasswordPurpose.other,
-                                    onPasswordVerified: (password) => {
-                                        props.navigation.push('EmailEditing', { password })
-                                    }
-                                }
-                            })
-                        },
+                        title: 'Food Products',
+                        imageSource: require('../icons/products.png'),
+                        onPress: () => {props.navigation.push('ProductsList')},
                     },
                     {
-                        title: 'Name',
-                        rightSubtitleText: authentication.userObject.getFullName(),
-                        imageSource: require('./name.png'),
-                        onPress: () => { props.navigation.push('NameEditing') },
+                        title: 'Menus',
+                        imageSource: require('../icons/menus.png'),
+                        onPress: () => {props.navigation.push('MenusList')},
                     },
                     {
-                        title: 'Phone Number',
-                        rightSubtitleText: authentication.userObject.phoneNumber,
-                        imageSource: require('./phone.png'),
-                        onPress: () => { props.navigation.push('PhoneNumberEditing') },
+                        title: 'Meals',
+                        imageSource: require('../icons/meals.png'),
+                        onPress: () => {props.navigation.push('MealsList')},
                     },
                     {
-                        title: 'Change Password',
-                        imageSource: require('./password.png'),
-                        onPress: () => {
-                            tabBarControllerNavigation.navigate('LogInSignUpUI', {
-                                initialScreen: 'VerifyPassword',
-                                initialScreenParams: {
-                                    purpose: VerifyPasswordPurpose.forPasswordChange,
-                                    onPasswordVerified: (password) => {
-                                        props.navigation.push('ChangePassword', { currentPassword: password })
-                                    }
-                                }
-                            })
-                        },
+                        title: 'Meal Categories',
+                        imageSource: require('../icons/mealCategories.png'),
+                        onPress: () => {props.navigation.push('MealCategoriesList')},
                     },
                 ]
-            },
+            }] : []),
+            ...((isEmployeeOrManager === false) ? [{
+                title: 'Profile Info',
+                data: profileSettingsItems,
+            }] : []),
             {
                 title: "General",
                 data: [
+                    ...(isEmployeeOrManager ? [{
+                        title: 'Edit Profile Info',
+                        imageSource: require('../icons/notification.png'),
+                        onPress: () => { 
+                            props.navigation.push('UserProfileSettings');
+                        },
+                    }] : []),
                     {
-                        title: 'Ordering System',
-                        imageSource: require('./burger.png'),
-                        onPress: () => props.navigation.push('OrderingSystemSettingsList'),
-                    },
-                    {
-                        title: 'Notifications',
-                        imageSource: require('./notification.png'),
-                        onPress: () => { },
+                        title: 'My Orders',
+                        imageSource: require('../icons/burger.png'),
+                        onPress: () => {
+                            props.navigation.push('OrderingSystemSettingsList')
+                        },
                     },
                     {
                         title: 'Log Out',
-                        imageSource: require('./logout.png'),
+                        imageSource: require('../icons/logout.png'),
                         onPress: () => {
                             displayTwoDecisionAlert('Are you sure?', 'Are you sure you want to log out?', 'Log Out', () => {
                                 store.dispatch(logOutAction())
@@ -93,7 +78,7 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                 ]
             }
         ]
-    }, [authentication, props.navigation, tabBarControllerNavigation]);
+    }, [authentication, isEmployeeOrManager, profileSettingsItems, props.navigation]);
 
     if (authentication == null) {
         return <></>;

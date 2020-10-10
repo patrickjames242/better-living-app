@@ -11,31 +11,31 @@ const OrderingSystemSettingsListScreen = (props: StackScreenProps<SettingsNavSta
 
     const sections: GenericSettingsScreenSection[] = useMemo(() => {
         return [
-            {
-                title: null,
-                data: [
-                    {
-                        title: 'Food Products',
-                        imageSource: require('./products.png'),
-                        onPress: () => {props.navigation.push('ProductsList')},
-                    },
-                    {
-                        title: 'Menus',
-                        imageSource: require('./menus.png'),
-                        onPress: () => {props.navigation.push('MenusList')},
-                    },
-                    {
-                        title: 'Meals',
-                        imageSource: require('./meals.png'),
-                        onPress: () => {props.navigation.push('MealsList')},
-                    },
-                    {
-                        title: 'Meal Categories',
-                        imageSource: require('./mealCategories.png'),
-                        onPress: () => {props.navigation.push('MealCategoriesList')},
-                    },
-                ]
-            }
+            // {
+            //     title: null,
+            //     data: [
+            //         {
+            //             title: 'Food Products',
+            //             imageSource: require('./products.png'),
+            //             onPress: () => {props.navigation.push('ProductsList')},
+            //         },
+            //         {
+            //             title: 'Menus',
+            //             imageSource: require('./menus.png'),
+            //             onPress: () => {props.navigation.push('MenusList')},
+            //         },
+            //         {
+            //             title: 'Meals',
+            //             imageSource: require('./meals.png'),
+            //             onPress: () => {props.navigation.push('MealsList')},
+            //         },
+            //         {
+            //             title: 'Meal Categories',
+            //             imageSource: require('./mealCategories.png'),
+            //             onPress: () => {props.navigation.push('MealCategoriesList')},
+            //         },
+            //     ]
+            // }
         ]
     }, [props.navigation]);
 

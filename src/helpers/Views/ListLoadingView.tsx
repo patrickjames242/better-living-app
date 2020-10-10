@@ -22,11 +22,18 @@ const ListLoadingHolderView = (() => {
     });
 
     const ListLoadingHolderView = (props: React.PropsWithChildren<ListLoadingHolderViewProps>) => {
+        
         const hasAlreadyConnectedOnce = useRef(false);
+        const hasFailedOnce = useRef(false);
+
         const connectionType = useSelector(state => state.realtimeUpdates.connectionState);
         if (connectionType === RealtimeUpdatesConnectionState.connectedAndGotInitialUpdates) {
             hasAlreadyConnectedOnce.current = true;
         }
+        if (connectionType === RealtimeUpdatesConnectionState.disconnected){
+            hasFailedOnce.current = true;
+        }
+
         return <>
             {(() => {
                 if (hasAlreadyConnectedOnce.current) {
@@ -34,8 +41,8 @@ const ListLoadingHolderView = (() => {
                 } else {
                     return <View style={styles.root}>
                         {(() => {
-                            if (connectionType === RealtimeUpdatesConnectionState.disconnected) {
-                                return <NoItemsToShowView imageSource={AssetImages.warningIconColored} imageStyle={{ height: 110, width: 110 }} title="Connection Issues" subtitle="Could not connect to the server. Check your internet connection." />    
+                            if (hasFailedOnce.current === true) {
+                                return <NoItemsToShowView imageSource={AssetImages.warningIconColored} imageStyle={{ height: 110, width: 110 }} title="Connection Issues 🙄" subtitle="Could not connect to the server. We'll keep trying in the background!" />    
                             } else {
                                 return <ActivityIndicator size="large" color={Color.gray(0.5).stringValue}/>
                             }
