@@ -1,8 +1,11 @@
 
 import moment from 'moment-timezone'
 import { Optional } from '../../helpers/general';
+import AppSettings from '../../settings';
 import getErrorObjFromApiObjValidateFunction from '../helpers';
 import {OrderJsonResponseObj, orderResponseObjValidator} from './validation';
+import currency from  'currency.js'
+
 
 export default class Order{
 
@@ -46,6 +49,30 @@ export default class Order{
         this.vatCharged = json.vat_charged;
         this.userPaidOnline = json.user_paid_online;
         this.userWantsOrderDelivered = json.user_wants_order_delivered;
+    }
+
+    calculatePriceInfo(): {
+        total: number,
+        subtotal: number,
+        vat: number,
+    }{
+        let subtotal: currency;
+        let vat: currency;
+
+        if (this.userPaidOnline){
+            subtotal = currency(this.subtotalCharged ?? 0);
+            vat = currency(this.vatCharged ?? 0);
+        } else {
+            subtotal = this.detailsJson.reduce<currency>((a1, a2) => {
+                return a1.add(currency(a2.quantity).multiply((a2.entry_type === 'product' ? a2.product_price : a2.meal_price)));
+            }, currency(0));
+            vat = currency(AppSettings.vatPercentage).multiply(subtotal);
+        }
+        return {
+            subtotal: subtotal.dollars(),
+            vat: vat.dollars(),
+            total: subtotal.add(vat).dollars(),
+        }
     }
 
 }

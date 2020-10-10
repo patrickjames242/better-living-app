@@ -14,7 +14,6 @@ import AssetImages from '../../../images/AssetImages';
 import Notification from '../../../helpers/Notification';
 import { useForceUpdate } from '../../../helpers/reactHooks';
 import Space from '../../../helpers/Spacers/Space';
-import AppSettings from '../../../settings';
 import currency from 'currency.js';
 
 
@@ -126,19 +125,13 @@ const TodaysOrdersListItemView = (() => {
         }, [props.order.detailsJson]);
 
         function respondToButtonPressed() {
-            // navigation.push('InquiryDetail');
+            navigation.push('OrderDetail', {orderId: props.order.id});
         }
 
-        const price = (() => {
-            if (props.order.subtotalCharged == null){
-                return (1 + AppSettings.vatPercentage) * props.order.detailsJson.reduce<number>((a1, a2) => {
-                    return a1 + a2.quantity * (a2.entry_type === 'product' ? a2.product_price : a2.meal_price);
-                }, 0);
-            } else {
-                return props.order.subtotalCharged + (props.order.vatCharged ?? 0);
-            }
-        })();
-
+        const price = useMemo(() => {
+            return props.order.calculatePriceInfo().total;
+        }, [props.order]) 
+        
         return <BouncyButton bounceScaleValue={0.9} contentViewProps={{ style: styles.root }} onPress={respondToButtonPressed}>
             {(props.order.isCompleted === false) &&
                 <View style={styles.unreadSideBar} />

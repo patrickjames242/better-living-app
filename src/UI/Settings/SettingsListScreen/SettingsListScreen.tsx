@@ -109,8 +109,6 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
             }}
         />
     }
-
-
 }
 
 
