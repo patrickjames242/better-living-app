@@ -43,6 +43,11 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                         imageSource: require('../icons/mealCategories.png'),
                         onPress: () => {props.navigation.push('MealCategoriesList')},
                     },
+                    {
+                        title: 'Orders History',
+                        imageSource: require('../icons/history-book.png'),
+                        onPress: () => {props.navigation.push('OrdersHistory')},
+                    },
                 ]
             }] : []),
             ...((isEmployeeOrManager === false) ? [{

@@ -21,6 +21,7 @@ import SettingsChangePasswordScreen from './ProfileEditingScreens/SettingsChange
 import UserProfileSettingsScreen from './OrderingSystemSettings/UserProfileSettingsScreen';
 import MyOrdersListScreen from './MyOrdersListScreen/MyOrdersListScreen';
 import OrderDetailScreen from '../TodaysOrders/OrderDetailScreen/OrderDetailScreen';
+import OrdersHistoryScreen from './OrderingSystemSettings/OrdersHistoryScreen/OrdersHistoryScreen';
 
 
 export default function Settings(){
@@ -48,6 +49,7 @@ export default function Settings(){
             
             <SettingsNavStack.Screen name="MyOrders" component={MyOrdersListScreen}/>
             <SettingsNavStack.Screen name="OrderDetail" component={OrderDetailScreen}/>
+            <SettingsNavStack.Screen name="OrdersHistory" component={OrdersHistoryScreen}/>
         </SettingsNavStack.Navigator>
     </NavigationContainer>
 }

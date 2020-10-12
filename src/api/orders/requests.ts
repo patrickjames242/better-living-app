@@ -109,3 +109,19 @@ export function getCurrentUserOrders(maxAmount?: number, maxDate?: string){
         return orderResponses.map(json => new Order(json));
     });
 }
+
+export function getAllOrders(maxAmount?: number, maxDate?: string){
+    let url = basePath + `all/?`;
+
+    url += [
+        ...(maxAmount == null ? [] : [`maxAmount=${maxAmount}`]),
+        ...(maxDate == null ? [] : [`maxDate=${maxDate}`]),
+    ].join('&');
+
+    return fetchFromAPI<OrderJsonResponseObj[]>({
+        method: HttpMethod.get,
+        path: url,
+    }).then(orderResponses => {
+        return orderResponses.map(json => new Order(json));
+    });
+}
