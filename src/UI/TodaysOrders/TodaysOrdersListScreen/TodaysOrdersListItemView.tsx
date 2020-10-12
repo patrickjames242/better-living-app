@@ -15,10 +15,12 @@ import Notification from '../../../helpers/Notification';
 import { useForceUpdate } from '../../../helpers/reactHooks';
 import Space from '../../../helpers/Spacers/Space';
 import currency from 'currency.js';
+import { useCallback } from 'react';
 
 
 export interface TodaysOrdersListItemViewProps {
     order: Order;
+    onPress: (order: Order) => void;
 }
 
 const TodaysOrdersListItemView = (() => {
@@ -51,6 +53,7 @@ const TodaysOrdersListItemView = (() => {
             fontSize: 17,
             fontFamily: CustomFont.bold,
             flex: 1,
+            marginBottom: 5,
         },
         orderNumberLabel: {
             fontFamily: CustomFont.medium,
@@ -59,6 +62,7 @@ const TodaysOrdersListItemView = (() => {
         },
         description: {
             color: Color.gray(0.65).stringValue,
+            marginBottom: 8,
         },
         bottomViewRow: {
             flexDirection: 'row',
@@ -83,6 +87,7 @@ const TodaysOrdersListItemView = (() => {
             fontSize: 14,
             color: CustomColors.themeGreen.stringValue,
             flexShrink: 1,
+            marginLeft: 5,
         },
         priceView: {
             backgroundColor: Color.gray(0.94).stringValue, 
@@ -96,7 +101,6 @@ const TodaysOrdersListItemView = (() => {
         priceText: {
             fontSize: 14,
             color: Color.gray(0.4).stringValue,
-            
         },
         cardOrMoneyIcon: {
             height: 23,
@@ -109,8 +113,7 @@ const TodaysOrdersListItemView = (() => {
 
     const TodaysOrdersListItemView = (props: TodaysOrdersListItemViewProps) => {
 
-        const navigation = useNavigation<StackNavigationProp<TodaysOrdersNavStackParams, 'TodaysOrdersList'>>();
-
+        
         const detailsText = useMemo(() => {
             return props.order.detailsJson.map(x => {
                 return (x.quantity > 1 ? x.quantity + ' × ' : '') + (() => {
@@ -124,19 +127,22 @@ const TodaysOrdersListItemView = (() => {
             }).join(' • ');
         }, [props.order.detailsJson]);
 
-        function respondToButtonPressed() {
-            navigation.push('OrderDetail', {orderId: props.order.id});
-        }
+        const order = props.order;
+        const propsOnPress = props.onPress;
 
         const price = useMemo(() => {
-            return props.order.calculatePriceInfo().total;
-        }, [props.order]) 
+            return order.calculatePriceInfo().total;
+        }, [order]);
+
+        const onPress = useCallback(() => {
+            propsOnPress(order);
+        }, [order, propsOnPress]);
         
-        return <BouncyButton bounceScaleValue={0.9} contentViewProps={{ style: styles.root }} onPress={respondToButtonPressed}>
+        return <BouncyButton bounceScaleValue={0.9} contentViewProps={{ style: styles.root }} onPress={onPress}>
             {(props.order.isCompleted === false) &&
                 <View style={styles.unreadSideBar} />
             }
-            <SpacerView style={styles.content} space={5}>
+            <View style={styles.content}>
                 <View style={styles.topLabels}>
                     <CustomizedText style={styles.orderNumberLabel}>{'#' + props.order.orderNum}</CustomizedText>
                     <Image style={styles.cardOrMoneyIcon} source={props.order.userPaidOnline ? require('./credit-card.png') : require('./money.png')}/>
@@ -147,20 +153,19 @@ const TodaysOrdersListItemView = (() => {
                 <CustomizedText numberOfLines={2} style={styles.description}>
                     {detailsText}
                 </CustomizedText>
-                <Space space={8}/>
                 <View style={styles.bottomViewRow}>
-                    <SpacerView style={styles.timeView} space={5}>
+                    <View style={styles.timeView}>
                         <Image style={styles.timeIcon} source={AssetImages.alarmClock} />
                         <TimeText style={styles.timeText} order={props.order}/>
-                    </SpacerView>
+                    </View>
                     <View style={styles.priceView}>
                         <CustomizedText style={styles.priceText}>{currency(price).format()}</CustomizedText>
                     </View>
                 </View>
-            </SpacerView>
+            </View>
         </BouncyButton>
     }
-    return TodaysOrdersListItemView;
+    return React.memo(TodaysOrdersListItemView);
 })();
 
 export default TodaysOrdersListItemView;

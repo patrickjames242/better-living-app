@@ -1,9 +1,10 @@
 import { createStackNavigator } from "@react-navigation/stack"
+import Order from "../../api/orders/Order";
 
 
 export type TodaysOrdersNavStackParams = {
     TodaysOrdersList: undefined;
-    OrderDetail: {orderId: string};
+    OrderDetail: {order: Order};
 }
 
 export const TodaysOrdersNavStack = createStackNavigator<TodaysOrdersNavStackParams>();

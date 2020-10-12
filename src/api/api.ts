@@ -55,12 +55,16 @@ export async function fetchFromAPI<JsonResult = any>(props: {
             ...headersToSend
         },
     });
-    const json = await (response.json() as Promise<ApiResponse>);
-    if (json.isSuccess) {
-        return json.data;
-    } else {
-        return Promise.reject(new Error(json.errorMessage));
-    }
+    try{
+        const json = await (response.json() as Promise<ApiResponse>);
+        if (json.isSuccess) {
+            return json.data;
+        } else {
+            return Promise.reject(new Error(json.errorMessage));
+        }
+    } catch {
+        return Promise.reject(new Error('An unknown client side error has occured.'))
+    } 
         
 }
 

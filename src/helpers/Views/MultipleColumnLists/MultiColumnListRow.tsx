@@ -10,6 +10,7 @@ interface MultiColumnFlatListRowProps {
     rowIndex: number,
     itemSpacing?: number,
     sideInsets?: number,
+    itemKeyExtractor: (itemIndex: number) => string,
     itemRenderer: (itemIndex: number) => React.ReactNode
 }
 
@@ -24,7 +25,7 @@ const MultiColumnFlatListRow = (() => {
         },
     });
 
-    return function MultiColumnFlatListRow(props: MultiColumnFlatListRowProps) {
+    const MultiColumnFlatListRow = (props: MultiColumnFlatListRowProps) => {
         const startingIndex = props.numberOfColumns * props.rowIndex;
         const sideInsets = props.sideInsets ?? 0;
         return <View style={[styles.root, {
@@ -35,8 +36,10 @@ const MultiColumnFlatListRow = (() => {
                 if (props.numberOfColumns < 1) { return undefined; }
                 return <Spacer space={props.itemSpacing ?? 0}>
                     {getNumbersList(0, props.numberOfColumns - 1).map(num => {
-                        const item = props.itemRenderer(startingIndex + num);
-                        return <View key={num} style={styles.itemHolder}>
+                        const index = startingIndex + num
+                        const key = props.itemKeyExtractor(index);
+                        const item = props.itemRenderer(index);
+                        return <View key={key} style={styles.itemHolder}>
                             {item != null && item}
                         </View>
                     })}
@@ -44,6 +47,7 @@ const MultiColumnFlatListRow = (() => {
             })()}
         </View>
     }
+    return React.memo(MultiColumnFlatListRow);
 })();
 
 

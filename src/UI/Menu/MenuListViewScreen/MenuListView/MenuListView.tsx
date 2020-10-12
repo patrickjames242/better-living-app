@@ -119,7 +119,7 @@ const MenuListView = (() => {
                     }}
                     stickySectionHeadersEnabled={false}
                     sections={listViewSections}
-                    keyExtractor={(item, index) => item + "," + index} // so react can shut up
+                    keyExtractor={item => item}
                     ListHeaderComponent={MenuListViewHeader}
                     renderItem={item => {
                         return <MenuListItemView productId={item} />

@@ -1,7 +1,7 @@
 
 import { LayoutRectangle, Dimensions, LayoutChangeEvent } from "react-native";
 import { Optional } from "../../general";
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useCallback } from "react";
 import { useForceUpdate } from "../../reactHooks";
 
 
@@ -33,21 +33,23 @@ export function useMultipleColumnFunctionality(listViewProps: {
 
     const forceRerender = useForceUpdate();
 
+    const onListViewLayout = useCallback((layout: LayoutChangeEvent) => {
+        if (
+            // prevents update on 0 height and width layout update when new screen is presented in a navigation stack
+            layout.nativeEvent.layout.width === 0 && 
+            layout.nativeEvent.layout.height === 0
+        ){
+            return;
+        }
+        latestLayout.current = layout.nativeEvent.layout;
+        const newNumberOfColumns = calculateNumberOfColumns(propsNumberOfColumns, latestLayout.current);
+        if (newNumberOfColumns !== calculatedNumberOfColumns) forceRerender();
+        listViewProps.onLayout?.(layout);
+    }, [calculatedNumberOfColumns, forceRerender, listViewProps, propsNumberOfColumns]);
+
     return {
         calculatedNumberOfColumns,
-        onListViewLayout: (layout: LayoutChangeEvent) => {
-            if (
-                // prevents update on 0 height and width layout update when new screen is presented in a navigation stack
-                layout.nativeEvent.layout.width === 0 && 
-                layout.nativeEvent.layout.height === 0
-            ){
-                return;
-            }
-            latestLayout.current = layout.nativeEvent.layout;
-            const newNumberOfColumns = calculateNumberOfColumns(propsNumberOfColumns, latestLayout.current);
-            if (newNumberOfColumns !== calculatedNumberOfColumns) forceRerender();
-            listViewProps.onLayout?.(layout);
-        }
+        onListViewLayout
     }
 }
 

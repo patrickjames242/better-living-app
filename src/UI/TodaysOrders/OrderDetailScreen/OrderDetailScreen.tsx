@@ -43,20 +43,19 @@ const OrderDetailScreen = (() => {
     });
 
     const OrderDetailScreen = (props: StackScreenProps<TodaysOrdersNavStackParams, 'OrderDetail'>) => {
-        const order = useSelector(state => state.todaysOrders.get(props.route.params.orderId));
-
+        
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Order Details" />
             {(() => {
-                if (order == null) {
+                if (props.route.params.order == null) {
                     return <ResourceNotFoundView />
                 } else {
                     return <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContainer}>
                         <Spacer space={15}>
-                            <OrderInfoSection order={order} />
-                            <CustomerProfileSection user={order.user} />
-                            <OrderItemsView orderDetailsJson={order.detailsJson} />
-                            <OrderSubtotalsView order={order}/>
+                            <OrderInfoSection order={props.route.params.order} />
+                            <CustomerProfileSection user={props.route.params.order.user} />
+                            <OrderItemsView orderDetailsJson={props.route.params.order.detailsJson} />
+                            <OrderSubtotalsView order={props.route.params.order}/>
                         </Spacer>
                     </ScrollView>
                 }

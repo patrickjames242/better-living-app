@@ -1,21 +1,18 @@
 
 import React from 'react';
-import {StyleSheet, View, LayoutRectangle } from 'react-native';
+import {StyleSheet, View } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 import MultiColumnFlatList from '../../../helpers/Views/MultipleColumnLists/MultiColumnFlatList';
 import InquiriesListItemView, { InquiryUnreadStatus } from './InquiriesListItemView';
-import { getNumbersList, computeNumberOfListColumns } from '../../../helpers/general';
-import LayoutConstants from '../../../LayoutConstants';
+import { getNumbersList } from '../../../helpers/general';
 import Space from '../../../helpers/Spacers/Space';
 import PlusButton from '../../../helpers/Buttons/PlusButton';
+import { OrdersUIConstants } from '../../TodaysOrders/TodaysOrdersListScreen/helpers';
 
 
 
 
 const InquiriesListScreen = (() => {
-
-    const itemSpacing = 15;
-    const sideInsets = LayoutConstants.pageSideInsets;
     
     const styles = StyleSheet.create({
         root: {
@@ -26,15 +23,10 @@ const InquiriesListScreen = (() => {
             overflow: 'visible',
         },
         flatListContentContainer: {
-            padding: sideInsets,
+            padding: OrdersUIConstants.sideInsets,
         }
     });
 
-    
-
-    function calculateNumberOfColumns(layout: LayoutRectangle){
-        return computeNumberOfListColumns({listWidth: layout.width, maxItemWidth: 350, sideInsets, horizontalItemSpacing: itemSpacing});
-    }
     
     const InquiriesListScreen = () => {
         return <View style={styles.root}>
@@ -42,9 +34,9 @@ const InquiriesListScreen = (() => {
             <MultiColumnFlatList
                 contentContainerStyle={styles.flatListContentContainer}
                 style={styles.flatList}
-                ItemSeparatorComponent={() => <Space space={itemSpacing}/>}
-                numberOfColumns={calculateNumberOfColumns}
-                columnSpacing={itemSpacing}
+                ItemSeparatorComponent={() => <Space space={OrdersUIConstants.itemSpacing}/>}
+                numberOfColumns={OrdersUIConstants.calculateNumberOfColumns}
+                columnSpacing={OrdersUIConstants.itemSpacing}
                 data={getNumbersList(1, 10)}
                 keyExtractor={item => String(item)}
                 renderItem={(_, index) => {

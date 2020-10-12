@@ -1,9 +1,8 @@
 
-import React, { useMemo } from 'react';
-import { StyleSheet, View, LayoutRectangle } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 import TodaysOrdersListItemView from './TodaysOrdersListItemView';
-import { computeNumberOfListColumns } from '../../../helpers/general';
 import LayoutConstants from '../../../LayoutConstants';
 import MultiColumnSectionList from '../../../helpers/Views/MultipleColumnLists/MultiColumnSectionList';
 import Order from '../../../api/orders/Order';
@@ -13,6 +12,9 @@ import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
 import ListLoadingHolderView from '../../../helpers/Views/ListLoadingView';
+import { OrdersUIConstants } from './helpers';
+import { StackScreenProps } from '@react-navigation/stack';
+import { TodaysOrdersNavStackParams } from '../navigationHelpers';
 
 
 
@@ -43,18 +45,13 @@ const TodaysOrdersListScreen = (() => {
         }
     });
 
-    function calculateNumberOfColumns(layout: LayoutRectangle) {
-        return computeNumberOfListColumns({ listWidth: layout.width, maxItemWidth: 350, sideInsets, horizontalItemSpacing: itemSpacing });
-    }
 
     interface SectionType {
         title: string;
         data: Order[];
     }
 
-
-
-    const TodaysOrdersListScreen = () => {
+    const TodaysOrdersListScreen = (props: StackScreenProps<TodaysOrdersNavStackParams, 'TodaysOrdersList'>) => {
 
         const ordersReduxState = useSelector(state => state.todaysOrders);
 
@@ -86,7 +83,10 @@ const TodaysOrdersListScreen = (() => {
             ]
         }, [ordersReduxState]);
 
-
+        const respondToButtonPressed = useCallback((order: Order) => {
+            props.navigation.push('OrderDetail', {order});
+        }, [props.navigation]);
+        
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Todays Orders" />
             <ListLoadingHolderView>
@@ -98,10 +98,11 @@ const TodaysOrdersListScreen = (() => {
                         contentContainerStyle={styles.flatListContentContainer}
                         style={styles.flatList}
                         ItemSeparatorComponent={() => <Space space={itemSpacing} />}
-                        numberOfColumns={calculateNumberOfColumns}
+                        numberOfColumns={OrdersUIConstants.calculateNumberOfColumns}
                         itemSpacing={itemSpacing}
                         sections={orderSections}
                         stickySectionHeadersEnabled={false}
+                        keyExtractor={item => item.id}
                         SectionSeparatorComponent={(leadingTrailingInfo) => {
                             const size = (() => {
                                 if (leadingTrailingInfo.trailingItem !== undefined) {
@@ -118,7 +119,7 @@ const TodaysOrdersListScreen = (() => {
                             return <CustomizedText style={styles.sectionHeaderText}>{(info.section.realSection as SectionType).title}</CustomizedText>
                         }}
                         renderItem={item => {
-                            return <TodaysOrdersListItemView order={item} />
+                            return <TodaysOrdersListItemView order={item} onPress={respondToButtonPressed} />
                         }}
                     />
                 })()}

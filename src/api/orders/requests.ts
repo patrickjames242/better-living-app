@@ -94,4 +94,18 @@ export function checkOrderValidity(orderItems: OrderItemRequestObj[]){
 }
 
 
+export function getCurrentUserOrders(maxAmount?: number, maxDate?: string){
+    let url = basePath + `all-for-user/?`;
 
+    url += [
+        ...(maxAmount == null ? [] : [`maxAmount=${maxAmount}`]),
+        ...(maxDate == null ? [] : [`maxDate=${maxDate}`]),
+    ].join('&');
+
+    return fetchFromAPI<OrderJsonResponseObj[]>({
+        method: HttpMethod.get,
+        path: url,
+    }).then(orderResponses => {
+        return orderResponses.map(json => new Order(json));
+    });
+}

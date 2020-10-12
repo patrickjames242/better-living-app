@@ -19,6 +19,8 @@ import SettingsPhoneNumberEditingScreen from './ProfileEditingScreens/SettingsPh
 import SettingsEmailEditingScreen from './ProfileEditingScreens/SettingsEmailEditingScreen';
 import SettingsChangePasswordScreen from './ProfileEditingScreens/SettingsChangePasswordScreen';
 import UserProfileSettingsScreen from './OrderingSystemSettings/UserProfileSettingsScreen';
+import MyOrdersListScreen from './MyOrdersListScreen/MyOrdersListScreen';
+import OrderDetailScreen from '../TodaysOrders/OrderDetailScreen/OrderDetailScreen';
 
 
 export default function Settings(){
@@ -44,6 +46,8 @@ export default function Settings(){
             <SettingsNavStack.Screen name="EmailEditing" component={SettingsEmailEditingScreen}/>
             <SettingsNavStack.Screen name="ChangePassword" component={SettingsChangePasswordScreen}/>
             
+            <SettingsNavStack.Screen name="MyOrders" component={MyOrdersListScreen}/>
+            <SettingsNavStack.Screen name="OrderDetail" component={OrderDetailScreen}/>
         </SettingsNavStack.Navigator>
     </NavigationContainer>
 }

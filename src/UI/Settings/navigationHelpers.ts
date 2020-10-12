@@ -2,6 +2,7 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import { Optional } from '../../helpers/general';
 import { Set } from 'immutable';
+import { TodaysOrdersNavStackParams } from '../TodaysOrders/navigationHelpers';
 
 export type SettingsNavStackParams = {
     SettingsList: undefined;
@@ -27,6 +28,8 @@ export type SettingsNavStackParams = {
     PhoneNumberEditing: undefined;
     ChangePassword: {currentPassword: string};
     UserProfileSettings: undefined;
+    MyOrders: undefined;
+    OrderDetail: TodaysOrdersNavStackParams['OrderDetail'];
 }
 
 export const SettingsNavStack = createStackNavigator<SettingsNavStackParams>();

@@ -54,7 +54,7 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                 data: [
                     ...(isEmployeeOrManager ? [{
                         title: 'Edit Profile Info',
-                        imageSource: require('../icons/notification.png'),
+                        imageSource: require('../icons/edit-user.png'),
                         onPress: () => { 
                             props.navigation.push('UserProfileSettings');
                         },
@@ -63,7 +63,7 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                         title: 'My Orders',
                         imageSource: require('../icons/burger.png'),
                         onPress: () => {
-                            props.navigation.push('OrderingSystemSettingsList')
+                            props.navigation.push('MyOrders');
                         },
                     },
                     {

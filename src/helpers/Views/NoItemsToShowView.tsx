@@ -2,6 +2,7 @@
 import React from 'react';
 import {Image, ImageStyle, StyleProp, StyleSheet, View} from 'react-native';
 import AssetImages from '../../images/AssetImages';
+import RoundedTextBouncyButton from '../Buttons/RoundedTextBouncyButton';
 import { CustomColors } from '../colors';
 import { CustomFont } from '../fonts/fonts';
 import Space from '../Spacers/Space';
@@ -12,6 +13,8 @@ export interface NoItemsToShowViewProps{
     subtitle?: string;
     imageSource?: any;
     imageStyle?: StyleProp<ImageStyle>
+    buttonTitle?: string;
+    buttonOnPress?: () => void;
 }
 
 const NoItemsToShowView = (() => {
@@ -52,6 +55,8 @@ const NoItemsToShowView = (() => {
                 <CustomizedText style={styles.title}>{props.title ?? "No Items"}</CustomizedText>
                 <Space space={8}/>
                 <CustomizedText style={styles.subtitle}>{props.subtitle ?? "There are no items to show currently."}</CustomizedText>
+                <Space space={15}/>
+                {props.buttonTitle && <RoundedTextBouncyButton text={props.buttonTitle} onPress={props.buttonOnPress} />}
             </View>
         </View>
     }

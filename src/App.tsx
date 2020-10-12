@@ -21,9 +21,6 @@ YellowBox.ignoreWarnings([
 ]);
 
 
-
-
-
 export default function App() {
 
 	const [appIsReady, setAppIsReady] = useState(false);
@@ -46,7 +43,6 @@ export default function App() {
 		</ReduxProvider>
 	}
 
-	
 }
 
 
