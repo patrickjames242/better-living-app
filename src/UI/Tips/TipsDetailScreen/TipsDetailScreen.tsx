@@ -15,6 +15,7 @@ import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
 import { useUpdateEffect } from '../../../helpers/reactHooks';
+import { UserType } from '../../../api/authentication/validation';
 
 
 
@@ -46,7 +47,9 @@ const TipsDetailScreen = (() => {
         const healthTipId = healthTip?.id;
 
         const healthTipArticleText = healthTip?.articleText?.trim() ?? '';
-
+        const userIsManager = useSelector(state => {
+            return state.authentication?.userObject.userType === UserType.manager;
+        });
 
         useUpdateEffect(() => {
             if (healthTipId == null){
@@ -73,7 +76,7 @@ const TipsDetailScreen = (() => {
                             ...healthTip?.youtubeVideoIDs.toArray().map(x => <TipsDetailYTVideoView key={x} ytVideoID={x}/>) ?? [],
                             (healthTipArticleText.length >= 1) &&
                                 <TipsDetailDescriptionView key='description-view' articleText={healthTipArticleText} />,
-                            <TipsDetailBottomButtonsView key='bottom-buttons' healthTipId={props.route.params.healthTipId} />
+                        ...(userIsManager ? [<TipsDetailBottomButtonsView key='bottom-buttons' healthTipId={props.route.params.healthTipId} />] : [])
                         ]}/>
                     </ScrollView>
                 }

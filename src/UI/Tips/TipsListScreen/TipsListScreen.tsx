@@ -14,8 +14,9 @@ import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
 import PaginationListHolderView, { PaginationListChangeType, PaginationListHolderViewRef } from '../../../helpers/Views/PaginationListHolderView';
 import { getAllHealthTips } from '../../../api/healthTips/requests';
 import { HealthTipChangeType, healthTipsUpdatesNotification } from '../../../api/healthTips/realtimeUpdates';
-import store from '../../../redux/store';
+import store, { useSelector } from '../../../redux/store';
 import { deleteHealthTipAction, insertHealthTipsAction, updateHealthTipAction } from '../../../redux/healthTips';
+import { UserType } from '../../../api/authentication/validation';
 
 
 const TipsListScreen = (() => {
@@ -114,9 +115,13 @@ const TipsListScreen = (() => {
             });
         }, []);
 
+        const isUserManager = useSelector(state => {
+            return state.authentication?.userObject.userType === UserType.manager;
+        });
+
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Health Tips" rightAlignedView={
-                <PlusButton onPress={onPlusButtonPressed} />
+                isUserManager ? <PlusButton onPress={onPlusButtonPressed} /> : undefined
             } />
             <PaginationListHolderView<number, number>
                 batchSize={20}

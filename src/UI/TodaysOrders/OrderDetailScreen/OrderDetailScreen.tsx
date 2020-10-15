@@ -18,6 +18,7 @@ import SpacerView from '../../../helpers/Spacers/SpacerView';
 import RoundedTextBouncyButton from '../../../helpers/Buttons/RoundedTextBouncyButton';
 import { updateOrderIsCompleted } from '../../../api/orders/requests';
 import { displayErrorMessage } from '../../../helpers/Alerts';
+import { UserType } from '../../../api/authentication/validation';
 
 
 const headingFontSize = 18;
@@ -177,6 +178,11 @@ const OrderInfoSection = (() => {
             });
         }, [onOrderUpdate, order.id, order.isCompleted]);
 
+        const isUserEmployeeOrManager = useSelector(state => {
+            const currentUserType = state.authentication?.userObject.userType ?? UserType.customer;
+            return [UserType.employee, UserType.manager].includes(currentUserType);
+        });
+
         return <TitleContainer title="Order Info">
             <View style={{flexDirection: 'row'}}>
                 <SpacerView space={15} style={{flex: 1,}}>
@@ -195,7 +201,7 @@ const OrderInfoSection = (() => {
                     <SegmentView title="Total Price" value={currency(totalPrice).format()}/>
                 </SpacerView>
             </View>
-            <RoundedTextBouncyButton isEnabled={completedIsLoading === false} text={completedIsLoading ? 'Loading...' : (props.order.isCompleted ? "Mark Incomplete" : "Mark Complete")} style={styles.setCompletedButtonStyle} onPress={toggleCompleted}/>
+            {isUserEmployeeOrManager && <RoundedTextBouncyButton isEnabled={completedIsLoading === false} text={completedIsLoading ? 'Loading...' : (props.order.isCompleted ? "Mark Incomplete" : "Mark Complete")} style={styles.setCompletedButtonStyle} onPress={toggleCompleted}/>}
         </TitleContainer>
     }
     return OrderInfoSection;
