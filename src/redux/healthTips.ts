@@ -1,18 +1,19 @@
+
 import { CustomReduxAction } from "./helpers";
-import { List, Map } from "immutable";
+import { Map } from "immutable";
 import HealthTip from "../api/healthTips/HealthTip";
 import ActionStrings from "./actionStrings";
 
 
 
-export type UpdateAllHealthTipsAction = CustomReduxAction<{
-    allHealthTips: List<HealthTip>,
+export type InsertHealthTipsAction = CustomReduxAction<{
+    healthTips: HealthTip[],
 }>;
 
-export function updateAllHealthTipsAction(allHealthTips: List<HealthTip>): UpdateAllHealthTipsAction{
+export function insertHealthTipsAction(healthTips: HealthTip[]): InsertHealthTipsAction{
     return {
-        type: ActionStrings.healthTips.UPDATE_ALL_HEALTH_TIPS,
-        allHealthTips,
+        type: ActionStrings.healthTips.INSERT_HEALTH_TIPS,
+        healthTips,
     }
 }
 
@@ -20,13 +21,13 @@ export function updateAllHealthTipsAction(allHealthTips: List<HealthTip>): Updat
 
 
 
-export type InsertOrUpdateHealthTipAction = CustomReduxAction<{
+export type UpdateHealthTipAction = CustomReduxAction<{
     healthTip: HealthTip,
 }>;
 
-export function insertOrUpdateHealthTipAction(healthTip: HealthTip): InsertOrUpdateHealthTipAction{
+export function updateHealthTipAction(healthTip: HealthTip): UpdateHealthTipAction{
     return {
-        type: ActionStrings.healthTips.INSERT_OR_UPDATE_HEALTH_TIP,
+        type: ActionStrings.healthTips.UPDATE_HEALTH_TIP,
         healthTip: healthTip,
     }
 }
@@ -50,17 +51,21 @@ export function deleteHealthTipAction(healthTipID: number): DeleteHealthTipActio
 
 
 
-export type HealthTipsActions = UpdateAllHealthTipsAction | InsertOrUpdateHealthTipAction | DeleteHealthTipAction;
+export type HealthTipsActions = InsertHealthTipsAction | UpdateHealthTipAction | DeleteHealthTipAction;
 
 export function healthTipsReducer(state = Map<number, HealthTip>(), action: HealthTipsActions){
     switch (action.type){
-        case ActionStrings.healthTips.UPDATE_ALL_HEALTH_TIPS:{
-            const allHealthTips = (action as UpdateAllHealthTipsAction).allHealthTips;
-            return Map(allHealthTips.map(x => [x.id, x]))
+        case ActionStrings.healthTips.INSERT_HEALTH_TIPS:{
+            const healthTips = (action as InsertHealthTipsAction).healthTips;
+            return state.withMutations(map => {
+                healthTips.forEach(tip => map.set(tip.id, tip));
+            });
         }
-        case ActionStrings.healthTips.INSERT_OR_UPDATE_HEALTH_TIP:{
-            const healthTip = (action as InsertOrUpdateHealthTipAction).healthTip;
-            return state.set(healthTip.id, healthTip);
+        case ActionStrings.healthTips.UPDATE_HEALTH_TIP:{
+            const healthTip = (action as UpdateHealthTipAction).healthTip;
+            if (state.has(healthTip.id))
+                return state.set(healthTip.id, healthTip);
+            else return state;
         }
         case ActionStrings.healthTips.DELETE_HEALTH_TIP:{
             const id = (action as DeleteHealthTipAction).healthTipID;

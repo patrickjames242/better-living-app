@@ -1,20 +1,38 @@
 
 
 import { OrderedMap } from 'immutable';
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatListProps, StyleSheet, View } from 'react-native';
 import AssetImages from '../../images/AssetImages';
 import { displayErrorMessage } from '../Alerts';
 import { Optional } from '../general';
 import NoItemsToShowView from './NoItemsToShowView';
 
+export enum PaginationListChangeType {
+    insertOrUpdate = 'insertOrUpdate',
+    delete = 'delete',
+}
+
+export type PaginationListChange<KeyT, ItemT> = { changeType: PaginationListChangeType.delete, deletedItemId: KeyT } |
+{ changeType: PaginationListChangeType.insertOrUpdate, changedItem: ItemT }
+
+export interface PaginationListHolderViewRef<KeyT extends string | number, ItemT> {
+    // shouldApplyChange: (change: PaginationListChange<KeyT, ItemT>) => boolean;
+
+    // returns true if the change was applied and false if it wasn't
+    applyChangeIfNeeded: (change: PaginationListChange<KeyT, ItemT>) => boolean;
+}
+
 export interface PaginationListHolderViewProps<KeyT extends string | number, ItemT> {
     batchSize: number;
+
+    // expects that items fetched will be sorted already
     fetchMoreItems: (maxAmount: number, maxDate?: string) => Promise<ItemT[]>;
     getItemId: (item: ItemT) => KeyT;
     getItemDate: (item: ItemT) => moment.Moment;
-    children: (args: {items: ItemT[], fetchMoreItems: () => void, ListFooterComponent: FlatListProps<any>['ListFooterComponent']}) => JSX.Element;
+    children: (args: { items: ItemT[], fetchMoreItems: () => void, ListFooterComponent: FlatListProps<any>['ListFooterComponent'] }) => JSX.Element;
 }
+
 
 const PaginationListHolderView = (() => {
 
@@ -26,9 +44,12 @@ const PaginationListHolderView = (() => {
         },
     });
 
-    const PaginationListHolderView = <KeyT extends string | number, ItemT>(props: React.PropsWithChildren<PaginationListHolderViewProps<KeyT, ItemT>>) => {
+    const PaginationListHolderView = <KeyT extends string | number, ItemT>(
+        props: React.PropsWithChildren<PaginationListHolderViewProps<KeyT, ItemT>>,
+        ref: Parameters<React.ForwardRefRenderFunction<PaginationListHolderViewRef<KeyT, ItemT>, PaginationListHolderViewProps<KeyT, ItemT>>>[1],
+    ) => {
 
-        const {batchSize, fetchMoreItems: propsFetchMoreItems, getItemId, getItemDate} = props;
+        const { batchSize, fetchMoreItems: propsFetchMoreItems, getItemId, getItemDate } = props;
 
         const [items, setItems] = useState<OrderedMap<KeyT, ItemT>>(OrderedMap());
         const [itemsAreBeingFetched, setItemsAreBeingFetched] = useState(false);
@@ -36,6 +57,48 @@ const PaginationListHolderView = (() => {
         const fetchEndedInError = useRef(false);
         const noMoreItemsAreAvailable = useRef(false);
         const lastMaxDate = useRef<Optional<moment.Moment>>(null);
+
+
+        useImperativeHandle(ref, () => {
+            const shouldApplyChange = (change: PaginationListChange<KeyT, ItemT>) => {
+                if (change.changeType === PaginationListChangeType.insertOrUpdate){
+                    if (lastMaxDate.current == null){
+                        return noMoreItemsAreAvailable.current;
+                    } else if (
+                        getItemDate(change.changedItem).isAfter(lastMaxDate.current) || 
+                        getItemDate(change.changedItem).isSame(lastMaxDate.current)
+                    ){
+                        return true;
+                    }
+                }
+                return true;
+            }
+            const applyChangeIfNeeded: PaginationListHolderViewRef<KeyT, ItemT>['applyChangeIfNeeded'] = change => {
+
+                if (shouldApplyChange(change) === false) return false;
+
+                setItems(oldItems => {
+                    if (change.changeType === PaginationListChangeType.delete) {
+                        return oldItems.remove(change.deletedItemId);
+                    } else {
+                        const id = getItemId(change.changedItem);
+                        return oldItems.set(id, change.changedItem).sort((i1, i2) => {
+                            if (getItemDate(i1).isAfter(getItemDate(i2))) {
+                                return -1;
+                            } else if (getItemDate(i1).isBefore(getItemDate(i2))) {
+                                return 1;
+                            } else { return 0 }
+                        });
+                    }
+                });
+                return true;
+            }
+            return {
+                applyChangeIfNeeded
+                // shouldApplyChange 
+            };
+        }, [getItemDate, getItemId]);
+
 
         const itemsArray = useMemo(() => {
             const x: ItemT[] = [];
@@ -92,7 +155,7 @@ const PaginationListHolderView = (() => {
                 <ActivityIndicator size="large" />
             </View>
         } else if (
-            itemsAreBeingFetched === false && 
+            itemsAreBeingFetched === false &&
             fetchEndedInError.current && (itemsArray?.length ?? 0) <= 0
         ) {
             return <NoItemsToShowView
@@ -106,10 +169,13 @@ const PaginationListHolderView = (() => {
                 }}
             />
         } else {
-            return props.children({ListFooterComponent,fetchMoreItems, items: itemsArray ?? []});
+            return props.children({ ListFooterComponent, fetchMoreItems, items: itemsArray ?? [] });
         }
     }
-    return PaginationListHolderView;
+    return React.forwardRef(PaginationListHolderView) as <KeyT extends number | string, ItemT>(props: PaginationListHolderViewProps<KeyT, ItemT> & {
+        ref?: Parameters<React.ForwardRefRenderFunction<PaginationListHolderViewRef<KeyT, ItemT>, PaginationListHolderViewProps<KeyT, ItemT>>>[1]
+    }) => JSX.Element;
 })();
 
 export default PaginationListHolderView;
+

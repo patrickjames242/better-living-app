@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { StyleSheet, View, LayoutRectangle } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 import { computeNumberOfListColumns } from '../../../helpers/general';
@@ -7,12 +7,15 @@ import TipsListItemView from './TipsListItemView';
 import LayoutConstants from '../../../LayoutConstants';
 import Space from '../../../helpers/Spacers/Space';
 import MultiColumnFlatList from '../../../helpers/Views/MultipleColumnLists/MultiColumnFlatList';
-import { useAllHealthTipsArray } from '../../../api/healthTips/helpers';
 import PlusButton from '../../../helpers/Buttons/PlusButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
-import ListLoadingHolderView from '../../../helpers/Views/ListLoadingView';
 import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
+import PaginationListHolderView, { PaginationListChangeType, PaginationListHolderViewRef } from '../../../helpers/Views/PaginationListHolderView';
+import { getAllHealthTips } from '../../../api/healthTips/requests';
+import { HealthTipChangeType, healthTipsUpdatesNotification } from '../../../api/healthTips/realtimeUpdates';
+import store from '../../../redux/store';
+import { deleteHealthTipAction, insertHealthTipsAction, updateHealthTipAction } from '../../../redux/healthTips';
 
 
 const TipsListScreen = (() => {
@@ -23,7 +26,6 @@ const TipsListScreen = (() => {
     const styles = StyleSheet.create({
         root: {
             flex: 1,
-
         },
         flatList: {
             zIndex: -1,
@@ -42,38 +44,117 @@ const TipsListScreen = (() => {
 
     const TipsListScreen = (props: StackScreenProps<TipsNavStackParamList, 'TipsList'>) => {
 
-        const healthTips = useAllHealthTipsArray();
-
         function onPlusButtonPressed() {
             props.navigation.push('CreateOrEditTip', { tipIdToEdit: null });
         }
+
+        const paginationListHolderView = useRef<PaginationListHolderViewRef<number, number>>(null);
+
+        useEffect(() => {
+            return healthTipsUpdatesNotification.addListener(info => {
+                switch (info.changeType) {
+                    case HealthTipChangeType.insert:
+                    case HealthTipChangeType.update: {
+                        const changeToApply: {
+                            changeType: PaginationListChangeType.insertOrUpdate,
+                            changedItem: number
+                        } = {
+                            changeType: PaginationListChangeType.insertOrUpdate,
+                            changedItem: info.changedObject.id,
+                        };
+
+                        switch (info.changeType) {
+                            case HealthTipChangeType.insert:{
+                                store.dispatch(insertHealthTipsAction([info.changedObject]));
+                                const changeWasApplied = paginationListHolderView.current?.applyChangeIfNeeded(changeToApply) ?? false;
+                                if (changeWasApplied === false) {
+                                    store.dispatch(deleteHealthTipAction(info.changedObject.id));
+                                }
+                                break;
+                            }
+                            case HealthTipChangeType.update: {
+                                const previousHealthTip = store.getState().healthTips.get(info.changedObject.id);
+                                store.dispatch(updateHealthTipAction(info.changedObject));
+                                const changeWasApplied = (paginationListHolderView.current?.applyChangeIfNeeded(changeToApply) ?? false);
+                                if ((changeWasApplied === false) && (previousHealthTip != null)) {
+                                    store.dispatch(updateHealthTipAction(previousHealthTip));
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    case HealthTipChangeType.delete: {
+                        const changeToApply: {
+                            changeType: PaginationListChangeType.delete,
+                            deletedItemId: number,
+                        } = {
+                            changeType: PaginationListChangeType.delete,
+                            deletedItemId: info.deletedObjectId,
+                        }
+                        const healthTipToDelete = store.getState().healthTips.get(info.deletedObjectId);
+                        store.dispatch(deleteHealthTipAction(info.deletedObjectId));
+                        if (
+                            ((paginationListHolderView.current?.applyChangeIfNeeded(changeToApply) ?? false) === false) &&
+                            (healthTipToDelete != null)
+                        ) {
+                            store.dispatch(insertHealthTipsAction([healthTipToDelete]));
+                        }
+                        break;
+                    }
+                }
+            });
+        }, []);
+
+
+        const fetchMoreItems = useCallback((maxAmount?: number, maxDate?: string) => {
+            return getAllHealthTips(maxAmount, maxDate).then(healthTips => {
+                store.dispatch(insertHealthTipsAction(healthTips));
+                return healthTips.map(x => x.id);
+            });
+        }, []);
 
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Health Tips" rightAlignedView={
                 <PlusButton onPress={onPlusButtonPressed} />
             } />
-            <ListLoadingHolderView>
-                {(() => {
-                    if (healthTips.length < 1) {
-                        return <NoItemsToShowView title="No Tips" subtitle="No health tips are available at this time."/>
-                    } else {
-                        return <MultiColumnFlatList
-                            contentContainerStyle={styles.flatListContentContainer}
-                            numberOfColumns={calculateListColumns}
-                            style={styles.flatList}
-                            ItemSeparatorComponent={() => {
-                                return <Space space={itemSpacing} />
-                            }}
-                            columnSpacing={itemSpacing}
-                            data={healthTips}
-                            keyExtractor={item => String(item)}
-                            renderItem={(item) => {
-                                return <TipsListItemView id={item.id} />
-                            }}
-                        />
+            <PaginationListHolderView<number, number>
+                batchSize={20}
+                fetchMoreItems={fetchMoreItems}
+                getItemId={x => x}
+                getItemDate={x => {
+                    const date = store.getState().healthTips.get(x)?.date;
+                    if (date == null) {
+                        throw new Error('no health tip was found for the provided id')
                     }
-                })()}
-            </ListLoadingHolderView>
+                    return date;
+                }}
+                ref={paginationListHolderView}
+            >{
+                    ({ ListFooterComponent, fetchMoreItems, items }) => {
+                        if (items.length < 1) {
+                            return <NoItemsToShowView title="No Tips" subtitle="No health tips are available at this time." />
+                        } else {
+                            return <MultiColumnFlatList
+                                contentContainerStyle={styles.flatListContentContainer}
+                                numberOfColumns={calculateListColumns}
+                                style={styles.flatList}
+                                ItemSeparatorComponent={() => {
+                                    return <Space space={itemSpacing} />
+                                }}
+                                columnSpacing={itemSpacing}
+                                data={items}
+                                keyExtractor={item => String(item)}
+                                renderItem={(item) => {
+                                    return <TipsListItemView id={item} />
+                                }}
+                                ListFooterComponent={ListFooterComponent}
+                                onEndReachedThreshold={0.1}
+                                onEndReached={fetchMoreItems}
+                            />
+                        }
+                    }
+                }</PaginationListHolderView>
         </View>
     }
 

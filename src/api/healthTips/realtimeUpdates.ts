@@ -1,42 +1,36 @@
 
 import { Optional } from "../../helpers/general";
 import HealthTip from "./HealthTip";
-import { List } from "immutable";
-import store from "../../redux/store";
-import { insertOrUpdateHealthTipAction, deleteHealthTipAction, updateAllHealthTipsAction } from "../../redux/healthTips";
 import { getHealthTipFromObject_orNull } from "./helpers";
+import Notification from '../../helpers/Notification';
 
-
-enum ChangeType {
-    update,
-    insert,
-    delete,
+export enum HealthTipChangeType {
+    update = 'update',
+    insert = 'insert',
+    delete = 'delete',
 }
 
-function getChangeTypeFromString(string: string): Optional<ChangeType> {
+export type HealthTipUpdatesNotificationInfo = {
+    changeType: HealthTipChangeType.insert | HealthTipChangeType.update;
+    changedObject: HealthTip;
+} | {
+    changeType: HealthTipChangeType.delete;
+    deletedObjectId: number;
+}
+
+export const healthTipsUpdatesNotification = Notification<HealthTipUpdatesNotificationInfo>();
+
+function getChangeTypeFromString(string: string): Optional<HealthTipChangeType> {
     switch (string) {
-        case 'update': return ChangeType.update;
-        case 'insert': return ChangeType.insert;
-        case 'delete': return ChangeType.delete;
+        case 'update': return HealthTipChangeType.update;
+        case 'insert': return HealthTipChangeType.insert;
+        case 'delete': return HealthTipChangeType.delete;
         default: return null;
     }
 }
 
 export function handleHealthTipsRealtimeUpdate(jsonData: any) {
-    if (typeof jsonData !== 'object') { return; }
-
-    const allObjects = jsonData.all_objects;
-
-    if (allObjects instanceof Array) {
-        let healthTips = List<HealthTip>().withMutations(list => {
-            for (const item of allObjects) {
-                const converted = getHealthTipFromObject_orNull(item);
-                if (converted == null) { continue; }
-                list.push(converted);
-            }
-        });
-        store.dispatch(updateAllHealthTipsAction(healthTips));
-    }
+    if (typeof jsonData !== 'object' && jsonData != null) { return; }
 
     const changeType = getChangeTypeFromString(jsonData.change_type);
     const changedObject = jsonData.changed_object;
@@ -44,21 +38,27 @@ export function handleHealthTipsRealtimeUpdate(jsonData: any) {
     if (typeof changedObject === 'object' && typeof changeType != null) {
 
         switch (changeType) {
-            case ChangeType.insert:
-            case ChangeType.update:{
+            case HealthTipChangeType.insert:
+            case HealthTipChangeType.update:{
                 const healthTip = getHealthTipFromObject_orNull(changedObject);
                 if (healthTip == null) {break;}
-                store.dispatch(insertOrUpdateHealthTipAction(healthTip));
+                healthTipsUpdatesNotification.post({
+                    changeType: changeType,
+                    changedObject: healthTip,
+                });
                 break;
             }
-            case ChangeType.delete:{
+            case HealthTipChangeType.delete:{
                 const deletedHealthTipId = changedObject.id;
                 if (typeof deletedHealthTipId !== "number"){break;}
-                store.dispatch(deleteHealthTipAction(deletedHealthTipId));
+                healthTipsUpdatesNotification.post({
+                    changeType: changeType,
+                    deletedObjectId: deletedHealthTipId,
+                })
                 break;
-            }   
+            }
         }
-
+        
     }
 }
 

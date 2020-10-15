@@ -1,14 +1,11 @@
 
 import { Optional, getPropsFromObject } from "../../helpers/general";
 import { fetchFromAPI, HttpMethod } from "../api";
-import { getHealthTipFromObject_orThrow } from "./helpers";
-import store from "../../redux/store";
-import { insertOrUpdateHealthTipAction, deleteHealthTipAction, } from "../../redux/healthTips";
 import { List } from "immutable";
-import { HealthTipJsonKeys, HealthTipFormDataKeys } from "./validation";
+import { HealthTipJsonKeys, HealthTipFormDataKeys, HealthTipJsonResponseObj } from "./validation";
+import HealthTip from "./HealthTip";
 
 const basePath = 'health-tips/';
-
 
 export interface HealthTipRequestObj{
     [HealthTipJsonKeys.title]: string,
@@ -43,36 +40,49 @@ function getBodyForRequestObject(obj: Partial<HealthTipRequestObj>): FormData{
 }
 
 export function createNewHealthTip(healthTip: HealthTipRequestObj){
-    return fetchFromAPI({
+    return fetchFromAPI<HealthTipJsonResponseObj>({
         method: HttpMethod.post,
         path: basePath + 'create/',
         rawBody: getBodyForRequestObject(healthTip),
     }).then(response => {
-        const healthTip = getHealthTipFromObject_orThrow(response);
-        store.dispatch(insertOrUpdateHealthTipAction(healthTip));
-        return healthTip;
+        return new HealthTip(response);
     });
 }
 
 export function updateHealthTip(id: number, requestObj: Partial<HealthTipRequestObj>){
-    return fetchFromAPI({
+    return fetchFromAPI<HealthTipJsonResponseObj>({
         path: basePath + id + '/',
         method: HttpMethod.put,
         rawBody: getBodyForRequestObject(requestObj),
     }).then(response => {
-        const healthTip = getHealthTipFromObject_orThrow(response);
-        store.dispatch(insertOrUpdateHealthTipAction(healthTip));
-        return healthTip;
+        return new HealthTip(response);
     });
 }
 
 export function deleteHealthTip(id: number){
-    return fetchFromAPI({
+    return fetchFromAPI<null>({
         method: HttpMethod.delete,
         path: basePath + id + '/'
-    }).then(() => {
-        store.dispatch(deleteHealthTipAction(id));
     });
 }
+
+
+export function getAllHealthTips(maxAmount?: number, maxDate?: string){
+    let url = basePath + `?`;
+
+    url += [
+        ...(maxAmount == null ? [] : [`maxAmount=${maxAmount}`]),
+        ...(maxDate == null ? [] : [`maxDate=${maxDate}`]),
+    ].join('&');
+
+    return fetchFromAPI<HealthTipJsonResponseObj[]>({
+        method: HttpMethod.get,
+        path: url,
+    }).then(healthTips => {
+        return healthTips.map(x => new HealthTip(x));
+    });
+}
+
+
 
 

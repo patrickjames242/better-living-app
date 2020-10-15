@@ -1,5 +1,5 @@
 
-import { Optional } from "../../helpers/general";
+import { NASSAU_TIME_ZONE, Optional } from "../../helpers/general";
 import { List } from "immutable";
 import { HealthTipJsonResponseObj, healthTipResponseObjValidator } from "./validation";
 import moment from 'moment-timezone';
@@ -29,7 +29,7 @@ export default class HealthTip {
 
         this.id = apiResponseObj.id;
         this.title = apiResponseObj.title;
-        this.date = moment(apiResponseObj.date);
+        this.date = moment.tz(apiResponseObj.date, 'UTC').tz(NASSAU_TIME_ZONE);
         this.youtubeVideoIDs = List(apiResponseObj.yt_video_ids);
         this.audioFiles = List(apiResponseObj.audio_files.map<HealthTipAudioFile>(x => ({
             id: x.id,
@@ -44,3 +44,5 @@ export default class HealthTip {
         return this.date.format('ll');
     }
 }
+
+
