@@ -30,7 +30,7 @@ function getChangeTypeFromString(string: string): Optional<HealthTipChangeType> 
 }
 
 export function handleHealthTipsRealtimeUpdate(jsonData: any) {
-    if (typeof jsonData !== 'object' && jsonData != null) { return; }
+    if (typeof jsonData !== 'object' || jsonData == null) { return; }
 
     const changeType = getChangeTypeFromString(jsonData.change_type);
     const changedObject = jsonData.changed_object;

@@ -1,6 +1,6 @@
 
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import {StyleSheet, View} from 'react-native';
 import Order from '../../../../api/orders/Order';
 import { getAllOrders } from '../../../../api/orders/requests';
@@ -8,7 +8,7 @@ import Space from '../../../../helpers/Spacers/Space';
 import MultiColumnFlatList from '../../../../helpers/Views/MultipleColumnLists/MultiColumnFlatList';
 import NavigationControllerNavigationBar from '../../../../helpers/Views/NavigationControllerNavigationBar';
 import NoItemsToShowView from '../../../../helpers/Views/NoItemsToShowView';
-import PaginationListHolderView from '../../../../helpers/Views/PaginationListHolderView';
+import PaginationListHolderView, { PaginationListChangeType, PaginationListHolderViewRef } from '../../../../helpers/Views/PaginationListHolderView';
 import LayoutConstants from '../../../../LayoutConstants';
 import { OrdersUIConstants } from '../../../TodaysOrders/TodaysOrdersListScreen/helpers';
 import TodaysOrdersListItemView from '../../../TodaysOrders/TodaysOrdersListScreen/TodaysOrdersListItemView';
@@ -32,10 +32,20 @@ const OrdersHistoryScreen = (() => {
     });
     
     const OrdersHistoryScreen = (props: StackScreenProps<SettingsNavStackParams, 'OrdersHistory'>) => {
+
+        const paginationListHolderViewRef = useRef<PaginationListHolderViewRef<string, Order>>(null);
         
         const renderItem = useCallback((item: Order) => {
             return <TodaysOrdersListItemView order={item} onPress={(order: Order) => {
-                props.navigation.push('OrderDetail', { order });
+                props.navigation.push('OrderDetail', { 
+                    order,
+                    onOrderUpdate: (order: Order) => {
+                        paginationListHolderViewRef.current?.applyChangeIfNeeded({
+                            changeType: PaginationListChangeType.insertOrUpdate,
+                            changedItem: order,
+                        });
+                    }
+                });
             }} />
         }, [props.navigation]);
         const keyExtractor = useCallback((item: Order) => item.id, []);
@@ -46,6 +56,7 @@ const OrdersHistoryScreen = (() => {
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Orders History" />
             <PaginationListHolderView<string, Order>
+                ref={paginationListHolderViewRef}
                 batchSize={15}
                 fetchMoreItems={getAllOrders}
                 getItemId={x => x.id}

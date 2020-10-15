@@ -4,6 +4,7 @@ import {StyleSheet, ActivityIndicator, Image} from 'react-native';
 import { Color } from '../../../../helpers/colors';
 import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
 import AssetImages from '../../../../images/AssetImages';
+import CustomActivityIndicator from '../../../../helpers/Views/ActivityIndicator';
 
 
 export enum PlayPauseButtonState {
@@ -54,7 +55,7 @@ const PlayPauseButton = (() => {
         >
             {(() => {
                 if (props.stateValue === PlayPauseButtonState.loading){
-                    return <ActivityIndicator size={20} color={Color.gray(0.2).stringValue}/>
+                    return <CustomActivityIndicator />
                 } else {
                     return <Image style={[styles.image, {
                         transform: [{ translateX: props.stateValue === PlayPauseButtonState.play ? circleSize * 0.05 : 0 }],

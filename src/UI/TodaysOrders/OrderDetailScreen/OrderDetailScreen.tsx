@@ -1,6 +1,6 @@
 
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import Order from '../../../api/orders/Order';
 import { Color, CustomColors } from '../../../helpers/colors';
@@ -15,6 +15,9 @@ import { useSelector } from '../../../redux/store';
 import { TodaysOrdersNavStackParams } from '../navigationHelpers';
 import currency from 'currency.js';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
+import RoundedTextBouncyButton from '../../../helpers/Buttons/RoundedTextBouncyButton';
+import { updateOrderIsCompleted } from '../../../api/orders/requests';
+import { displayErrorMessage } from '../../../helpers/Alerts';
 
 
 const headingFontSize = 18;
@@ -59,6 +62,13 @@ const OrderDetailScreen = (() => {
                 return props.route.params.order;
             }
         })();
+
+        const onOrderUpdate = props.route.params.onOrderUpdate;
+
+        const updateOrder = useCallback((order: Order) => {
+             props.navigation.setParams({order});
+             onOrderUpdate?.(order);
+        }, [props.navigation, onOrderUpdate]);
         
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Order Details" />
@@ -68,7 +78,7 @@ const OrderDetailScreen = (() => {
                 } else {
                     return <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContainer}>
                         <Spacer space={15}>
-                            <OrderInfoSection order={orderToUse} />
+                            <OrderInfoSection order={orderToUse} onOrderUpdate={updateOrder} />
                             <CustomerProfileSection user={orderToUse.user} />
                             <OrderItemsView orderDetailsJson={orderToUse.detailsJson} />
                             <OrderSubtotalsView order={orderToUse}/>
@@ -88,6 +98,7 @@ export default OrderDetailScreen;
 
 interface OrderInfoSectionProps {
     order: Order;
+    onOrderUpdate: (order: Order) => void;
 }
 
 const OrderInfoSection = (() => {
@@ -119,6 +130,10 @@ const OrderInfoSection = (() => {
             height: 20,
             width: 20,
         },
+        setCompletedButtonStyle: {
+            alignSelf: 'flex-start', 
+            marginTop: 12,
+        },
     });
 
     const SegmentView = (props: React.PropsWithChildren<{ title: string, value?: string, imageSource?: any }>) => {
@@ -143,9 +158,24 @@ const OrderInfoSection = (() => {
 
     const OrderInfoSection = (props: OrderInfoSectionProps) => {
 
+        const {order, onOrderUpdate} = props;
+
         const totalPrice = useMemo(() => {
-            return props.order.calculatePriceInfo().total;
-        }, [props.order]);
+            return order.calculatePriceInfo().total;
+        }, [order]);
+
+        const [completedIsLoading, setCompletedIsLoading] = useState(false);
+
+        const toggleCompleted = useCallback(() => {
+            setCompletedIsLoading(true);
+            updateOrderIsCompleted(order.id, !order.isCompleted).then(order => {
+                onOrderUpdate(order);
+            }).catch(error => {
+                displayErrorMessage(error.message);
+            }).finally(() => {
+                setCompletedIsLoading(false);
+            });
+        }, [onOrderUpdate, order.id, order.isCompleted]);
 
         return <TitleContainer title="Order Info">
             <View style={{flexDirection: 'row'}}>
@@ -165,7 +195,7 @@ const OrderInfoSection = (() => {
                     <SegmentView title="Total Price" value={currency(totalPrice).format()}/>
                 </SpacerView>
             </View>
-            
+            <RoundedTextBouncyButton isEnabled={completedIsLoading === false} text={completedIsLoading ? 'Loading...' : (props.order.isCompleted ? "Mark Incomplete" : "Mark Complete")} style={styles.setCompletedButtonStyle} onPress={toggleCompleted}/>
         </TitleContainer>
     }
     return OrderInfoSection;

@@ -1,12 +1,13 @@
 
 import React from 'react';
-import { StyleSheet, View, Image, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import { CustomColors, Color } from '../colors';
 import LayoutConstants from '../../LayoutConstants';
 import { CustomFont } from '../fonts/fonts';
 import BouncyButton, { BouncyButtonProps } from './BouncyButton';
 import CustomizedText from '../Views/CustomizedText';
 import AssetImages from '../../images/AssetImages';
+import CustomActivityIndicator from '../Views/ActivityIndicator';
 
 
 export const DefaultLongButtonsProps: {
@@ -112,7 +113,7 @@ const LongTextAndIconButton = (() => {
             <View style={styles.iconHolder}>
                 <Image style={[styles.icon, {opacity: isLoading ? 0 : 1}]} source={props.iconSource} />
                 <View style={[styles.activityIndicatorHolder, {opacity: isLoading ? 1 : 0}]}>
-                    {isLoading && <ActivityIndicator color="white" size={25} />}
+                    {isLoading && <CustomActivityIndicator color="white" />}
                 </View>
             </View>
         </BouncyButton>

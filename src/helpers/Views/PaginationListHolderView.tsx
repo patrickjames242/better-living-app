@@ -6,6 +6,7 @@ import { ActivityIndicator, FlatListProps, StyleSheet, View } from 'react-native
 import AssetImages from '../../images/AssetImages';
 import { displayErrorMessage } from '../Alerts';
 import { Optional } from '../general';
+import CustomActivityIndicator from './ActivityIndicator';
 import NoItemsToShowView from './NoItemsToShowView';
 
 export enum PaginationListChangeType {
@@ -146,13 +147,13 @@ const PaginationListHolderView = (() => {
                 fetchEndedInError.current === true
             ) return null;
             return <View style={{ height: 80, justifyContent: 'center', alignContent: 'center' }}>
-                <ActivityIndicator />
+                <CustomActivityIndicator />
             </View>
         }, []);
 
         if (itemsAreBeingFetched && itemsArray.length <= 0) {
             return <View style={styles.fullScreenLoaderHolder}>
-                <ActivityIndicator size="large" />
+                <CustomActivityIndicator size="large" />
             </View>
         } else if (
             itemsAreBeingFetched === false &&

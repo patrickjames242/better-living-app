@@ -1,14 +1,14 @@
+
 import { List } from "immutable";
 import store from "../../redux/store";
 import { insertOrUpdateOrderAction, updateAllOrdersAction } from "../../redux/todaysOrders";
 import Order from "./Order";
 
 enum ChangeUpdateType{
-    insert = 'insert'
-    // update = 'update'
+    insert = 'insert',
+    update = 'update'
     // delete = 'delete'
 }
-
 
 
 export function handleTodaysOrdersRealtimeUpdate(jsonData: any){
@@ -27,7 +27,10 @@ export function handleTodaysOrdersRealtimeUpdate(jsonData: any){
 
     switch (jsonData.change_type){
         case ChangeUpdateType.insert:
+        case ChangeUpdateType.update:
             store.dispatch(insertOrUpdateOrderAction(new Order(jsonData.changed_object)))
+            break;
+        
     }
 }
 

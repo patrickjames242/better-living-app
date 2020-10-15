@@ -81,6 +81,17 @@ export const submitOrder = (() => {
 })();
 
 
+export function updateOrderIsCompleted(orderId: string, isCompleted: boolean){
+    return fetchFromAPI<OrderJsonResponseObj>({
+        method: HttpMethod.put,
+        path: basePath + orderId + '/',
+        jsonBody: {
+            is_completed: isCompleted,
+        }
+    }).then(orderResponse => {
+        return new Order(orderResponse);
+    });
+}
 
 
 export function checkOrderValidity(orderItems: OrderItemRequestObj[]){
@@ -94,14 +105,15 @@ export function checkOrderValidity(orderItems: OrderItemRequestObj[]){
 }
 
 
-export function getCurrentUserOrders(maxAmount?: number, maxDate?: string){
-    let url = basePath + `all-for-user/?`;
-
-    url += [
+function getPaginationParams(maxAmount?: number, maxDate?: string){
+    return [
         ...(maxAmount == null ? [] : [`maxAmount=${maxAmount}`]),
         ...(maxDate == null ? [] : [`maxDate=${maxDate}`]),
     ].join('&');
+}
 
+export function getCurrentUserOrders(maxAmount?: number, maxDate?: string){
+    let url = basePath + `all-for-user/?` + getPaginationParams(maxAmount, maxDate);
     return fetchFromAPI<OrderJsonResponseObj[]>({
         method: HttpMethod.get,
         path: url,
@@ -111,13 +123,7 @@ export function getCurrentUserOrders(maxAmount?: number, maxDate?: string){
 }
 
 export function getAllOrders(maxAmount?: number, maxDate?: string){
-    let url = basePath + `all/?`;
-
-    url += [
-        ...(maxAmount == null ? [] : [`maxAmount=${maxAmount}`]),
-        ...(maxDate == null ? [] : [`maxDate=${maxDate}`]),
-    ].join('&');
-
+    let url = basePath + `all/?` + getPaginationParams(maxAmount, maxDate);
     return fetchFromAPI<OrderJsonResponseObj[]>({
         method: HttpMethod.get,
         path: url,
@@ -125,3 +131,5 @@ export function getAllOrders(maxAmount?: number, maxDate?: string){
         return orderResponses.map(json => new Order(json));
     });
 }
+
+

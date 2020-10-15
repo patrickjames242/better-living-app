@@ -1,8 +1,5 @@
 
 
-
-
-
 const AppSettings = {
     useLocalHostDevServer: false,
     useTestDatabaseData: false,
