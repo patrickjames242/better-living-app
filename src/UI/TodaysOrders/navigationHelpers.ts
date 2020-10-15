@@ -4,7 +4,7 @@ import Order from "../../api/orders/Order";
 
 export type TodaysOrdersNavStackParams = {
     TodaysOrdersList: undefined;
-    OrderDetail: {order: Order};
+    OrderDetail: {order: Order} | {reduxOrderId: string};
 }
 
 export const TodaysOrdersNavStack = createStackNavigator<TodaysOrdersNavStackParams>();

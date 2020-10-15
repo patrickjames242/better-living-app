@@ -84,7 +84,7 @@ const TodaysOrdersListScreen = (() => {
         }, [ordersReduxState]);
 
         const respondToButtonPressed = useCallback((order: Order) => {
-            props.navigation.push('OrderDetail', {order});
+            props.navigation.push('OrderDetail', {reduxOrderId: order.id});
         }, [props.navigation]);
         
         return <View style={styles.root}>

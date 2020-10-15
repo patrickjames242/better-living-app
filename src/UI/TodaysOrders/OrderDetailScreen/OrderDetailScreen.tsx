@@ -43,19 +43,35 @@ const OrderDetailScreen = (() => {
     });
 
     const OrderDetailScreen = (props: StackScreenProps<TodaysOrdersNavStackParams, 'OrderDetail'>) => {
+
+        const reduxOrder = useSelector(state => {
+            if ('reduxOrderId' in props.route.params)
+                return state.todaysOrders.get(props.route.params.reduxOrderId);
+            else if ('order' in props.route.params)
+                return state.todaysOrders.get(props.route.params.order.id);
+            else return undefined;
+        });
+
+        const orderToUse = (() => {
+            if (reduxOrder instanceof Order) 
+                return reduxOrder;
+            else if ('order' in props.route.params){
+                return props.route.params.order;
+            }
+        })();
         
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Order Details" />
             {(() => {
-                if (props.route.params.order == null) {
+                if (orderToUse == null) {
                     return <ResourceNotFoundView />
                 } else {
                     return <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContainer}>
                         <Spacer space={15}>
-                            <OrderInfoSection order={props.route.params.order} />
-                            <CustomerProfileSection user={props.route.params.order.user} />
-                            <OrderItemsView orderDetailsJson={props.route.params.order.detailsJson} />
-                            <OrderSubtotalsView order={props.route.params.order}/>
+                            <OrderInfoSection order={orderToUse} />
+                            <CustomerProfileSection user={orderToUse.user} />
+                            <OrderItemsView orderDetailsJson={orderToUse.detailsJson} />
+                            <OrderSubtotalsView order={orderToUse}/>
                         </Spacer>
                     </ScrollView>
                 }
@@ -93,7 +109,6 @@ const OrderInfoSection = (() => {
             fontFamily: CustomFont.medium,
             color: titleColor,
             flex: 1,
-            // backgroundColor: 'red',
         },
         segmentValueWithImageHolder: {
             flexDirection: 'row',
