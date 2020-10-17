@@ -4,13 +4,10 @@ import { getShadowStyle } from "../../general";
 import { CustomFont } from "../../fonts/fonts";
 import BouncyButton from "../../Buttons/BouncyButton";
 import Spacer from "../../Spacers/Spacer";
-import AspectRatioView from "../AspectRatioView";
 import CustomizedText from "../CustomizedText";
-import {StyleSheet, Image, ViewProps, View} from 'react-native';
+import {StyleSheet, ViewProps} from 'react-native';
 import MealCreatorConstants from '../../../UI/Menu/MealCreaterScreen/MealCreatorConstants';
 import Product from '../../../api/orderingSystem/products/Product';
-import AssetImages from '../../../images/AssetImages';
-import { Color, CustomColors } from '../../colors';
 import ProductImageThumbnailView from './ProductImageThumbnailView';
 
 
@@ -25,7 +22,6 @@ const ListViewProductItemView = (() => {
 
     const styles = StyleSheet.create({
         root: {
-            flex: 1,
             alignItems: 'flex-start',
         },
         contentView: {

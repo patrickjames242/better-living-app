@@ -154,6 +154,8 @@ const FloatingCellStylesItemView = (() => {
         root: {
             backgroundColor: 'white',
             overflow: 'hidden',
+            // flexDirection: 'row', 
+            // to correct a problem on android on the cells of the products list screen where the cells would appear squished up
         },
     });
 

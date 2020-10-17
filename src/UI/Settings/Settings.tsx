@@ -23,7 +23,7 @@ import OrderDetailScreen from '../TodaysOrders/OrderDetailScreen/OrderDetailScre
 import OrdersHistoryScreen from './OrderingSystemSettings/OrdersHistoryScreen/OrdersHistoryScreen';
 
 
-export default function Settings() {
+const Settings = () => {
     return <SettingsNavStack.Navigator initialRouteName="SettingsList" screenOptions={DEFAULT_NAV_SCREEN_OPTIONS}>
 
         <SettingsNavStack.Screen name="SettingsList" component={SettingsListScreen} />
@@ -49,5 +49,6 @@ export default function Settings() {
         <SettingsNavStack.Screen name="OrderDetail" component={OrderDetailScreen} />
         <SettingsNavStack.Screen name="OrdersHistory" component={OrdersHistoryScreen} />
     </SettingsNavStack.Navigator>
-}
+};
 
+export default React.memo(Settings);

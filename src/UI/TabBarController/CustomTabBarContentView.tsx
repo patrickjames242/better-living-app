@@ -2,13 +2,12 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 import {
-    NavigationHelpersContext,
+
     useNavigationBuilder,
     TabRouter,
     DefaultNavigatorOptions,
     createNavigatorFactory,
 } from '@react-navigation/native';
-import { TabBarSelection } from './tabBarSelectionsHelpers';
 import { useUpdateEffect } from '../../helpers/reactHooks';
 import { List } from 'immutable';
 

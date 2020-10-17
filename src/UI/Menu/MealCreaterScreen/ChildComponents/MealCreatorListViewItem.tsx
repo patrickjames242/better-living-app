@@ -29,6 +29,7 @@ const MealCreatorListViewItem = (() => {
         productInfoItemView: {
             padding: LayoutConstants.floatingCellStyles.padding,
             paddingRight: 0,
+            flex: 1,
         },
         backgroundSelectionView: {
             ...StyleSheet.absoluteFillObject

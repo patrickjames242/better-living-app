@@ -9,14 +9,14 @@ import { DEFAULT_NAV_SCREEN_OPTIONS } from '../../helpers/general';
 
 
 
-const Menu = React.memo(function _InnerMenu() {
+const Menu = () => {
     return <MenuNavStack.Navigator initialRouteName="MenuListView" screenOptions={DEFAULT_NAV_SCREEN_OPTIONS}>
         <MenuNavStack.Screen name="MealCreator" component={MealCreaterScreen} />
         <MenuNavStack.Screen name="ProductDetail" component={ProductDetailScreen} />
         <MenuNavStack.Screen name="MenuListView" component={MenuListScreen} />
     </MenuNavStack.Navigator>
-});
+};
 
-export default Menu;
+export default React.memo(Menu);
 
 

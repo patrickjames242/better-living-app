@@ -6,9 +6,11 @@ import { DEFAULT_NAV_SCREEN_OPTIONS } from '../../helpers/general';
 
 
 
-export default function Inquiries() {
+const Inquiries = () => {
     return <InquiriesNavStack.Navigator initialRouteName="InquiriesList" screenOptions={DEFAULT_NAV_SCREEN_OPTIONS}>
         <InquiriesNavStack.Screen name="InquiriesList" component={InquiriesListScreen} />
         <InquiriesNavStack.Screen name="InquiryDetail" component={InquiryDetailScreen} />
     </InquiriesNavStack.Navigator>
 }
+
+export default React.memo(Inquiries);
