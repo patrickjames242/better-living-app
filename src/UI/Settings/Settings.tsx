@@ -1,7 +1,6 @@
 
 import React from 'react';
 import SettingsListScreen from './SettingsListScreen/SettingsListScreen';
-import { NavigationContainer } from '@react-navigation/native';
 import { SettingsNavStack } from './navigationHelpers';
 import { DEFAULT_NAV_SCREEN_OPTIONS } from '../../helpers/general';
 import ProductsListScreen from './OrderingSystemSettings/ListScreens/ProductsListScreen';
@@ -24,33 +23,31 @@ import OrderDetailScreen from '../TodaysOrders/OrderDetailScreen/OrderDetailScre
 import OrdersHistoryScreen from './OrderingSystemSettings/OrdersHistoryScreen/OrdersHistoryScreen';
 
 
-export default function Settings(){
-    return <NavigationContainer independent>
-        <SettingsNavStack.Navigator initialRouteName="SettingsList" screenOptions={DEFAULT_NAV_SCREEN_OPTIONS}>
+export default function Settings() {
+    return <SettingsNavStack.Navigator initialRouteName="SettingsList" screenOptions={DEFAULT_NAV_SCREEN_OPTIONS}>
 
-            <SettingsNavStack.Screen name="SettingsList" component={SettingsListScreen}/>
-            <SettingsNavStack.Screen name="ProductsList" component={ProductsListScreen}/>
-            <SettingsNavStack.Screen name="MenusList" component={MenusListScreen}/>
-            <SettingsNavStack.Screen name="MealsList" component={MealsListScreen}/>
-            <SettingsNavStack.Screen name="MealCategoriesList" component={MealCategoriesListScreen}/>
-            
-            <SettingsNavStack.Screen name="ProductEditOrCreate" component={ProductEditOrCreationScreen}/>
-            <SettingsNavStack.Screen name="MealCategoryEditOrCreate" component={MealCategoryEditOrCreationScreen}/>
-            <SettingsNavStack.Screen name="ProductsPicker" component={OrderingSystemEditingProductsPickerScreen}/>
-            <SettingsNavStack.Screen name="MealEditOrCreate" component={MealEditOrCreationScreen}/>
-            <SettingsNavStack.Screen name="MealCategoriesPicker" component={OrderingSystemEditingMealCategoriesPickerScreen}/>
-            <SettingsNavStack.Screen name="MenuEditOrCreate" component={MenuEditOrCreationScreen}/>
-            
-            <SettingsNavStack.Screen name="UserProfileSettings" component={UserProfileSettingsScreen}/>
-            <SettingsNavStack.Screen name="NameEditing" component={SettingsNameEditingScreen}/>
-            <SettingsNavStack.Screen name="PhoneNumberEditing" component={SettingsPhoneNumberEditingScreen}/>
-            <SettingsNavStack.Screen name="EmailEditing" component={SettingsEmailEditingScreen}/>
-            <SettingsNavStack.Screen name="ChangePassword" component={SettingsChangePasswordScreen}/>
-            
-            <SettingsNavStack.Screen name="MyOrders" component={MyOrdersListScreen}/>
-            <SettingsNavStack.Screen name="OrderDetail" component={OrderDetailScreen}/>
-            <SettingsNavStack.Screen name="OrdersHistory" component={OrdersHistoryScreen}/>
-        </SettingsNavStack.Navigator>
-    </NavigationContainer>
+        <SettingsNavStack.Screen name="SettingsList" component={SettingsListScreen} />
+        <SettingsNavStack.Screen name="ProductsList" component={ProductsListScreen} />
+        <SettingsNavStack.Screen name="MenusList" component={MenusListScreen} />
+        <SettingsNavStack.Screen name="MealsList" component={MealsListScreen} />
+        <SettingsNavStack.Screen name="MealCategoriesList" component={MealCategoriesListScreen} />
+
+        <SettingsNavStack.Screen name="ProductEditOrCreate" component={ProductEditOrCreationScreen} />
+        <SettingsNavStack.Screen name="MealCategoryEditOrCreate" component={MealCategoryEditOrCreationScreen} />
+        <SettingsNavStack.Screen name="ProductsPicker" component={OrderingSystemEditingProductsPickerScreen} />
+        <SettingsNavStack.Screen name="MealEditOrCreate" component={MealEditOrCreationScreen} />
+        <SettingsNavStack.Screen name="MealCategoriesPicker" component={OrderingSystemEditingMealCategoriesPickerScreen} />
+        <SettingsNavStack.Screen name="MenuEditOrCreate" component={MenuEditOrCreationScreen} />
+
+        <SettingsNavStack.Screen name="UserProfileSettings" component={UserProfileSettingsScreen} />
+        <SettingsNavStack.Screen name="NameEditing" component={SettingsNameEditingScreen} />
+        <SettingsNavStack.Screen name="PhoneNumberEditing" component={SettingsPhoneNumberEditingScreen} />
+        <SettingsNavStack.Screen name="EmailEditing" component={SettingsEmailEditingScreen} />
+        <SettingsNavStack.Screen name="ChangePassword" component={SettingsChangePasswordScreen} />
+
+        <SettingsNavStack.Screen name="MyOrders" component={MyOrdersListScreen} />
+        <SettingsNavStack.Screen name="OrderDetail" component={OrderDetailScreen} />
+        <SettingsNavStack.Screen name="OrdersHistory" component={OrdersHistoryScreen} />
+    </SettingsNavStack.Navigator>
 }
 

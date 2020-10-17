@@ -1,3 +1,5 @@
+import React from 'react';
+import { NavigationContainerRef } from "@react-navigation/native";
 import { LogInSignUpUIContainerParams } from "../LogInSignUpUI/helpers";
 
 
@@ -6,4 +8,6 @@ export type RootNavigationViewParams = {
     LogInSignUpUI: LogInSignUpUIContainerParams;
 }
 
+
+export const navigationRef = React.createRef<NavigationContainerRef>();
 

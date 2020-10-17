@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import TabBarController from '../TabBarController/TabBarController';
 import LogInSignUpUI from '../LogInSignUpUI/LogInSignUpUI';
 import { NavigationContainer } from '@react-navigation/native';
-import { RootNavigationViewParams } from './helpers';
+import { navigationRef, RootNavigationViewParams } from './helpers';
 
 
 
@@ -12,14 +12,12 @@ import { RootNavigationViewParams } from './helpers';
 const Nav = createStackNavigator<RootNavigationViewParams>();
 
 const RootNavigationView = () => {
-    return <NavigationContainer>
+    return <NavigationContainer ref={navigationRef}>
         <Nav.Navigator mode="modal" initialRouteName="MainInterface" screenOptions={{ headerShown: false, gestureEnabled: false }}>
             <Nav.Screen name="MainInterface" component={TabBarController} />
             <Nav.Screen name="LogInSignUpUI" component={LogInSignUpUI} />
         </Nav.Navigator>
     </NavigationContainer>
-
-
 }
 
 export default RootNavigationView;

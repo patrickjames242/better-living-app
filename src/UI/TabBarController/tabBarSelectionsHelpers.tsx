@@ -7,16 +7,16 @@ import { Optional } from "../../helpers/general";
 import { useSelector } from "../../redux/store";
 
 export enum TabBarSelection {
-    todaysOrders,
-    menu,
-    cart,
-    tips,
-    contactRequests,
-    settings,
+    todaysOrders = 'TodaysOrders',
+    menu = 'Menu',
+    cart = 'Cart',
+    tips = 'Tips',
+    inquiries = 'Inquiries',
+    settings = 'Settings',
 }
 
 const allTabBarItemsData: {
-    [index: number]: {
+    [index: string]: {
         url: any,
         requiresAuthentication: boolean,
     },
@@ -37,7 +37,7 @@ const allTabBarItemsData: {
         url: require('./icons/tips.png'),
         requiresAuthentication: false,
     },
-    [TabBarSelection.contactRequests]: {
+    [TabBarSelection.inquiries]: {
         url: require('./icons/contact-requests.png'),
         requiresAuthentication: false,
     },
@@ -57,7 +57,7 @@ const customerSelections = [
     TabBarSelection.menu,
     TabBarSelection.cart,
     TabBarSelection.tips,
-    TabBarSelection.contactRequests,
+    TabBarSelection.inquiries,
     TabBarSelection.settings
 ];
 

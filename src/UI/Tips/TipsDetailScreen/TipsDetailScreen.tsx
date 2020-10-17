@@ -52,10 +52,10 @@ const TipsDetailScreen = (() => {
         });
 
         useUpdateEffect(() => {
-            if (healthTipId == null){
+            if (healthTipId == null) {
                 props.navigation.goBack();
             }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [props.route.params.healthTipId]);
 
 
@@ -72,12 +72,12 @@ const TipsDetailScreen = (() => {
                         {/*eslint-disable-next-line react/no-children-prop*/}
                         <Spacer space={spacing} children={[
                             <TipsDetailTitleView key="title-view" dateString={healthTip.getFormattedDateString()} titleString={healthTip.title} />,
-                            ...healthTip?.audioFiles.toArray().map(x => <TipsDetailAudioPlayerView key={x.id} audioFileUrl={x.url}/>) ?? [],
-                            ...healthTip?.youtubeVideoIDs.toArray().map(x => <TipsDetailYTVideoView key={x} ytVideoID={x}/>) ?? [],
+                            ...healthTip?.audioFiles.toArray().map(x => <TipsDetailAudioPlayerView key={x.id} audioFileUrl={x.url} />) ?? [],
+                            ...healthTip?.youtubeVideoIDs.toArray().map(x => <TipsDetailYTVideoView key={x} ytVideoID={x} />) ?? [],
                             (healthTipArticleText.length >= 1) &&
-                                <TipsDetailDescriptionView key='description-view' articleText={healthTipArticleText} />,
-                        ...(userIsManager ? [<TipsDetailBottomButtonsView key='bottom-buttons' healthTipId={props.route.params.healthTipId} />] : [])
-                        ]}/>
+                            <TipsDetailDescriptionView key='description-view' articleText={healthTipArticleText} />,
+                            ...(userIsManager ? [<TipsDetailBottomButtonsView key='bottom-buttons' healthTipId={props.route.params.healthTipId} />] : [])
+                        ]} />
                     </ScrollView>
                 }
             })()}
