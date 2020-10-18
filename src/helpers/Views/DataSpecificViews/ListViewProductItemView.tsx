@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { getShadowStyle } from "../../general";
 import { CustomFont } from "../../fonts/fonts";
 import BouncyButton from "../../Buttons/BouncyButton";
 import Spacer from "../../Spacers/Spacer";

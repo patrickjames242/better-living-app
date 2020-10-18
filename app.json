@@ -27,6 +27,7 @@
       "supportsTablet": true
     },
     "android": {
+      "useNextNotificationsApi": true
     }
   }
 }

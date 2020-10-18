@@ -88,10 +88,3 @@ const MealCreatorListViewItem = (() => {
 export default MealCreatorListViewItem;
 
 
-
-
-
-
-
-
-

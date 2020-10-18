@@ -76,7 +76,7 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                         imageSource: require('../icons/logout.png'),
                         onPress: () => {
                             displayTwoDecisionAlert('Are you sure?', 'Are you sure you want to log out?', 'Log Out', () => {
-                                store.dispatch(logOutAction())
+                                store.dispatch(logOutAction());
                             });
                         },
                     }

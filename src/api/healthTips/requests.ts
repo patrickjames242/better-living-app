@@ -4,6 +4,7 @@ import { fetchFromAPI, HttpMethod } from "../api";
 import { List } from "immutable";
 import { HealthTipJsonKeys, HealthTipFormDataKeys, HealthTipJsonResponseObj } from "./validation";
 import HealthTip from "./HealthTip";
+import { getExpoNotificationDeviceTokenIfPossible } from "../authentication/authRequests";
 
 const basePath = 'health-tips/';
 
@@ -16,13 +17,20 @@ export interface HealthTipRequestObj{
 }
 
 
-function getBodyForRequestObject(obj: Partial<HealthTipRequestObj>): FormData{
+async function getBodyForRequestObject(obj: Partial<HealthTipRequestObj>, includeNotificationDeviceId?: boolean): Promise<FormData>{
     
+    const CURRENT_NOTIFICATION_DEVICE_ID_KEY: 'current_notification_device_id' = 'current_notification_device_id'
+    const notificationDeviceId = includeNotificationDeviceId ? await getExpoNotificationDeviceTokenIfPossible() : undefined;
+
     const json: object | undefined = (() => {
-        const filteredObj = getPropsFromObject(obj, [
-            HealthTipJsonKeys.title, 
-            HealthTipJsonKeys.article_text, 
-            HealthTipJsonKeys.yt_video_ids
+        const filteredObj = getPropsFromObject({
+            ...obj,
+            [CURRENT_NOTIFICATION_DEVICE_ID_KEY]: notificationDeviceId,
+        }, [
+            HealthTipJsonKeys.title,
+            HealthTipJsonKeys.article_text,
+            HealthTipJsonKeys.yt_video_ids,
+            CURRENT_NOTIFICATION_DEVICE_ID_KEY,
         ]);
         return Object.getOwnPropertyNames(filteredObj).length >= 1 ? filteredObj : undefined;
     })();
@@ -39,21 +47,21 @@ function getBodyForRequestObject(obj: Partial<HealthTipRequestObj>): FormData{
     return formData;
 }
 
-export function createNewHealthTip(healthTip: HealthTipRequestObj){
+export async function createNewHealthTip(healthTip: HealthTipRequestObj){
     return fetchFromAPI<HealthTipJsonResponseObj>({
         method: HttpMethod.post,
         path: basePath + 'create/',
-        rawBody: getBodyForRequestObject(healthTip),
+        rawBody: await getBodyForRequestObject(healthTip, true),
     }).then(response => {
         return new HealthTip(response);
     });
 }
 
-export function updateHealthTip(id: number, requestObj: Partial<HealthTipRequestObj>){
+export async function updateHealthTip(id: number, requestObj: Partial<HealthTipRequestObj>){
     return fetchFromAPI<HealthTipJsonResponseObj>({
         path: basePath + id + '/',
         method: HttpMethod.put,
-        rawBody: getBodyForRequestObject(requestObj),
+        rawBody: await getBodyForRequestObject(requestObj),
     }).then(response => {
         return new HealthTip(response);
     });
