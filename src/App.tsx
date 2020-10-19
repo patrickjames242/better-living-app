@@ -33,11 +33,9 @@ export default function App() {
 	useEffect(() => {
 		loadFonts().then(() => {
 			setAppIsReady(true)
-			tryConnectingWebsocketListener()
+			tryConnectingWebsocketListener();
 			if (Platform.OS === 'ios' || Platform.OS === 'android'){
-				Notifications.requestPermissionsAsync().then(async () => {
-					console.log(await Notifications.getExpoPushTokenAsync());
-				});
+				Notifications.requestPermissionsAsync();
 			}
 		});
 	}, []);

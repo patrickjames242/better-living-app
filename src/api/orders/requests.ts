@@ -7,6 +7,7 @@ import { CartProductEntry } from "../cart/CartProductEntry";
 import Order from "./Order";
 import { OrderJsonResponseObj } from "./validation";
 import {v4 as uuidv4} from 'react-native-uuid';
+import { getExpoNotificationDeviceTokenIfPossible } from "../authentication/authRequests";
 
 const basePath = 'orders/';
 
@@ -65,18 +66,19 @@ export const submitOrder = (() => {
 
     let _nextUnusedUuid = uuidv4();
     
-    return function (requestInfo: OrderRequestObj){
-        return fetchFromAPI<OrderJsonResponseObj>({
+    return async function (requestInfo: OrderRequestObj){
+        const deviceId = await getExpoNotificationDeviceTokenIfPossible();
+        const result = await fetchFromAPI<OrderJsonResponseObj>({
             method: HttpMethod.post,
             path: basePath + 'submit-order/?emptyCartOnComplete=true',
             jsonBody: {
                 user_provided_uuid: _nextUnusedUuid,
+                current_notification_device_id_key: deviceId,
                 ...requestInfo,
             },
-        }).then(result => {
-            _nextUnusedUuid = uuidv4();
-            return new Order(result);
         });
+        _nextUnusedUuid = uuidv4();
+        return new Order(result);
     }
 })();
 

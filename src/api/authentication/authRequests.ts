@@ -109,7 +109,7 @@ export async function getExpoNotificationDeviceTokenIfPossible() {
             await sendCurrentDeviceIdToServerAsAnonymousUser();
             await AsyncStorage.setItem(deviceTokenNeedsToBePushedKey, _false);
         } else {
-            await AsyncStorage.setItem(deviceTokenNeedsToBePushedKey, _false);
+            await AsyncStorage.setItem(deviceTokenNeedsToBePushedKey, _false); // because if the user is logged in, their device id has already been sent to the server
         }
     }
 
@@ -117,6 +117,7 @@ export async function getExpoNotificationDeviceTokenIfPossible() {
     const connectionStateObserver = async (state: AppState['realtimeUpdates']['connectionState']) => {
         if (
             state === RealtimeUpdatesConnectionState.connected &&
+            store.getState().authentication == null && // because if the user is logged in, their device id has already been sent to the server
             await AsyncStorage.getItem(deviceTokenNeedsToBePushedKey) !== _false // so that if the value hasn't been set, the block will still be executed
         ) {
             await sendCurrentDeviceIdToServerAsAnonymousUser();
