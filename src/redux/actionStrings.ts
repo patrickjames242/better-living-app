@@ -57,6 +57,9 @@ const ActionStrings = nestReduxActionStrings({
     todaysOrders: {
         UPDATE_ALL_ORDERS: 'UPDATE_ALL_ORDERS',
         INSERT_OR_UPDATE_ORDER: 'INERT_OR_UPDATE_ORDER',
+    },
+    globalSettings: {
+        UPDATE_GLOBAL_SETTINGS: 'UPDATE_GLOBAL_SETTINGS',
     }
 });
 

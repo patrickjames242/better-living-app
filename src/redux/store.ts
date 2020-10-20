@@ -11,8 +11,6 @@ import { healthTipsReducer } from "./healthTips";
 import { productsReducer } from "./orderingSystem/products";
 import { productInfoTagsReducer } from "./orderingSystem/productInfoTags";
 import { menusReducer } from "./orderingSystem/menus";
-import testReduxState from "./testData";
-import AppSettings from "../settings";
 import { mealsReducer } from "./orderingSystem/meals";
 import { mealCategoriesReducer } from "./orderingSystem/mealCategories";
 import { is } from "immutable";
@@ -20,6 +18,7 @@ import { realtimeUpdatesReducer } from "./realtimeUpdates";
 import { authenticationReducer } from "./authentication";
 import { cartReducer } from "./cart";
 import { todaysOrdersReducer } from "./todaysOrders";
+import { globalSettingsReducer } from "./globalSettings";
 
 
 const appReducer = combineReducers({
@@ -36,17 +35,13 @@ const appReducer = combineReducers({
     cart: cartReducer,
     authentication: authenticationReducer,
     todaysOrders: todaysOrdersReducer,
+    globalSettings: globalSettingsReducer,
 });
 
 export type AppState = ReturnType<typeof appReducer>;
 
-const store = (() => {
-    if (AppSettings.useTestDatabaseData){
-        return createStore(appReducer, testReduxState);
-    } else {
-        return createStore(appReducer);
-    }
-})();
+const store = createStore(appReducer);
+
 
 export default store;
 

@@ -39,6 +39,7 @@ function calculateIsCurrentMenu(menu: Menu){
     const currentTimeSeconds = getSecondsSinceDayBeginning(currentMoment); 
     
     if (
+        store.getState().globalSettings.isOrderingSystemEnabled === false ||
         menu.isActive === false ||
         menu.daysOfTheWeek.contains(currentDayOfTheWeek) === false || 
         menu.startTime == null || 
@@ -89,6 +90,10 @@ function updateCurrentMenuIfNeeded(){
 
 addSelectedStateListener(selectMenusState, () => {
     updateCurrentMenuIfNeeded()
+});
+
+addSelectedStateListener(state => state.globalSettings.isOrderingSystemEnabled, () => {
+    updateCurrentMenuIfNeeded();
 });
 
 setInterval(() => {

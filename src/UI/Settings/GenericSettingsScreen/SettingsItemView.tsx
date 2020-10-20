@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Image, ImageSourcePropType } from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
 import { Color, CustomColors } from '../../../helpers/colors';
@@ -6,14 +6,20 @@ import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import Spacer from '../../../helpers/Spacers/Spacer';
+import CustomActivityIndicator from '../../../helpers/Views/ActivityIndicator';
+import { CustomSwitch } from '../../../helpers/Views/CustomSwitch';
 
 
 
 export interface SettingsItemViewProps {
     title: string;
     imageSource: ImageSourcePropType;
-    onPress: () => void;
+    onPress?: () => void;
     rightSubtitleText?: string;
+    rightSwitchInfo?: {
+        isOnValue: boolean,
+        onValueChange: (isOn: boolean) => void | Promise<any>;
+    }
 }
 
 const SettingsItemView = (() => {
@@ -55,18 +61,47 @@ const SettingsItemView = (() => {
     });
 
     const SettingsItemView = (props: SettingsItemViewProps) => {
+        
+        const [isLoading, setIsLoading] = useState(false);
+
         return <BouncyButton
+            isPressAnimationEnabled={props.rightSwitchInfo == null}
             bounceScaleValue={0.93}
             style={styles.root}
             contentViewProps={{ style: styles.buttonContentView }}
             onPress={props.onPress}
         >
-            <Spacer space={10}>
-                <Image style={styles.iconImage} source={props.imageSource} />
-                <CustomizedText style={styles.titleText}>{props.title}</CustomizedText>
-                <CustomizedText numberOfLines={1} style={styles.subtitleText}>{props.rightSubtitleText ?? ''}</CustomizedText>
-                <Image style={styles.chevronIcon} source={require('./arrow.png')} />
-            </Spacer>
+            {/* eslint-disable-next-line react/no-children-prop */}
+            <Spacer space={10} children={[
+                <Image key={1} style={styles.iconImage} source={props.imageSource} />,
+                <CustomizedText key={2} style={[styles.titleText, {
+                    flex: (isLoading || props.rightSwitchInfo != null) ? 1 : undefined,
+                }]}>{props.title}</CustomizedText>,
+                ...(() => {
+                    if (isLoading){
+                        return [<CustomActivityIndicator key={3} />]
+                    } else if (props.rightSwitchInfo == null) {
+                        return [
+                            <CustomizedText key={4} numberOfLines={1} style={styles.subtitleText}>{props.rightSubtitleText ?? ''}</CustomizedText>,
+                            <Image key={5} style={styles.chevronIcon} source={require('./arrow.png')} />
+                        ]
+                    } else {
+                        return [<CustomSwitch
+                            key={6}
+                            value={props.rightSwitchInfo.isOnValue}
+                            onValueChange={(val) => {
+                                const returnVal = props.rightSwitchInfo?.onValueChange(val);
+                                if (returnVal instanceof Promise){
+                                    setIsLoading(true);
+                                    returnVal.finally(() => {
+                                        setIsLoading(false);
+                                    });
+                                }
+                            }}
+                        />]
+                    }
+                })()
+            ]} />
         </BouncyButton>
     }
     return SettingsItemView;

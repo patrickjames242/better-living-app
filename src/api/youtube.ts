@@ -24,14 +24,11 @@ export async function fetchYoutubeVideo(videoID: string): Promise<YoutubeVideo |
     }
     
     const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoID}&key=${YOUTUBE_API_KEY}`;
-
     const invalidJson = new Error('Could not parse response from YouTube');
-
     const fetchResponse = await fetch(url, {
         method: 'GET',
     });
-    const json = await fetchResponse.json();
-    
+    const json = await fetchResponse.json();    
     const items = json.items;
     if ((items instanceof Array) === false) {
         throw invalidJson;
@@ -51,11 +48,8 @@ export async function fetchYoutubeVideo(videoID: string): Promise<YoutubeVideo |
         typeof thumbnailImageURL !== 'string') {
         throw invalidJson;
     }
-
     const video = { title, description, thumbnailImageURL, id: videoID };
-
     cachedVideos = cachedVideos.set(video.id, video);
-
     return video;
 }
 

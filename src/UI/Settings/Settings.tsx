@@ -21,6 +21,7 @@ import UserProfileSettingsScreen from './OrderingSystemSettings/UserProfileSetti
 import MyOrdersListScreen from './MyOrdersListScreen/MyOrdersListScreen';
 import OrderDetailScreen from '../TodaysOrders/OrderDetailScreen/OrderDetailScreen';
 import OrdersHistoryScreen from './OrderingSystemSettings/OrdersHistoryScreen/OrdersHistoryScreen';
+import AllowOrderingSwitchScreen from './OrderingSystemSettings/AllowOrderingScreen';
 
 
 const Settings = () => {
@@ -48,6 +49,8 @@ const Settings = () => {
         <SettingsNavStack.Screen name="MyOrders" component={MyOrdersListScreen} />
         <SettingsNavStack.Screen name="OrderDetail" component={OrderDetailScreen} />
         <SettingsNavStack.Screen name="OrdersHistory" component={OrdersHistoryScreen} />
+
+        <SettingsNavStack.Screen name="AllowOrderingSwitch" component={AllowOrderingSwitchScreen}/>
     </SettingsNavStack.Navigator>
 };
 

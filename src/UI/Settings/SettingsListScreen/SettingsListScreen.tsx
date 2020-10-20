@@ -17,12 +17,26 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
     const isEmployeeOrManager = [UserType.employee, UserType.manager].includes((authentication?.userObject.userType ?? UserType.customer));
     const profileSettingsItems = useUserProfileSettingsItems();
 
+    const isOrderingSystemEnabled = useSelector(state => state.globalSettings.isOrderingSystemEnabled);
+
     const sections: GenericSettingsScreenSection[] = useMemo(() => {
         if (authentication == null) { return []; }
         return [
             ...(isEmployeeOrManager ? [{
                 title: "Ordering System",
                 data: [
+                    {
+                        title: 'Allow Ordering',
+                        imageSource: require('../icons/light-switch.png'),
+                        rightSubtitleText: (() => {
+                            if (isOrderingSystemEnabled === true) return 'On';
+                            else if (isOrderingSystemEnabled === false) return 'Off';
+                            else return undefined;
+                        })(),
+                        onPress: () => {
+                            props.navigation.push('AllowOrderingSwitch');
+                        },
+                    },
                     {
                         title: 'Food Products',
                         imageSource: require('../icons/products.png'),
@@ -83,7 +97,7 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                 ]
             }
         ]
-    }, [authentication, isEmployeeOrManager, profileSettingsItems, props.navigation]);
+    }, [authentication, isEmployeeOrManager, isOrderingSystemEnabled, profileSettingsItems, props.navigation]);
 
     if (authentication == null) {
         return <></>;

@@ -12,6 +12,7 @@ import Notification from '../helpers/Notification';
 import { handleCartRealtimeUpdate } from './cart/realtimeUpdates';
 import { batch } from 'react-redux';
 import { handleTodaysOrdersRealtimeUpdate } from './orders/realtimeUpdates';
+import { handleGlobalSettingsRealtimeUpdate } from './globalSettings/realtimeUpdates';
 
 const isInternetReachableNotification = Notification<boolean>();
 
@@ -132,6 +133,7 @@ function startWebsocketConnection(authToken: Optional<string>, onCloseAfterSucce
                 user_info: 'user_info',
                 cart: 'cart',
                 todays_orders: 'todays_orders',
+                global_settings: 'global_settings',
             }
 
             batch(() => {
@@ -155,8 +157,10 @@ function startWebsocketConnection(authToken: Optional<string>, onCloseAfterSucce
                             case Keys.todays_orders:
                                 handleTodaysOrdersRealtimeUpdate(value);
                                 break;
+                            case Keys.global_settings:
+                                handleGlobalSettingsRealtimeUpdate(value);
+                                break;
                         }
-                        // eslint-disable-next-line no-empty
                     } catch (error){
                         console.log(error);
                     }

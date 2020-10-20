@@ -2,7 +2,6 @@
 
 const AppSettings = {
     useLocalHostDevServer: false,
-    useTestDatabaseData: false,
     vatPercentage: 0.12,
     apiHostUrl(){
         if (this.useLocalHostDevServer){

@@ -26,6 +26,7 @@ Notifications.setNotificationHandler({
 	}),
 });
 
+
 export default function App() {
 
 	const [appIsReady, setAppIsReady] = useState(false);

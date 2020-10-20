@@ -7,6 +7,7 @@ import { useUpdateEffect, useIsUnmounted } from '../reactHooks';
 
 export interface BouncyButtonProps extends ViewProps {
     onPress?: () => void;
+    isPressAnimationEnabled?: boolean;
     bounceScaleValue?: number;
     contentViewProps?: ViewProps,
 }
@@ -17,10 +18,9 @@ const BouncyButton: React.FC<BouncyButtonProps> = (props) => {
 
     const transformAnimation = useRef(new Animated.Value(1)).current;
 
-    
     useUpdateEffect(() => {
 
-        if (isUnmounted.current){return;}
+        if (isUnmounted.current || (props.isPressAnimationEnabled ?? true) === false){return;}
 
         Animated.timing(transformAnimation, {
             toValue: isPressed ? (props.bounceScaleValue ?? 0.7) : 1,
