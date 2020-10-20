@@ -48,7 +48,11 @@ const MenuListScreen = (() => {
 				<ListLoadingHolderView>
 					{(() => {
 						if (contextValue.allSortedCategories.size < 1) {
-							return <NoItemsToShowView imageSource={require('./shop-closed.png')} title="Nothing Available 😞" subtitle="Nothing is available for purchase at this time. Try again later." />
+							return <NoItemsToShowView
+								imageSource={require('./shop-closed.png')}
+								title="Nothing Available 😞"
+								subtitle="Nothing is available for purchase at this time. Try again later."
+							/>
 						} else {
 							return <View style={styles.contentView}>
 								<MenuListView />

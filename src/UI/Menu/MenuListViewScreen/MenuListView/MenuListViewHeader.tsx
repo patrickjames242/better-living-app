@@ -8,6 +8,7 @@ import CustomizedText from '../../../../helpers/Views/CustomizedText';
 import BouncyButton from '../../../../helpers/Buttons/BouncyButton';
 import { CustomColors, Color } from '../../../../helpers/colors';
 import { useMenulistViewScreenContext, ALL_CATEGORIES_CATEGORY } from '../helpers';
+import { useSelector } from '../../../../redux/store';
 
 interface MenuListViewHeader{
     
@@ -36,9 +37,10 @@ const MenuListViewHeader = (() => {
     });
 
     return function MenuListViewHeader(props: MenuListViewHeader) {
+        const firstName = useSelector(state => state.authentication?.userObject.firstName);
         return <View style={styles.root}>
             <View style={styles.topTitlesHolder}>
-                <CustomizedText style={styles.topTitles_topBoldTitle}>Hello, Patrick</CustomizedText>
+                <CustomizedText style={styles.topTitles_topBoldTitle}>{`Hello, ${firstName ?? 'Guest'}`}</CustomizedText>
                 <CustomizedText style={styles.topTitles_subtitle}>What would you like to eat?</CustomizedText>
             </View>
             <MenuCategoriesListView />
@@ -48,9 +50,7 @@ const MenuListViewHeader = (() => {
 
 export default MenuListViewHeader;
 
-interface MenuCategoriesListViewProps{
-    
-}
+
 
 const MenuCategoriesListView = (() => {
 

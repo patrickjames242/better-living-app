@@ -53,7 +53,7 @@ export function getInfoForTabBarSelection(selection: TabBarSelection){
     return allTabBarItemsData[selection];
 }
 
-const customerSelections = [
+export const customerSelections = [
     TabBarSelection.menu,
     TabBarSelection.cart,
     TabBarSelection.tips,
@@ -61,7 +61,7 @@ const customerSelections = [
     TabBarSelection.settings
 ];
 
-const employeeAndManagerSelections = [
+export const employeeAndManagerSelections = [
     TabBarSelection.todaysOrders,
     TabBarSelection.menu,
     TabBarSelection.cart,

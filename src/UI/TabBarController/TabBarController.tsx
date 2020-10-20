@@ -12,7 +12,7 @@ import { changeTabBarPosition } from '../../redux/tabBarController';
 import LogInPopUp, { LogInPopUpRef } from './LogInPopUp';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootNavigationViewParams } from '../RootNavigationView/helpers';
-import { getDefaultTabBarSelectionForUserObject, getInfoForTabBarSelection, TabBarSelection } from './tabBarSelectionsHelpers';
+import { customerSelections, employeeAndManagerSelections, getDefaultTabBarSelectionForUserObject, getInfoForTabBarSelection, TabBarSelection } from './tabBarSelectionsHelpers';
 import createCustomTabBarNavigator from './CustomTabBarContentView';
 import TodaysOrders from '../TodaysOrders/TodaysOrders';
 import Menu from '../Menu/Menu';
@@ -20,6 +20,7 @@ import Cart from '../Cart/Cart';
 import Tips from '../Tips/Tips';
 import Inquiries from '../Inquiries/Inquiries';
 import Settings from '../Settings/Settings';
+import { UserType } from '../../api/authentication/validation';
 
 
 
@@ -52,13 +53,13 @@ const TabBarController = (() => {
 
 	const Tab = createCustomTabBarNavigator<TabNavigatorProps>();
 
-	function getCurrentInitialRouteName(){
+	function getCurrentInitialRouteName() {
 		const currentUser = store.getState().authentication?.userObject ?? null;
 		return getDefaultTabBarSelectionForUserObject(currentUser);
 	}
 
 	function _CustomTabBarContentView() {
-		
+
 		const initialRouteName = useMemo(getCurrentInitialRouteName, []);
 
 		return <Tab.Navigator initialRouteName={initialRouteName}>
@@ -81,13 +82,11 @@ const TabBarController = (() => {
 
 		const dispatch = useDispatch();
 		const currentTabBarState = useSelector(state => state.tabBarController);
-		const authentication = useSelector(state => state.authentication);
 
 		const [currentTabBarSelection, setCurrentTabBarSelection] = useState(getCurrentInitialRouteName());
 
 		useEffect(() => {
 			return props.navigation.addListener('state', event => {
-	
 				const tabBarState = event.data.state.routes.find(x => x.name === mainInterfaceKey)?.state;
 				if (tabBarState && 'routeNames' in tabBarState) {
 					const newSelection = (tabBarState.routeNames as string[])[tabBarState.index!] as TabBarSelection;
@@ -95,22 +94,40 @@ const TabBarController = (() => {
 				}
 			});
 		}, [props.navigation]);
-		
+
 		const changeTab = useCallback((selection: TabBarSelection) => {
 			const tabBarSelectionInfo = getInfoForTabBarSelection(selection);
-			if (authentication == null && tabBarSelectionInfo.requiresAuthentication) {
+			if (store.getState().authentication == null && tabBarSelectionInfo.requiresAuthentication) {
 				logInPopUp.current?.present();
 			} else {
 				props.navigation.navigate(mainInterfaceKey, {
 					screen: selection,
 				} as any);
 			}
-		}, [authentication, props.navigation]);
+		}, [props.navigation]);
 
 		useEffect(() => {
 			return addSelectedStateListener(state => state.authentication, authentication => {
-				if (authentication == null && getInfoForTabBarSelection(currentTabBarSelection).requiresAuthentication) {
-					changeTab(getDefaultTabBarSelectionForUserObject(null));
+
+				const selections = (() => {
+					switch (authentication?.userObject.userType) {
+						case UserType.manager:
+						case UserType.employee:
+							return employeeAndManagerSelections;
+						case UserType.customer:
+						default:
+							return customerSelections;
+					}
+				})();
+
+				if (
+					selections.includes(currentTabBarSelection) === false ||
+					(
+						authentication == null &&
+						getInfoForTabBarSelection(currentTabBarSelection).requiresAuthentication
+					)
+				) {
+					changeTab(getDefaultTabBarSelectionForUserObject(authentication?.userObject ?? null));
 				}
 			});
 		}, [changeTab, currentTabBarSelection]);

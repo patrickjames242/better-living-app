@@ -50,8 +50,7 @@ const CustomTabNavigator = (() => {
         useMemo(() => {
             currentScreenIndices.push(state.index).forEach(index => {
                 if (animatedValues.current[index] != undefined) return;
-                const isCurrentSelection = index === state.index;
-                animatedValues.current[index] = { translateX: new Animated.Value(0), opacity: new Animated.Value(isCurrentSelection ? 1 : 0) }
+                animatedValues.current[index] = { translateX: new Animated.Value(0), opacity: new Animated.Value(1) }
             });
         }, [currentScreenIndices, state.index]);
 
@@ -94,6 +93,7 @@ const CustomTabNavigator = (() => {
             const oldViewOpacity = animatedValues.current[oldScreenIndex].opacity;
             const newViewOpacity = animatedValues.current[newScreenIndex].opacity;
 
+            newViewOpacity.setValue(0);
             Animated.timing(newViewOpacity, {
                 toValue: 1,
                 easing: easing,
@@ -145,7 +145,6 @@ const CustomTabNavigator = (() => {
                 });
             })()}
         </View>
-
 
     };
     return CustomTabNavigator;
