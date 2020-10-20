@@ -22,7 +22,7 @@ import { UserType } from '../../../api/authentication/validation';
 const TipsListScreen = (() => {
 
     const listViewPadding = LayoutConstants.pageSideInsets;
-    const itemSpacing = LayoutConstants.pageSideInsets;
+    const itemSpacing = 13;
 
     const styles = StyleSheet.create({
         root: {

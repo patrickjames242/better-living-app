@@ -66,10 +66,10 @@ const OrderDetailScreen = (() => {
 
         const onOrderUpdate = props.route.params.onOrderUpdate;
 
-        const updateOrder = useCallback((order: Order) => {
-             props.navigation.setParams({order});
-             onOrderUpdate?.(order);
-        }, [props.navigation, onOrderUpdate]);
+        const updateOrder = useCallback((order: Order) => { 
+            props.navigation.setParams({order});
+            onOrderUpdate?.(order);
+        }, [onOrderUpdate, props.navigation]);
         
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Order Details" />

@@ -61,7 +61,7 @@ const MenuListItemView = (() => {
             backgroundColor: 'white',
             borderRadius: borderRadius,
             marginTop: -(borderRadius),
-            padding: 15,
+            padding: 12,
             ...shadowConfig,
             flexDirection: 'row',
             alignItems: 'center',
@@ -71,13 +71,13 @@ const MenuListItemView = (() => {
             flexGrow: 1,
         },
         textBox_productName: {
-            fontSize: 18.5,
+            fontSize: 17,
             fontFamily: CustomFont.bold,
         },
         textBox_productDescription: {
             fontSize: 13,
             color: CustomColors.offBlackSubtitle.stringValue,
-            marginTop: 5,
+            marginTop: 4,
         },
         textBox_rightSide: {
             marginLeft: 30,
@@ -85,13 +85,13 @@ const MenuListItemView = (() => {
         },
         startingAtText: {
             color: Color.gray(0.7).stringValue,
-            fontSize: 13,
+            fontSize: 12,
             marginBottom: 2,
         },
         priceText: {
             color: CustomColors.themeGreen.stringValue,
             fontFamily: CustomFont.bold,
-            fontSize: 17,
+            fontSize: 15,
         }
     });
 
