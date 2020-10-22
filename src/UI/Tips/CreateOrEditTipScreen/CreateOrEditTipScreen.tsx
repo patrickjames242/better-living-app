@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import GenericEditingFormScreen from '../../../helpers/Views/GenericEditingFormScreen';
 import { DefaultLongButtonsProps } from '../../../helpers/Buttons/LongTextAndIconButton';
 import { displayErrorMessage } from '../../../helpers/Alerts';
+import { RNFileForUpload } from '../../../helpers/RNFileForUpload';
 
 
 
@@ -56,7 +57,7 @@ const CreateOrEditTipScreen = (() => {
         const [articleText, setArticleText] = useState(initialFieldValues.articleText);
         const [ytVideoIds, setYtVideoIds] = useState(initialFieldValues.ytVideoIds);
 
-        const [audioFilesToAdd, setAudioFilesToAdd] = useState(List<File>());
+        const [audioFilesToAdd, setAudioFilesToAdd] = useState(List<RNFileForUpload>());
         const [audioFilesToDelete, setAudioFilesToDelete] = useState(Set<number>());
 
         const navigationBarTitle = (() => {

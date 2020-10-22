@@ -6,13 +6,14 @@ import { HealthTipAudioFile } from '../../../../api/healthTips/HealthTip';
 import { List, Set } from 'immutable';
 import Spacer from '../../../../helpers/Spacers/Spacer';
 import AudioFileView from './AudioFileView';
+import { RNFileForUpload } from '../../../../helpers/RNFileForUpload';
 
 export interface CreateOrEditTipAudioFilesSectionProps {
     audioFiles: List<HealthTipAudioFile>;
-    addedAudioFiles: List<File>;
+    addedAudioFiles: List<RNFileForUpload>;
     deletedAudioFileIds: Set<number>;
-    onUserWantsToAddFile: (file: File) => void;
-    onUserWantsToRemoveAddedFile: (file: File) => void;
+    onUserWantsToAddFile: (file: RNFileForUpload) => void;
+    onUserWantsToRemoveAddedFile: (file: RNFileForUpload) => void;
     onUserWantsToRemoveExistingFile: (id: number) => void;
 }
 
@@ -42,7 +43,7 @@ const CreateOrEditTipAudioFilesSection = (() => {
                 ...(addedAudioFiles.map((x, i) => {
                     return <AudioFileView
                         key={i + existingAudioFiles.length}
-                        audioFileName={x.name}
+                        audioFileName={x.getFormDataValue().name}
                         onDeleteButtonPressed={() => props.onUserWantsToRemoveAddedFile(x)}
                     />
                 })),

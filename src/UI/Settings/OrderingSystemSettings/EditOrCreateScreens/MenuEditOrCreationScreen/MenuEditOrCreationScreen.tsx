@@ -24,9 +24,6 @@ import { displayErrorMessage } from '../../../../../helpers/Alerts';
 
 const MenuEditOrCreationScreen = (() => {
 
-
-
-
     const timeStringTextFieldMomentFormat = 'h:mm a';
     const timeStringApiFormat = 'HH:mm:ss'
 

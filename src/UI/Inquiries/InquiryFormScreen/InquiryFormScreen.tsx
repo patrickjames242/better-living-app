@@ -7,6 +7,10 @@ import { FormikMultilineTextFieldView, FormikTextFieldView } from '../../../help
 import GenericEditingFormScreen from '../../../helpers/Views/GenericEditingFormScreen';
 import store from '../../../redux/store';
 import * as Yup from 'yup';
+import { submitInquiry } from '../../../api/submitInquiry';
+import { displayErrorMessage } from '../../../helpers/Alerts';
+import { StackScreenProps } from '@react-navigation/stack';
+import { InquiriesNavStackParams } from '../navigationHelpers';
 
 
 
@@ -17,11 +21,12 @@ const InquiryFormScreen = (() => {
         name: string;
         subject: string;
         description: string;
+        phoneNumber: string;
     }
 
     const fieldIsRequired = (fieldName: string) => fieldName + ' is a required field.';
 
-    const InquiryFormScreen = () => {
+    const InquiryFormScreen = (props: StackScreenProps<InquiriesNavStackParams, 'InquiryForm'>) => {
 
         const initialValues: Values = useMemo(() => {
             const currentUser = store.getState().authentication?.userObject;
@@ -30,6 +35,7 @@ const InquiryFormScreen = (() => {
                 name: mapOptional(currentUser, x => x.firstName + " " + x.lastName) ?? '',
                 subject: '',
                 description: '',
+                phoneNumber: currentUser?.phoneNumber ?? '',
             }
         }, []);
 
@@ -40,9 +46,25 @@ const InquiryFormScreen = (() => {
                 name: Yup.string().trim().required(fieldIsRequired('Full Name')),
                 subject: Yup.string().trim().required(fieldIsRequired('Subject')),
                 description: Yup.string().trim().required(fieldIsRequired('Description')),
+                phoneNumber: Yup.string()
             })}
             onSubmit={(values, { setSubmitting }) => {
-
+                submitInquiry({
+                    email: values.email.trim(),
+                    name: values.name.trim(),
+                    subject: values.subject.trim(),
+                    description: values.description.trim(),
+                    phone_number: (() => {
+                        const x = values.phoneNumber.trim();
+                        return x.length >= 1 ? x : undefined;
+                    })(),
+                }).finally(() => {
+                    setSubmitting(false);
+                }).then(() => {
+                    props.navigation.goBack();
+                }).catch(error => {
+                    displayErrorMessage(error.message);
+                });
             }}
         >{formik => {
             return <GenericEditingFormScreen
@@ -50,10 +72,13 @@ const InquiryFormScreen = (() => {
                 longButtons={[
                     {
                         ...DefaultLongButtonsProps.saveChanges,
+                        isLoading: formik.isSubmitting,
+                        onPress: formik.submitForm,
                     }
                 ]}
             >
                 <FormikTextFieldView<Values> formikFieldName="email" topTitleText="Contact Email" />
+                <FormikTextFieldView<Values> formikFieldName="phoneNumber" topTitleText="Phone Number"/>
                 <FormikTextFieldView<Values> formikFieldName="name" topTitleText="Full Name" />
                 <FormikTextFieldView<Values> formikFieldName="subject" topTitleText="Subject" />
                 <FormikMultilineTextFieldView<Values> formikFieldName="description" topTitleText="Description" />

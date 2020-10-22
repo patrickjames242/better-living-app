@@ -1,17 +1,15 @@
 
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
-import CustomizedText from '../../../../helpers/Views/CustomizedText';
-import RoundedBouncyButton from '../../../../helpers/Buttons/RoundedBouncyButton';
+import { StyleSheet } from 'react-native';
 import AssetImages from '../../../../images/AssetImages';
-import Space from '../../../../helpers/Spacers/Space';
 import { CustomFont } from '../../../../helpers/fonts/fonts';
 import * as DocumentPicker from 'expo-document-picker';
 import RoundedTextAndIconBouncyButton from '../../../../helpers/Buttons/RoundedTextAndIconBouncyButton';
+import { RNFileForUpload } from '../../../../helpers/RNFileForUpload';
 
 
 export interface AddNewFileButtonProps {
-    onUserWantsToAddFile: (file: File) => void;
+    onUserWantsToAddFile: (file: RNFileForUpload) => void;
 }
 
 const AddNewFileButton = (() => {
@@ -48,16 +46,12 @@ const AddNewFileButton = (() => {
                 }
                 
                 if (documentPickerResult.file instanceof File){
-                    props.onUserWantsToAddFile(documentPickerResult.file);
+                    props.onUserWantsToAddFile(new RNFileForUpload({file: documentPickerResult.file}));
                     return;
                 }
+
+                props.onUserWantsToAddFile(new RNFileForUpload({name: documentPickerResult.name, uri: documentPickerResult.uri}));
                 
-                fetch(documentPickerResult.uri).then(result => 
-                    result.blob()
-                ).then(result => {
-                    const file = new File([result], documentPickerResult.name);
-                    props.onUserWantsToAddFile(file);
-                });  
             });
         }
 

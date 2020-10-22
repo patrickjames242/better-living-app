@@ -65,7 +65,11 @@ const ProductDetailScreen = (() => {
         const isUserLoggedIn = useSelector(state => state.authentication != null);
         const tabBarControllerContext = useContext(TabBarControllerContext);
 
-
+        useLayoutEffect(() => {
+            if (product == null){
+                props.navigation.goBack();
+            }
+        }, [product, props.navigation]);
 
         const allCartEntriesReduxState = useSelector(state => state.cart);
 

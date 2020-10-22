@@ -113,7 +113,11 @@ const MealCreatorScreen = (() => {
         const [bottomButtonViewHeight, setBottomButtonViewHeight] = useState(0);
         const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
-
+        useLayoutEffect(() => {
+            if (meal == null){
+                props.navigation.goBack();
+            }
+        }, [meal, props.navigation]);
 
 
         const initialMealEntryToEdit_CategoryIdToChosenProductIdMap = useMemo(() => {

@@ -23,7 +23,7 @@ import { UserType } from '../../../api/authentication/validation';
 
 const TipsDetailScreen = (() => {
 
-    const spacing = LayoutConstants.pageSideInsets;
+    const spacing = 15;
 
     const styles = StyleSheet.create({
         root: {
@@ -34,17 +34,13 @@ const TipsDetailScreen = (() => {
             zIndex: -1,
         },
         scrollViewContentContainer: {
-            padding: spacing,
-            width: '100%',
-            maxWidth: LayoutConstants.floatingCellStyles.maxWidth + (spacing * 2),
-            alignSelf: 'center',
+            ...LayoutConstants.maxWidthListContentContainerStyles(),
         }
     });
 
     const TipsDetailScreen = (props: StackScreenProps<TipsNavStackParamList, 'TipDetail'>) => {
 
         const healthTip = useSelector(state => state.healthTips.get(props.route.params.healthTipId));
-        const healthTipId = healthTip?.id;
 
         const healthTipArticleText = healthTip?.articleText?.trim() ?? '';
         const userIsManager = useSelector(state => {
@@ -52,11 +48,11 @@ const TipsDetailScreen = (() => {
         });
 
         useUpdateEffect(() => {
-            if (healthTipId == null) {
+            if (healthTip == null) {
                 props.navigation.goBack();
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [props.route.params.healthTipId]);
+        }, [healthTip]);
 
 
         return <View style={styles.root}>

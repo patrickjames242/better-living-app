@@ -5,6 +5,7 @@ import { List } from "immutable";
 import { HealthTipJsonKeys, HealthTipFormDataKeys, HealthTipJsonResponseObj } from "./validation";
 import HealthTip from "./HealthTip";
 import { getExpoNotificationDeviceTokenIfPossible } from "../authentication/authRequests";
+import { RNFileForUpload } from "../../helpers/RNFileForUpload";
 
 const basePath = 'health-tips/';
 
@@ -12,7 +13,7 @@ export interface HealthTipRequestObj{
     [HealthTipJsonKeys.title]: string,
     [HealthTipJsonKeys.article_text]: Optional<string>,
     [HealthTipJsonKeys.yt_video_ids]?: string[];
-    audioFilesToInsert?: List<File>,
+    audioFilesToInsert?: List<RNFileForUpload>,
     audioFilesToDelete?: List<number>,
 }
 
@@ -42,7 +43,8 @@ async function getBodyForRequestObject(obj: Partial<HealthTipRequestObj>, includ
         formData.append(HealthTipFormDataKeys.deleteAudioFile, String(audioFileId));
     }
     for (const audioFile of obj.audioFilesToInsert?.toArray() ?? []){
-        formData.append(HealthTipFormDataKeys.insertAudioFile, audioFile, audioFile.name);
+        const formDataValue = audioFile.getFormDataValue();
+        formData.append(HealthTipFormDataKeys.insertAudioFile, formDataValue as any, formDataValue.name);
     }
     return formData;
 }
