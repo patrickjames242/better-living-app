@@ -11,7 +11,7 @@ import { Platform } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { RealtimeUpdatesConnectionState } from "../../redux/realtimeUpdates";
 
-const baseUrl = 'auth/users/'
+const baseUrl = 'auth/users/';
 
 export interface SignUpInfo {
     first_name: string,
@@ -106,6 +106,7 @@ export async function getExpoNotificationDeviceTokenIfPossible() {
     const authObserver = async (authentication: AppState['authentication']) => {
         if (authentication == null) {
             await AsyncStorage.setItem(deviceTokenNeedsToBePushedKey, _true);
+            console.log('sending token as anonymous user');
             await sendCurrentDeviceIdToServerAsAnonymousUser();
             await AsyncStorage.setItem(deviceTokenNeedsToBePushedKey, _false);
         } else {
@@ -116,7 +117,10 @@ export async function getExpoNotificationDeviceTokenIfPossible() {
     // observing the connection state because this tells us that the device has just connected to the internet
     const connectionStateObserver = async (state: AppState['realtimeUpdates']['connectionState']) => {
         if (
-            state === RealtimeUpdatesConnectionState.connected &&
+            [
+                RealtimeUpdatesConnectionState.connected, 
+                RealtimeUpdatesConnectionState.connectedAndGotInitialUpdates
+            ].includes(state) &&
             store.getState().authentication == null && // because if the user is logged in, their device id has already been sent to the server
             await AsyncStorage.getItem(deviceTokenNeedsToBePushedKey) !== _false // so that if the value hasn't been set, the block will still be executed
         ) {
@@ -125,9 +129,9 @@ export async function getExpoNotificationDeviceTokenIfPossible() {
         }
     }
 
-    const state = store.getState();
-    authObserver(state.authentication);
-    connectionStateObserver(state.realtimeUpdates.connectionState);
+    // we execute the connection state observer immediately and not the auth observer because if we did this, the authentication object might not be set from async storage yet, and the null value would result in the current device id being sent as an anonymous user.
+
+    connectionStateObserver(store.getState().realtimeUpdates.connectionState);
 
     addSelectedStateListener(state => state.authentication, authObserver);
     addSelectedStateListener(state => state.realtimeUpdates.connectionState, connectionStateObserver)

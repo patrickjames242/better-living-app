@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
 import { useIsUnmounted } from '../../../helpers/reactHooks';
-import { displayErrorMessage } from '../../../helpers/Alerts';
+import { displayDeleteConfirmationAlert, displayErrorMessage } from '../../../helpers/Alerts';
 
 export interface TipsDetailBottomButtonsViewProps{
     healthTipId: number;
@@ -41,13 +41,15 @@ const TipsDetailBottomButtonsView = (() => {
         const isUnmounted = useIsUnmounted();
 
         function deleteButtonPressed(){
-            setDeleteIsLoading(true);
-            deleteHealthTip(props.healthTipId).catch(error => {
-                displayErrorMessage(error.message);
-            }).finally(() => {
-                if (isUnmounted.current === false){
-                    setDeleteIsLoading(false);
-                }
+            displayDeleteConfirmationAlert(() => {
+                setDeleteIsLoading(true);
+                deleteHealthTip(props.healthTipId).catch(error => {
+                    displayErrorMessage(error.message);
+                }).finally(() => {
+                    if (isUnmounted.current === false){
+                        setDeleteIsLoading(false);
+                    }
+                });
             });
         }
 

@@ -18,9 +18,6 @@ import { useUpdateEffect } from '../../../helpers/reactHooks';
 import { UserType } from '../../../api/authentication/validation';
 
 
-
-
-
 const TipsDetailScreen = (() => {
 
     const spacing = 15;

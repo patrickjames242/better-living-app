@@ -34,3 +34,6 @@ export const displayTwoDecisionAlert = (title: string, message: string, yesText:
     }
 }
 
+export const displayDeleteConfirmationAlert = (deleteAction: () => void) => {
+    displayTwoDecisionAlert('Are you sure?', 'Are you sure you want to delete this? Once deleted, it cannot be recovered.', 'Delete', deleteAction);
+}

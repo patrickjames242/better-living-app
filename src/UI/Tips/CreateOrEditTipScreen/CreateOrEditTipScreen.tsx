@@ -2,7 +2,6 @@
 import React, { useMemo, useState } from 'react';
 import { Optional, mapOptional } from '../../../helpers/general';
 import store from '../../../redux/store';
-import { TextFieldView, MultilineTextFieldView } from '../../../helpers/Views/TextFieldView';
 import { updateHealthTip, createNewHealthTip, HealthTipRequestObj } from '../../../api/healthTips/requests';
 import CreateOrEditTipYoutubeSection from './CreateOrEditTipYoutubeSection/CreateOrEditTipYoutubeSection';
 import { List, Set } from 'immutable';
@@ -15,7 +14,9 @@ import GenericEditingFormScreen from '../../../helpers/Views/GenericEditingFormS
 import { DefaultLongButtonsProps } from '../../../helpers/Buttons/LongTextAndIconButton';
 import { displayErrorMessage } from '../../../helpers/Alerts';
 import { RNFileForUpload } from '../../../helpers/RNFileForUpload';
-
+import { Formik } from '../../../helpers/formik';
+import * as yup from 'yup';
+import { FormikMultilineTextFieldView, FormikTextFieldView } from '../../../helpers/Views/FormikTextFieldView';
 
 
 const CreateOrEditTipScreen = (() => {
@@ -44,6 +45,11 @@ const CreateOrEditTipScreen = (() => {
         }
     }
 
+    interface FormikValues {
+        title: string,
+        articleText: string,
+    }
+
     const CreateOrEditTipScreen = (props: StackScreenProps<TipsNavStackParamList, 'CreateOrEditTip'>) => {
 
         const initialFieldValues = useMemo(() => {
@@ -51,12 +57,7 @@ const CreateOrEditTipScreen = (() => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
 
-        const [isLoading, setIsLoading] = useState(false);
-
-        const [title, setTitle] = useState(initialFieldValues.title);
-        const [articleText, setArticleText] = useState(initialFieldValues.articleText);
         const [ytVideoIds, setYtVideoIds] = useState(initialFieldValues.ytVideoIds);
-
         const [audioFilesToAdd, setAudioFilesToAdd] = useState(List<RNFileForUpload>());
         const [audioFilesToDelete, setAudioFilesToDelete] = useState(Set<number>());
 
@@ -70,65 +71,74 @@ const CreateOrEditTipScreen = (() => {
 
         const navigation = useNavigation<StackNavigationProp<TipsNavStackParamList, 'CreateOrEditTip'>>();
 
-        function saveChanges() {
 
-            const requestObj: HealthTipRequestObj = {
-                title: title,
-                article_text: articleText,
-                yt_video_ids: ytVideoIds.toArray(),
-                audioFilesToInsert: audioFilesToAdd,
-                audioFilesToDelete: audioFilesToDelete.toList(),
-            };
+        return <Formik<FormikValues>
+            initialValues={{
+                title: initialFieldValues.title,
+                articleText: initialFieldValues.articleText,
+            }}
+            validationSchema={yup.object({
+                title: yup.string().trim().required('Title field required'),
+                articleText: yup.string(),
+            })}
+            onSubmit={(values, { setSubmitting }) => {
+                const article_text = (() => {
+                    const x = values.articleText.trim();
+                    return x.length <= 0 ? null : x;
+                })();
 
-            setIsLoading(true);
-            ((props.route.params.tipIdToEdit == null) ?
-                createNewHealthTip(requestObj) :
-                updateHealthTip(props.route.params.tipIdToEdit, requestObj))
-                .then(() => {
-                    navigation.goBack();
-                }).catch(error => {
-                    displayErrorMessage(error.message);
-                }).finally(() => {
-                    setIsLoading(false);
-                });
-        }
+                const requestObj: HealthTipRequestObj = {
+                    title: values.title.trim(),
+                    article_text: article_text,
+                    yt_video_ids: ytVideoIds.toArray(),
+                    audioFilesToInsert: audioFilesToAdd,
+                    audioFilesToDelete: audioFilesToDelete.toList(),
+                };
 
-        return <GenericEditingFormScreen
-            navBarTitle={navigationBarTitle}
-            longButtons={[{
-                ...DefaultLongButtonsProps.saveChanges,
-                onPress: saveChanges,
-                isLoading,
-            }]}
-        >
-            <TextFieldView
-                value={title}
-                onChangeText={setTitle}
-                topTitleText="Title"
-            />
-            <CreateOrEditTipYoutubeSection
-                videoIds={ytVideoIds}
-                onDeleteVideoId={videoId => {
-                    setYtVideoIds(i => i.filter(x => x !== videoId));
-                }}
-                onAddVideoId={videoId => {
-                    setYtVideoIds(x => x.filter(x => x !== videoId).push(videoId));
-                }}
-            />
-            <CreateOrEditTipAudioFilesSection
-                audioFiles={initialFieldValues.audioFiles}
-                addedAudioFiles={audioFilesToAdd}
-                deletedAudioFileIds={audioFilesToDelete}
-                onUserWantsToAddFile={file => setAudioFilesToAdd(x => x.push(file))}
-                onUserWantsToRemoveAddedFile={file => setAudioFilesToAdd(x => x.filter(y => y !== file))}
-                onUserWantsToRemoveExistingFile={id => setAudioFilesToDelete(x => x.add(id))}
-            />
-            <MultilineTextFieldView 
-                topTitleText="Description"
-                value={articleText} 
-                onChangeText={setArticleText}
-            />
-        </GenericEditingFormScreen>
+                setSubmitting(true);
+                ((props.route.params.tipIdToEdit == null) ?
+                    createNewHealthTip(requestObj) :
+                    updateHealthTip(props.route.params.tipIdToEdit, requestObj))
+                    .then(() => {
+                        navigation.goBack();
+                    }).catch(error => {
+                        displayErrorMessage(error.message);
+                    }).finally(() => {
+                        setSubmitting(false);
+                    });
+            }}
+        >{formik => {
+            return <GenericEditingFormScreen
+                navBarTitle={navigationBarTitle}
+                longButtons={[{
+                    ...DefaultLongButtonsProps.saveChanges,
+                    onPress: formik.submitForm,
+                    isLoading: formik.isSubmitting,
+                }]}
+            >
+                <FormikTextFieldView<FormikValues> formikFieldName="title" topTitleText="Title" />
+                <CreateOrEditTipYoutubeSection
+                    videoIds={ytVideoIds}
+                    onDeleteVideoId={videoId => {
+                        setYtVideoIds(i => i.filter(x => x !== videoId));
+                    }}
+                    onAddVideoId={videoId => {
+                        setYtVideoIds(x => x.filter(x => x !== videoId).push(videoId));
+                    }}
+                />
+                <CreateOrEditTipAudioFilesSection
+                    audioFiles={initialFieldValues.audioFiles}
+                    addedAudioFiles={audioFilesToAdd}
+                    deletedAudioFileIds={audioFilesToDelete}
+                    onUserWantsToAddFile={file => setAudioFilesToAdd(x => x.push(file))}
+                    onUserWantsToRemoveAddedFile={file => setAudioFilesToAdd(x => x.filter(y => y !== file))}
+                    onUserWantsToRemoveExistingFile={id => setAudioFilesToDelete(x => x.add(id))}
+                />
+                <FormikMultilineTextFieldView<FormikValues> formikFieldName="articleText" topTitleText="Description" />
+
+            </GenericEditingFormScreen>
+        }}</Formik>
+
     }
     return CreateOrEditTipScreen;
 })();

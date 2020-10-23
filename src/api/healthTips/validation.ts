@@ -73,7 +73,7 @@ const HealthTipApiResponseSchema = {
             type: 'array',
             items: { type: 'string' }
         },
-        [HealthTipJsonKeys.article_text]: { type: 'string' },
+        [HealthTipJsonKeys.article_text]: { type: ['string', 'null'] },
     },
     required: [
         HealthTipJsonKeys.id, 
