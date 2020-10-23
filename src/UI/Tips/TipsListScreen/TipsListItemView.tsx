@@ -34,7 +34,7 @@ const TipsListItemView = (() => {
         },
         titleLabel: {
             fontFamily: CustomFont.bold,
-            fontSize: 20,
+            fontSize: 17,
         },
         descriptionLabel: {
             color: CustomColors.offBlackSubtitle.stringValue,
@@ -64,7 +64,7 @@ const TipsListItemView = (() => {
             contentViewProps={{ style: styles.buttonContentView }}
             onPress={onPress}
         >
-            <Spacer space={10}>
+            <Spacer space={7}>
                 <CustomizedText style={styles.dateLabel}>{
                     healthTip?.getFormattedDateString()
                 }</CustomizedText>

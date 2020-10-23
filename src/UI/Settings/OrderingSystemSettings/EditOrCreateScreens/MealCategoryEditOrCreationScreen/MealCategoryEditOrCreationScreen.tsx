@@ -80,7 +80,6 @@ const MealCategoryEditOrCreationScreen = (() => {
             const shouldButtonsBeEnabled = formik.isSubmitting === false && isDeleting === false;
 
             return <OrderingSystemEditingFormScreen
-                formHasErrors={Object.getOwnPropertyNames(formik.errors).length >= 1}
                 navBarTitle={navBarTitle}
                 saveButtonProps={{
                     onPress: formik.submitForm,

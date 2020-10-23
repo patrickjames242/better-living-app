@@ -17,6 +17,8 @@ import { HealthTipChangeType, healthTipsUpdatesNotification } from '../../../api
 import store, { useSelector } from '../../../redux/store';
 import { deleteHealthTipAction, insertHealthTipsAction, updateHealthTipAction } from '../../../redux/healthTips';
 import { UserType } from '../../../api/authentication/validation';
+import { shouldPopTabBarControllerChildToTop, useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
+import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
 
 
 const TipsListScreen = (() => {
@@ -50,6 +52,8 @@ const TipsListScreen = (() => {
         }
 
         const paginationListHolderView = useRef<PaginationListHolderViewRef<number, number>>(null);
+
+        useTabBarControllerChildRootScreenPopToTopFunctionality(TabBarSelection.tips, props);
 
         useEffect(() => {
             return healthTipsUpdatesNotification.addListener(info => {

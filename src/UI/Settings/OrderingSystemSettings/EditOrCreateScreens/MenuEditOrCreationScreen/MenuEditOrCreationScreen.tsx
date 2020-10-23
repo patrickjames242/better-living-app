@@ -35,7 +35,7 @@ const MenuEditOrCreationScreen = (() => {
         return moment.tz(timeString, timeStringApiFormat, NASSAU_TIME_ZONE).format(timeStringTextFieldMomentFormat);
     }
 
-    function apiTimeStringTextFromTextFieldText(textFieldText: string){
+    function apiTimeStringTextFromTextFieldText(textFieldText: string) {
         return parseTextFieldTimeString(textFieldText).format(timeStringApiFormat);
     }
 
@@ -96,12 +96,19 @@ const MenuEditOrCreationScreen = (() => {
 
 
     function submit(values: MenuEditOrCreationValues, menuId: Optional<number>){
+
+        const timeString = (str: string) => {
+            str = str.trim();
+            if (str.length <= 0) return null;
+            return apiTimeStringTextFromTextFieldText(str);
+        }
+        
         const menuRequestObj: MenuRequestObj = {
             title: values.title,
             is_active: values.isActive,
             days_of_the_week: values.daysOfTheWeek.toArray(),
-            start_time: apiTimeStringTextFromTextFieldText(values.startTime),
-            end_time: apiTimeStringTextFromTextFieldText(values.endTime),
+            start_time: timeString(values.startTime),
+            end_time: timeString(values.endTime),
             categories: (() => {
                 const categories: MenuRequestObj['categories'] = {};
                 values.productCategories.forEach(value => {
@@ -164,7 +171,6 @@ const MenuEditOrCreationScreen = (() => {
             const shouldButtonsBeEnabled = formik.isSubmitting === false && isDeleteLoading === false;
 
             return <OrderingSystemEditingFormScreen
-                formHasErrors={Object.getOwnPropertyNames(formik.errors).length >= 1}
                 navBarTitle={navBarTitle}
                 saveButtonProps={{
                     onPress: formik.submitForm,

@@ -1,5 +1,5 @@
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 import TodaysOrdersListItemView from './TodaysOrdersListItemView';
@@ -15,6 +15,8 @@ import ListLoadingHolderView from '../../../helpers/Views/ListLoadingView';
 import { OrdersUIConstants } from './helpers';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TodaysOrdersNavStackParams } from '../navigationHelpers';
+import { shouldPopTabBarControllerChildToTop, useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
+import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
 
 
 const TodaysOrdersListScreen = (() => {
@@ -49,6 +51,8 @@ const TodaysOrdersListScreen = (() => {
     }
 
     const TodaysOrdersListScreen = (props: StackScreenProps<TodaysOrdersNavStackParams, 'TodaysOrdersList'>) => {
+
+        useTabBarControllerChildRootScreenPopToTopFunctionality(TabBarSelection.todaysOrders, props);
 
         const ordersReduxState = useSelector(state => state.todaysOrders);
 

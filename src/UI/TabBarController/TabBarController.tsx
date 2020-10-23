@@ -5,7 +5,7 @@ import { CustomColors } from '../../helpers/colors';
 import { View, StyleSheet } from 'react-native';
 import SideTabBar from './TabBar/SideTabBar';
 import BottomTabBar from './TabBar/BottomTabBar';
-import { TabBarPosition, useSetUpWindowDimensionsObserver, calculateCurrentDesiredTabBarPosition, useWindowDimensionsNotificationListener, TabBarControllerContext, TabBarControllerContextValue } from './helpers';
+import { TabBarPosition, useSetUpWindowDimensionsObserver, calculateCurrentDesiredTabBarPosition, useWindowDimensionsNotificationListener, TabBarControllerContext, TabBarControllerContextValue, shouldPopTabBarControllerChildToTop } from './helpers';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import store, { addSelectedStateListener, useDispatch, useSelector } from '../../redux/store';
 import { changeTabBarPosition } from '../../redux/tabBarController';
@@ -99,12 +99,14 @@ const TabBarController = (() => {
 			const tabBarSelectionInfo = getInfoForTabBarSelection(selection);
 			if (store.getState().authentication == null && tabBarSelectionInfo.requiresAuthentication) {
 				logInPopUp.current?.present();
-			} else {
+			} else if (currentTabBarSelection === selection){
+				shouldPopTabBarControllerChildToTop.post(selection);
+			} else  {
 				props.navigation.navigate(mainInterfaceKey, {
 					screen: selection,
 				} as any);
 			}
-		}, [props.navigation]);
+		}, [currentTabBarSelection, props.navigation]);
 
 		useEffect(() => {
 			return addSelectedStateListener(state => state.authentication, authentication => {

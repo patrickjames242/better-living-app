@@ -1,5 +1,5 @@
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import MenuListView from './MenuListView/MenuListView';
 import { useCurrentMenu } from '../../../api/orderingSystem/menus/helpers';
@@ -10,6 +10,10 @@ import { caseInsensitiveStringSort } from '../../../helpers/general';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 import ListLoadingHolderView from '../../../helpers/Views/ListLoadingView';
 import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
+import { shouldPopTabBarControllerChildToTop, useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
+import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
+import { StackScreenProps } from '@react-navigation/stack';
+import { MenuNavStackParams } from '../navigationHelpers';
 
 
 const MenuListScreen = (() => {
@@ -25,11 +29,13 @@ const MenuListScreen = (() => {
 		},
 	});
 
-	return function MenuListScreen() {
+	return function MenuListScreen(props: StackScreenProps<MenuNavStackParams, 'MenuListView'>) {
 
 		const menu = useCurrentMenu();
 
 		const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORIES_CATEGORY);
+
+		useTabBarControllerChildRootScreenPopToTopFunctionality(TabBarSelection.menu, props);
 
 		const contextValue: MenuListViewScreenContextValue = useMemo(() => {
 			return {

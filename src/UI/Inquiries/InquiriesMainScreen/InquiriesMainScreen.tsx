@@ -1,9 +1,11 @@
 
 import { StackScreenProps } from '@react-navigation/stack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {StyleSheet, View} from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
+import { shouldPopTabBarControllerChildToTop, useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
+import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
 import { InquiriesNavStackParams } from '../navigationHelpers';
 
 
@@ -16,6 +18,9 @@ const InquiriesMainScreen = (() => {
     });
     
     const InquiriesMainScreen = (props: StackScreenProps<InquiriesNavStackParams, 'InquiriesMain'>) => {
+
+        useTabBarControllerChildRootScreenPopToTopFunctionality(TabBarSelection.inquiries, props);
+
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Ask a Question"/>
             <NoItemsToShowView 

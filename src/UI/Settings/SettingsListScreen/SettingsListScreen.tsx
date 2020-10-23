@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import GenericSettingsScreen, { GenericSettingsScreenSection, GenericSettingsScreenNavigationBarType } from '../GenericSettingsScreen/GenericSettingsScreen';
 import SettingsListScreenHeader from './SettingsListScreenHeader';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -9,6 +9,8 @@ import { logOutAction } from '../../../redux/authentication';
 import { displayTwoDecisionAlert } from '../../../helpers/Alerts';
 import { useUserProfileSettingsItems } from '../helpers';
 import { UserType } from '../../../api/authentication/validation';
+import { shouldPopTabBarControllerChildToTop, useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
+import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
 
 
 const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'SettingsList'>) => {
@@ -18,6 +20,8 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
     const profileSettingsItems = useUserProfileSettingsItems();
 
     const isOrderingSystemEnabled = useSelector(state => state.globalSettings.isOrderingSystemEnabled);
+
+    useTabBarControllerChildRootScreenPopToTopFunctionality(TabBarSelection.settings, props);
 
     const sections: GenericSettingsScreenSection[] = useMemo(() => {
         if (authentication == null) { return []; }

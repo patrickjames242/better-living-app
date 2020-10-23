@@ -106,7 +106,6 @@ export async function getExpoNotificationDeviceTokenIfPossible() {
     const authObserver = async (authentication: AppState['authentication']) => {
         if (authentication == null) {
             await AsyncStorage.setItem(deviceTokenNeedsToBePushedKey, _true);
-            console.log('sending token as anonymous user');
             await sendCurrentDeviceIdToServerAsAnonymousUser();
             await AsyncStorage.setItem(deviceTokenNeedsToBePushedKey, _false);
         } else {

@@ -1,6 +1,6 @@
 
 
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import FloatingCellStyleList from '../../../helpers/Views/FloatingCellStyleList';
 import CartItemListItemView from './CartItemLIstItemView';
@@ -18,6 +18,8 @@ import { checkOrderValidity, getRequestOrderItemsFromCartEntries } from '../../.
 import { displayErrorMessage } from '../../../helpers/Alerts';
 import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
 import ListLoadingHolderView from '../../../helpers/Views/ListLoadingView';
+import { shouldPopTabBarControllerChildToTop, useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
+import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
 
 
 
@@ -52,6 +54,8 @@ const CartItemListScreen = (() => {
     }
 
     const CartItemListScreen = (props: StackScreenProps<CartNavStackParamList, 'CartItemList'>) => {
+
+        useTabBarControllerChildRootScreenPopToTopFunctionality(TabBarSelection.cart, props);
 
         // the number refers to the id of the item
         const currentlyOpenDrawerID = useRef(new ValueBox<Optional<string>>(null)).current;
