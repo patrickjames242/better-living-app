@@ -2,6 +2,7 @@
 import { ValidateFunction } from 'ajv';
 import { CustomColors } from './colors';
 import * as yup from 'yup';
+import { TextInputProps } from 'react-native';
 
 
 
@@ -17,6 +18,52 @@ export const DEFAULT_NAV_SCREEN_OPTIONS = {headerShown: false, cardStyle: {backg
 export function YUP_EDITING_FORM_PRICE_STRING(fieldName: string){
     fieldName = fieldName[0].toUpperCase() + fieldName.substring(1);
     return yup.string().matches(/^[0-9]+(.[0-9]{2})?$/, `${fieldName} format is invalid. It must follow the format: '15' or '15.99'.`);
+}
+
+export const DefaultKeyboardConfigs: {
+    email: Partial<TextInputProps>,
+    name: Partial<TextInputProps>,
+    password: Partial<TextInputProps>,
+    phoneNumber: Partial<TextInputProps>,
+    title: Partial<TextInputProps>,
+    description: Partial<TextInputProps>,
+    website: Partial<TextInputProps>,
+    price: Partial<TextInputProps>,
+} = {
+    email: {
+        autoCapitalize: 'none',
+        keyboardType: 'email-address',
+        autoCompleteType: 'email',
+    },
+    name: {
+        autoCapitalize: 'words',
+        autoCompleteType: 'name',
+    },
+    password: {
+        autoCompleteType: 'password',
+        autoCapitalize: 'none',
+        keyboardType: 'default',
+    },
+    phoneNumber: {
+        autoCompleteType: 'tel',
+        autoCapitalize: 'none',
+        keyboardType: 'phone-pad',
+    },
+    title: {
+        autoCapitalize: 'words',
+        autoCompleteType: 'name',
+    },
+    description: {
+        autoCapitalize: 'sentences',
+    },
+    website: {
+        autoCapitalize: 'none',
+        keyboardType: 'url',
+    },
+    price: {
+        autoCapitalize: 'none',
+        keyboardType: 'numbers-and-punctuation',
+    },
 }
 
 export const NASSAU_TIME_ZONE = 'America/Nassau';

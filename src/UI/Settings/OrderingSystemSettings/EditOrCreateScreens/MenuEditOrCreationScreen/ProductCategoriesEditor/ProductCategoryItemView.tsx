@@ -10,7 +10,7 @@ import SpacerView from '../../../../../../helpers/Spacers/SpacerView';
 import OrderingSystemFormChildrenProductsSelector from '../../OrderingSystemFormChildrenProductsSelector';
 import LayoutConstants from '../../../../../../LayoutConstants';
 import { Color, CustomColors } from '../../../../../../helpers/colors';
-import { Optional } from '../../../../../../helpers/general';
+import { DefaultKeyboardConfigs, Optional } from '../../../../../../helpers/general';
 
 
 export interface MenuEditOrCreationProductCategoryItemViewProps {
@@ -112,6 +112,7 @@ const ExpandedView = (() => {
                 }}
                 textInputProps={{
                     inactiveBorderColor: Color.gray(0.91).stringValue,
+                    ...DefaultKeyboardConfigs.title,
                 }}
                 errorMessage={props.errorMessage ?? undefined}
             />

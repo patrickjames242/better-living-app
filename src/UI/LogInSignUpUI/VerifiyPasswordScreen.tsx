@@ -12,6 +12,7 @@ import { useNavigation, CompositeNavigationProp, useRoute, RouteProp } from '@re
 import { displayErrorMessage } from '../../helpers/Alerts';
 import { LogInSignUpUIParams, VerifyPasswordPurpose } from './helpers';
 import { RootNavigationViewParams } from '../RootNavigationView/helpers';
+import { DefaultKeyboardConfigs } from '../../helpers/general';
 
 
 
@@ -53,7 +54,10 @@ const VerifyPasswordScreen = () => {
             onContinueButtonPress={formik.submitForm}
             topLeftButtonType={ExitOrBackButton.exit}
         >
-            <FormikTextFieldView<VerifyPasswordValues> topTitleText="Password" textInputProps={{secureTextEntry: true}} formikFieldName="password"/>
+            <FormikTextFieldView<VerifyPasswordValues> topTitleText="Password" textInputProps={{
+                ...DefaultKeyboardConfigs.password,
+                secureTextEntry: true,
+            }} formikFieldName="password"/>
             <Space space={15}/>
             <ForgotPasswordButton onForgottenPasswordChanged={(_, password) => {
                 switch (route.params.purpose){

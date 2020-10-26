@@ -8,6 +8,7 @@ import { FormikTextFieldView } from '../../helpers/Views/FormikTextFieldView';
 import { sendForgotMyPasswordVerificationCode } from '../../api/authentication/verificationCodeRequests';
 import { displayErrorMessage } from '../../helpers/Alerts';
 import { LogInSignUpUIParams } from './helpers';
+import { DefaultKeyboardConfigs } from '../../helpers/general';
 
 interface ForgotPasswordFormValues {
     email: string;
@@ -42,7 +43,7 @@ const ForgotPasswordScreen = (props: StackScreenProps<LogInSignUpUIParams, 'Forg
             onContinueButtonPress={formik.submitForm}
             isContinueButtonLoading={formik.isSubmitting}
         >
-            <FormikTextFieldView<ForgotPasswordFormValues> topTitleText="Email" formikFieldName="email" />
+            <FormikTextFieldView<ForgotPasswordFormValues> topTitleText="Email" formikFieldName="email" textInputProps={DefaultKeyboardConfigs.email}/>
         </LogInSignUpScreenTemplate>
     }}</Formik>
 }

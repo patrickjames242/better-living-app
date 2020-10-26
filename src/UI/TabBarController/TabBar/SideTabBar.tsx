@@ -1,6 +1,6 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { View, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, Dimensions, ScrollView, Platform } from 'react-native';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import { CustomColors } from '../../../helpers/colors';
 import LayoutConstants from '../../../LayoutConstants';
@@ -11,7 +11,7 @@ import { getInfoForTabBarSelection, TabBarSelection, useTabBarSelectionsForCurre
 
 
 
-interface SideTabBarProps{
+interface SideTabBarProps {
 	selectedTab: TabBarSelection;
 	onTabPress: (selection: TabBarSelection) => void;
 }
@@ -30,7 +30,7 @@ const SideTabBar = (() => {
 
 		scrollViewContentView: {
 			padding: LayoutConstants.sideMenuBar.padding,
-			
+
 		}
 	});
 
@@ -79,7 +79,7 @@ const SideTabBar = (() => {
 							onPress={() => props.onTabPress(item)}
 							key={index}
 							imageSource={info.url}
-							isFirstInList={index === 0} 
+							isFirstInList={index === 0}
 						/>
 					})
 				})()}
@@ -106,14 +106,13 @@ const SideBarItem = (() => {
 
 	const styles = StyleSheet.create({
 		root: {
-			
+
 		},
 		contentView: {
 			padding: LayoutConstants.sideMenuBar.barItem.padding,
 			borderRadius: 15,
 			alignSelf: 'flex-start',
-			shadowRadius: 25,
-			elevation: 1,
+			...(Platform.OS === 'android' ? {} : {shadowRadius: 25}),
 		},
 		image: {
 			width: LayoutConstants.sideMenuBar.barItem.imageSize,
@@ -129,11 +128,13 @@ const SideBarItem = (() => {
 				style: [styles.contentView, {
 					marginTop: (props.isFirstInList ?? false) ? undefined : props.marginSize,
 					backgroundColor: props.isSelected ? CustomColors.themeGreen.stringValue : 'white',
-					shadowColor: props.isSelected ? CustomColors.themeGreen.stringValue : 'black',
-					shadowOpacity: props.isSelected ? 0.5 : 0.05,
+					...(Platform.OS === 'android' ? {} : {
+						shadowColor: props.isSelected ? CustomColors.themeGreen.stringValue : 'black',
+						shadowOpacity: props.isSelected ? 0.5 : 0.05,
+					})
 				}]
 			}}
-			>
+		>
 			<Image source={props.imageSource} style={[styles.image, {
 				tintColor: props.isSelected ? 'white' : CustomColors.themeGreen.stringValue,
 			}]} />

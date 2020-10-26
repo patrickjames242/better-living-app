@@ -52,7 +52,7 @@ const TodaysOrdersListItemView = (() => {
         subjectTitle: {
             fontSize: 17,
             fontFamily: CustomFont.bold,
-            flex: 1,
+            // flex: 1,
             marginBottom: 5,
         },
         orderNumberLabel: {

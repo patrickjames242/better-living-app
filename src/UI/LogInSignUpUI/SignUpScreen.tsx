@@ -5,7 +5,7 @@ import Spacer from '../../helpers/Spacers/Spacer';
 import SpacerView from '../../helpers/Spacers/SpacerView';
 import { Formik } from '../../helpers/formik';
 import * as yup from 'yup';
-import { YUP_PASSWORD_VALIDATOR } from '../../helpers/general';
+import { DefaultKeyboardConfigs, YUP_PASSWORD_VALIDATOR } from '../../helpers/general';
 import { SignUpInfo, signUpUser } from '../../api/authentication/authRequests';
 import { useNavigation, CompositeNavigationProp, NavigationProp } from '@react-navigation/native';
 import { FormikTextFieldView } from '../../helpers/Views/FormikTextFieldView';
@@ -88,12 +88,12 @@ const SignUpScreen = () => {
         >
             <Spacer space={15}>
                 <SpacerView space={15} style={styles.nameContainer}>
-                    <FormikTextFieldView<SignUpScreenValues> topTitleText="First Name" style={styles.nameContainerChild} formikFieldName="firstName" />
-                    <FormikTextFieldView<SignUpScreenValues> topTitleText="Last Name" style={styles.nameContainerChild} formikFieldName="lastName"/>
+                    <FormikTextFieldView<SignUpScreenValues> topTitleText="First Name" style={styles.nameContainerChild} formikFieldName="firstName" textInputProps={DefaultKeyboardConfigs.name}/>
+                    <FormikTextFieldView<SignUpScreenValues> topTitleText="Last Name" style={styles.nameContainerChild} formikFieldName="lastName" textInputProps={DefaultKeyboardConfigs.name}/>
                 </SpacerView>
-                <FormikTextFieldView<SignUpScreenValues> topTitleText="Email" formikFieldName="email" />
-                <FormikTextFieldView<SignUpScreenValues> topTitleText="Phone Number" formikFieldName="phoneNumber"/>
-                <FormikTextFieldView<SignUpScreenValues> topTitleText="Password" formikFieldName="password"/>
+                <FormikTextFieldView<SignUpScreenValues> topTitleText="Email" formikFieldName="email" textInputProps={DefaultKeyboardConfigs.email}/>
+                <FormikTextFieldView<SignUpScreenValues> topTitleText="Phone Number" formikFieldName="phoneNumber" textInputProps={DefaultKeyboardConfigs.phoneNumber}/>
+                <FormikTextFieldView<SignUpScreenValues> topTitleText="Password" formikFieldName="password" textInputProps={DefaultKeyboardConfigs.password}/>
             </Spacer>
         </LogInSignUpScreenTemplate>
     }}</Formik>

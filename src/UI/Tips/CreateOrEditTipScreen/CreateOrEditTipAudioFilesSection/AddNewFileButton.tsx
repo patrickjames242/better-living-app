@@ -44,13 +44,13 @@ const AddNewFileButton = (() => {
                 if (documentPickerResult.type !== 'success'){
                     return Promise.reject(new Error("An error occured when trying to pick a document from the document picker."));
                 }
-                
+
                 if (documentPickerResult.file instanceof File){
                     props.onUserWantsToAddFile(new RNFileForUpload({file: documentPickerResult.file}));
                     return;
                 }
 
-                props.onUserWantsToAddFile(new RNFileForUpload({name: documentPickerResult.name, uri: documentPickerResult.uri}));
+                props.onUserWantsToAddFile(new RNFileForUpload({name: documentPickerResult.name, uri: documentPickerResult.uri, defaultFileType: 'audio/mpeg'}));
                 
             });
         }

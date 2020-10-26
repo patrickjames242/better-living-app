@@ -40,10 +40,12 @@ const ForgotPasswordVerificationCodeScreen = (props: StackScreenProps<LogInSignU
             isContinueButtonLoading={formik.isSubmitting}
             onContinueButtonPress={formik.submitForm}
         >
-            <FormikTextFieldView<VerificationCodeFormValues> topTitleText="Verification Code" formikFieldName="verificationCode"/>
+            <FormikTextFieldView<VerificationCodeFormValues> topTitleText="Verification Code" formikFieldName="verificationCode" textInputProps={{keyboardType: 'number-pad', autoCapitalize: 'none'}}/>
         </LogInSignUpScreenTemplate>
     }}</Formik>
 }
 
 
 export default ForgotPasswordVerificationCodeScreen;
+
+

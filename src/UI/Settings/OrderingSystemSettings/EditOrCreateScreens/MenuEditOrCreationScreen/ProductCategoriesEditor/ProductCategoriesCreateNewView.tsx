@@ -8,6 +8,7 @@ import AssetImages from '../../../../../../images/AssetImages';
 import { useField } from '../../../../../../helpers/formik';
 import { MenuEditOrCreationValues, MenuEditOrCreateProductCategory } from '../helpers';
 import { Set } from 'immutable';
+import { DefaultKeyboardConfigs } from '../../../../../../helpers/general';
 
 
 const MenuEditOrCreationProductCategoriesCreateNewView = (() => {
@@ -37,6 +38,7 @@ const MenuEditOrCreationProductCategoriesCreateNewView = (() => {
                     onChangeText={setTextFieldText}
                     style={styles.textFieldInput}
                     placeholder="Type title here..."
+                    {...DefaultKeyboardConfigs.title}
                 />
                 <BouncySquareIconButton
                     iconSource={AssetImages.plusIcon}

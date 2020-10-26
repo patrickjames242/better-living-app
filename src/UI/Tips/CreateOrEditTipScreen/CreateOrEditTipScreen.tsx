@@ -1,6 +1,6 @@
 
 import React, { useMemo, useState } from 'react';
-import { Optional, mapOptional } from '../../../helpers/general';
+import { Optional, mapOptional, DefaultKeyboardConfigs } from '../../../helpers/general';
 import store from '../../../redux/store';
 import { updateHealthTip, createNewHealthTip, HealthTipRequestObj } from '../../../api/healthTips/requests';
 import CreateOrEditTipYoutubeSection from './CreateOrEditTipYoutubeSection/CreateOrEditTipYoutubeSection';
@@ -116,7 +116,7 @@ const CreateOrEditTipScreen = (() => {
                     isLoading: formik.isSubmitting,
                 }]}
             >
-                <FormikTextFieldView<FormikValues> formikFieldName="title" topTitleText="Title" />
+                <FormikTextFieldView<FormikValues> formikFieldName="title" topTitleText="Title" textInputProps={DefaultKeyboardConfigs.title}/>
                 <CreateOrEditTipYoutubeSection
                     videoIds={ytVideoIds}
                     onDeleteVideoId={videoId => {
@@ -134,8 +134,7 @@ const CreateOrEditTipScreen = (() => {
                     onUserWantsToRemoveAddedFile={file => setAudioFilesToAdd(x => x.filter(y => y !== file))}
                     onUserWantsToRemoveExistingFile={id => setAudioFilesToDelete(x => x.add(id))}
                 />
-                <FormikMultilineTextFieldView<FormikValues> formikFieldName="articleText" topTitleText="Description" />
-
+                <FormikMultilineTextFieldView<FormikValues> formikFieldName="articleText" topTitleText="Description" textInputProps={DefaultKeyboardConfigs.description} />
             </GenericEditingFormScreen>
         }}</Formik>
 

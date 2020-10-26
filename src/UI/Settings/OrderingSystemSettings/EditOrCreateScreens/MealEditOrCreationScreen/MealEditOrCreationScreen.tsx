@@ -5,7 +5,7 @@ import { MealEditOrCreationValues } from './helpers';
 import { useSelector } from '../../../../../redux/store';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../../navigationHelpers';
-import { mapOptional, YUP_EDITING_FORM_PRICE_STRING, Optional } from '../../../../../helpers/general';
+import { mapOptional, YUP_EDITING_FORM_PRICE_STRING, Optional, DefaultKeyboardConfigs } from '../../../../../helpers/general';
 import { Set } from 'immutable';
 import * as yup from 'yup';
 import OrderingSystemEditingFormScreen from '../OrderingSystemEditingFormScreen';
@@ -89,8 +89,8 @@ const MealEditOrCreationScreen = (() => {
                     }
                 }}
             >
-                <FormikTextFieldView<MealEditOrCreationValues> topTitleText="Title" formikFieldName="title"/>
-                <FormikTextFieldView<MealEditOrCreationValues> topTitleText="Price" formikFieldName="priceString" placeholder="e.g. 15.99"/>
+                <FormikTextFieldView<MealEditOrCreationValues> topTitleText="Title" formikFieldName="title" textInputProps={DefaultKeyboardConfigs.title}/>
+                <FormikTextFieldView<MealEditOrCreationValues> topTitleText="Price" formikFieldName="priceString" placeholder="e.g. 15.99" textInputProps={DefaultKeyboardConfigs.price}/>
                 <MealEditOrCreationCategoriesSelector/>
             </OrderingSystemEditingFormScreen>
         }}</Formik>

@@ -5,7 +5,7 @@ import * as mimeTypes from 'react-native-mime-types';
 export class RNFileForUpload{
 
     constructor(
-        private readonly fileInfo: {file: File} | {uri: string, name?: string},
+        private readonly fileInfo: {file: File} | {uri: string, name?: string, defaultFileType?: string},
     ){
         if (Platform.OS === 'web' && (fileInfo as any).file instanceof File === false){
             throw new Error("you must include a file object on the web.")
@@ -19,7 +19,7 @@ export class RNFileForUpload{
 
     getFormDataValue: () => File | {uri: string, name: string, type: string} = () => {
         const _fileInfo = this.fileInfo as any;
-        return Platform.select({
+        const result = Platform.select({
             web: _fileInfo.file,
             default: {
                 uri: _fileInfo.uri,
@@ -29,10 +29,11 @@ export class RNFileForUpload{
                 })(),
                 type: (() => {
                     const mimeType = mimeTypes.lookup(_fileInfo.name ?? _fileInfo.uri);
-                    return typeof mimeType === 'string' ? mimeTypes : undefined;
+                    return typeof mimeType === 'string' ? mimeType : _fileInfo.defaultFileType;
                 })(),
             }
-        })
+        });
+        return result;
     }
 
 }

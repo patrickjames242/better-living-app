@@ -9,6 +9,7 @@ import { updateUserInfo } from '../../../api/authentication/userRequests';
 import { useSelector } from '../../../redux/store';
 import { SettingsNavStackParams } from '../navigationHelpers';
 import { displayErrorMessage } from '../../../helpers/Alerts';
+import { DefaultKeyboardConfigs } from '../../../helpers/general';
 
 
 
@@ -55,8 +56,8 @@ const SettingsNameEditingScreen = (props: StackScreenProps<SettingsNavStackParam
                 onPress: formik.submitForm,
             }]}
         >
-            <FormikTextFieldView<NameEditingValues> topTitleText="First Name" formikFieldName="firstName"/>
-            <FormikTextFieldView<NameEditingValues> topTitleText="Last Name" formikFieldName="lastName"/>
+            <FormikTextFieldView<NameEditingValues> topTitleText="First Name" formikFieldName="firstName" textInputProps={DefaultKeyboardConfigs.name}/>
+            <FormikTextFieldView<NameEditingValues> topTitleText="Last Name" formikFieldName="lastName" textInputProps={DefaultKeyboardConfigs.name}/>
         </GenericEditingFormScreen>
     }}</Formik>
 

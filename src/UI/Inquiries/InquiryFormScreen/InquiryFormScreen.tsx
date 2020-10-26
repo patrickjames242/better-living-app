@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { DefaultLongButtonsProps } from '../../../helpers/Buttons/LongTextAndIconButton';
 import { Formik } from '../../../helpers/formik';
-import { mapOptional } from '../../../helpers/general';
+import { DefaultKeyboardConfigs, mapOptional } from '../../../helpers/general';
 import { FormikMultilineTextFieldView, FormikTextFieldView } from '../../../helpers/Views/FormikTextFieldView';
 import GenericEditingFormScreen from '../../../helpers/Views/GenericEditingFormScreen';
 import store from '../../../redux/store';
@@ -77,11 +77,11 @@ const InquiryFormScreen = (() => {
                     }
                 ]}
             >
-                <FormikTextFieldView<Values> formikFieldName="email" topTitleText="Contact Email" />
-                <FormikTextFieldView<Values> formikFieldName="phoneNumber" topTitleText="Phone Number"/>
-                <FormikTextFieldView<Values> formikFieldName="name" topTitleText="Full Name" />
-                <FormikTextFieldView<Values> formikFieldName="subject" topTitleText="Subject" />
-                <FormikMultilineTextFieldView<Values> formikFieldName="description" topTitleText="Description" />
+                <FormikTextFieldView<Values> formikFieldName="email" topTitleText="Contact Email" textInputProps={DefaultKeyboardConfigs.email} />
+                <FormikTextFieldView<Values> formikFieldName="phoneNumber" topTitleText="Phone Number" textInputProps={DefaultKeyboardConfigs.phoneNumber}/>
+                <FormikTextFieldView<Values> formikFieldName="name" topTitleText="Full Name" textInputProps={DefaultKeyboardConfigs.name}/>
+                <FormikTextFieldView<Values> formikFieldName="subject" topTitleText="Subject" textInputProps={DefaultKeyboardConfigs.title}/>
+                <FormikMultilineTextFieldView<Values> formikFieldName="description" topTitleText="Description" textInputProps={DefaultKeyboardConfigs.description}/>
             </GenericEditingFormScreen>
         }}</Formik>
     }

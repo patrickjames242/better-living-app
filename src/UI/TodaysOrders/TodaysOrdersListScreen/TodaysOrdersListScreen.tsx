@@ -15,7 +15,7 @@ import ListLoadingHolderView from '../../../helpers/Views/ListLoadingView';
 import { OrdersUIConstants } from './helpers';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TodaysOrdersNavStackParams } from '../navigationHelpers';
-import { shouldPopTabBarControllerChildToTop, useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
+import { useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
 import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
 
 

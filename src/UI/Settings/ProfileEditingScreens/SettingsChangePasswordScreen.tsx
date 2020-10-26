@@ -9,7 +9,7 @@ import { changePassword } from '../../../api/authentication/userRequests';
 import { useSelector } from '../../../redux/store';
 import { SettingsNavStackParams } from '../navigationHelpers';
 import { displayErrorMessage } from '../../../helpers/Alerts';
-import { YUP_PASSWORD_VALIDATOR } from '../../../helpers/general';
+import { DefaultKeyboardConfigs, YUP_PASSWORD_VALIDATOR } from '../../../helpers/general';
 
 
 
@@ -53,7 +53,7 @@ const SettingsChangePasswordScreen = (props: StackScreenProps<SettingsNavStackPa
                 onPress: formik.submitForm,
             }]}
         >
-            <FormikTextFieldView<ChangePasswordValues> topTitleText="New Password" formikFieldName="newPassword"/>
+            <FormikTextFieldView<ChangePasswordValues> topTitleText="New Password" formikFieldName="newPassword" textInputProps={DefaultKeyboardConfigs.password}/>
         </GenericEditingFormScreen>
     }}</Formik>
 

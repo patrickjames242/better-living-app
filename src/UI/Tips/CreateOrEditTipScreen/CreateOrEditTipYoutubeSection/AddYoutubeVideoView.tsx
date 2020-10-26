@@ -5,6 +5,7 @@ import URLParser from 'url-parse';
 import { TextFieldViewContainer, TextFieldTextInput } from '../../../../helpers/Views/TextFieldView';
 import SpacerView from '../../../../helpers/Spacers/SpacerView';
 import CreateOrEditTipEditButton, { CreateOrEditTipEditButton_EditButtonType } from '../CreateOrEditTipEditButton';
+import { DefaultKeyboardConfigs } from '../../../../helpers/general';
 
 
 export interface AddYoutubeVideoViewProps {
@@ -52,6 +53,7 @@ const AddYoutubeVideoView = (() => {
                     onChangeText={setUrlText}
                     placeholder="e.g. https://www.youtube.com/watch?v=vMo5R5pLPBE"
                     style={styles.textInput}
+                    {...DefaultKeyboardConfigs.website}
                 />
                 <CreateOrEditTipEditButton isEnabled={shouldAddButtonBeEnabled} buttonType={CreateOrEditTipEditButton_EditButtonType.add} onPress={() => {
                     const videoID = extractVideoId(urlText);

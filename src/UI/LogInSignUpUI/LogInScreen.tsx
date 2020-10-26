@@ -12,6 +12,7 @@ import { displayErrorMessage } from '../../helpers/Alerts';
 import ForgotPasswordButton from './ForgotPasswordButton';
 import { LogInSignUpUIParams } from './helpers';
 import { RootNavigationViewParams } from '../RootNavigationView/helpers';
+import { DefaultKeyboardConfigs } from '../../helpers/general';
 
 
 interface LogInScreenValues{
@@ -69,8 +70,11 @@ const LogInScreen = () => {
             onContinueButtonPress={formik.submitForm}
         >
             <Spacer space={15}>
-                <FormikTextFieldView<LogInScreenValues> topTitleText="Email" formikFieldName="email"/>
-                <FormikTextFieldView<LogInScreenValues> topTitleText="Password" textInputProps={{ secureTextEntry: true }} formikFieldName="password"/>
+                <FormikTextFieldView<LogInScreenValues> topTitleText="Email" formikFieldName="email" textInputProps={DefaultKeyboardConfigs.email}/>
+                <FormikTextFieldView<LogInScreenValues> topTitleText="Password" textInputProps={{
+                    ...DefaultKeyboardConfigs.password,
+                    secureTextEntry: true,
+                }} formikFieldName="password"/>
                 <ForgotPasswordButton onForgottenPasswordChanged={(email, password) => {
                     const route: keyof LogInSignUpUIParams = 'LogIn';
                     const params: LogInSignUpUIParams['LogIn'] = {email, password};

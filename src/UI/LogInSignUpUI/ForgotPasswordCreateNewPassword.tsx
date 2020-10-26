@@ -5,7 +5,7 @@ import LogInSignUpScreenTemplate, { ExitOrBackButton } from './LogInSignUpScreen
 import { FormikTextFieldView } from '../../helpers/Views/FormikTextFieldView';
 import { Formik } from '../../helpers/formik';
 import * as yup from 'yup';
-import { YUP_PASSWORD_VALIDATOR } from '../../helpers/general';
+import { DefaultKeyboardConfigs, YUP_PASSWORD_VALIDATOR } from '../../helpers/general';
 import { changePasswordWithVerificationCode } from '../../api/authentication/userRequests';
 import { displayErrorMessage } from '../../helpers/Alerts';
 import { LogInSignUpUIParams } from './helpers';
@@ -47,7 +47,7 @@ const ForgotPasswordCreatePasswordScreen = (props: StackScreenProps<LogInSignUpU
             onContinueButtonPress={formik.submitForm}
             isContinueButtonLoading={formik.isSubmitting}
         >
-            <FormikTextFieldView<ForgotPasswordCreatePasswordValues> topTitleText="Password" formikFieldName="password" />
+            <FormikTextFieldView<ForgotPasswordCreatePasswordValues> topTitleText="Password" formikFieldName="password" textInputProps={DefaultKeyboardConfigs.password}/>
         </LogInSignUpScreenTemplate>
     }}</Formik>
 }

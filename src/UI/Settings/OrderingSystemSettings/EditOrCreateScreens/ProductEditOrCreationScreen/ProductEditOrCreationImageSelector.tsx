@@ -44,7 +44,7 @@ const ProductEditOrCreationImageSelector = (() => {
 
     async function getImageFromUser(): Promise<{uri: string, fileToUpload: RNFileForUpload} | null>{
 
-        if (Platform.OS === 'ios'){
+        if (Platform.OS === 'ios' || Platform.OS === 'android'){
 
             if (
                 Platform.OS === 'ios' && 

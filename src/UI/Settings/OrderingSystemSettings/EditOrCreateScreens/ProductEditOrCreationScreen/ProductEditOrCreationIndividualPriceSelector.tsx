@@ -6,6 +6,7 @@ import SpacerView from '../../../../../helpers/Spacers/SpacerView';
 import { useField } from '../../../../../helpers/formik';
 import { ProductEditOrCreateValues } from './helpers';
 import { CustomSwitch } from '../../../../../helpers/Views/CustomSwitch';
+import { DefaultKeyboardConfigs } from '../../../../../helpers/general';
 
 export interface ProductEditOrCreationIndividualPriceSelectorProps {
 
@@ -38,6 +39,7 @@ const ProductEditOrCreationIndividualPriceSelector = (() => {
                     placeholder="e.g. 11.95"
                     style={[styles.textField, {opacity: shouldBeSoldIndividuallyValue ? 1 : 0.4}]}
                     onBlur={() => setPriceStringTouched(true)}
+                    {...DefaultKeyboardConfigs.price}
                 />
                 <CustomSwitch
                     value={shouldBeSoldIndividuallyValue}

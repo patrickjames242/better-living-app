@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../../navigationHelpers';
 import { useSelector } from '../../../../../redux/store';
-import { mapOptional, NASSAU_TIME_ZONE, Optional } from '../../../../../helpers/general';
+import { DefaultKeyboardConfigs, mapOptional, NASSAU_TIME_ZONE, Optional } from '../../../../../helpers/general';
 import { MenuEditOrCreationValues, MenuEditOrCreateProductCategory, menuEditOrCreateProductCategorySchema } from './helpers';
 import { Set, Map } from 'immutable';
 import { Formik } from '../../../../../helpers/formik';
@@ -223,7 +223,7 @@ const FormChildren = (() => {
 
     const FormChildren = () => {
         return <Spacer space={GenericEditingFormScreenConstants.childrenSpacing}>
-            <FormikTextFieldView<MenuEditOrCreationValues> formikFieldName="title" topTitleText="Title" />
+            <FormikTextFieldView<MenuEditOrCreationValues> formikFieldName="title" topTitleText="Title" textInputProps={DefaultKeyboardConfigs.title} />
             <MenuEditOrCreationIsEnabledView />
             <MenuEditOrCreationDayOfTheWeekSelector />
             <SpacerView style={styles.startAndEndTimeContainer} space={10}>
@@ -232,12 +232,14 @@ const FormChildren = (() => {
                     formikFieldName="startTime"
                     topTitleText="Start Time"
                     placeholder={startAndEndTimePlaceholder}
+                    textInputProps={{keyboardType: 'numbers-and-punctuation'}}
                 />
                 <FormikTextFieldView<MenuEditOrCreationValues>
                     style={styles.startOrEndItemField}
                     formikFieldName="endTime"
                     topTitleText="End Time"
                     placeholder={startAndEndTimePlaceholder}
+                    textInputProps={{keyboardType: 'numbers-and-punctuation'}}
                 />
             </SpacerView>
             <MenuEditOrCreationProductCategoriesEditor />

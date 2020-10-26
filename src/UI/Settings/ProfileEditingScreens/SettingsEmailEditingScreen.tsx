@@ -9,6 +9,7 @@ import { changeEmail } from '../../../api/authentication/userRequests';
 import { useSelector } from '../../../redux/store';
 import { SettingsNavStackParams } from '../navigationHelpers';
 import { displayErrorMessage } from '../../../helpers/Alerts';
+import { DefaultKeyboardConfigs } from '../../../helpers/general';
 
 
 
@@ -52,7 +53,7 @@ const SettingsEmailEditingScreen = (props: StackScreenProps<SettingsNavStackPara
                 onPress: formik.submitForm,
             }]}
         >
-            <FormikTextFieldView<EmailEditingValues> topTitleText="Email" formikFieldName="email"/>
+            <FormikTextFieldView<EmailEditingValues> topTitleText="Email" formikFieldName="email" textInputProps={DefaultKeyboardConfigs.email}/>
         </GenericEditingFormScreen>
     }}</Formik>
 

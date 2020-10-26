@@ -5,7 +5,7 @@ import { SettingsNavStackParams } from '../../../navigationHelpers';
 import OrderingSystemEditingFormScreen from '../OrderingSystemEditingFormScreen';
 import { Formik } from '../../../../../helpers/formik';
 import { useSelector } from '../../../../../redux/store';
-import { mapOptional, Optional } from '../../../../../helpers/general';
+import { DefaultKeyboardConfigs, mapOptional, Optional } from '../../../../../helpers/general';
 import { Set } from 'immutable';
 import { MealCategoryEditOrCreateValues } from './helpers';
 import { FormikTextFieldView } from '../../../../../helpers/Views/FormikTextFieldView';
@@ -104,8 +104,8 @@ const MealCategoryEditOrCreationScreen = (() => {
                     },
                 }}
             >
-                <FormikTextFieldView<MealCategoryEditOrCreateValues>formikFieldName="uniqueName" topTitleText="Unique Name" />
-                <FormikTextFieldView<MealCategoryEditOrCreateValues> formikFieldName="displayName" topTitleText="Display Name" />
+                <FormikTextFieldView<MealCategoryEditOrCreateValues> formikFieldName="uniqueName" topTitleText="Unique Name" textInputProps={DefaultKeyboardConfigs.name}/>
+                <FormikTextFieldView<MealCategoryEditOrCreateValues> formikFieldName="displayName" topTitleText="Display Name" textInputProps={DefaultKeyboardConfigs.name}/>
                 <OrderingSystemFormChildrenProductsSelector value={formik.values.productIds} onValueChanged={v => formik.setFieldValue('productIds', v)} />
             </OrderingSystemEditingFormScreen>
         }}</Formik>

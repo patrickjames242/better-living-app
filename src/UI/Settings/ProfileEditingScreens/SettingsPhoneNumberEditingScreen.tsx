@@ -9,6 +9,7 @@ import { updateUserInfo } from '../../../api/authentication/userRequests';
 import { useSelector } from '../../../redux/store';
 import { SettingsNavStackParams } from '../navigationHelpers';
 import { displayErrorMessage } from '../../../helpers/Alerts';
+import { DefaultKeyboardConfigs } from '../../../helpers/general';
 
 
 
@@ -51,7 +52,7 @@ const SettingsPhoneNumberEditingScreen = (props: StackScreenProps<SettingsNavSta
                 onPress: formik.submitForm,
             }]}
         >
-            <FormikTextFieldView<PhoneNumberEditingValues> topTitleText="First Name" formikFieldName="phoneNumber"/>
+            <FormikTextFieldView<PhoneNumberEditingValues> topTitleText="First Name" formikFieldName="phoneNumber" textInputProps={DefaultKeyboardConfigs.phoneNumber}/>
         </GenericEditingFormScreen>
     }}</Formik>
 

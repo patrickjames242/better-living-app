@@ -4,7 +4,7 @@ import { SettingsNavStackParams } from '../../../navigationHelpers';
 import { StackScreenProps } from '@react-navigation/stack';
 import { Set } from 'immutable';
 import { useSelector } from '../../../../../redux/store';
-import { mapOptional, Optional, YUP_EDITING_FORM_PRICE_STRING } from '../../../../../helpers/general';
+import { DefaultKeyboardConfigs, mapOptional, Optional, YUP_EDITING_FORM_PRICE_STRING } from '../../../../../helpers/general';
 import ProductEditOrCreationImageSelector from './ProductEditOrCreationImageSelector';
 import ProductEditOrCreationIndividualPriceSelector from './ProductEditOrCreationIndividualPriceSelector';
 import { Formik } from '../../../../../helpers/formik';
@@ -134,11 +134,11 @@ const ProductEditOrCreationScreen = (() => {
                     }
                 }}
             >
-                <FormikTextFieldView<ProductEditOrCreateValues> formikFieldName="title" topTitleText="Title" />
+                <FormikTextFieldView<ProductEditOrCreateValues> formikFieldName="title" topTitleText="Title" textInputProps={DefaultKeyboardConfigs.title}/>
                 <ProductEditOrCreationInfoTagsSelector />
                 <ProductEditOrCreationImageSelector />
                 <ProductEditOrCreationIndividualPriceSelector />
-                <FormikMultilineTextFieldView<ProductEditOrCreateValues> formikFieldName="description" topTitleText="Description" />
+                <FormikMultilineTextFieldView<ProductEditOrCreateValues> formikFieldName="description" topTitleText="Description" textInputProps={DefaultKeyboardConfigs.description}/>
             </OrderingSystemEditingFormScreen>
         }}</Formik>
 
