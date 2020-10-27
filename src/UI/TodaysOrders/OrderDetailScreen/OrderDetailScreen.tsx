@@ -49,17 +49,17 @@ const OrderDetailScreen = (() => {
     const OrderDetailScreen = (props: StackScreenProps<TodaysOrdersNavStackParams, 'OrderDetail'>) => {
 
         const reduxOrder = useSelector(state => {
-            if ('reduxOrderId' in props.route.params)
+            if ('reduxOrderId' in props.route.params && typeof props.route.params.reduxOrderId === 'string')
                 return state.todaysOrders.get(props.route.params.reduxOrderId);
-            else if ('order' in props.route.params)
+            else if ('order' in props.route.params && props.route.params.order instanceof Order)
                 return state.todaysOrders.get(props.route.params.order.id);
             else return undefined;
         });
 
         const orderToUse = (() => {
-            if (reduxOrder instanceof Order) 
+            if (reduxOrder instanceof Order){
                 return reduxOrder;
-            else if ('order' in props.route.params){
+            } else if ('order' in props.route.params && props.route.params.order instanceof Order){
                 return props.route.params.order;
             }
         })();
@@ -67,7 +67,7 @@ const OrderDetailScreen = (() => {
         const onOrderUpdate = props.route.params.onOrderUpdate;
 
         const updateOrder = useCallback((order: Order) => { 
-            props.navigation.setParams({order});
+            props.navigation.setParams({order: order, reduxOrderId: undefined});
             onOrderUpdate?.(order);
         }, [onOrderUpdate, props.navigation]);
         

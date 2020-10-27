@@ -1,12 +1,19 @@
 import { Platform, Alert } from "react-native";
 
-
+export function displaySuccessMessage(message: string){
+    const success = "Success! 🥳";
+    if (Platform.OS === 'web') {
+        alert(success + message);
+    } else {
+        Alert.alert(success, message, [{ text: 'Ok' }]);
+    }
+}
 
 
 export function displayErrorMessage(message: string) {
     const oops = "Oops! 😨";
     if (Platform.OS === 'web') {
-        alert(oops + message);
+        alert(oops + ' ' + message);
     } else {
         Alert.alert(oops, message, [{ text: 'Ok' }]);
     }

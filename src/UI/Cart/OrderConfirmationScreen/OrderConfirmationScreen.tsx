@@ -16,7 +16,9 @@ import { CartNavStackParamList } from '../navigationHelpers';
 import { StackScreenProps } from '@react-navigation/stack';
 import { Optional } from '../../../helpers/general';
 import { getRequestOrderItemsFromCartEntries, submitOrder } from '../../../api/orders/requests';
-import { displayErrorMessage } from '../../../helpers/Alerts';
+import { displayErrorMessage, displaySuccessMessage } from '../../../helpers/Alerts';
+import { batch } from 'react-redux';
+import AppSettings from '../../../settings';
 
 
 const OrderConfirmationScreen = (() => {
@@ -47,9 +49,17 @@ const OrderConfirmationScreen = (() => {
 
     const OrderConfirmationScreen = (props: StackScreenProps<CartNavStackParamList, 'OrderingConfirmation'>) => {
 
-        
+        const [pickUpOrDelivery, _setPickUpOrDelivery] = useState<Optional<PickUpOrDelivery>>(null);
         const [howToPay, setHowToPay] = useState<Optional<HowToPay>>(null);
-        const [pickUpOrDelivery, setPickUpOrDelivery] = useState<Optional<PickUpOrDelivery>>(null);
+
+        const setPickUpOrDelivery = (pickUpOrDelivery: Optional<PickUpOrDelivery>) => {
+            batch(() => {
+                _setPickUpOrDelivery(pickUpOrDelivery);
+                if (pickUpOrDelivery === PickUpOrDelivery.delivery){
+                    setHowToPay(HowToPay.online);
+                }
+            });
+        }
 
         const shouldBottomButtonBeEnabled = howToPay != null && pickUpOrDelivery != null;
         const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,6 +75,11 @@ const OrderConfirmationScreen = (() => {
                 setIsSubmitting(false);
             }).then(() => {
                 props.navigation.popToTop();
+                displaySuccessMessage([
+                    'Your order has been placed!!', 
+                    'To see your order details, go to the "My Orders" page on the settings screen.',
+                    ...(pickUpOrDelivery === PickUpOrDelivery.delivery ? [`Remember to give our delivery driver a call at ${AppSettings.deliveryDriverPhoneNumber}.`] : [])
+                ].join('\n'));
             }).catch(error => {
                 displayErrorMessage(error.message);
             });
@@ -82,7 +97,7 @@ const OrderConfirmationScreen = (() => {
                             <CartTotalSummaryView entries={props.route.params.cartEntries} />
                         </FloatingCellStyleSectionView>
                         <OrderConfirmationPickUpOrDeliveryView value={pickUpOrDelivery} onValueChange={setPickUpOrDelivery}/>
-                        <OrderConfirmationHowToPayView value={howToPay} onValueChange={setHowToPay}/>
+                        <OrderConfirmationHowToPayView value={howToPay} onValueChange={setHowToPay} payOnArrivalEnabled={pickUpOrDelivery !== PickUpOrDelivery.delivery}/>
                         <Space space={LayoutConstants.pageSideInsets} />
                         <LongTextAndIconButton
                             text="Submit Order"

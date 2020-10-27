@@ -17,6 +17,7 @@ export enum HowToPay {
 export interface OrderConfirmationHowToPayViewProps{
     value: Optional<HowToPay>;
     onValueChange: (value: Optional<HowToPay>) => void;
+    payOnArrivalEnabled?: boolean;
 }
 
 
@@ -37,6 +38,7 @@ const OrderConfirmationHowToPayView = (() => {
                     title="Pay on arrival (in person)"
                     isSelected={props.value === HowToPay.inPerson}
                     onCheckMarkPressed={() => props.onValueChange(HowToPay.inPerson)}
+                    isEnabled={props.payOnArrivalEnabled}
                 />
                 <OrderConfirmationSelectableOptionView
                     imageSource={require('./icons/pay.png')}

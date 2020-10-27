@@ -1,8 +1,7 @@
 
 import React from 'react';
-import {StyleSheet, Image} from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
-import OrderConfirmationLayoutConstants from './OrderConfirmationLayoutConstants';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
@@ -15,6 +14,7 @@ interface OrderConfirmationSelectableOptionViewProps {
     imageSource: any;
     title: string;
     onCheckMarkPressed?: () => void;
+    isEnabled?: boolean;
 }
 
 const OrderConfirmationSelectableOptionView = (() => {
@@ -44,12 +44,19 @@ const OrderConfirmationSelectableOptionView = (() => {
             const x = LayoutConstants.floatingCellStyles.padding;
             return { left: x, right: x, top: x, bottom: x };
         })();
-        return <SpacerView style={[styles.root, {
-            borderColor: props.isSelected ? LayoutConstants.forms.textFieldSelectionOutline.color.selected : LayoutConstants.forms.textFieldSelectionOutline.color.unselected,
-        }]} space={15}>
+        const isEnabled = props.isEnabled ?? true;
+        const isSelected = isEnabled && props.isSelected;
+        return <SpacerView
+            pointerEvents={isEnabled ? undefined : 'none'}
+            style={[styles.root, {
+                borderColor: isSelected ? LayoutConstants.forms.textFieldSelectionOutline.color.selected : LayoutConstants.forms.textFieldSelectionOutline.color.unselected,
+                opacity: isEnabled ? 1 : 0.5,
+            }]}
+            space={15}
+        >
             <Image source={props.imageSource} style={styles.image} />
             <CustomizedText style={styles.title}>{props.title}</CustomizedText>
-            <CheckMarkButton isSelected={props.isSelected} onPress={props.onCheckMarkPressed} hitSlop={checkMarkButtonHitSlop} />
+            <CheckMarkButton isSelected={isSelected} onPress={props.onCheckMarkPressed} hitSlop={checkMarkButtonHitSlop} />
         </SpacerView>
     }
     return OrderConfirmationSelectableOptionView;

@@ -1,6 +1,7 @@
 
 
 const AppSettings = {
+    deliveryDriverPhoneNumber: '+1 (242) 333-3333',
     useLocalHostDevServer: false,
     vatPercentage: 0.12,
     apiHostUrl(){

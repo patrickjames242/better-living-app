@@ -156,6 +156,8 @@ const CartItemListItemView = (() => {
             }
         }
 
+
+
         if (productOrMeal == null) {
             return <></>
         }

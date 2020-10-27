@@ -6,6 +6,10 @@ import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellSty
 import Spacer from '../../../helpers/Spacers/Spacer';
 import OrderConfirmationLayoutConstants from './OrderConfirmationLayoutConstants';
 import OrderConfirmationSelectableOptionView from './OrderConfirmationSelectableOptionView';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
+import { CustomFont } from '../../../helpers/fonts/fonts';
+import { CustomColors } from '../../../helpers/colors';
+import AppSettings from '../../../settings';
 
 export enum PickUpOrDelivery {
     pickUp,
@@ -23,6 +27,13 @@ const OrderConfirmationPickUpOrDeliveryView = (() => {
     const styles = StyleSheet.create({
         root: {
 
+        },
+        bottomMessageText: {
+            marginLeft: 15,
+            marginRight: 15,
+            fontFamily: CustomFont.medium,
+            color: CustomColors.redColor.stringValue,
+            fontSize: 14,
         },
     });
 
@@ -42,6 +53,10 @@ const OrderConfirmationPickUpOrDeliveryView = (() => {
                     isSelected={props.value === PickUpOrDelivery.delivery}
                     onCheckMarkPressed={() => props.onValueChange(PickUpOrDelivery.delivery)}
                 />
+                {props.value === PickUpOrDelivery.delivery && 
+                    <CustomizedText style={styles.bottomMessageText}>
+                        {`If you want your order delivered you MUST call our delivery driver at ${AppSettings.deliveryDriverPhoneNumber}, inform him of the order and give him your directions. You are also required to pay him a delivery fee with cash.`}
+                    </CustomizedText>}
             </Spacer>
         </FloatingCellStyleSectionView>
     }

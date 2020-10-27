@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 import TodaysOrdersListItemView from './TodaysOrdersListItemView';
@@ -87,6 +87,7 @@ const TodaysOrdersListScreen = (() => {
         const respondToButtonPressed = useCallback((order: Order) => {
             props.navigation.push('OrderDetail', {
                 reduxOrderId: order.id, 
+
             });
         }, [props.navigation]);
 
