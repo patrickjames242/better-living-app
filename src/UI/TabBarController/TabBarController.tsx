@@ -21,6 +21,8 @@ import Tips from '../Tips/Tips';
 import Inquiries from '../Inquiries/Inquiries';
 import Settings from '../Settings/Settings';
 import { UserType } from '../../api/authentication/validation';
+import { CommonActions, NavigationState, StackNavigationState } from '@react-navigation/native';
+import { mapOptional } from '../../helpers/general';
 
 
 
@@ -76,6 +78,8 @@ const TabBarController = (() => {
 
 	return function TabBarController(props: StackScreenProps<RootNavigationViewParams, 'MainInterface'>) {
 
+		// console.log(props.navigation.dangerouslyGetState());
+
 		const safeAreaInsets = useSafeAreaInsets();
 
 		const logInPopUp = useRef<LogInPopUpRef>(null);
@@ -85,6 +89,7 @@ const TabBarController = (() => {
 
 		const [currentTabBarSelection, setCurrentTabBarSelection] = useState(getCurrentInitialRouteName());
 
+		// updates currentTabBarSelection state value when navigation state of the navigation object changes
 		useEffect(() => {
 			return props.navigation.addListener('state', event => {
 				const tabBarState = event.data.state.routes.find(x => x.name === mainInterfaceKey)?.state;
@@ -111,7 +116,7 @@ const TabBarController = (() => {
 		useEffect(() => {
 			return addSelectedStateListener(state => state.authentication, authentication => {
 
-				const selections = (() => {
+				const selectionsForCurrentUser = (() => {
 					switch (authentication?.userObject.userType) {
 						case UserType.manager:
 						case UserType.employee:
@@ -122,8 +127,10 @@ const TabBarController = (() => {
 					}
 				})();
 
+				// changes the current screen if it is unavailable for the current user, when the user logs in or out.
+
 				if (
-					selections.includes(currentTabBarSelection) === false ||
+					selectionsForCurrentUser.includes(currentTabBarSelection) === false ||
 					(
 						authentication == null &&
 						getInfoForTabBarSelection(currentTabBarSelection).requiresAuthentication
@@ -132,9 +139,9 @@ const TabBarController = (() => {
 					changeTab(getDefaultTabBarSelectionForUserObject(authentication?.userObject ?? null));
 				}
 			});
-		}, [changeTab, currentTabBarSelection]);
+		}, [changeTab, currentTabBarSelection, props.navigation]);
 
-
+		
 		const updateTabBarPositionIfNeeded = useCallback((newPosition: TabBarPosition) => {
 			if (currentTabBarState.tabBarPosition !== newPosition) {
 				dispatch(changeTabBarPosition(newPosition));

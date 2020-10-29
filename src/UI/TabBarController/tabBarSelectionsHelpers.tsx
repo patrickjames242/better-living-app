@@ -1,10 +1,16 @@
 
-
 import { useMemo } from "react";
 import { User } from "../../api/authentication/User";
 import { UserType } from "../../api/authentication/validation";
+import { Color } from "../../helpers/colors";
 import { Optional } from "../../helpers/general";
 import { useSelector } from "../../redux/store";
+import BellIconSVG from "./icons/hotel_svg";
+import ContactRequestsIconSVG from "./icons/contact-requests_svg";
+import FoodIconSVG from "./icons/food_svg";
+import SettingsIconSVG from "./icons/settings_svg";
+import ShoppingCartIconSVG from "./icons/shopping-cart_svg";
+import TipsIconSVG from "./icons/tips_svg";
 
 export enum TabBarSelection {
     todaysOrders = 'TodaysOrders',
@@ -17,32 +23,50 @@ export enum TabBarSelection {
 
 const allTabBarItemsData: {
     [index: string]: {
-        url: any,
         requiresAuthentication: boolean,
+        icons: {png: any, svg: (props: {color: Color, style?: React.CSSProperties}) => JSX.Element},
     },
 } = {
     [TabBarSelection.todaysOrders]: {
-        url: require('../Cart/OrderConfirmationScreen/icons/hotel.png'),
+        icons: {
+            png: require('./icons/hotel.png'),
+            svg: BellIconSVG
+        },
         requiresAuthentication: true,
     },
     [TabBarSelection.menu]: {
-        url: require('./icons/food.png'),
+        icons: {
+            png: require('./icons/food.png'),
+            svg: FoodIconSVG,
+        },
         requiresAuthentication: false,
     },
     [TabBarSelection.cart]: {
-        url: require('./icons/shopping-cart.png'),
+        icons: {
+            png: require('./icons/shopping-cart.png'),
+            svg: ShoppingCartIconSVG,
+        },
         requiresAuthentication: true,
     },
     [TabBarSelection.tips]: {
-        url: require('./icons/tips.png'),
+        icons: {
+            png: require('./icons/tips.png'),
+            svg: TipsIconSVG,
+        },
         requiresAuthentication: false,
     },
     [TabBarSelection.inquiries]: {
-        url: require('./icons/contact-requests.png'),
+        icons: {
+            png: require('./icons/contact-requests.png'),
+            svg: ContactRequestsIconSVG,
+        },
         requiresAuthentication: false,
     },
     [TabBarSelection.settings]: {
-        url: require('./icons/settings.png'),
+        icons: {
+            png: require('./icons/settings.png'),
+            svg: SettingsIconSVG,
+        },
         requiresAuthentication: true,
     }
 }

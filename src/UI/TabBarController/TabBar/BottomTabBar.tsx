@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, StyleSheet, Image, ViewStyle, ViewProps } from 'react-native';
+import { View, StyleSheet, Image, ViewStyle, ViewProps, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import { CustomColors, Color } from '../../../helpers/colors';
@@ -14,6 +14,7 @@ interface BottomTabBarProps extends ViewProps{
     onTabPress: (selection: TabBarSelection) => void;
 }
 
+const iconSize = 28;
 
 export default function BottomTabBar(props: BottomTabBarProps){
 
@@ -29,11 +30,19 @@ export default function BottomTabBar(props: BottomTabBarProps){
 
                 const isSelected = selection === props.selectedTab;
                 const onPress = () => props.onTabPress(selection);
-                const imageTintColor = (isSelected ? CustomColors.themeGreen : Color.gray(0.75)).stringValue;
+                const imageTintColor = (isSelected ? CustomColors.themeGreen : Color.gray(0.75));
+                
                 const info = getInfoForTabBarSelection(selection);
 
                 return <BouncyButton key={index} style={tabBarStyles.tabBarButton} onPress={onPress} bounceScaleValue={1.3}>
-                    <Image source={info.url} style={[tabBarStyles.tabBarButtonImage, {tintColor: imageTintColor}]}/>
+                    {(() => {
+                        switch (Platform.OS){
+                            case 'web':
+                                return <info.icons.svg color={imageTintColor} style={{width: iconSize, height: iconSize}}/>;
+                            default:
+                                return <Image resizeMode="contain" source={info.icons.png} style={[tabBarStyles.tabBarButtonImage, {tintColor: imageTintColor.stringValue}]}/>
+                        }
+                    })()}
                 </BouncyButton>
             })}
         </View>
@@ -65,7 +74,7 @@ const tabBarStyles = StyleSheet.create({
         } as ViewStyle;
     })(),
     tabBarButtonImage: (() => {
-        const size = 28;
+        const size = iconSize;
         return {
             width: size,
             height: size,

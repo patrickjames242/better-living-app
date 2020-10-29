@@ -111,7 +111,7 @@ const LongTextAndIconButton = (() => {
         >
             <CustomizedText style={[styles.text, {textAlign: (props.centerTitleText ?? false) ? 'center' : undefined}]}>{props.text}</CustomizedText>
             <View style={styles.iconHolder}>
-                <Image style={[styles.icon, {opacity: isLoading ? 0 : 1}]} source={props.iconSource} />
+                <Image resizeMode="contain" style={[styles.icon, {opacity: isLoading ? 0 : 1}]} source={props.iconSource} />
                 <View style={[styles.activityIndicatorHolder, {opacity: isLoading ? 1 : 0}]}>
                     {isLoading && <CustomActivityIndicator color="white" />}
                 </View>

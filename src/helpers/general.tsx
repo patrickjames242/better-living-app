@@ -2,7 +2,7 @@
 import { ValidateFunction } from 'ajv';
 import { CustomColors } from './colors';
 import * as yup from 'yup';
-import { TextInputProps } from 'react-native';
+import { Platform, TextInputProps } from 'react-native';
 
 
 
@@ -13,14 +13,14 @@ export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 // makes specific properties optional
 export type PartialBy<T, Keys extends keyof T> = Omit<T, Keys> & Partial<Pick<T, Keys>>
 
-export const DEFAULT_NAV_SCREEN_OPTIONS = {headerShown: false, cardStyle: {backgroundColor: CustomColors.mainBackgroundColor.stringValue}};
+export const DEFAULT_NAV_SCREEN_OPTIONS = { headerShown: false, cardStyle: { backgroundColor: CustomColors.mainBackgroundColor.stringValue } };
 
-export function YUP_EDITING_FORM_PRICE_STRING(fieldName: string){
+export function YUP_EDITING_FORM_PRICE_STRING(fieldName: string) {
     fieldName = fieldName[0].toUpperCase() + fieldName.substring(1);
     return yup.string().matches(/^[0-9]+(.[0-9]{2})?$/, `${fieldName} format is invalid. It must follow the format: '15' or '15.99'.`);
 }
 
-export const DefaultKeyboardConfigs: {
+interface DefaultKeyboardConfigs{
     email: Partial<TextInputProps>,
     name: Partial<TextInputProps>,
     password: Partial<TextInputProps>,
@@ -29,46 +29,56 @@ export const DefaultKeyboardConfigs: {
     description: Partial<TextInputProps>,
     website: Partial<TextInputProps>,
     price: Partial<TextInputProps>,
-} = {
-    email: {
-        autoCapitalize: 'none',
-        keyboardType: 'email-address',
-        autoCompleteType: 'email',
-    },
-    name: {
-        autoCapitalize: 'words',
-        autoCompleteType: 'name',
-    },
-    password: {
-        autoCompleteType: 'password',
-        autoCapitalize: 'none',
-        keyboardType: 'default',
-    },
-    phoneNumber: {
-        autoCompleteType: 'tel',
-        autoCapitalize: 'none',
-        keyboardType: 'phone-pad',
-    },
-    title: {
-        autoCapitalize: 'words',
-        autoCompleteType: 'name',
-    },
-    description: {
-        autoCapitalize: 'sentences',
-    },
-    website: {
-        autoCapitalize: 'none',
-        keyboardType: 'url',
-    },
-    price: {
-        autoCapitalize: 'none',
-        keyboardType: 'numbers-and-punctuation',
-    },
 }
+
+export const DefaultKeyboardConfigs: DefaultKeyboardConfigs = (() => {
+
+    const autoCompleteType = (autoCompleteType: TextInputProps['autoCompleteType']) => {
+        return Platform.OS !== 'web' ? { autoCompleteType: autoCompleteType } : {};
+    }
+    
+    const keyboardConfig: DefaultKeyboardConfigs = {
+        email: {
+            autoCapitalize: 'none',
+            keyboardType: 'email-address',
+            ...autoCompleteType('email'),
+        },
+        name: {
+            autoCapitalize: 'words',
+            ...autoCompleteType('name'),
+        },
+        password: {
+            ...autoCompleteType('password'),
+            autoCapitalize: 'none',
+            keyboardType: 'default',
+        },
+        phoneNumber: {
+            ...autoCompleteType('tel'),
+            autoCapitalize: 'none',
+            keyboardType: 'phone-pad',
+        },
+        title: {
+            autoCapitalize: 'words',
+            ...autoCompleteType('name'),
+        },
+        description: {
+            autoCapitalize: 'sentences',
+        },
+        website: {
+            autoCapitalize: 'none',
+            keyboardType: 'url',
+        },
+        price: {
+            autoCapitalize: 'none',
+            keyboardType: 'numbers-and-punctuation',
+        },
+    }
+    return keyboardConfig;
+})();
 
 export const NASSAU_TIME_ZONE = 'America/Nassau';
 
-export function YUP_PASSWORD_VALIDATOR(fieldName: string){
+export function YUP_PASSWORD_VALIDATOR(fieldName: string) {
     const minCharacters = 6;
     const capitalizedFieldName = fieldName.substr(0, 1).toUpperCase() + fieldName.substr(1);
     return yup.string().min(minCharacters, `${capitalizedFieldName} must be at least ${minCharacters} characters long.`).required(`${capitalizedFieldName} is a required field.`);
@@ -125,9 +135,9 @@ export function mapOptional<Unwrapped, ReturnVal>(optional: Unwrapped | undefine
     }
 }
 
-export function compactMap<InputType, OutputType>(items: Array<InputType>, transformer: (input: InputType) => OutputType | undefined | null){
+export function compactMap<InputType, OutputType>(items: Array<InputType>, transformer: (input: InputType) => OutputType | undefined | null) {
     const newItems: OutputType[] = [];
-    for (const item of items){
+    for (const item of items) {
         const result = transformer(item);
         result != null && newItems.push(result);
     }
@@ -166,9 +176,9 @@ export interface SectionSeparatorComponentInfo<
 
 
 
-export function getJsonValidatorErrorsText(validator: ValidateFunction): Optional<string>{
+export function getJsonValidatorErrorsText(validator: ValidateFunction): Optional<string> {
     const errors = validator.errors;
-    if (errors == null){return null;}
+    if (errors == null) { return null; }
     return '[' + '\n' + errors.map(x => `\tdataPath: '${x.dataPath}', message: ${x.message}`).join(',\n') + '\n]'
 }
 
@@ -185,11 +195,11 @@ export function getJsonValidatorErrorsText(validator: ValidateFunction): Optiona
 
 
 /** filters out any properties whose key is not in the included props array and whose value is not equal to undefiend*/
-export function getPropsFromObject<ObjType extends object>(obj: ObjType, includedProps: (keyof ObjType)[]){
+export function getPropsFromObject<ObjType extends object>(obj: ObjType, includedProps: (keyof ObjType)[]) {
     const resultObj: Partial<ObjType> = {};
-    for (const key of includedProps){
+    for (const key of includedProps) {
         const value = obj[key];
-        if (value === undefined){continue;}
+        if (value === undefined) { continue; }
         resultObj[key] = value;
     }
     return resultObj;
@@ -197,11 +207,11 @@ export function getPropsFromObject<ObjType extends object>(obj: ObjType, include
 
 
 
-export function caseInsensitiveStringSort<ItemT>(...args: ItemT extends string ? [] : [(item: ItemT) => string]): (item1: ItemT, item2: ItemT) => number{
+export function caseInsensitiveStringSort<ItemT>(...args: ItemT extends string ? [] : [(item: ItemT) => string]): (item1: ItemT, item2: ItemT) => number {
     return (item1, item2) => {
         const item1String = ((typeof item1 === 'string') ? item1 : args[0]?.(item1));
         const item2String = ((typeof item2 === 'string') ? item2 : args[0]?.(item2));
-        if (typeof item1String !== 'string' || typeof item2String !== 'string'){
+        if (typeof item1String !== 'string' || typeof item2String !== 'string') {
             throw new Error('caseInsensitiveStringSort could not produce sort value');
         }
         return item1String.toLowerCase().localeCompare(item2String.toLowerCase());

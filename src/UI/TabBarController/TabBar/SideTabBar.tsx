@@ -1,8 +1,8 @@
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
 import { View, StyleSheet, Image, Dimensions, ScrollView, Platform } from 'react-native';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
-import { CustomColors } from '../../../helpers/colors';
+import { Color, CustomColors } from '../../../helpers/colors';
 import LayoutConstants from '../../../LayoutConstants';
 import { windowDimensionsDidChangeNotification, WindowDimensions } from '../helpers';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -78,24 +78,25 @@ const SideTabBar = (() => {
 							isSelected={props.selectedTab === item}
 							onPress={() => props.onTabPress(item)}
 							key={index}
-							imageSource={info.url}
+							icons={info.icons}
 							isFirstInList={index === 0}
 						/>
 					})
 				})()}
 			</ScrollView>
 		</View>
-
 	}
-
 })();
-
 
 export default SideTabBar;
 
 
+
+
+
+
 interface SideTabBarItemProps {
-	imageSource: any,
+	icons: {png: any, svg: (props: {color: Color, style: CSSProperties}) => JSX.Element},
 	isSelected: boolean,
 	onPress: () => void,
 	isFirstInList?: boolean,
@@ -103,6 +104,8 @@ interface SideTabBarItemProps {
 }
 
 const SideBarItem = (() => {
+
+	const imageSize = LayoutConstants.sideMenuBar.barItem.imageSize;
 
 	const styles = StyleSheet.create({
 		root: {
@@ -115,12 +118,16 @@ const SideBarItem = (() => {
 			...(Platform.OS === 'android' ? {} : {shadowRadius: 25}),
 		},
 		image: {
-			width: LayoutConstants.sideMenuBar.barItem.imageSize,
-			height: LayoutConstants.sideMenuBar.barItem.imageSize,
+			width: imageSize,
+			height: imageSize,
+			resizeMode: 'contain',
 		}
 	});
 
 	return function SideBarItem(props: SideTabBarItemProps) {
+		
+		const color = props.isSelected ? Color.gray(1) : CustomColors.themeGreen;
+
 		return <BouncyButton
 			onPress={props.onPress}
 			bounceScaleValue={0.8}
@@ -135,9 +142,14 @@ const SideBarItem = (() => {
 				}]
 			}}
 		>
-			<Image source={props.imageSource} style={[styles.image, {
-				tintColor: props.isSelected ? 'white' : CustomColors.themeGreen.stringValue,
-			}]} />
+			{(() => {
+				switch(Platform.OS){
+					case 'web':
+						return <props.icons.svg color={color} style={{width: imageSize, height: imageSize}}/>
+					default: 
+						return <Image source={props.icons.png} style={[styles.image, {tintColor: color.stringValue}]} />
+				}
+			})()}
 		</BouncyButton>
 	}
 

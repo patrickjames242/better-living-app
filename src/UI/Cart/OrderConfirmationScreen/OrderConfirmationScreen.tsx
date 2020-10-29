@@ -101,7 +101,7 @@ const OrderConfirmationScreen = (() => {
                         <Space space={LayoutConstants.pageSideInsets} />
                         <LongTextAndIconButton
                             text="Submit Order"
-                            iconSource={require('./icons/hotel.png')}
+                            iconSource={require('./icons/hotel_white.png')}
                             style={styles.submitButton}
                             isEnabled={shouldBottomButtonBeEnabled}
                             isLoading={isSubmitting}

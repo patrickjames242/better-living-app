@@ -21,7 +21,7 @@ const CartItemListCheckOutButton = (() => {
 
     const CartItemListCheckOutButton = (props: CartItemListCheckOutButtonProps) => {
         return <LongTextAndIconButton
-            iconSource={require('../../TabBar/icons/shopping-cart.png')}
+            iconSource={require('../../TabBarController/icons/shopping-cart.png')}
             text="Confirm Order"
             style={[styles.root, {maxWidth: props.maxWidth}]}
             onPress={props.onPress}
