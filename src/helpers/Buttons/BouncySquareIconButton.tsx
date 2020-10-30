@@ -7,11 +7,13 @@ import { CustomColors, Color } from '../colors';
 export interface BouncySquareIconButtonProps extends BouncyButtonProps{
     isEnabled?: boolean;
     isSelected?: boolean;
-    iconSource: any;
+    iconSources: {
+        offBlack?: any,
+        white: any,
+    };
     backgroundColor?: string;
-
     iconSize?: number;
-    iconPadding?: number;
+    iconPadding?: number; 
 }
 
 const BouncySquareIconButton = (() => {
@@ -32,7 +34,7 @@ const BouncySquareIconButton = (() => {
     const BouncySquareIconButton = ({
         isEnabled: propsIsEnabledValue,
         isSelected: propsIsSelectedValue, 
-        iconSource, 
+        iconSources, 
         backgroundColor, 
         iconPadding,
         iconSize,
@@ -48,17 +50,16 @@ const BouncySquareIconButton = (() => {
             style={[styles.root, bouncyButtonProps.style]}
             contentViewProps={{
                 style: [styles.buttonContentView, {
-                    backgroundColor: isSelected ? (backgroundColor ?? CustomColors.themeGreen.stringValue)  : Color.gray(0.93).stringValue,
+                    backgroundColor: isSelected ? (backgroundColor ?? CustomColors.themeGreen.stringValue) : Color.gray(0.93).stringValue,
                     padding: iconPadding ?? 10.5,
                     opacity: isEnabled ? 1 : 0.5,
                 }, bouncyButtonProps.contentViewProps]
             }}
         >
-            <Image style={[styles.iconImage, {
-                tintColor: isSelected ? 'white' : CustomColors.offBlackTitle.stringValue,
+            <Image resizeMode="contain" style={[styles.iconImage, {
                 width: iconSize ?? 15,
                 height: iconSize ?? 15,
-            }]} source={iconSource} />
+            }]} source={isSelected ? iconSources.white : (iconSources.offBlack ?? iconSources.white)} />
         </BouncyButton>
     }
     return BouncySquareIconButton;

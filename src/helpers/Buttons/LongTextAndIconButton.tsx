@@ -74,7 +74,7 @@ const LongTextAndIconButton = (() => {
         icon: {
             width: 22,
             height: 22,
-            tintColor: 'white',
+            // tintColor: 'white',
         }, 
         activityIndicatorHolder: {
             ...StyleSheet.absoluteFillObject,

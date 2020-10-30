@@ -56,7 +56,7 @@ const SettingsItemView = (() => {
         chevronIcon: {
             height: 12.5,
             width: 12.5,
-            tintColor: Color.gray(0.7).stringValue,
+            // tintColor: Color.gray(0.7).stringValue,
         },
     });
 
@@ -83,7 +83,7 @@ const SettingsItemView = (() => {
                     } else if (props.rightSwitchInfo == null) {
                         return [
                             <CustomizedText key={4} numberOfLines={1} style={styles.subtitleText}>{props.rightSubtitleText ?? ''}</CustomizedText>,
-                            <Image key={5} style={styles.chevronIcon} source={require('./arrow.png')} />
+                            <Image key={5} resizeMode="contain" style={styles.chevronIcon} source={require('./arrow.png')} />
                         ]
                     } else {
                         return [<CustomSwitch

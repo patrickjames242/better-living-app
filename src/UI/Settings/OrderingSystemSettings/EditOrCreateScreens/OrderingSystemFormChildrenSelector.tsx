@@ -35,7 +35,7 @@ const OrderingSystemFormChildrenSelector = (() => {
                 <RoundedTextAndIconBouncyButton 
                     text={itemsNotEmpty ? props.buttonEditText : props.buttonAddText} 
                     onPress={props.onEditOrAddButtonPressed} 
-                    iconSource={itemsNotEmpty ? AssetImages.editIcon : AssetImages.plusIcon} 
+                    iconSource={itemsNotEmpty ? AssetImages.editIcon : AssetImages.plusIcon.white} 
                 />
             </Spacer>
         </TextFieldViewContainer>

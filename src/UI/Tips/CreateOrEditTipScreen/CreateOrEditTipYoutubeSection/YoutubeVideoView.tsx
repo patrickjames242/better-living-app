@@ -43,7 +43,7 @@ const YoutubeVideoView = (() => {
         errorIcon: {
             width: 25,
             height: 25,
-            tintColor: CustomColors.redColor.stringValue,
+            // tintColor: CustomColors.redColor.stringValue,
         },
         textHolder: {
             flex: 1,

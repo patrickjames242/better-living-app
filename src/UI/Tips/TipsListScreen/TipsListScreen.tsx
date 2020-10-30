@@ -7,7 +7,7 @@ import TipsListItemView from './TipsListItemView';
 import LayoutConstants from '../../../LayoutConstants';
 import Space from '../../../helpers/Spacers/Space';
 import MultiColumnFlatList from '../../../helpers/Views/MultipleColumnLists/MultiColumnFlatList';
-import PlusButton from '../../../helpers/Buttons/PlusButton';
+import NavigationBarPlusButton from '../../../helpers/Buttons/PlusButton';
 import { StackScreenProps } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
 import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
@@ -125,7 +125,7 @@ const TipsListScreen = (() => {
 
         return <View style={styles.root}>
             <LargeHeadingNavigationBar title="Health Tips" rightAlignedView={
-                isUserManager ? <PlusButton onPress={onPlusButtonPressed} /> : undefined
+                isUserManager ? <NavigationBarPlusButton onPress={onPlusButtonPressed} /> : undefined
             } />
             <PaginationListHolderView<number, number>
                 batchSize={20}

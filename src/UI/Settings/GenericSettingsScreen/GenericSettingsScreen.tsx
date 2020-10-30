@@ -60,7 +60,7 @@ const GenericSettingsScreen = (() => {
                 switch (props.navBarType){
                     case GenericSettingsScreenNavigationBarType.mainScreenLargeTitle:
                         return <LargeHeadingNavigationBar title={props.navBarTitle} />
-                    default: 
+                    default:
                         return <NavigationControllerNavigationBar title={props.navBarTitle}/>
                 }
             })()}

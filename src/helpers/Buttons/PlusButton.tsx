@@ -12,15 +12,15 @@ const styles = StyleSheet.create({
         paddingLeft: 6,
         paddingRight: 6,
     }
-})
+});
 
-const PlusButton = (props: PlusButtonProps) => {
+const NavigationBarPlusButton = (props: PlusButtonProps) => {
     return <IconButton
-        iconSource={AssetImages.plusIcon}
+        iconSource={AssetImages.plusIcon.green}
         iconSize={20} 
         style={styles.icon}
         {...props}
     />
 }
 
-export default PlusButton;
+export default NavigationBarPlusButton;

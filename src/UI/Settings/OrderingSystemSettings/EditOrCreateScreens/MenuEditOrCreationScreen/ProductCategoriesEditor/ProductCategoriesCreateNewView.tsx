@@ -29,8 +29,6 @@ const MenuEditOrCreationProductCategoriesCreateNewView = (() => {
 
         const [, { value }, { setValue }] = useField<MenuEditOrCreationValues, 'productCategories'>('productCategories');
 
-        
-
         return <TextFieldViewContainer topTitleText="Add New Category">
             <SpacerView style={styles.contentContainer} space={10}>
                 <TextFieldTextInput
@@ -41,7 +39,7 @@ const MenuEditOrCreationProductCategoriesCreateNewView = (() => {
                     {...DefaultKeyboardConfigs.title}
                 />
                 <BouncySquareIconButton
-                    iconSource={AssetImages.plusIcon}
+                    iconSources={{white: AssetImages.plusIcon.white}}
                     isEnabled={textFieldText.trim().length >= 1}
                     onPress={() => {
                         const newCategory: MenuEditOrCreateProductCategory = {

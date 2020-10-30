@@ -158,7 +158,7 @@ const ListItemView = (() => {
             {props.children}
             <BouncySquareIconButton
                 onPress={props.onSelectButtonPressed}
-                iconSource={props.isSelected ? AssetImages.xIcon : AssetImages.plusIcon}
+                iconSources={{white: props.isSelected ? AssetImages.xIcon.white : AssetImages.plusIcon.white}}
                 backgroundColor={(props.isSelected ? CustomColors.redColor : CustomColors.themeGreen).stringValue}
             />
         </SpacerView>

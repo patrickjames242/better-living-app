@@ -8,7 +8,7 @@ import { useSelector } from '../../../../redux/store';
 import ListViewProductItemView from '../../../../helpers/Views/DataSpecificViews/ListViewProductItemView';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../navigationHelpers';
-import PlusButton from '../../../../helpers/Buttons/PlusButton';
+import NavigationBarPlusButton from '../../../../helpers/Buttons/PlusButton';
 import { caseInsensitiveStringSort } from '../../../../helpers/general';
 import LayoutConstants from '../../../../LayoutConstants';
 import ListLoadingHolderView from '../../../../helpers/Views/ListLoadingView';
@@ -45,7 +45,7 @@ const ProductsListScreen = (() => {
             <NavigationControllerNavigationBar
                 title="Food Products"
                 rightAlignedView={
-                    <PlusButton
+                    <NavigationBarPlusButton
                         onPress={() => {
                             props.navigation.push('ProductEditOrCreate', { productId: null });
                         }}

@@ -20,7 +20,7 @@ const IconButton = (() => {
 
         },
         iconImage: {
-            tintColor: CustomColors.themeGreen.stringValue
+            // tintColor: CustomColors.themeGreen.stringValue
         },
     });
 
@@ -38,7 +38,7 @@ const IconButton = (() => {
             hitSlop={hitSlop}
             onPress={onPress}
         >
-            <Image style={[styles.iconImage, {
+            <Image resizeMode="contain" style={[styles.iconImage, {
                 height: iconSize,
                 width: iconSize,
             }]} source={iconSource} />

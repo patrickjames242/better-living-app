@@ -59,7 +59,7 @@ const MenuEditOrCreationProductCategoryItemView = (() => {
                     alignSelf: isExpanded ? 'flex-start' : 'center',
                 }]} space={10}>
                     <BouncySquareIconButton
-                        iconSource={isExpanded ? AssetImages.minimizeIcon : AssetImages.zoomInIcon}
+                        iconSources={{white: isExpanded ? AssetImages.minimizeIcon : AssetImages.zoomInIcon}}
                         iconSize={19}
                         iconPadding={(totalSideButtonSize - 19) / 2}
                         onPress={() => setIsExpanded(v => !v)}
@@ -67,7 +67,7 @@ const MenuEditOrCreationProductCategoryItemView = (() => {
                     {isExpanded && <BouncySquareIconButton
                         iconSize={18}
                         iconPadding={(totalSideButtonSize - 18) / 2}
-                        iconSource={AssetImages.deleteIcon}
+                        iconSources={{white: AssetImages.deleteIcon}}
                         backgroundColor={CustomColors.redColor.stringValue}
                         onPress={() => onCategoryDeleted(category.customId)}
                     />}

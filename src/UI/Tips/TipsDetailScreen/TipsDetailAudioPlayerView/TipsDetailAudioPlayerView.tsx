@@ -40,7 +40,7 @@ const TipsDetailAudioPlayerView = (() => {
         errorIcon: {
             width: 20,
             height: 20,
-            tintColor: CustomColors.redColor.stringValue,
+            // tintColor: CustomColors.redColor.stringValue,
         },
         errorText: {
             color: CustomColors.redColor.stringValue,

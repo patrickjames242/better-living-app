@@ -49,7 +49,7 @@ const MenuListItemView = (() => {
         noImageAvailableImage: {
             height: 50,
             width: 50,
-            tintColor: CustomColors.themeGreen.stringValue,
+            // tintColor: CustomColors.themeGreen.stringValue,
         },
         noImageAvailableText: {
             fontSize: 14,
@@ -130,7 +130,7 @@ const MenuListItemView = (() => {
                         return <Image style={styles.image} source={{uri: product?.imageUrl ?? undefined}} resizeMode="cover" />
                     } else {
                         return <SpacerView style={styles.noImageAvailableHolder} space={5}>
-                            <Image style={styles.noImageAvailableImage} source={AssetImages.imageIcon}/>
+                            <Image style={styles.noImageAvailableImage} source={AssetImages.imageIcon} resizeMode="contain"/>
                             <CustomizedText style={styles.noImageAvailableText}>No Image Available</CustomizedText>
                         </SpacerView>
                     }

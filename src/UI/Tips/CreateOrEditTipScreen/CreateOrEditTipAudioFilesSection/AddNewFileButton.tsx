@@ -55,7 +55,7 @@ const AddNewFileButton = (() => {
             });
         }
 
-        return <RoundedTextAndIconBouncyButton iconSource={AssetImages.plusIcon} text="Add New File" onPress={onPress}/>
+        return <RoundedTextAndIconBouncyButton iconSource={AssetImages.plusIcon.white} text="Add New File" onPress={onPress}/>
     }
     return AddNewFileButton;
 })();

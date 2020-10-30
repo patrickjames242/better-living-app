@@ -1,9 +1,7 @@
 
 import React from 'react';
-import { StyleSheet, Image, ImageStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
 import CenteredTitleNavigationBar from '../NavigationBar/CenteredTitleNavigationBar';
-import BouncyButton from '../Buttons/BouncyButton';
-import { CustomColors } from '../colors';
 import { useNavigation } from '@react-navigation/native';
 import AssetImages from '../../images/AssetImages';
 import IconButton from '../Buttons/IconButton';

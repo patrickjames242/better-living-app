@@ -39,7 +39,7 @@ const TitleBox = (() => {
             const styles: ImageStyle = {
                 width: size,
                 height: size,
-                tintColor: CustomColors.offBlackSubtitle.stringValue,
+                // tintColor: CustomColors.offBlackSubtitle.stringValue,
             };
             return styles;
         })(),
@@ -72,7 +72,7 @@ const TitleBox = (() => {
             <CustomizedText style={styles.titleText}>{props.product.title}</CustomizedText>
             {categoryTitles.size >= 1 &&
                 <SpacerView style={styles.categoryBox} space={4} dimension={SpaceDimension.onlyHorizontal}>
-                    <Image style={styles.categoryIcon} source={require('./forkAndKnife.png')} />
+                    <Image resizeMode="contain" style={styles.categoryIcon} source={require('./forkAndKnife.png')} />
                     <CustomizedText style={styles.categoryText}>{categoryTitles.join(' • ')}</CustomizedText>
                 </SpacerView>}
             {infoTags.length >= 1 &&

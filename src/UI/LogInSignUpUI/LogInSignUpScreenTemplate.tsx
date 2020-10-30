@@ -94,7 +94,7 @@ const LogInSignUpScreenTemplate = (() => {
                         iconSource={(() => {
                             switch (props.topLeftButtonType) {
                                 case ExitOrBackButton.back: return AssetImages.backArrowIcon;
-                                case ExitOrBackButton.exit: return AssetImages.xIcon;
+                                case ExitOrBackButton.exit: return AssetImages.xIcon.green;
                             }
                         })()}
                         iconSize={17}

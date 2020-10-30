@@ -1,7 +1,10 @@
 
 
 const AssetImages = {
-    plusIcon: require('./plus.png'),
+    plusIcon: {
+        green: require('./plus_green.png'),
+        white: require('./plus_white.png'),
+    },
     playIcon: require('./play.png'),
     pauseIcon: require('./pause.png'),
     deleteIcon: require('./trash.png'),
@@ -13,8 +16,14 @@ const AssetImages = {
     reloadIcon: require('./reload.png'),
     audioFileIcon: require('./audioFileIcon.png'),
     imageIcon: require('./imageIcon.png'),
-    checkMarkIcon: require('./checkMarkIcon.png'),
-    xIcon: require('./xIcon.png'),
+    checkMarkIcon: {
+        black: require('./checkMarkIcon_black.png'),
+        white: require('./checkMarkIcon_white.png'),
+    },
+    xIcon: {
+        white: require('./xIcon_white.png'), 
+        green: require('./xIcon_green.png'),
+    },
     minimizeIcon: require('./minimize.png'),
     zoomInIcon: require('./zoom-in.png'),
     logInIcon: require('./login.png'),

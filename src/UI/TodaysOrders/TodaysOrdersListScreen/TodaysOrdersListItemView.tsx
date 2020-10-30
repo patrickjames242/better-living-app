@@ -81,7 +81,7 @@ const TodaysOrdersListItemView = (() => {
         timeIcon: {
             height: 15,
             width: 15,
-            tintColor: CustomColors.themeGreen.stringValue,
+            // tintColor: CustomColors.themeGreen.stringValue,
         },
         timeText: {
             fontSize: 14,
@@ -105,7 +105,7 @@ const TodaysOrdersListItemView = (() => {
         cardOrMoneyIcon: {
             height: 23,
             width: 23,
-            tintColor: Color.gray(0.85).stringValue, 
+            // tintColor: Color.gray(0.85).stringValue, 
             alignSelf: 'flex-end',
         },
         
@@ -145,7 +145,7 @@ const TodaysOrdersListItemView = (() => {
             <View style={styles.content}>
                 <View style={styles.topLabels}>
                     <CustomizedText style={styles.orderNumberLabel}>{'#' + props.order.orderNum}</CustomizedText>
-                    <Image style={styles.cardOrMoneyIcon} source={props.order.userPaidOnline ? require('./credit-card.png') : require('./money.png')}/>
+                    <Image resizeMode="contain" style={styles.cardOrMoneyIcon} source={props.order.userPaidOnline ? require('./credit-card.png') : require('./money.png')}/>
                 </View>
                 <CustomizedText style={styles.subjectTitle}>
                     {props.order.user.firstName + ' ' + props.order.user.lastName}
@@ -155,7 +155,7 @@ const TodaysOrdersListItemView = (() => {
                 </CustomizedText>
                 <View style={styles.bottomViewRow}>
                     <View style={styles.timeView}>
-                        <Image style={styles.timeIcon} source={AssetImages.alarmClock} />
+                        <Image resizeMode="contain" style={styles.timeIcon} source={AssetImages.alarmClock} />
                         <TimeText style={styles.timeText} order={props.order}/>
                     </View>
                     <View style={styles.priceView}>

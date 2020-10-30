@@ -22,7 +22,6 @@ export class Color {
 		const num = 255 * percentage;
 		return new Color(num, num, num);
 	}
-	
 }
 
 export const CustomColors = {

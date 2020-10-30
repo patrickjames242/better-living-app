@@ -32,7 +32,7 @@ const CreateOrEditTipEditButton = (() => {
         deleteImage: {
             height: '50%',
             width: '50%',
-            tintColor: 'white'
+            // tintColor: 'white'
         }
     });
 
@@ -53,9 +53,9 @@ const CreateOrEditTipEditButton = (() => {
             onPress={props.onPress}
             pointerEvents={isEnabled ? undefined : 'none'}
         >
-            <Image source={(() => {
+            <Image resizeMode="contain" source={(() => {
                 switch (props.buttonType) {
-                    case CreateOrEditTipEditButton_EditButtonType.add: return AssetImages.plusIcon;
+                    case CreateOrEditTipEditButton_EditButtonType.add: return AssetImages.plusIcon.white;
                     case CreateOrEditTipEditButton_EditButtonType.delete: return AssetImages.deleteIcon;
                 }
             })()} style={styles.deleteImage} />

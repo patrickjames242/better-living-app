@@ -9,7 +9,7 @@ interface CheckMarkButton extends Partial<BouncySquareIconButtonProps>{
 
 const CheckMarkButton = (props: CheckMarkButton) => {
     const isSelected = props.isSelected ?? false;
-    return <BouncySquareIconButton {...props} iconSource={props.iconSource ?? AssetImages.checkMarkIcon} isSelected={isSelected} />
+    return <BouncySquareIconButton {...props} iconSources={props.iconSources ?? {white: AssetImages.checkMarkIcon.white, offBlack: AssetImages.checkMarkIcon.black}} isSelected={isSelected} />
 }
 
 

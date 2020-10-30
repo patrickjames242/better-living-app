@@ -9,7 +9,7 @@ import PlainTextListItem from '../PlainTextListItem';
 import { caseInsensitiveStringSort } from '../../../../helpers/general';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../navigationHelpers';
-import PlusButton from '../../../../helpers/Buttons/PlusButton';
+import NavigationBarPlusButton from '../../../../helpers/Buttons/PlusButton';
 import ListLoadingHolderView from '../../../../helpers/Views/ListLoadingView';
 import NoItemsToShowView from '../../../../helpers/Views/NoItemsToShowView';
 
@@ -36,7 +36,7 @@ const MenusListScreen = (() => {
 
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Menus" rightAlignedView={
-                <PlusButton
+                <NavigationBarPlusButton
                     onPress={() => {
                         props.navigation.push('MenuEditOrCreate', { menuId: null });
                     }}

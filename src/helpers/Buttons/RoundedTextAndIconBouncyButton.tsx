@@ -27,7 +27,7 @@ const RoundedTextAndIconBouncyButton = (() => {
         iconImage: {
             height: 17.5,
             width: 17.5,
-            tintColor: 'white',
+            // tintColor: 'white',
         },
         text: {
             fontFamily: CustomFont.medium,

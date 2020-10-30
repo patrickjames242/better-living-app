@@ -33,7 +33,7 @@ const ProductImageThumbnailView = (() => {
         noImageIcon: {
             height: 30,
             width: 30,
-            tintColor: CustomColors.themeGreen.stringValue,
+            // tintColor: CustomColors.themeGreen.stringValue,
         },
     });
     
@@ -47,7 +47,7 @@ const ProductImageThumbnailView = (() => {
                     return <Image style={styles.image} source={{uri: props.imageUrl}} resizeMode="cover" />
                 } else {
                     return <View style={styles.noImageIconHolder}>
-                        <Image style={styles.noImageIcon} source={AssetImages.imageIcon}/>
+                        <Image resizeMode="contain" style={styles.noImageIcon} source={AssetImages.imageIcon}/>
                     </View>
                 }
             })()}

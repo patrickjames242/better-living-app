@@ -8,7 +8,7 @@ import PlainTextListItem from '../PlainTextListItem';
 import { caseInsensitiveStringSort } from '../../../../helpers/general';
 import { SettingsNavStackParams } from '../../navigationHelpers';
 import { StackScreenProps } from '@react-navigation/stack';
-import PlusButton from '../../../../helpers/Buttons/PlusButton';
+import NavigationBarPlusButton from '../../../../helpers/Buttons/PlusButton';
 import ListLoadingHolderView from '../../../../helpers/Views/ListLoadingView';
 import NoItemsToShowView from '../../../../helpers/Views/NoItemsToShowView';
 
@@ -37,7 +37,7 @@ const MealCategoriesListScreen = (() => {
             <NavigationControllerNavigationBar
                 title="Meal Categories"
                 rightAlignedView={
-                    <PlusButton onPress={() => {
+                    <NavigationBarPlusButton onPress={() => {
                         props.navigation.push('MealCategoryEditOrCreate', { mealCategoryId: null });
                     }} />
                 }
