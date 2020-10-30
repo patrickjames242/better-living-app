@@ -64,7 +64,7 @@ const TabBarController = (() => {
 
 		const initialRouteName = useMemo(getCurrentInitialRouteName, []);
 
-		return <Tab.Navigator initialRouteName={initialRouteName}>
+		return <Tab.Navigator initialRouteName={initialRouteName} >
 			<Tab.Screen name={TabBarSelection.todaysOrders} component={TodaysOrders} />
 			<Tab.Screen name={TabBarSelection.menu} component={Menu} />
 			<Tab.Screen name={TabBarSelection.cart} component={Cart} />

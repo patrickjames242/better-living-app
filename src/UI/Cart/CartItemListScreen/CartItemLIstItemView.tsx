@@ -266,7 +266,7 @@ const SwipableButtonActions = (() => {
         trashButtonImage: {
             width: imageWidth,
             height: imageWidth,
-            tintColor: 'white',
+            // tintColor: 'white',
         }
     });
 

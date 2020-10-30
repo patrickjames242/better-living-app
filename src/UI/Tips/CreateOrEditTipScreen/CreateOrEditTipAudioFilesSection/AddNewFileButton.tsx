@@ -14,28 +14,7 @@ export interface AddNewFileButtonProps {
 
 const AddNewFileButton = (() => {
 
-    const styles = StyleSheet.create({
-        root: {
-            alignSelf: 'flex-start',
-        },
-        contentView: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            padding: 10,
-            paddingLeft: 15,
-            paddingRight: 15,
-        },
-        plusIcon: {
-            height: 17.5,
-            width: 17.5,
-            tintColor: 'white',
-        },
-        text: {
-            fontFamily: CustomFont.medium,
-            fontSize: 15,
-            color: 'white',
-        },
-    });
+   
 
     const AddNewFileButton = (props: AddNewFileButtonProps) => {
 

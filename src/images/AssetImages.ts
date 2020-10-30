@@ -11,7 +11,6 @@ const AssetImages = {
     editIcon: require('./edit.png'),
     warningIconColored: require('./warningColored.png'),
     warningIcon: require('./warning.png'),
-    errorIcon: require('./error.png'),
     saveIcon: require('./save.png'),
     reloadIcon: require('./reload.png'),
     audioFileIcon: require('./audioFileIcon.png'),
