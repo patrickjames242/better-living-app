@@ -54,6 +54,7 @@ const tabBarStyles = StyleSheet.create({
     tabBar: (() => {
         const borderRadius = LayoutConstants.navBar.cornerRadius;
         return {
+            zIndex: 10,
             backgroundColor: 'white',
             borderTopLeftRadius: borderRadius, 
             borderTopRightRadius: borderRadius,

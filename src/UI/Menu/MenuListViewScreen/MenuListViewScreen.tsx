@@ -23,7 +23,6 @@ const MenuListScreen = (() => {
 			flex: 1,
 		},
 		contentView: {
-			zIndex: -1,
 			flex: 1,
 			height: 1,
 		},

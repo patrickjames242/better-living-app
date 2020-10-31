@@ -8,6 +8,8 @@ import NavigationControllerNavigationBar from './NavigationControllerNavigationB
 import SpacerView from '../Spacers/SpacerView';
 import Space from '../Spacers/Space';
 import { TextFieldViewContainer } from './TextFieldView';
+import { getNumbersList } from '../general';
+import CustomizedText from './CustomizedText';
 
 export const GenericEditingFormScreenConstants = {
     childrenSpacing: 25,
@@ -27,7 +29,6 @@ const GenericEditingFormScreen = (() => {
         },
         scrollView: {
             flex: 1,
-            zIndex: -1,
         },
         scrollViewContentContainer: {
             ...LayoutConstants.maxWidthListContentContainerStyles(),

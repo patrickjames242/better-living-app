@@ -1,6 +1,6 @@
 
 import React, { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import NavigationControllerNavigationBar from '../../../../helpers/Views/NavigationControllerNavigationBar';
 import FloatingCellStyleList from '../../../../helpers/Views/FloatingCellStyleList';
 import Product from '../../../../api/orderingSystem/products/Product';
@@ -9,10 +9,11 @@ import ListViewProductItemView from '../../../../helpers/Views/DataSpecificViews
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../navigationHelpers';
 import NavigationBarPlusButton from '../../../../helpers/Buttons/PlusButton';
-import { caseInsensitiveStringSort } from '../../../../helpers/general';
+import { caseInsensitiveStringSort, getNumbersList } from '../../../../helpers/general';
 import LayoutConstants from '../../../../LayoutConstants';
 import ListLoadingHolderView from '../../../../helpers/Views/ListLoadingView';
 import NoItemsToShowView from '../../../../helpers/Views/NoItemsToShowView';
+import CustomizedText from '../../../../helpers/Views/CustomizedText';
 
 
 

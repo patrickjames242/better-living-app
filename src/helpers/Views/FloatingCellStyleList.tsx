@@ -22,7 +22,6 @@ const FloatingCellStyleList = (() => {
     const styles = StyleSheet.create({
         sectionList: {
             overflow: 'visible',
-            zIndex: -1,
         },
         contentContainer: {
             ...LayoutConstants.maxWidthListContentContainerStyles(LayoutConstants.floatingCellStyles.maxWidth),

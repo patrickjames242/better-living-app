@@ -23,7 +23,6 @@ const OrdersHistoryScreen = (() => {
             flex: 1,
         },
         listView: {
-            zIndex: -1,
             flex: 1,
         },
         contentContainer: {

@@ -2,18 +2,13 @@
 import React, { useEffect, useMemo } from 'react';
 import { Image, StyleProp, StyleSheet, TextStyle, View } from 'react-native';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
-import SpacerView from '../../../helpers/Spacers/SpacerView';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { Color, CustomColors } from '../../../helpers/colors';
 import BouncyButton from '../../../helpers/Buttons/BouncyButton';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { TodaysOrdersNavStackParams } from '../navigationHelpers';
 import Order from '../../../api/orders/Order';
 import AssetImages from '../../../images/AssetImages';
 import Notification from '../../../helpers/Notification';
 import { useForceUpdate } from '../../../helpers/reactHooks';
-import Space from '../../../helpers/Spacers/Space';
 import currency from 'currency.js';
 import { useCallback } from 'react';
 
@@ -28,7 +23,6 @@ const TodaysOrdersListItemView = (() => {
     const styles = StyleSheet.create({
         root: {
             backgroundColor: 'white',
-            // borderRadius: LayoutConstants.floatingCellStyles.borderRadius,
             borderRadius: 12.5,
             overflow: 'hidden',
             flexDirection: 'row',
@@ -52,7 +46,6 @@ const TodaysOrdersListItemView = (() => {
         subjectTitle: {
             fontSize: 17,
             fontFamily: CustomFont.bold,
-            // flex: 1,
             marginBottom: 5,
         },
         orderNumberLabel: {
@@ -81,7 +74,6 @@ const TodaysOrdersListItemView = (() => {
         timeIcon: {
             height: 15,
             width: 15,
-            // tintColor: CustomColors.themeGreen.stringValue,
         },
         timeText: {
             fontSize: 14,
@@ -105,7 +97,6 @@ const TodaysOrdersListItemView = (() => {
         cardOrMoneyIcon: {
             height: 23,
             width: 23,
-            // tintColor: Color.gray(0.85).stringValue, 
             alignSelf: 'flex-end',
         },
         

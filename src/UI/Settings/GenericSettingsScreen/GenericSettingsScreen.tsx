@@ -1,9 +1,9 @@
 
 
 import React from 'react';
-import { StyleSheet, View, SectionList, SectionListProps } from 'react-native';
+import { StyleSheet, View, SectionList, SectionListProps, ScrollView } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
-import { SectionSeparatorComponentInfo, Optional } from '../../../helpers/general';
+import { SectionSeparatorComponentInfo, Optional, getNumbersList } from '../../../helpers/general';
 import LayoutConstants from '../../../LayoutConstants';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 import Space from '../../../helpers/Spacers/Space';
@@ -37,7 +37,7 @@ const GenericSettingsScreen = (() => {
         },
         sectionList: {
             overflow: 'visible',
-            zIndex: -1,
+            flex: 1,
         },
         sectionListContentContainer: {
             paddingLeft: LayoutConstants.pageSideInsets,
@@ -64,6 +64,7 @@ const GenericSettingsScreen = (() => {
                         return <NavigationControllerNavigationBar title={props.navBarTitle}/>
                 }
             })()}
+            
             
             <SectionList<SettingsItemViewProps>
                 {...props.sectionListProps}

@@ -21,8 +21,7 @@ import Tips from '../Tips/Tips';
 import Inquiries from '../Inquiries/Inquiries';
 import Settings from '../Settings/Settings';
 import { UserType } from '../../api/authentication/validation';
-import { CommonActions, NavigationState, StackNavigationState } from '@react-navigation/native';
-import { mapOptional } from '../../helpers/general';
+
 
 
 

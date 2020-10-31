@@ -28,7 +28,6 @@ const TipsDetailScreen = (() => {
         },
         scrollView: {
             overflow: 'visible',
-            zIndex: -1,
         },
         scrollViewContentContainer: {
             ...LayoutConstants.maxWidthListContentContainerStyles(),

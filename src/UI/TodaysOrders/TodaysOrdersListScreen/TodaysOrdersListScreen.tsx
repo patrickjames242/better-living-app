@@ -29,7 +29,6 @@ const TodaysOrdersListScreen = (() => {
             flex: 1,
         },
         flatList: {
-            zIndex: -1,
             overflow: 'visible',
         },
         flatListContentContainer: {

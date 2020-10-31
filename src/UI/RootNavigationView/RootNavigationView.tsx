@@ -11,6 +11,7 @@ import { navigationRef, RootNavigationViewParams } from './helpers';
 
 const Nav = createStackNavigator<RootNavigationViewParams>();
 
+
 const RootNavigationView = () => {
     return <NavigationContainer ref={navigationRef} documentTitle={{enabled: false}}>
         <Nav.Navigator mode="modal" initialRouteName="MainInterface" screenOptions={{ headerShown: false, gestureEnabled: false }}>

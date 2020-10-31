@@ -15,6 +15,7 @@ const BaseNavigationBar = (() => {
             borderBottomLeftRadius: LayoutConstants.navBar.cornerRadius,
             borderBottomRightRadius: LayoutConstants.navBar.cornerRadius,
             ...LayoutConstants.navBar.shadowConfig,
+            zIndex: 10,
         },
         contentView: {
             padding: 13,

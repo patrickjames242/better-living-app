@@ -29,7 +29,6 @@ const OrderConfirmationScreen = (() => {
         },
         scrollView: {
             overflow: 'visible',
-            zIndex: -1,
         },
         scrollViewContentContainer: {
             padding: LayoutConstants.pageSideInsets,

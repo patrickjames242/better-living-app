@@ -11,6 +11,10 @@ import { useUserProfileSettingsItems } from '../helpers';
 import { UserType } from '../../../api/authentication/validation';
 import { shouldPopTabBarControllerChildToTop, useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
 import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
+import { ScrollView } from 'react-native-gesture-handler';
+import { getNumbersList } from '../../../helpers/general';
+import CustomizedText from '../../../helpers/Views/CustomizedText';
+import { FlatList, View } from 'react-native';
 
 
 const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'SettingsList'>) => {
@@ -116,6 +120,23 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                 /> : undefined,
             }}
         />
+
+        // return <View style={{flex: 1}}>
+        //     <View style={{height: 50, backgroundColor: 'green'}}/>
+        //     <FlatList 
+        //         data={getNumbersList(0, 100)}
+        //         renderItem={() => {
+        //             return <CustomizedText style={{fontSize: 20, color: 'blue'}}>Patrick is the greatest human alive</CustomizedText>
+        //         }}
+        //     />
+        // </View>
+        
+
+        // return <ScrollView style={{flex: 1, backgroundColor: 'green'}}>
+        //     {getNumbersList(0, 200).map((x, i) => {
+        //         return <CustomizedText style={{fontSize: 20, color: 'blue'}} key={i}>Patrick is the greatest human alive</CustomizedText>
+        //     })}
+        // </ScrollView>
     }
 }
 

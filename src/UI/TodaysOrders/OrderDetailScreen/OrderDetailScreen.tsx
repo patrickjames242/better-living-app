@@ -33,7 +33,6 @@ const OrderDetailScreen = (() => {
             flex: 1,
         },
         scrollView: {
-            zIndex: -1,
         },
         scrollViewContainer: {
             ...LayoutConstants.maxWidthListContentContainerStyles(500)

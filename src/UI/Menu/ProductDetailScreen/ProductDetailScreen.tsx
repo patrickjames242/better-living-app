@@ -34,7 +34,6 @@ const ProductDetailScreen = (() => {
             flex: 1,
         },
         scrollView: {
-            zIndex: -1,
             overflow: 'visible',
         },
         scrollViewContentContainer: {

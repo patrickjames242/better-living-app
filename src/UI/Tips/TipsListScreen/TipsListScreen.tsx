@@ -31,7 +31,6 @@ const TipsListScreen = (() => {
             flex: 1,
         },
         flatList: {
-            zIndex: -1,
             overflow: 'visible',
             flex: 1,
         },
