@@ -47,7 +47,8 @@
     "url-parse": "^1.4.7",
     "yup": "^0.29.3",
     "expo-notifications": "~0.3.3",
-    "expo-constants": "~9.1.1"
+    "expo-constants": "~9.1.1",
+    "expo-image-manipulator": "~8.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

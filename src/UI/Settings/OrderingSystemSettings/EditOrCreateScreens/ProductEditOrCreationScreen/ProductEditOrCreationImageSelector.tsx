@@ -61,11 +61,13 @@ const ProductEditOrCreationImageSelector = (() => {
             return {uri: result.uri, fileToUpload: new RNFileForUpload({uri: result.uri})};
         } else {
 
-            const documentPickerResult = await DocumentPicker.getDocumentAsync({ type: 'audio/*' });
+            const documentPickerResult = await DocumentPicker.getDocumentAsync({ type: 'image/*' });
 
+            
             if (documentPickerResult.type !== 'success'){
                 return Promise.reject(new Error("An error occured when trying to pick a document from the document picker."));
             }
+            
 
             return {
                 uri: documentPickerResult.uri,

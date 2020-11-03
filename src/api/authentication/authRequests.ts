@@ -88,7 +88,11 @@ async function sendCurrentDeviceIdToServerAsAnonymousUser() {
 
 export async function getExpoNotificationDeviceTokenIfPossible() {
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
-        return await Notifications.getExpoPushTokenAsync()
+        try {
+            return await Notifications.getExpoPushTokenAsync();
+        } catch {
+            return undefined;
+        }
     }
 }
 
@@ -96,7 +100,7 @@ export async function getExpoNotificationDeviceTokenIfPossible() {
 
 
 (() => {
-    
+
     if (Platform.OS !== 'android' && Platform.OS !== 'ios') return;
 
     const deviceTokenNeedsToBePushedKey = 'deviceTokenNeedsToBePushed';
@@ -117,7 +121,7 @@ export async function getExpoNotificationDeviceTokenIfPossible() {
     const connectionStateObserver = async (state: AppState['realtimeUpdates']['connectionState']) => {
         if (
             [
-                RealtimeUpdatesConnectionState.connected, 
+                RealtimeUpdatesConnectionState.connected,
                 RealtimeUpdatesConnectionState.connectedAndGotInitialUpdates
             ].includes(state) &&
             store.getState().authentication == null && // because if the user is logged in, their device id has already been sent to the server

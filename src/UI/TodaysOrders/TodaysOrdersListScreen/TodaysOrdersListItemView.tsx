@@ -162,6 +162,8 @@ const TodaysOrdersListItemView = (() => {
 export default TodaysOrdersListItemView;
 
 
+
+
 export const TimeText = (() => {
     
     const updateTimeNotification = Notification<null>();
@@ -182,7 +184,6 @@ export const TimeText = (() => {
 
         return <CustomizedText numberOfLines={1} style={props.style}>
             {props.order.creationDate.fromNow()}
-            {/* a few seconds ago */}
         </CustomizedText>
     }
     return React.memo(TimeText);
