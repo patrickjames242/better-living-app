@@ -2,7 +2,8 @@
 
 import { OrderedMap } from 'immutable';
 import React, { useCallback, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, FlatListProps, StyleSheet, View } from 'react-native';
+import { FlatListProps, StyleSheet, View } from 'react-native';
+import { batch } from 'react-redux';
 import AssetImages from '../../images/AssetImages';
 import { displayErrorMessage } from '../Alerts';
 import { Optional } from '../general';
@@ -18,10 +19,11 @@ export type PaginationListChange<KeyT, ItemT> = { changeType: PaginationListChan
 { changeType: PaginationListChangeType.insertOrUpdate, changedItem: ItemT }
 
 export interface PaginationListHolderViewRef<KeyT extends string | number, ItemT> {
-    // shouldApplyChange: (change: PaginationListChange<KeyT, ItemT>) => boolean;
 
     // returns true if the change was applied and false if it wasn't
     applyChangeIfNeeded: (change: PaginationListChange<KeyT, ItemT>) => boolean;
+
+    refresh: () => void;
 }
 
 export interface PaginationListHolderViewProps<KeyT extends string | number, ItemT> {
@@ -45,6 +47,14 @@ const PaginationListHolderView = (() => {
         },
     });
 
+    const initialStateValues = {
+        items: OrderedMap<any, any>(),
+        itemsAreBeingFetched: false,
+        fetchEndedInError: false,
+        noMoreItemsAreAvailable: false,
+        lastMaxDate: null,
+    }
+
     const PaginationListHolderView = <KeyT extends string | number, ItemT>(
         props: React.PropsWithChildren<PaginationListHolderViewProps<KeyT, ItemT>>,
         ref: Parameters<React.ForwardRefRenderFunction<PaginationListHolderViewRef<KeyT, ItemT>, PaginationListHolderViewProps<KeyT, ItemT>>>[1],
@@ -52,12 +62,60 @@ const PaginationListHolderView = (() => {
 
         const { batchSize, fetchMoreItems: propsFetchMoreItems, getItemId, getItemDate } = props;
 
-        const [items, setItems] = useState<OrderedMap<KeyT, ItemT>>(OrderedMap());
-        const [itemsAreBeingFetched, setItemsAreBeingFetched] = useState(false);
+        const [items, setItems] = useState<OrderedMap<KeyT, ItemT>>(initialStateValues.items);
+        const [itemsAreBeingFetched, setItemsAreBeingFetched] = useState(initialStateValues.itemsAreBeingFetched);
 
-        const fetchEndedInError = useRef(false);
-        const noMoreItemsAreAvailable = useRef(false);
-        const lastMaxDate = useRef<Optional<moment.Moment>>(null);
+        const fetchEndedInError = useRef(initialStateValues.fetchEndedInError);
+        const noMoreItemsAreAvailable = useRef(initialStateValues.noMoreItemsAreAvailable);
+        const lastMaxDate = useRef<Optional<moment.Moment>>(initialStateValues.lastMaxDate);
+
+        const resetState = useCallback(() => {
+            batch(() => {
+                fetchEndedInError.current = initialStateValues.fetchEndedInError;
+                noMoreItemsAreAvailable.current = initialStateValues.noMoreItemsAreAvailable;
+                lastMaxDate.current = initialStateValues.lastMaxDate;
+                setItems(initialStateValues.items);
+                setItemsAreBeingFetched(initialStateValues.itemsAreBeingFetched);
+            });
+        }, []);
+
+
+        const itemsArray = useMemo(() => {
+            const x: ItemT[] = [];
+            items?.forEach(value => {
+                x.push(value);
+            });
+            return x;
+        }, [items]);
+
+
+        const fetchMoreItems = useCallback(() => {
+            if (itemsAreBeingFetched || noMoreItemsAreAvailable.current === true) return;
+
+            fetchEndedInError.current = false;
+            setItemsAreBeingFetched(true);
+
+            propsFetchMoreItems(batchSize, lastMaxDate.current?.format() ?? undefined).then(items => {
+                if (items.length < batchSize)
+                    noMoreItemsAreAvailable.current = true;
+                if (items.length >= 1)
+                    lastMaxDate.current = getItemDate(items[items.length - 1]);
+                setItems(prevItems => {
+                    return (prevItems ?? OrderedMap<KeyT, ItemT>()).withMutations(map => {
+                        items.forEach(x => map.set(getItemId(x), x));
+                    });
+                });
+            }).catch(error => {
+                fetchEndedInError.current = true;
+                if (items.size <= 0) {
+                    displayErrorMessage(error.message);
+                }
+            }).finally(() => {
+                setItemsAreBeingFetched(false);
+            });
+
+        }, [batchSize, getItemDate, getItemId, items, itemsAreBeingFetched, propsFetchMoreItems]);
+
 
 
         useImperativeHandle(ref, () => {
@@ -94,47 +152,19 @@ const PaginationListHolderView = (() => {
                 });
                 return true;
             }
+
+            const refresh = () => {
+                resetState();
+                fetchMoreItems();
+            }
+            
             return {
-                applyChangeIfNeeded
-                // shouldApplyChange 
+                applyChangeIfNeeded,
+                refresh,
             };
-        }, [getItemDate, getItemId]);
+        }, [fetchMoreItems, getItemDate, getItemId, resetState]);
 
 
-        const itemsArray = useMemo(() => {
-            const x: ItemT[] = [];
-            items?.forEach(value => {
-                x.push(value);
-            });
-            return x;
-        }, [items]);
-
-        const fetchMoreItems = useCallback(() => {
-            if (itemsAreBeingFetched || noMoreItemsAreAvailable.current === true) return;
-
-            fetchEndedInError.current = false;
-            setItemsAreBeingFetched(true);
-
-            propsFetchMoreItems(batchSize, lastMaxDate.current?.format() ?? undefined).then(items => {
-                if (items.length < batchSize)
-                    noMoreItemsAreAvailable.current = true;
-                if (items.length >= 1)
-                    lastMaxDate.current = getItemDate(items[items.length - 1]);
-                setItems(prevItems => {
-                    return (prevItems ?? OrderedMap<KeyT, ItemT>()).withMutations(map => {
-                        items.forEach(x => map.set(getItemId(x), x));
-                    });
-                });
-            }).catch(error => {
-                fetchEndedInError.current = true;
-                if (items.size <= 0) {
-                    displayErrorMessage(error.message);
-                }
-            }).finally(() => {
-                setItemsAreBeingFetched(false);
-            });
-
-        }, [batchSize, getItemDate, getItemId, items, itemsAreBeingFetched, propsFetchMoreItems]);
 
         useLayoutEffect(() => {
             fetchMoreItems();

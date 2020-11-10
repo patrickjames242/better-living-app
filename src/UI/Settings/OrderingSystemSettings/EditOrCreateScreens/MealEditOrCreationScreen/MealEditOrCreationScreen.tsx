@@ -2,7 +2,7 @@
 import React, { useMemo, useState } from 'react';
 import { Formik } from '../../../../../helpers/formik';
 import { MealEditOrCreationValues } from './helpers';
-import { useSelector } from '../../../../../redux/store';
+import store, { useSelector } from '../../../../../redux/store';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../../navigationHelpers';
 import { mapOptional, YUP_EDITING_FORM_PRICE_STRING, Optional, DefaultKeyboardConfigs } from '../../../../../helpers/general';
@@ -17,29 +17,39 @@ import { displayErrorMessage } from '../../../../../helpers/Alerts';
 
 const MealEditOrCreationScreen = (() => {
 
-    function submitForm(mealId: Optional<number>, values: MealEditOrCreationValues){
+    function submitForm(mealId: Optional<number>, values: MealEditOrCreationValues) {
         const requestObj: MealRequestObj = {
             title: values.title,
             price: Number(values.priceString),
-            product_categories: values.productCategoryIds.toArray().map(id => ({id, order_num: 0})),
+            product_categories: values.productCategoryIds.toArray().map(id => ({ id, order_num: 0 })),
         }
         return mealId == null ? createNewMeal(requestObj) : updateMeal(mealId, requestObj);
     }
-    
+
     const MealEditOrCreationScreen = (props: StackScreenProps<SettingsNavStackParams, 'MealEditOrCreate'>) => {
 
         const mealId = props.route.params.mealId;
 
         const meal = useSelector(state => {
-            return mapOptional(mealId, x => state.orderingSystem.meals.get(x)); 
+            return mapOptional(mealId, x => state.orderingSystem.meals.get(x));
         });
 
-        const initialValues: MealEditOrCreationValues = useMemo(() => ({
-            title: meal?.title ?? '',
-            priceString: mapOptional(meal?.price, x => String(x)) ?? '',
-            productCategoryIds: mapOptional(meal?.productCategories, x => Set(x))?.map(x => x.id) ?? Set<number>(),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        }), []);
+
+        const initialValues: MealEditOrCreationValues = useMemo(() => {
+            const productCategoriesReduxState = store.getState().orderingSystem.mealCategories;
+            return {
+                title: meal?.title ?? '',
+                priceString: mapOptional(meal?.price, x => String(x)) ?? '',
+                productCategoryIds: Set<number>().withMutations(set => {
+                    const categories = meal?.productCategories;
+                    if (categories == null) return;
+                    categories.forEach(category => {
+                        if (productCategoriesReduxState.has(category.id)) set.add(category.id);
+                    });
+                }),
+            }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
 
         const [isDeleting, setIsDeleting] = useState(false);
 
@@ -49,7 +59,7 @@ const MealEditOrCreationScreen = (() => {
                 title: yup.string().trim().required(),
                 priceString: YUP_EDITING_FORM_PRICE_STRING('price').required("price is a required field"),
             })}
-            onSubmit={(values, {setSubmitting}) => {
+            onSubmit={(values, { setSubmitting }) => {
                 submitForm(props.route.params.mealId, values).finally(() => {
                     setSubmitting(false);
                 }).then(() => {
@@ -77,7 +87,7 @@ const MealEditOrCreationScreen = (() => {
                     isLoading: isDeleting,
                     isEnabled: shouldButtonsBeEnabled,
                     onPress: () => {
-                        if (typeof mealId !== 'number'){return;}
+                        if (typeof mealId !== 'number') { return; }
                         setIsDeleting(true);
                         deleteMeal(mealId).finally(() => {
                             setIsDeleting(false);
@@ -89,9 +99,9 @@ const MealEditOrCreationScreen = (() => {
                     }
                 }}
             >
-                <FormikTextFieldView<MealEditOrCreationValues> topTitleText="Title" formikFieldName="title" textInputProps={DefaultKeyboardConfigs.title}/>
-                <FormikTextFieldView<MealEditOrCreationValues> topTitleText="Price" formikFieldName="priceString" placeholder="e.g. 15.99" textInputProps={DefaultKeyboardConfigs.price}/>
-                <MealEditOrCreationCategoriesSelector/>
+                <FormikTextFieldView<MealEditOrCreationValues> topTitleText="Title" formikFieldName="title" textInputProps={DefaultKeyboardConfigs.title} />
+                <FormikTextFieldView<MealEditOrCreationValues> topTitleText="Price" formikFieldName="priceString" placeholder="e.g. 15.99" textInputProps={DefaultKeyboardConfigs.price} />
+                <MealEditOrCreationCategoriesSelector />
             </OrderingSystemEditingFormScreen>
         }}</Formik>
     }

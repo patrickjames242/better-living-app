@@ -56,9 +56,6 @@ const MenuListView = (() => {
     }
 
 
-
-
-
     return function MenuListView(props: MenuListViewProps) {
 
 

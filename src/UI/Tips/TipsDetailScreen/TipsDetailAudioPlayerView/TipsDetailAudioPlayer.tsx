@@ -91,7 +91,6 @@ export default function TipsDetailAudioPlayer(props: {
 
             // because on webkit browsers, the audio doesn't load properly unless you try to play it
             if (Platform.OS === 'web' && navigator.vendor.indexOf('Apple') !== -1){
-                console.log('executed');
                 isAutoPlayingInitially = true;
                 soundObject.playAsync();
             }

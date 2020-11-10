@@ -44,6 +44,7 @@ const OrderConfirmationScreen = (() => {
             alignSelf: 'center',
             width: '100%',
         },
+        
     });
 
     const OrderConfirmationScreen = (props: StackScreenProps<CartNavStackParamList, 'OrderingConfirmation'>) => {
@@ -68,7 +69,7 @@ const OrderConfirmationScreen = (() => {
             submitOrder({
                 user_notes: null,
                 user_paid_online: howToPay === HowToPay.online,
-                user_wants_order_delivered: howToPay === HowToPay.inPerson,
+                user_wants_order_delivered: pickUpOrDelivery === PickUpOrDelivery.delivery,
                 order_items: getRequestOrderItemsFromCartEntries(props.route.params.cartEntries),
             }).finally(() => {
                 setIsSubmitting(false);
@@ -96,7 +97,7 @@ const OrderConfirmationScreen = (() => {
                             <CartTotalSummaryView entries={props.route.params.cartEntries} />
                         </FloatingCellStyleSectionView>
                         <OrderConfirmationPickUpOrDeliveryView value={pickUpOrDelivery} onValueChange={setPickUpOrDelivery}/>
-                        <OrderConfirmationHowToPayView value={howToPay} onValueChange={setHowToPay} payOnArrivalEnabled={pickUpOrDelivery !== PickUpOrDelivery.delivery}/>
+                        <OrderConfirmationHowToPayView value={howToPay} onValueChange={setHowToPay} payOnArrivalEnabled={pickUpOrDelivery !== PickUpOrDelivery.delivery} />
                         <Space space={LayoutConstants.pageSideInsets} />
                         <LongTextAndIconButton
                             text="Submit Order"

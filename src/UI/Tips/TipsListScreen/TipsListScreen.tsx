@@ -14,11 +14,12 @@ import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
 import PaginationListHolderView, { PaginationListChangeType, PaginationListHolderViewRef } from '../../../helpers/Views/PaginationListHolderView';
 import { getAllHealthTips } from '../../../api/healthTips/requests';
 import { HealthTipChangeType, healthTipsUpdatesNotification } from '../../../api/healthTips/realtimeUpdates';
-import store, { useSelector } from '../../../redux/store';
+import store, { addSelectedStateListener, useSelector } from '../../../redux/store';
 import { deleteHealthTipAction, insertHealthTipsAction, updateHealthTipAction } from '../../../redux/healthTips';
 import { UserType } from '../../../api/authentication/validation';
-import { shouldPopTabBarControllerChildToTop, useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
+import { useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
 import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
+import { RealtimeUpdatesConnectionState } from '../../../redux/realtimeUpdates';
 
 
 const TipsListScreen = (() => {
@@ -40,7 +41,12 @@ const TipsListScreen = (() => {
     });
 
     function calculateListColumns(layout: LayoutRectangle) {
-        const num = computeNumberOfListColumns({ listWidth: layout.width, sideInsets: listViewPadding, horizontalItemSpacing: itemSpacing, maxItemWidth: 600 })
+        const num = computeNumberOfListColumns({ 
+            listWidth: layout.width, 
+            sideInsets: listViewPadding, 
+            horizontalItemSpacing: itemSpacing, 
+            maxItemWidth: 600 
+        });
         return Math.min(num, 2);
     }
 
@@ -53,6 +59,23 @@ const TipsListScreen = (() => {
         const paginationListHolderView = useRef<PaginationListHolderViewRef<number, number>>(null);
 
         useTabBarControllerChildRootScreenPopToTopFunctionality(TabBarSelection.tips, props);
+
+        const shouldRefreshOnNextConnect = useRef([
+            RealtimeUpdatesConnectionState.noConnectionAttemptMade,
+            RealtimeUpdatesConnectionState.connecting,
+        ].includes(store.getState().realtimeUpdates.connectionState) === false);
+
+        useEffect(() => {
+            return addSelectedStateListener(x => x.realtimeUpdates.connectionState === RealtimeUpdatesConnectionState.connected, isConnected => {
+                if (isConnected === false) return;
+                if (shouldRefreshOnNextConnect.current === false){
+                    shouldRefreshOnNextConnect.current = true;
+                    return;
+                }
+                paginationListHolderView.current?.refresh();
+                shouldRefreshOnNextConnect.current = true;
+            });
+        }, []);
 
         useEffect(() => {
             return healthTipsUpdatesNotification.addListener(info => {

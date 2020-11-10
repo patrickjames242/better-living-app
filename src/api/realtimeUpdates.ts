@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 import AppSettings from '../settings';
 import { handleOrderingSystemRealtimeUpdate } from './orderingSystem/realtimeUpdates';
 import store, { addSelectedStateListener, AppState } from '../redux/store';
-import { updateRealtimeUpdatesConnectionStateAction, RealtimeUpdatesConnectionState } from '../redux/realtimeUpdates';
+import { updateRealtimeUpdatesConnectionStateAction, RealtimeUpdatesConnectionState, updateRealtimeUpdatesGotInitialUpdatesAction } from '../redux/realtimeUpdates';
 import { handleUserAuthRealtimeUpdate } from './authentication/realtimeUpdates';
 import { Optional, mapOptional } from '../helpers/general';
 import Notification from '../helpers/Notification';
@@ -113,17 +113,17 @@ function startWebsocketConnection(authToken: Optional<string>, onCloseAfterSucce
                 resolve(socket);
                 callbackCalled = true;
             }
-            console.log('websocket opened');
+            // console.log('websocket opened');
             store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connected));
         }
         socket.onmessage = function (event) {
             const data = JSON.parse(event.data);
 
-            if (Platform.OS === 'web') {
-                console.log('socket on message', data);
-            }
+            // if (Platform.OS === 'web') {
+            //     console.log('socket on message', data);
+            // }
 
-            store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.connectedAndGotInitialUpdates));
+            store.dispatch(updateRealtimeUpdatesGotInitialUpdatesAction(true));
 
             if (typeof data !== 'object') { return; }
 
@@ -175,7 +175,7 @@ function startWebsocketConnection(authToken: Optional<string>, onCloseAfterSucce
                 onCloseAfterSuccessfulOpen();
             }
             websocketHasAlreadyClosed = true;
-            console.log('websocket closed');
+            // console.log('websocket closed');
             store.dispatch(updateRealtimeUpdatesConnectionStateAction(RealtimeUpdatesConnectionState.disconnected));
         };
     });

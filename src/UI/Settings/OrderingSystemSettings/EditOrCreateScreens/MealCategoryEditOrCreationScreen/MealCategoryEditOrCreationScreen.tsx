@@ -4,7 +4,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../../navigationHelpers';
 import OrderingSystemEditingFormScreen from '../OrderingSystemEditingFormScreen';
 import { Formik } from '../../../../../helpers/formik';
-import { useSelector } from '../../../../../redux/store';
+import store, { useSelector } from '../../../../../redux/store';
 import { DefaultKeyboardConfigs, mapOptional, Optional } from '../../../../../helpers/general';
 import { Set } from 'immutable';
 import { MealCategoryEditOrCreateValues } from './helpers';
@@ -51,12 +51,23 @@ const MealCategoryEditOrCreationScreen = (() => {
 
         const [isDeleting, setIsDeleting] = useState(false);
 
-        const initialValues: MealCategoryEditOrCreateValues = useMemo(() => ({
-            displayName: mealCategory?.displayName ?? '',
-            uniqueName: mealCategory?.uniqueName ?? '',
-            productIds: mealCategory?.productIds ?? Set<number>(),
+        const initialValues: MealCategoryEditOrCreateValues = useMemo(() => {
+            
+            const reduxProducts = store.getState().orderingSystem.products;
+
+            return {
+                displayName: mealCategory?.displayName ?? '',
+                uniqueName: mealCategory?.uniqueName ?? '',
+                productIds: Set<number>().withMutations(set => {
+                    const productIds = mealCategory?.productIds;
+                    if (productIds == null) return;
+                    productIds.forEach(x => {
+                        if (reduxProducts.has(x)) set.add(x);
+                    });
+                }),
+            }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }), []);
+        }, []);
 
         return <Formik
             initialValues={initialValues}
@@ -104,8 +115,8 @@ const MealCategoryEditOrCreationScreen = (() => {
                     },
                 }}
             >
-                <FormikTextFieldView<MealCategoryEditOrCreateValues> formikFieldName="uniqueName" topTitleText="Unique Name" textInputProps={DefaultKeyboardConfigs.name}/>
-                <FormikTextFieldView<MealCategoryEditOrCreateValues> formikFieldName="displayName" topTitleText="Display Name" textInputProps={DefaultKeyboardConfigs.name}/>
+                <FormikTextFieldView<MealCategoryEditOrCreateValues> formikFieldName="uniqueName" topTitleText="Unique Name" textInputProps={DefaultKeyboardConfigs.name} />
+                <FormikTextFieldView<MealCategoryEditOrCreateValues> formikFieldName="displayName" topTitleText="Display Name" textInputProps={DefaultKeyboardConfigs.name} />
                 <OrderingSystemFormChildrenProductsSelector value={formik.values.productIds} onValueChanged={v => formik.setFieldValue('productIds', v)} />
             </OrderingSystemEditingFormScreen>
         }}</Formik>

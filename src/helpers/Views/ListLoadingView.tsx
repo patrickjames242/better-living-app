@@ -27,11 +27,11 @@ const ListLoadingHolderView = (() => {
         const hasAlreadyConnectedOnce = useRef(false);
         const hasFailedOnce = useRef(false);
 
-        const connectionType = useSelector(state => state.realtimeUpdates.connectionState);
-        if (connectionType === RealtimeUpdatesConnectionState.connectedAndGotInitialUpdates) {
+        const realtimeUpdatesState = useSelector(state => state.realtimeUpdates);
+        if (realtimeUpdatesState.gotInitialUpdates) {
             hasAlreadyConnectedOnce.current = true;
         }
-        if (connectionType === RealtimeUpdatesConnectionState.disconnected){
+        if (realtimeUpdatesState.connectionState === RealtimeUpdatesConnectionState.disconnected){
             hasFailedOnce.current = true;
         }
 

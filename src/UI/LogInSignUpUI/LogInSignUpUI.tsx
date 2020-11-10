@@ -14,12 +14,14 @@ import { RootNavigationViewParams } from '../RootNavigationView/helpers';
 const Nav = createStackNavigator<LogInSignUpUIParams>();
 
 const LogInSignUpUI = (props: StackScreenProps<RootNavigationViewParams, 'LogInSignUpUI'>) => {
+    
     const getInitialParams = <Key extends keyof LogInSignUpUIParams>(routeName: Key) => {
         if (props.route.params.initialScreen === routeName){
             return props.route.params.initialScreenParams as LogInSignUpUIParams[Key];
         }
     }
-    return <Nav.Navigator initialRouteName={props.route.params?.initialScreen} screenOptions={{headerShown: false}}>
+
+    return <Nav.Navigator initialRouteName={props.route.params?.initialScreen} screenOptions={{headerShown: false, animationEnabled: true}}>
         <Nav.Screen name="LogIn" component={LogInScreen} initialParams={getInitialParams('LogIn')}/>
         <Nav.Screen name="SignUp" component={SignUpScreen} initialParams={getInitialParams('SignUp')} />
         <Nav.Screen name="ForgotPassword" component={ForgotPasswordScreen} initialParams={getInitialParams('ForgotPassword')}/>

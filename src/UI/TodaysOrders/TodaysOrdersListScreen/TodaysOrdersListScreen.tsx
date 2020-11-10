@@ -1,6 +1,7 @@
 
-import React, { useCallback, useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { AppState, AppStateStatus, StyleSheet, View } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 import TodaysOrdersListItemView from './TodaysOrdersListItemView';
 import LayoutConstants from '../../../LayoutConstants';
@@ -17,6 +18,9 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { TodaysOrdersNavStackParams } from '../navigationHelpers';
 import { useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
 import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
+import { NASSAU_TIME_ZONE } from '../../../helpers/general';
+import * as moment from 'moment-timezone';
+import { useForceUpdate } from '../../../helpers/reactHooks';
 
 
 const TodaysOrdersListScreen = (() => {
@@ -49,11 +53,40 @@ const TodaysOrdersListScreen = (() => {
         data: Order[];
     }
 
+    const startOfToday = () => moment.tz(NASSAU_TIME_ZONE).startOf('day');
+
     const TodaysOrdersListScreen = (props: StackScreenProps<TodaysOrdersNavStackParams, 'TodaysOrdersList'>) => {
 
         useTabBarControllerChildRootScreenPopToTopFunctionality(TabBarSelection.todaysOrders, props);
 
         const ordersReduxState = useSelector(state => state.todaysOrders);
+
+        const forceComponentUpdate = useForceUpdate();
+
+        const latestCurrentDay = useRef(startOfToday());
+
+
+        // attempts to refresh the orders list when the day changes just in case the server is late delivering the new orders for the new day... or if the internet connection is lost
+        useEffect(() => {
+
+            const refreshIfNeeded = () => {
+                const newCurrentDay = startOfToday();
+                if (newCurrentDay.isSame(latestCurrentDay.current) === false){
+                    forceComponentUpdate();
+                }
+                latestCurrentDay.current = newCurrentDay;
+            }
+
+            const intervalId = setInterval(refreshIfNeeded, 60000);
+            const appStateEventListener = (state: AppStateStatus) => {
+                state === 'active' && refreshIfNeeded();
+            }
+            AppState.addEventListener('change', appStateEventListener);
+            return () => {
+                clearInterval(intervalId);
+                AppState.removeEventListener('change', appStateEventListener);
+            }
+        }, [forceComponentUpdate]);
 
         const orderSections: SectionType[] = useMemo(() => {
             const completedOrders: Order[] = [];
@@ -65,6 +98,10 @@ const TodaysOrdersListScreen = (() => {
                     return -1;
                 } else { return 0; }
             }).forEach((value) => {
+                
+                const orderWasCreatedToday = value.creationDate.startOf('day').isSame(startOfToday());
+                if (orderWasCreatedToday === false) return;
+
                 if (value.isCompleted) {
                     completedOrders.push(value);
                 } else {

@@ -9,12 +9,13 @@ import { navigationRef, RootNavigationViewParams } from './helpers';
 
 
 
+
 const Nav = createStackNavigator<RootNavigationViewParams>();
 
 
 const RootNavigationView = () => {
     return <NavigationContainer ref={navigationRef} documentTitle={{enabled: false}}>
-        <Nav.Navigator mode="modal" initialRouteName="MainInterface" screenOptions={{ headerShown: false, gestureEnabled: false }}>
+        <Nav.Navigator mode="modal" initialRouteName="MainInterface" screenOptions={{gestureEnabled: false, headerShown: false, animationEnabled: true}}>
             <Nav.Screen name="MainInterface" component={TabBarController} />
             <Nav.Screen name="LogInSignUpUI" component={LogInSignUpUI} />
         </Nav.Navigator>

@@ -19,7 +19,9 @@ import RoundedTextBouncyButton from '../../../helpers/Buttons/RoundedTextBouncyB
 import { updateOrderIsCompleted } from '../../../api/orders/requests';
 import { displayErrorMessage } from '../../../helpers/Alerts';
 import { UserType } from '../../../api/authentication/validation';
-
+import AppSettings from '../../../settings';
+import * as moment from 'moment-timezone';
+import { NASSAU_TIME_ZONE } from '../../../helpers/general';
 
 const headingFontSize = 18;
 const regularFontSize = 16;
@@ -43,6 +45,10 @@ const OrderDetailScreen = (() => {
             height: StyleSheet.hairlineWidth,
             backgroundColor: Color.gray(0.9).stringValue,
         },
+        deliveryDisclaimerText: {
+            fontSize: 14,
+            color: CustomColors.redColor.stringValue,
+        }
     });
 
     const OrderDetailScreen = (props: StackScreenProps<TodaysOrdersNavStackParams, 'OrderDetail'>) => {
@@ -56,20 +62,20 @@ const OrderDetailScreen = (() => {
         });
 
         const orderToUse = (() => {
-            if (reduxOrder instanceof Order){
+            if (reduxOrder instanceof Order) {
                 return reduxOrder;
-            } else if ('order' in props.route.params && props.route.params.order instanceof Order){
+            } else if ('order' in props.route.params && props.route.params.order instanceof Order) {
                 return props.route.params.order;
             }
         })();
 
         const onOrderUpdate = props.route.params.onOrderUpdate;
 
-        const updateOrder = useCallback((order: Order) => { 
-            props.navigation.setParams({order: order, reduxOrderId: undefined});
+        const updateOrder = useCallback((order: Order) => {
+            props.navigation.setParams({ order: order, reduxOrderId: undefined });
             onOrderUpdate?.(order);
         }, [onOrderUpdate, props.navigation]);
-        
+
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title="Order Details" />
             {(() => {
@@ -79,9 +85,16 @@ const OrderDetailScreen = (() => {
                     return <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContainer}>
                         <Spacer space={15}>
                             <OrderInfoSection order={orderToUse} onOrderUpdate={updateOrder} />
+                            {
+                                orderToUse.userWantsOrderDelivered &&
+                                moment.tz(NASSAU_TIME_ZONE).startOf('day').isSame(orderToUse.creationDate.startOf('day')) &&
+                                <TitleContainer>
+                                    <CustomizedText style={styles.deliveryDisclaimerText}>{AppSettings.deliveryDisclaimerMessage}</CustomizedText>
+                                </TitleContainer>
+                            }
                             <CustomerProfileSection user={orderToUse.user} />
                             <OrderItemsView orderDetailsJson={orderToUse.detailsJson} />
-                            <OrderSubtotalsView order={orderToUse}/>
+                            <OrderSubtotalsView order={orderToUse} />
                         </Spacer>
                     </ScrollView>
                 }
@@ -131,7 +144,7 @@ const OrderInfoSection = (() => {
             width: 20,
         },
         setCompletedButtonStyle: {
-            alignSelf: 'flex-start', 
+            alignSelf: 'flex-start',
             marginTop: 12,
         },
     });
@@ -158,7 +171,7 @@ const OrderInfoSection = (() => {
 
     const OrderInfoSection = (props: OrderInfoSectionProps) => {
 
-        const {order, onOrderUpdate} = props;
+        const { order, onOrderUpdate } = props;
 
         const totalPrice = useMemo(() => {
             return order.calculatePriceInfo().total;
@@ -183,24 +196,24 @@ const OrderInfoSection = (() => {
         });
 
         return <TitleContainer title="Order Info">
-            <View style={{flexDirection: 'row'}}>
-                <SpacerView space={15} style={{flex: 1,}}>
+            <View style={{ flexDirection: 'row' }}>
+                <SpacerView space={15} style={{ flex: 1, }}>
                     <SegmentView title="Order Number">
                         <CustomizedText style={styles.segmentValueText}>{'#' + props.order.orderNum}</CustomizedText>
                     </SegmentView>
-                    <SegmentView title="Payment Method" imageSource={props.order.userPaidOnline ? require('../../Cart/OrderConfirmationScreen/icons/pay.png') : require('../../Cart/OrderConfirmationScreen/icons/buy.png')} value={props.order.userPaidOnline ? "Paid Online" : "Payment In Person"}/>
-                    <SegmentView title="Completion Status" value={props.order.isCompleted ? "Completed" : "Incomplete"}/>
+                    <SegmentView title="Payment Method" imageSource={props.order.userPaidOnline ? require('../../Cart/OrderConfirmationScreen/icons/pay.png') : require('../../Cart/OrderConfirmationScreen/icons/buy.png')} value={props.order.userPaidOnline ? "Paid Online" : "Payment In Person"} />
+                    <SegmentView title="Completion Status" value={props.order.isCompleted ? "Completed" : "Incomplete"} />
                 </SpacerView>
-                <Space space={10}/>
-                <SpacerView space={15} style={{flex: 1,}}>
+                <Space space={10} />
+                <SpacerView space={15} style={{ flex: 1, }}>
                     <SegmentView title="Order Date">
                         <CustomizedText style={styles.segmentValueText}>{props.order.creationDate.format('LLL')}</CustomizedText>
                     </SegmentView>
-                    <SegmentView title="Pick Up Or Delivery" imageSource={props.order.userWantsOrderDelivered ? require('../../Cart/OrderConfirmationScreen/icons/motorcycle.png') : require('../../Cart/OrderConfirmationScreen/icons/order.png')} value={props.order.userWantsOrderDelivered ? "Delivery" : "Pick Up"}/>
-                    <SegmentView title="Total Price" value={currency(totalPrice).format()}/>
+                    <SegmentView title="Pick Up Or Delivery" imageSource={props.order.userWantsOrderDelivered ? require('../../Cart/OrderConfirmationScreen/icons/motorcycle.png') : require('../../Cart/OrderConfirmationScreen/icons/order.png')} value={props.order.userWantsOrderDelivered ? "Delivery" : "Pick Up"} />
+                    <SegmentView title="Total Price" value={currency(totalPrice).format()} />
                 </SpacerView>
             </View>
-            {isUserEmployeeOrManager && <RoundedTextBouncyButton isEnabled={completedIsLoading === false} text={completedIsLoading ? 'Loading...' : (props.order.isCompleted ? "Mark Incomplete" : "Mark Complete")} style={styles.setCompletedButtonStyle} onPress={toggleCompleted}/>}
+            {isUserEmployeeOrManager && <RoundedTextBouncyButton isEnabled={completedIsLoading === false} text={completedIsLoading ? 'Loading...' : (props.order.isCompleted ? "Mark Incomplete" : "Mark Complete")} style={styles.setCompletedButtonStyle} onPress={toggleCompleted} />}
         </TitleContainer>
     }
     return OrderInfoSection;
@@ -367,7 +380,7 @@ const OrderItemsView = (() => {
 })();
 
 
-interface OrderSubtotalsViewProps{
+interface OrderSubtotalsViewProps {
     order: Order
 }
 
@@ -412,7 +425,7 @@ const OrderSubtotalsView = (() => {
             <Spacer space={10}>
                 <SegmentView title="Subtotal" value={currency(priceInfo.subtotal).format()} />
                 <SegmentView title="VAT" value={currency(priceInfo.vat).format()} />
-                <SegmentView title="Total" value={currency(priceInfo.total).format()} isTotal/>
+                <SegmentView title="Total" value={currency(priceInfo.total).format()} isTotal />
             </Spacer>
         </TitleContainer>
     }

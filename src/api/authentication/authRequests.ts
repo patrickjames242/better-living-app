@@ -120,10 +120,7 @@ export async function getExpoNotificationDeviceTokenIfPossible() {
     // observing the connection state because this tells us that the device has just connected to the internet
     const connectionStateObserver = async (state: AppState['realtimeUpdates']['connectionState']) => {
         if (
-            [
-                RealtimeUpdatesConnectionState.connected,
-                RealtimeUpdatesConnectionState.connectedAndGotInitialUpdates
-            ].includes(state) &&
+            state === RealtimeUpdatesConnectionState.connected &&
             store.getState().authentication == null && // because if the user is logged in, their device id has already been sent to the server
             await AsyncStorage.getItem(deviceTokenNeedsToBePushedKey) !== _false // so that if the value hasn't been set, the block will still be executed
         ) {

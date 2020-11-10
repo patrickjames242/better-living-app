@@ -14,7 +14,7 @@ export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 // makes specific properties optional
 export type PartialBy<T, Keys extends keyof T> = Omit<T, Keys> & Partial<Pick<T, Keys>>
 
-export const DEFAULT_NAV_SCREEN_OPTIONS: StackNavigationOptions = { headerShown: false, cardStyle: { backgroundColor: CustomColors.mainBackgroundColor.stringValue }};
+export const DEFAULT_NAV_SCREEN_OPTIONS: StackNavigationOptions = { headerShown: false, cardStyle: { backgroundColor: CustomColors.mainBackgroundColor.stringValue}, animationEnabled: true};
 
 export function YUP_EDITING_FORM_PRICE_STRING(fieldName: string) {
     fieldName = fieldName[0].toUpperCase() + fieldName.substring(1);

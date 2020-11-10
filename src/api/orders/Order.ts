@@ -1,6 +1,6 @@
 
 import moment from 'moment-timezone'
-import { Optional } from '../../helpers/general';
+import { NASSAU_TIME_ZONE, Optional } from '../../helpers/general';
 import AppSettings from '../../settings';
 import getErrorObjFromApiObjValidateFunction from '../helpers';
 import {OrderJsonResponseObj, orderResponseObjValidator} from './validation';
@@ -40,7 +40,7 @@ export default class Order{
             email: json.user.email,
             phoneNumber: json.user.phone_number,
         };
-        this.creationDate = moment(json.creation_date);
+        this.creationDate = moment(json.creation_date).tz(NASSAU_TIME_ZONE);
         this.detailsJson = json.details_json;
         this.userNotes = json.user_notes;
         this.isCompleted = json.is_completed;

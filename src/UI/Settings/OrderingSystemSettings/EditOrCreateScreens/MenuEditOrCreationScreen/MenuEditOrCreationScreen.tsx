@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { SettingsNavStackParams } from '../../../navigationHelpers';
-import { useSelector } from '../../../../../redux/store';
+import store, { useSelector } from '../../../../../redux/store';
 import { DefaultKeyboardConfigs, mapOptional, NASSAU_TIME_ZONE, Optional } from '../../../../../helpers/general';
 import { MenuEditOrCreationValues, MenuEditOrCreateProductCategory, menuEditOrCreateProductCategorySchema } from './helpers';
 import { Set, Map } from 'immutable';
@@ -95,14 +95,14 @@ const MenuEditOrCreationScreen = (() => {
     }
 
 
-    function submit(values: MenuEditOrCreationValues, menuId: Optional<number>){
+    function submit(values: MenuEditOrCreationValues, menuId: Optional<number>) {
 
         const timeString = (str: string) => {
             str = str.trim();
             if (str.length <= 0) return null;
             return apiTimeStringTextFromTextFieldText(str);
         }
-        
+
         const menuRequestObj: MenuRequestObj = {
             title: values.title,
             is_active: values.isActive,
@@ -112,7 +112,7 @@ const MenuEditOrCreationScreen = (() => {
             categories: (() => {
                 const categories: MenuRequestObj['categories'] = {};
                 values.productCategories.forEach(value => {
-                    categories[value.title] = {product_ids: value.productIds.toArray()}
+                    categories[value.title] = { product_ids: value.productIds.toArray() }
                 });
                 return categories;
             })(),
@@ -135,21 +135,28 @@ const MenuEditOrCreationScreen = (() => {
 
         const navBarTitle = menuId == null ? 'Create New Menu' : 'Update Menu';
 
-        const initialValues: MenuEditOrCreationValues = useMemo(() => ({
-            title: menu?.title ?? '',
-            isActive: menu?.isActive ?? true,
-            daysOfTheWeek: menu?.daysOfTheWeek ?? Set(),
-            startTime: mapOptional(menu?.startTime, x => textFieldTextFromAPITimeString(x)) ?? '',
-            endTime: mapOptional(menu?.endTime, x => textFieldTextFromAPITimeString(x)) ?? '',
-            productCategories: mapOptional(menu?.categories.toArray(), x => Map(x.map((category, index) => {
-                const tuple: [number, MenuEditOrCreateProductCategory] = [index, { customId: index, ...category }];
-                return tuple;
-            }))) ?? Map(),
+
+
+        const initialValues: MenuEditOrCreationValues = useMemo(() => {
+
+            const reduxProductsState = store.getState().orderingSystem.products;
+            
+            return {
+                title: menu?.title ?? '',
+                isActive: menu?.isActive ?? true,
+                daysOfTheWeek: menu?.daysOfTheWeek ?? Set(),
+                startTime: mapOptional(menu?.startTime, x => textFieldTextFromAPITimeString(x)) ?? '',
+                endTime: mapOptional(menu?.endTime, x => textFieldTextFromAPITimeString(x)) ?? '',
+                productCategories: mapOptional(menu?.categories.toArray(), x => Map(x.map((category, index) => {
+                    const tuple: [number, MenuEditOrCreateProductCategory] = [index, { customId: index, title: category.title, productIds: category.productIds.filter(x => reduxProductsState.has(x)) }];
+                    return tuple;
+                }))) ?? Map(),
+            }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }), []);
+        }, []);
 
         return <Formik<MenuEditOrCreationValues>
-            
+
             initialValues={initialValues}
             validationSchema={yup.object({
                 title: yup.string().trim().required(),
@@ -232,14 +239,14 @@ const FormChildren = (() => {
                     formikFieldName="startTime"
                     topTitleText="Start Time"
                     placeholder={startAndEndTimePlaceholder}
-                    textInputProps={{keyboardType: 'numbers-and-punctuation'}}
+                    textInputProps={{ keyboardType: 'numbers-and-punctuation' }}
                 />
                 <FormikTextFieldView<MenuEditOrCreationValues>
                     style={styles.startOrEndItemField}
                     formikFieldName="endTime"
                     topTitleText="End Time"
                     placeholder={startAndEndTimePlaceholder}
-                    textInputProps={{keyboardType: 'numbers-and-punctuation'}}
+                    textInputProps={{ keyboardType: 'numbers-and-punctuation' }}
                 />
             </SpacerView>
             <MenuEditOrCreationProductCategoriesEditor />

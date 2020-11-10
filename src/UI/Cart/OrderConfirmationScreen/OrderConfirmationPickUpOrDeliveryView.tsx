@@ -55,7 +55,7 @@ const OrderConfirmationPickUpOrDeliveryView = (() => {
                 />
                 {props.value === PickUpOrDelivery.delivery && 
                     <CustomizedText style={styles.bottomMessageText}>
-                        {`If you want your order delivered you MUST call our delivery driver at ${AppSettings.deliveryDriverPhoneNumber}, inform him of the order and give him your directions. You are also required to pay him a delivery fee with cash.`}
+                        {AppSettings.deliveryDisclaimerMessage}
                     </CustomizedText>}
             </Spacer>
         </FloatingCellStyleSectionView>
@@ -65,3 +65,4 @@ const OrderConfirmationPickUpOrDeliveryView = (() => {
 
 
 export default OrderConfirmationPickUpOrDeliveryView;
+
