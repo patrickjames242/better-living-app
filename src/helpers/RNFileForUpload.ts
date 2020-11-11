@@ -7,21 +7,20 @@ export class RNFileForUpload{
     constructor(
         private readonly fileInfo: {file: File} | {uri: string, name?: string, defaultFileType?: string},
     ){
-        if (Platform.OS === 'web' && (fileInfo as any).file instanceof File === false){
-            throw new Error("you must include a file object on the web.")
-        } else if (
+        if (
             Platform.OS !== 'web' && 
-            typeof (fileInfo as any).uri !== 'string'
+            (fileInfo as any).file instanceof File
         ){
-            throw new Error("a uri is required on ios and android");
+            throw new Error("using files to istantiate RNFileForUpload on platforms other then the web is not supported");
         }
     }
 
     getFormDataValue: () => File | {uri: string, name: string, type: string} = () => {
         const _fileInfo = this.fileInfo as any;
-        const result = Platform.select({
-            web: _fileInfo.file,
-            default: {
+        if (_fileInfo.file){
+            return _fileInfo.file;
+        } else {
+            return {
                 uri: _fileInfo.uri,
                 name: _fileInfo.name ?? (() => { 
                     const paths = URLParse(_fileInfo.uri).pathname.split('/').filter(x => x !== '');
@@ -32,10 +31,8 @@ export class RNFileForUpload{
                     return typeof mimeType === 'string' ? mimeType : _fileInfo.defaultFileType;
                 })(),
             }
-        });
-        return result;
+        }
     }
-
 }
 
 

@@ -36,7 +36,9 @@ function getBodyForRequestObject(obj: Partial<ProductRequestObj>): FormData{
 
     const setImageValue: object | 'null' | undefined = (() => {
         if (obj.setImage === null){return 'null';}
-        else if (obj.setImage instanceof RNFileForUpload){return obj.setImage.getFormDataValue()}
+        else if (obj.setImage instanceof RNFileForUpload){
+            return obj.setImage.getFormDataValue();
+        }
     })();
 
     setImageValue && formData.append(ProductFormDataKeys.set_image, setImageValue as any);
