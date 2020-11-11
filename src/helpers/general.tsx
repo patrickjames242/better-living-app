@@ -18,7 +18,7 @@ export const DEFAULT_NAV_SCREEN_OPTIONS: StackNavigationOptions = { headerShown:
 
 export function YUP_EDITING_FORM_PRICE_STRING(fieldName: string) {
     fieldName = fieldName[0].toUpperCase() + fieldName.substring(1);
-    return yup.string().matches(/^[0-9]+(.[0-9]{2})?$/, `${fieldName} format is invalid. It must follow the format: '15' or '15.99'.`);
+    return yup.string().trim().matches(/^[0-9]+(.[0-9]{2})?$/, `${fieldName} format is invalid. It must follow the format: '15' or '15.99'.`);
 }
 
 interface DefaultKeyboardConfigs{

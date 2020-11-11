@@ -23,7 +23,7 @@ const ProductEditOrCreationScreen = (() => {
 
     function submitForm(values: ProductEditOrCreateValues, initialValues: ProductEditOrCreateValues, productId: Optional<number>){
         const individual_price = (() => {
-            const price = Number(values.priceString);
+            const price = Number(values.priceString.trim());
             return isNaN(price) ? null : price;
         })();
 

@@ -20,7 +20,7 @@ const MealEditOrCreationScreen = (() => {
     function submitForm(mealId: Optional<number>, values: MealEditOrCreationValues) {
         const requestObj: MealRequestObj = {
             title: values.title,
-            price: Number(values.priceString),
+            price: Number(values.priceString.trim()),
             product_categories: values.productCategoryIds.toArray().map(id => ({ id, order_num: 0 })),
         }
         return mealId == null ? createNewMeal(requestObj) : updateMeal(mealId, requestObj);
@@ -39,7 +39,7 @@ const MealEditOrCreationScreen = (() => {
             const productCategoriesReduxState = store.getState().orderingSystem.mealCategories;
             return {
                 title: meal?.title ?? '',
-                priceString: mapOptional(meal?.price, x => String(x)) ?? '',
+                priceString: mapOptional(meal?.price, x => x.toFixed(2)) ?? '',
                 productCategoryIds: Set<number>().withMutations(set => {
                     const categories = meal?.productCategories;
                     if (categories == null) return;
