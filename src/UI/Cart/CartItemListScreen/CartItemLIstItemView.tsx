@@ -266,7 +266,6 @@ const SwipableButtonActions = (() => {
         trashButtonImage: {
             width: imageWidth,
             height: imageWidth,
-            // tintColor: 'white',
         }
     });
 
@@ -279,7 +278,7 @@ const SwipableButtonActions = (() => {
 
         return <Animated.View style={[styles.root, { transform: [{ translateX }] }]}>
             <BouncyButton onPress={props.onDeleteButtonPressed} contentViewProps={{ style: styles.trashCanButtonContent }}>
-                <Image style={styles.trashButtonImage} source={AssetImages.deleteIcon} />
+                <Image resizeMode="contain" style={styles.trashButtonImage} source={AssetImages.deleteIcon} />
             </BouncyButton>
         </Animated.View>
     }
