@@ -24,10 +24,19 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.patrickhanna.betterliving"
+      "bundleIdentifier": "com.patrickhanna.betterliving",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Your photo library is needed to allow you upload photos into the app.",
+        "NSCameraUsageDescription": "Your camera is needed to allow you to upload photos into the app."
+      },
+      "supportsTablet": true
     },
     "android": {
-      "useNextNotificationsApi": true
+      "versionCode": 1,
+      "package": "com.patrickhanna.betterliving",
+      "useNextNotificationsApi": true,
+      "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
     }
   }
 }
