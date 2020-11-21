@@ -9,6 +9,7 @@ import store from './redux/store';
 import { tryConnectingWebsocketListener } from './api/realtimeUpdates';
 import RootNavigationView from './UI/RootNavigationView/RootNavigationView';
 import * as Notifications from 'expo-notifications';
+import AppSettings from './settings';
 
 registerRootComponent(App);
 
@@ -46,7 +47,7 @@ export default function App() {
 	} else {
 		return <ReduxProvider store={store}>
 			<SafeAreaProvider>
-				<StatusBar barStyle="dark-content" />
+				<StatusBar barStyle={AppSettings.defaultStatusBarStyle} />
 				<RootNavigationView />
 			</SafeAreaProvider>
 		</ReduxProvider>

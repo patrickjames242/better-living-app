@@ -1,9 +1,10 @@
 
 import React from 'react';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, StatusBar } from 'react-native';
 import { WebView } from 'react-native-webview';
 import AspectRatioView from '../../../helpers/Views/AspectRatioView';
 import LayoutConstants from '../../../LayoutConstants';
+import AppSettings from '../../../settings';
 
 interface TipsDetailYTVideoViewProps{
     ytVideoID: string
@@ -27,6 +28,11 @@ const TipsDetailYTVideoView = (() => {
                     source={{ uri: `https://www.youtube.com/embed/${props.ytVideoID}` }}
                     javaScriptEnabled
                     domStorageEnabled
+                    onLoadEnd={() => {
+                        if (Platform.OS === "ios"){
+                            StatusBar.setBarStyle(AppSettings.defaultStatusBarStyle);
+                        }
+                    }}
                 />
             })}
         </AspectRatioView>

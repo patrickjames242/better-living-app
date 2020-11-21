@@ -1,3 +1,6 @@
+import { StatusBarStyle } from "react-native";
+
+
 
 
 const AppSettings = {
@@ -14,6 +17,10 @@ const AppSettings = {
             return 'better-living-backend.herokuapp.com';
         }
     },
+    defaultStatusBarStyle: (() => {
+        const x: StatusBarStyle = 'dark-content';
+        return x;
+    })(),
 };
 
 export default AppSettings;
