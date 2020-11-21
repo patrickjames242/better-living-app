@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Platform, StatusBar, YellowBox } from 'react-native';
+import { LogBox, Platform, StatusBar } from 'react-native';
 import { registerRootComponent, AppLoading } from 'expo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loadFonts } from './helpers/fonts/fonts';
@@ -13,7 +13,7 @@ import AppSettings from './settings';
 
 registerRootComponent(App);
 
-YellowBox.ignoreWarnings([
+LogBox.ignoreLogs([
 	"Animated: `useNativeDriver`", 
 	"Non-serializable values were found in the navigation state.",
 	"[SECURITY] node-uuid: crypto not usable, falling back to insecure Math.random()"
