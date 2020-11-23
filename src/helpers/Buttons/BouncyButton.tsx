@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { ViewProps, Animated, Easing, View } from 'react-native';
+import { ViewProps, Animated, Easing } from 'react-native';
 import CustomDelayedTouchable from './CustomDelayedTouchable';
 import { useUpdateEffect, useIsUnmounted } from '../reactHooks';
 
@@ -20,7 +20,7 @@ const BouncyButton: React.FC<BouncyButtonProps> = (props) => {
 
     useUpdateEffect(() => {
 
-        if (isUnmounted.current || (props.isPressAnimationEnabled ?? true) === false){return;}
+        if (isUnmounted.current || (props.isPressAnimationEnabled ?? true) === false) { return; }
 
         Animated.timing(transformAnimation, {
             toValue: isPressed ? (props.bounceScaleValue ?? 0.7) : 1,
@@ -28,19 +28,19 @@ const BouncyButton: React.FC<BouncyButtonProps> = (props) => {
             easing: Easing.elastic(1),
             useNativeDriver: true,
         }).start();
-        
+
         //eslint-disable-next-line
     }, [isPressed]);
 
     const isUnmounted = useIsUnmounted();
 
     function touchDown() {
-        if (isUnmounted.current){return;}
+        if (isUnmounted.current) { return; }
         setIsPressed(true);
     }
 
     function touchUp() {
-        if (isUnmounted.current){return;}
+        if (isUnmounted.current) { return; }
         setIsPressed(false);
     }
 
@@ -48,12 +48,12 @@ const BouncyButton: React.FC<BouncyButtonProps> = (props) => {
         onPressIn={touchDown}
         onPressOut={touchUp}
         onPress={props.onPress}
+        contentViewProps={props}
     >
-        <View {...props}>
-            <Animated.View {...props.contentViewProps} style={[props.contentViewProps?.style, {
-                transform: [{scale: transformAnimation}]
-            }]}>{props.children}</Animated.View>
-        </View>
+        <Animated.View {...props.contentViewProps} style={[props.contentViewProps?.style, {
+            transform: [{ scale: transformAnimation }]
+        }]}>{props.children}</Animated.View>
+
     </CustomDelayedTouchable>
 }
 

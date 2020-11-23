@@ -1,6 +1,6 @@
 
-import React, {useRef, useCallback } from 'react';
-import { ViewProps, View, StyleSheet, Animated } from "react-native";
+import React, { useRef, useCallback } from 'react';
+import { ViewProps, StyleSheet, Animated } from "react-native";
 import { Color } from "../colors";
 import CustomDelayedTouchable from './CustomDelayedTouchable';
 
@@ -11,7 +11,7 @@ const touchUpAnimationLength = 400;
 
 
 
-export interface HighlightButtonProps extends ViewProps{
+export interface HighlightButtonProps extends ViewProps {
 	onPress?: () => void,
 	highlightColor?: Color,
 }
@@ -25,11 +25,11 @@ const HighlightButton = (() => {
 			left: 0, right: 0, top: 0, bottom: 0,
 		}
 	});
-	
+
 	const HighlightButton: React.FC<HighlightButtonProps> = (props) => {
-	
+
 		const coverViewOpacityAnimation = useRef(new Animated.Value(0)).current;
-	
+
 		const animateCoverView = useCallback((show: boolean) => {
 			Animated.timing(coverViewOpacityAnimation, {
 				toValue: show ? 1 : 0,
@@ -41,7 +41,7 @@ const HighlightButton = (() => {
 		const touchDown = useCallback(() => {
 			animateCoverView(true);
 		}, [animateCoverView]);
-		
+
 		const touchUp = useCallback(() => {
 			animateCoverView(false);
 		}, [animateCoverView]);
@@ -51,16 +51,15 @@ const HighlightButton = (() => {
 			onPressIn={touchDown}
 			onPressOut={touchUp}
 			onPress={props.onPress}
+			contentViewProps={props}
 		>
-			<View {...props}>
-				{props.children}
-				{(() => {
-					return <Animated.View pointerEvents="none" style={[styles.highlightCoverView, {
-						opacity: coverViewOpacityAnimation,
-						backgroundColor: (props.highlightColor ?? Color.gray(0).withAdjustedOpacity(0.05)).stringValue,
-					}]} />
-				})()}
-			</View>
+			{props.children}
+			{(() => {
+				return <Animated.View pointerEvents="none" style={[styles.highlightCoverView, {
+					opacity: coverViewOpacityAnimation,
+					backgroundColor: (props.highlightColor ?? Color.gray(0).withAdjustedOpacity(0.05)).stringValue,
+				}]} />
+			})()}
 		</CustomDelayedTouchable>
 	}
 
