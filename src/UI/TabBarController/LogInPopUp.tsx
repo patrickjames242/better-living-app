@@ -95,7 +95,7 @@ const LogInPopUp = (() => {
         }, [animatedValue]);
 
         useEffect(() => {
-            if (isPresented){
+            if (isPresented) {
                 return BackHandler.addEventListener('hardwareBackPress', () => {
                     setPresented(false);
                     return true
@@ -115,7 +115,8 @@ const LogInPopUp = (() => {
                     maxDist={1}
                     onHandlerStateChange={x => {
                         x.nativeEvent.state === State.ACTIVE && setPresented(false);
-                    }}>
+                    }}
+                >
                     <Animated.View style={[styles.backgroundView, {
                         opacity: animatedValue.interpolate({
                             inputRange: [0, 1],
