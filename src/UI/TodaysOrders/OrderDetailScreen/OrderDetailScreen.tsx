@@ -87,7 +87,7 @@ const OrderDetailScreen = (() => {
                             <OrderInfoSection order={orderToUse} onOrderUpdate={updateOrder} />
                             {
                                 orderToUse.userWantsOrderDelivered &&
-                                moment.tz(NASSAU_TIME_ZONE).startOf('day').isSame(orderToUse.creationDate.startOf('day')) &&
+                                moment.tz(NASSAU_TIME_ZONE).startOf('day').isSame(orderToUse.creationDate.clone().startOf('day')) &&
                                 <TitleContainer>
                                     <CustomizedText style={styles.deliveryDisclaimerText}>{AppSettings.deliveryDisclaimerMessage}</CustomizedText>
                                 </TitleContainer>

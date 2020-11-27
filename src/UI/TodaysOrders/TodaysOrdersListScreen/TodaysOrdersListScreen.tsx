@@ -99,7 +99,7 @@ const TodaysOrdersListScreen = (() => {
                 } else { return 0; }
             }).forEach((value) => {
                 
-                const orderWasCreatedToday = value.creationDate.startOf('day').isSame(startOfToday());
+                const orderWasCreatedToday = value.creationDate.clone().startOf('day').isSame(startOfToday());
                 if (orderWasCreatedToday === false) return;
 
                 if (value.isCompleted) {
@@ -123,7 +123,6 @@ const TodaysOrdersListScreen = (() => {
         const respondToButtonPressed = useCallback((order: Order) => {
             props.navigation.push('OrderDetail', {
                 reduxOrderId: order.id, 
-
             });
         }, [props.navigation]);
 

@@ -123,6 +123,7 @@ function startWebsocketConnection(authToken: Optional<string>, onCloseAfterSucce
             //     console.log('socket on message', data);
             // }
 
+
             store.dispatch(updateRealtimeUpdatesGotInitialUpdatesAction(true));
 
             if (typeof data !== 'object') { return; }

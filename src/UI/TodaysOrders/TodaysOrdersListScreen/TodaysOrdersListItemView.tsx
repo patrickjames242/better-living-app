@@ -1,5 +1,5 @@
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Image, StyleProp, StyleSheet, TextStyle, View } from 'react-native';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
@@ -8,7 +8,6 @@ import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import Order from '../../../api/orders/Order';
 import AssetImages from '../../../images/AssetImages';
 import Notification from '../../../helpers/Notification';
-import { useForceUpdate } from '../../../helpers/reactHooks';
 import currency from 'currency.js';
 import { useCallback } from 'react';
 
@@ -174,16 +173,21 @@ export const TimeText = (() => {
 
     const TimeText = function TimeText(props: { style: StyleProp<TextStyle>, order: Order }) {
 
-        const forceUpdate = useForceUpdate();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        const initialFromNowText = useMemo(() => props.order.creationDate.fromNow(), []);
+        const [fromNowText, setFromNowText] = useState(initialFromNowText);
+
+        
 
         useEffect(() => {
             return updateTimeNotification.addListener(() => {
-                forceUpdate();
+                setFromNowText(props.order.creationDate.fromNow());
+                
             });
-        }, [forceUpdate]);
+        }, [props.order.creationDate]);
 
         return <CustomizedText numberOfLines={1} style={props.style}>
-            {props.order.creationDate.fromNow()}
+            {fromNowText}
         </CustomizedText>
     }
     return React.memo(TimeText);
