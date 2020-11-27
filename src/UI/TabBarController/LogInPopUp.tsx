@@ -69,17 +69,6 @@ const LogInPopUp = (() => {
     });
 
 
-    /* this is to fix a bug in react-native-gesture handler that occured when upgrading to the latest version. it avoids the following error on the web only when clicking outside of the log in pop up view
-
-    Cannot read property 'onGestureHandlerStateChange' of undefined
-    */
-    class _NonForwardedRefAnimatedViewHack extends React.Component<any> {
-        render() {
-            return <Animated.View {...this.props} />;
-        }
-    }
-    const NonForwardedRefAnimatedViewHack = _NonForwardedRefAnimatedViewHack as any as Animated.AnimatedComponent<typeof View>;
-
     
 
     const LogInPopUp: React.ForwardRefRenderFunction<LogInPopUpRef, LogInPopUpProps> = (props, ref) => {
@@ -131,8 +120,7 @@ const LogInPopUp = (() => {
                         x.nativeEvent.state === State.ACTIVE && setPresented(false);
                     }}
                 >
-                    {/* <Animated.View style={[styles.backgroundView, { */}
-                    <NonForwardedRefAnimatedViewHack style={[styles.backgroundView, {
+                    <Animated.View style={[styles.backgroundView, {
                         opacity: animatedValue.interpolate({
                             inputRange: [0, 1],
                             outputRange: [0, 0.5],
