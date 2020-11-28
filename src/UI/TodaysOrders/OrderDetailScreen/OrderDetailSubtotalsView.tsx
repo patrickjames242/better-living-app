@@ -52,6 +52,7 @@ const OrderSubtotalsView = (() => {
 
         const priceInfo = useCalculatedPriceInfoForOrder(props.order);
 
+
         return <OrderDetailTitleContainer>
             <Spacer space={10}>
                 {priceInfo.deliveryFee && priceInfo.deliveryFee > 0 &&

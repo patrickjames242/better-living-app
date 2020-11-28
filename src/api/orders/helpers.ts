@@ -32,9 +32,9 @@ export function useCalculatedPriceInfoForOrder(order: Order): {
     }
 
     return {
-        subtotal: subtotal.dollars(),
-        vat: vat.dollars(),
-        total: subtotal.add(vat).add(deliveryFee ?? 0).dollars(),
+        subtotal: subtotal.toJSON(),
+        vat: vat.toJSON(),
+        total: subtotal.add(vat).add(deliveryFee ?? 0).toJSON(),
         deliveryFee,
     }
 }

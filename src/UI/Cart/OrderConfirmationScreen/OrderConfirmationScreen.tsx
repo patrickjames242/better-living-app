@@ -17,37 +17,16 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { getRequestOrderItemsFromCartEntries, submitOrder } from '../../../api/orders/requests';
 import { displayErrorMessage, displaySuccessMessage } from '../../../helpers/Alerts';
 import AppSettings from '../../../settings';
-import { Formik } from '../../../helpers/formik';
+import { Formik, useField, useFormikContext } from '../../../helpers/formik';
 import { HowToPay, OrderConfirmationScreenValues, PickUpOrDelivery } from './helpers';
 import * as yup from 'yup';
+import { CartEntriesMapValue } from '../../../redux/cart';
 
 const OrderConfirmationScreen = (() => {
 
-    const styles = StyleSheet.create({
-        root: {
-            flex: 1,
-        },
-        scrollView: {
-            overflow: 'visible',
-        },
-        scrollViewContentContainer: {
-            padding: LayoutConstants.pageSideInsets,
-            paddingTop: LayoutConstants.floatingCellStyles.sectionSpacing,
-        },
-        scrollViewContentHolder: {
-            maxWidth: LayoutConstants.floatingCellStyles.maxWidth,
-            width: '100%',
-            alignSelf: 'center',
-        },
-        submitButton: {
-            maxWidth: LayoutConstants.bottomScreenButtonWithGradient.maxWidth,
-            alignSelf: 'center',
-            width: '100%',
-        },
 
-    });
 
-    
+
 
     const OrderConfirmationScreen = (props: StackScreenProps<CartNavStackParamList, 'OrderingConfirmation'>) => {
 
@@ -67,7 +46,7 @@ const OrderConfirmationScreen = (() => {
                 }),
             })}
             initialValues={initialValues}
-            onSubmit={(values, {setSubmitting}) => {
+            onSubmit={(values, { setSubmitting }) => {
                 submitOrder({
                     user_notes: null,
                     user_paid_online: values.howToPay === HowToPay.online,
@@ -88,40 +67,92 @@ const OrderConfirmationScreen = (() => {
                     displayErrorMessage(error.message);
                 });
             }}
-        >{formik => {
-
-            return <CustomKeyboardAvoidingView style={styles.root}>
-                <NavigationControllerNavigationBar title="Confirm Order" />
-                <ScrollView
-                    style={styles.scrollView}
-                    alwaysBounceVertical={true}
-                    contentContainerStyle={styles.scrollViewContentContainer}
-                >
-                    <SpacerView style={styles.scrollViewContentHolder} space={LayoutConstants.floatingCellStyles.sectionSpacing}>
-                        <FloatingCellStyleSectionView sectionTitle="Order Total">
-                            <CartTotalSummaryView entries={props.route.params.cartEntries} includeDeliveryFee={formik.values.pickUpOrDelivery === PickUpOrDelivery.delivery} />
-                        </FloatingCellStyleSectionView>
-                        <OrderConfirmationPickUpOrDeliveryView />
-                        <OrderConfirmationHowToPayView />
-                        <Space space={LayoutConstants.pageSideInsets} />
-                        <LongTextAndIconButton
-                            text="Submit Order"
-                            iconSource={require('./icons/hotel_white.png')}
-                            style={styles.submitButton}
-                            isEnabled={formik.isValid && formik.dirty}
-                            isLoading={formik.isSubmitting}
-                            onPress={formik.submitForm}
-                        />
-                    </SpacerView>
-                </ScrollView>
-            </CustomKeyboardAvoidingView>
-        }}</Formik>
+        >
+            <OrderConfirmationScreenContent cartEntries={props.route.params.cartEntries} />
+        </Formik>
 
     }
     return OrderConfirmationScreen;
 })();
 
 export default OrderConfirmationScreen;
+
+
+
+
+const OrderConfirmationScreenContent = (() => {
+
+    const styles = StyleSheet.create({
+        root: {
+            flex: 1,
+        },
+        scrollView: {
+            overflow: 'visible',
+        },
+        scrollViewContentContainer: {
+            padding: LayoutConstants.pageSideInsets,
+            paddingTop: LayoutConstants.floatingCellStyles.sectionSpacing,
+        },
+        scrollViewContentHolder: {
+            maxWidth: LayoutConstants.floatingCellStyles.maxWidth,
+            width: '100%',
+            alignSelf: 'center',
+        },
+    });
+    const OrderConfirmationScreenContent = (props: { cartEntries: CartEntriesMapValue[] }) => {
+        return <CustomKeyboardAvoidingView style={styles.root}>
+            <NavigationControllerNavigationBar title="Confirm Order" />
+            <ScrollView
+                style={styles.scrollView}
+                alwaysBounceVertical={true}
+                contentContainerStyle={styles.scrollViewContentContainer}
+            >
+                <SpacerView style={styles.scrollViewContentHolder} space={LayoutConstants.floatingCellStyles.sectionSpacing}>
+                    <FloatingCellStyleSectionView sectionTitle="Order Total">
+                        <OrderConfirmationScreenCartTotalSummaryView cartEntries={props.cartEntries} />
+                    </FloatingCellStyleSectionView>
+                    <OrderConfirmationPickUpOrDeliveryView />
+                    <OrderConfirmationHowToPayView />
+                    <Space space={LayoutConstants.pageSideInsets} />
+                    <SubmitButton />
+                </SpacerView>
+            </ScrollView>
+        </CustomKeyboardAvoidingView>
+    }
+    return React.memo(OrderConfirmationScreenContent);
+})();
+
+
+
+
+const OrderConfirmationScreenCartTotalSummaryView = (props: { cartEntries: CartEntriesMapValue[] }) => {
+    const [,{value}] = useField<OrderConfirmationScreenValues, 'pickUpOrDelivery'>('pickUpOrDelivery');
+    return <CartTotalSummaryView entries={props.cartEntries} includeDeliveryFee={value === PickUpOrDelivery.delivery} />
+}
+
+const SubmitButton = (() => {
+
+    const styles = StyleSheet.create({
+        submitButton: {
+            maxWidth: LayoutConstants.bottomScreenButtonWithGradient.maxWidth,
+            alignSelf: 'center',
+            width: '100%',
+        },
+    })
+
+    const SubmitButton = () => {
+        const formikContext = useFormikContext<OrderConfirmationScreenValues>();
+        return <LongTextAndIconButton
+            text="Submit Order"
+            iconSource={require('./icons/hotel_white.png')}
+            style={styles.submitButton}
+            isEnabled={formikContext.isValid && formikContext.dirty}
+            isLoading={formikContext.isSubmitting}
+            onPress={formikContext.submitForm}
+        />
+    }
+    return SubmitButton;
+})();
 
 
 
