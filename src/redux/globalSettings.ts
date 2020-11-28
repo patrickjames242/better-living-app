@@ -23,7 +23,9 @@ export type GlobalSettingsActions = UpdateGlobalSettingsAction;
 
 
 export const defaultGlobalSettings = new GlobalSettings({
-    is_ordering_system_enabled: true
+    is_ordering_system_enabled: true,
+    vat_percentage: 0,
+    delivery_fee: 0,
 });
 
 
@@ -57,6 +59,8 @@ import('./store').then(module => {
         if (globalSettings === defaultGlobalSettings) return;
         const objToStore: GlobalSettingsResponseObj = {
             is_ordering_system_enabled: globalSettings.isOrderingSystemEnabled,
+            vat_percentage: globalSettings.vatPercentage,
+            delivery_fee: globalSettings.deliveryFee,
         }
         AsyncStorage.setItem(globalSettingsKey, JSON.stringify(objToStore));
     });

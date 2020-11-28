@@ -10,6 +10,7 @@ import AssetImages from '../../../images/AssetImages';
 import Notification from '../../../helpers/Notification';
 import currency from 'currency.js';
 import { useCallback } from 'react';
+import { useCalculatedPriceInfoForOrder } from '../../../api/orders/helpers';
 
 
 export interface TodaysOrdersListItemViewProps {
@@ -120,9 +121,11 @@ const TodaysOrdersListItemView = (() => {
         const order = props.order;
         const propsOnPress = props.onPress;
 
-        const price = useMemo(() => {
-            return order.calculatePriceInfo().total;
-        }, [order]);
+        // const price = useMemo(() => {
+        //     return order.calculatePriceInfo().total;
+        // }, [order]);
+
+        const price = useCalculatedPriceInfoForOrder(order).total;
 
         const onPress = useCallback(() => {
             propsOnPress(order);

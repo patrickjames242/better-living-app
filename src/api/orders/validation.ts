@@ -39,6 +39,8 @@ export const OrderJsonKeys: {
     order_num: 'order_num',
     subtotal_charged: 'subtotal_charged',
     vat_charged: 'vat_charged',
+    delivery_fee_charged: 'delivery_fee_charged',
+    delivery_directions: 'delivery_directions',
     user_paid_online: 'user_paid_online',
     user_wants_order_delivered: 'user_wants_order_delivered',
 } = {
@@ -78,6 +80,8 @@ export const OrderJsonKeys: {
     order_num: 'order_num',
     subtotal_charged: 'subtotal_charged',
     vat_charged: 'vat_charged',
+    delivery_fee_charged: 'delivery_fee_charged',
+    delivery_directions: 'delivery_directions',
     user_paid_online: 'user_paid_online',
     user_wants_order_delivered: 'user_wants_order_delivered',
 }
@@ -112,6 +116,8 @@ export interface OrderJsonResponseObj{
     [OrderJsonKeys.order_num]: number;
     [OrderJsonKeys.subtotal_charged]: Optional<number>;
     [OrderJsonKeys.vat_charged]: Optional<number>;
+    [OrderJsonKeys.delivery_fee_charged]: Optional<number>,
+    [OrderJsonKeys.delivery_directions]: Optional<string>,
     [OrderJsonKeys.user_paid_online]: boolean;
     [OrderJsonKeys.user_wants_order_delivered]: boolean;
 }
@@ -196,6 +202,8 @@ export const OrderApiResponseSchema = {
         [OrderJsonKeys.order_num]: {type: 'number'},
         [OrderJsonKeys.subtotal_charged]: {type: ['number', 'null']},
         [OrderJsonKeys.vat_charged]: {type: ['number', 'null']},
+        [OrderJsonKeys.delivery_fee_charged]: {type: ['number', 'null']},
+        [OrderJsonKeys.delivery_directions]: {type: ['string', 'null']},
         [OrderJsonKeys.user_paid_online]: {type: 'boolean'},
         [OrderJsonKeys.user_wants_order_delivered]: {type: 'boolean'},
     },
@@ -209,6 +217,8 @@ export const OrderApiResponseSchema = {
         OrderJsonKeys.order_num,
         OrderJsonKeys.subtotal_charged,
         OrderJsonKeys.vat_charged,
+        OrderJsonKeys.delivery_fee_charged,
+        OrderJsonKeys.delivery_directions,
         OrderJsonKeys.user_paid_online,
         OrderJsonKeys.user_wants_order_delivered,
     ]

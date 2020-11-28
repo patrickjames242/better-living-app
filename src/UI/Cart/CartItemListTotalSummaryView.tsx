@@ -1,7 +1,7 @@
 
 
 import React, { useMemo } from 'react';
-import {View, StyleSheet} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import LayoutConstants from '../../LayoutConstants';
 import { CustomColors } from '../../helpers/colors';
 import { CustomFont } from '../../helpers/fonts/fonts';
@@ -13,8 +13,9 @@ import { CartProductEntry } from '../../api/cart/CartProductEntry';
 import AppSettings from '../../settings';
 import currency from 'currency.js';
 
-export interface CartTotalSummaryViewProps{
+export interface CartTotalSummaryViewProps {
     entries: CartEntriesMapValue[];
+    includeDeliveryFee?: boolean;
 }
 
 const CartTotalSummaryView = (() => {
@@ -65,19 +66,21 @@ const CartTotalSummaryView = (() => {
         const allProductsReduxState = useSelector(state => state.orderingSystem.products);
         const allMealsReduxState = useSelector(state => state.orderingSystem.meals);
 
+        const deliveryFee = useSelector(state => state.globalSettings.deliveryFee);
+
         const subtotal = useMemo(() => {
-            return props.entries.reduce<currency>((pv, cv) => {
+            let x = props.entries.reduce<currency>((pv, cv) => {
                 const currentValuePrice = (() => {
 
                     const quantity = (() => {
-                        if (cv.pendingQuantityChangesInfo){
+                        if (cv.pendingQuantityChangesInfo) {
                             return currency(cv.pendingQuantityChangesInfo.originalQuantity).add(cv.pendingQuantityChangesInfo.pendingChange);
                         } else {
                             return currency(cv.entry.quantity);
                         }
                     })();
 
-                    if (cv.entry instanceof CartProductEntry){
+                    if (cv.entry instanceof CartProductEntry) {
                         const product = allProductsReduxState.get(cv.entry.productId);
                         if (!product) return currency(0);
                         const price = currency(product.shouldBeSoldIndividually ? (product.individualPrice ?? 0) : 0);
@@ -90,18 +93,28 @@ const CartTotalSummaryView = (() => {
                 })();
                 return pv.add(currentValuePrice);
             }, currency(0));
-        }, [allMealsReduxState, allProductsReduxState, props.entries]);
+            if (props.includeDeliveryFee) x = x.add(deliveryFee);
+            return x;
+        }, [allMealsReduxState, allProductsReduxState, deliveryFee, props.entries, props.includeDeliveryFee]);
+
+        const vatPercentage = useSelector(state => state.globalSettings.vatPercentage);
 
         const vatAmount = useMemo(() => {
-            return subtotal.multiply(AppSettings.vatPercentage);
-        }, [subtotal]);
+            return subtotal.multiply(vatPercentage);
+        }, [subtotal, vatPercentage]);
+
 
         const finalTotal = useMemo(() => {
-            return subtotal.add(vatAmount);
+            return subtotal.add(vatAmount)
         }, [subtotal, vatAmount]);
+
 
         return <SpacerView style={styles.root} space={10}>
             <SpacerView style={styles.subtotalItemsBox} space={8}>
+                {props.includeDeliveryFee && deliveryFee > 0 && <View style={styles.amountItemBox}>
+                    <CustomizedText style={styles.subtotalItemText}>Delivery Fee:</CustomizedText>
+                    <CustomizedText style={styles.subtotalItemText}>{currency(deliveryFee).format()}</CustomizedText>
+                </View>}
                 <View style={styles.amountItemBox}>
                     <CustomizedText style={styles.subtotalItemText}>Subtotal:</CustomizedText>
                     <CustomizedText style={styles.subtotalItemText}>{subtotal.format()}</CustomizedText>

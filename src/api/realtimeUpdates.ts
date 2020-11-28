@@ -119,9 +119,9 @@ function startWebsocketConnection(authToken: Optional<string>, onCloseAfterSucce
         socket.onmessage = function (event) {
             const data = JSON.parse(event.data);
 
-            // if (Platform.OS === 'web') {
-            //     console.log('socket on message', data);
-            // }
+            if (Platform.OS === 'web') {
+                console.log('socket on message', data);
+            }
 
 
             store.dispatch(updateRealtimeUpdatesGotInitialUpdatesAction(true));

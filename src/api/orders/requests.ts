@@ -25,12 +25,16 @@ export type OrderItemRequestObj = {
     }[];
 }
 
-export interface OrderRequestObj{
+const user_wants_order_delivered: 'user_wants_order_delivered' = 'user_wants_order_delivered';
+
+export type OrderRequestObj = {
     user_notes: Optional<string>;
     user_paid_online: boolean;
-    user_wants_order_delivered: boolean;
     order_items: OrderItemRequestObj[];
-}
+} & (
+    {[user_wants_order_delivered]: false} |
+    {[user_wants_order_delivered]: true, delivery_directions: string}
+)
 
 export function getRequestOrderItemsFromCartEntries(cartEntries: CartEntriesMapValue[]): OrderItemRequestObj[]{
     return cartEntries.map(x => {

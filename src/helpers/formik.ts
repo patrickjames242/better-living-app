@@ -28,7 +28,7 @@ type AdjustedFormikPropsType<Type, Values extends FormikValues = FormikValues> =
 }
 
 export function useFormikContext<Values>(): AdjustedFormikPropsType<FormikContextType<Values>, Values>{
-    return defaultUseFormikContext as any;
+    return defaultUseFormikContext() as any;
 }
 
 type CustomFormikProps<Values extends FormikValues = FormikValues> = AdjustedFormikPropsType<FormikProps<Values>, Values>;

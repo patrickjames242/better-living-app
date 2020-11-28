@@ -1,23 +1,19 @@
 
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import { Optional } from '../../../helpers/general';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import Spacer from '../../../helpers/Spacers/Spacer';
 import OrderConfirmationLayoutConstants from './OrderConfirmationLayoutConstants';
 import OrderConfirmationSelectableOptionView from './OrderConfirmationSelectableOptionView';
 import OrderConfirmationCardDetailsView from './OrderConfirmationCardDetailsView';
+import { HowToPay, OrderConfirmationScreenValues, PickUpOrDelivery } from './helpers';
+import { useFormikContext } from '../../../helpers/formik';
 
 
-export enum HowToPay {
-    inPerson,
-    online
-}
+
 
 export interface OrderConfirmationHowToPayViewProps{
-    value: Optional<HowToPay>;
-    onValueChange: (value: Optional<HowToPay>) => void;
-    payOnArrivalEnabled?: boolean;
+
 }
 
 
@@ -31,22 +27,23 @@ const OrderConfirmationHowToPayView = (() => {
 
     const OrderConfirmationHowToPayView = (props: OrderConfirmationHowToPayViewProps) => {
 
+        const formikContext = useFormikContext<OrderConfirmationScreenValues>();
         return <FloatingCellStyleSectionView sectionTitle="Pay In Person or Online" style={styles.root}>
             <Spacer space={OrderConfirmationLayoutConstants.selectableOptionViewSpacing}>
                 <OrderConfirmationSelectableOptionView
                     imageSource={require('./icons/buy.png')}
                     title="Pay on arrival (in person)"
-                    isSelected={props.value === HowToPay.inPerson}
-                    onCheckMarkPressed={() => props.onValueChange(HowToPay.inPerson)}
-                    isEnabled={props.payOnArrivalEnabled}
+                    isSelected={formikContext.values.howToPay === HowToPay.inPerson}
+                    onCheckMarkPressed={() => formikContext.setFieldValue('howToPay', HowToPay.inPerson)}
+                    isEnabled={formikContext.values.pickUpOrDelivery !== PickUpOrDelivery.delivery}
                 />
                 <OrderConfirmationSelectableOptionView
                     imageSource={require('./icons/pay.png')}
                     title="Pay online"
-                    isSelected={props.value === HowToPay.online}
-                    onCheckMarkPressed={() => props.onValueChange(HowToPay.online)}
+                    isSelected={formikContext.values.howToPay === HowToPay.online}
+                    onCheckMarkPressed={() => formikContext.setFieldValue('howToPay', HowToPay.online)}
                 />
-                <OrderConfirmationCardDetailsView isEnabled={props.value === HowToPay.online} />
+                <OrderConfirmationCardDetailsView isEnabled={formikContext.values.howToPay === HowToPay.online} />
             </Spacer>
         </FloatingCellStyleSectionView>
     }

@@ -5,6 +5,7 @@ import AppSettings from '../../settings';
 import getErrorObjFromApiObjValidateFunction from '../helpers';
 import {OrderJsonResponseObj, orderResponseObjValidator} from './validation';
 import currency from  'currency.js'
+import store from '../../redux/store';
 
 
 export default class Order{
@@ -23,6 +24,8 @@ export default class Order{
     readonly orderNum: number;
     readonly subtotalCharged: Optional<number>;
     readonly vatCharged: Optional<number>;
+    readonly deliveryFeeCharged: Optional<number>;
+    readonly deliveryDirections: Optional<string>;
     readonly userPaidOnline: boolean;
     readonly userWantsOrderDelivered: boolean;
 
@@ -47,33 +50,13 @@ export default class Order{
         this.orderNum = json.order_num;
         this.subtotalCharged = json.subtotal_charged;
         this.vatCharged = json.vat_charged;
+        this.deliveryFeeCharged = json.delivery_fee_charged;
+        this.deliveryDirections = json.delivery_directions;
         this.userPaidOnline = json.user_paid_online;
         this.userWantsOrderDelivered = json.user_wants_order_delivered;
     }
 
-    calculatePriceInfo(): {
-        total: number,
-        subtotal: number,
-        vat: number,
-    }{
-        let subtotal: currency;
-        let vat: currency;
-
-        if (this.userPaidOnline){
-            subtotal = currency(this.subtotalCharged ?? 0);
-            vat = currency(this.vatCharged ?? 0);
-        } else {
-            subtotal = this.detailsJson.reduce<currency>((a1, a2) => {
-                return a1.add(currency(a2.quantity).multiply((a2.entry_type === 'product' ? a2.product_price : a2.meal_price)));
-            }, currency(0));
-            vat = currency(AppSettings.vatPercentage).multiply(subtotal);
-        }
-        return {
-            subtotal: subtotal.dollars(),
-            vat: vat.dollars(),
-            total: subtotal.add(vat).dollars(),
-        }
-    }
+    
 
 }
 
