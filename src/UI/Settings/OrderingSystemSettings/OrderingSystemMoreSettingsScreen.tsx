@@ -1,13 +1,10 @@
-
 import React, { useMemo } from 'react';
 import GenericSettingsScreen, { GenericSettingsScreenSection } from '../GenericSettingsScreen/GenericSettingsScreen';
 import { useAllowOrderingSwitchSettingsItem } from '../helpers';
 
 
 
-    
-const AllowOrderingSwitchScreen = () => {
-
+const OrderingSystemMoreSettingsScreen = () => {
     const allowOrderingSwitchSettingsItem = useAllowOrderingSwitchSettingsItem();
 
     const sections: GenericSettingsScreenSection[] = useMemo(() => {
@@ -18,9 +15,11 @@ const AllowOrderingSwitchScreen = () => {
             ]
         }]
     }, [allowOrderingSwitchSettingsItem]);
-
-    return <GenericSettingsScreen navBarTitle="Allow Ordering" sections={sections}/>
+    return <GenericSettingsScreen
+        navBarTitle="More"
+        sections={sections}
+    />
 }
 
 
-export default AllowOrderingSwitchScreen;
+export default OrderingSystemMoreSettingsScreen;

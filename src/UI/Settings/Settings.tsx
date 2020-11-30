@@ -17,11 +17,12 @@ import SettingsNameEditingScreen from './ProfileEditingScreens/SettingsNameEditi
 import SettingsPhoneNumberEditingScreen from './ProfileEditingScreens/SettingsPhoneNumberEditingScreen';
 import SettingsEmailEditingScreen from './ProfileEditingScreens/SettingsEmailEditingScreen';
 import SettingsChangePasswordScreen from './ProfileEditingScreens/SettingsChangePasswordScreen';
-import UserProfileSettingsScreen from './OrderingSystemSettings/UserProfileSettingsScreen';
+import UserProfileSettingsScreen from './UserProfileSettingsScreen';
 import MyOrdersListScreen from './MyOrdersListScreen/MyOrdersListScreen';
 import OrderDetailScreen from '../TodaysOrders/OrderDetailScreen/OrderDetailScreen';
 import OrdersHistoryScreen from './OrderingSystemSettings/OrdersHistoryScreen/OrdersHistoryScreen';
 import AllowOrderingSwitchScreen from './OrderingSystemSettings/AllowOrderingScreen';
+import OrderingSystemMoreSettingsScreen from './OrderingSystemSettings/OrderingSystemMoreSettingsScreen';
 
 
 const Settings = () => {
@@ -51,6 +52,7 @@ const Settings = () => {
         <SettingsNavStack.Screen name="OrdersHistory" component={OrdersHistoryScreen} />
 
         <SettingsNavStack.Screen name="AllowOrderingSwitch" component={AllowOrderingSwitchScreen}/>
+        <SettingsNavStack.Screen name="OrderingSystemMoreSettings" component={OrderingSystemMoreSettingsScreen}/>
     </SettingsNavStack.Navigator>
 };
 

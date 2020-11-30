@@ -1,7 +1,7 @@
 
 import React, { useMemo } from 'react';
-import GenericSettingsScreen from '../GenericSettingsScreen/GenericSettingsScreen';
-import { useUserProfileSettingsItems } from '../helpers';
+import GenericSettingsScreen from './GenericSettingsScreen/GenericSettingsScreen';
+import { useUserProfileSettingsItems } from './helpers';
 
 
 const UserProfileSettingsScreen = () => {

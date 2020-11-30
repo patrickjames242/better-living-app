@@ -1,3 +1,4 @@
+
 {
   "expo": {
     "name": "Better Living",
@@ -25,10 +26,11 @@
     ],
     "ios": {
       "bundleIdentifier": "com.patrickhanna.betterliving",
-      "buildNumber": "1.0.5",
+      "buildNumber": "1.0.7",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "Your photo library is needed to allow you upload photos into the app.",
-        "NSCameraUsageDescription": "Your camera is needed to allow you to upload photos into the app."
+        "NSCameraUsageDescription": "Your camera is needed to allow you to upload photos into the app.",
+        "ITSAppUsesNonExemptEncryption": true
       },
       "supportsTablet": true
     },

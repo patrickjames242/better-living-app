@@ -1,5 +1,5 @@
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import GenericSettingsScreen, { GenericSettingsScreenSection, GenericSettingsScreenNavigationBarType } from '../GenericSettingsScreen/GenericSettingsScreen';
 import SettingsListScreenHeader from './SettingsListScreenHeader';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -9,21 +9,19 @@ import { logOutAction } from '../../../redux/authentication';
 import { displayTwoDecisionAlert } from '../../../helpers/Alerts';
 import { useUserProfileSettingsItems } from '../helpers';
 import { UserType } from '../../../api/authentication/validation';
-import { shouldPopTabBarControllerChildToTop, useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
+import { useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
 import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
-import { ScrollView } from 'react-native-gesture-handler';
-import { getNumbersList } from '../../../helpers/general';
-import CustomizedText from '../../../helpers/Views/CustomizedText';
-import { FlatList, View } from 'react-native';
+
 
 
 const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'SettingsList'>) => {
 
     const authentication = useSelector(state => state.authentication);
     const isEmployeeOrManager = [UserType.employee, UserType.manager].includes((authentication?.userObject.userType ?? UserType.customer));
-    const profileSettingsItems = useUserProfileSettingsItems();
 
+    const profileSettingsItems = useUserProfileSettingsItems();
     const isOrderingSystemEnabled = useSelector(state => state.globalSettings.isOrderingSystemEnabled);
+
 
     useTabBarControllerChildRootScreenPopToTopFunctionality(TabBarSelection.settings, props);
 
@@ -33,43 +31,50 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
             ...(isEmployeeOrManager ? [{
                 title: "Ordering System",
                 data: [
-                    {
-                        title: 'Allow Ordering',
-                        imageSource: require('../icons/light-switch.png'),
-                        rightSubtitleText: (() => {
-                            if (isOrderingSystemEnabled === true) return 'On';
-                            else if (isOrderingSystemEnabled === false) return 'Off';
-                            else return undefined;
-                        })(),
-                        onPress: () => {
-                            props.navigation.push('AllowOrderingSwitch');
-                        },
-                    },
+                    ...(authentication.userObject.userType === UserType.employee ? [
+                        {
+                            title: 'Allow Ordering',
+                            imageSource: require('../icons/light-switch.png'),
+                            rightSubtitleText: (() => {
+                                if (isOrderingSystemEnabled === true) return 'On';
+                                else if (isOrderingSystemEnabled === false) return 'Off';
+                                else return undefined;
+                            })(),
+                            onPress: () => {
+                                props.navigation.push('AllowOrderingSwitch');
+                            }
+                        }
+                    ] : []),
                     {
                         title: 'Food Products',
                         imageSource: require('../icons/products.png'),
-                        onPress: () => {props.navigation.push('ProductsList')},
+                        onPress: () => { props.navigation.push('ProductsList') },
                     },
                     {
                         title: 'Menus',
                         imageSource: require('../icons/menus.png'),
-                        onPress: () => {props.navigation.push('MenusList')},
+                        onPress: () => { props.navigation.push('MenusList') },
                     },
                     {
                         title: 'Meals',
                         imageSource: require('../icons/meals.png'),
-                        onPress: () => {props.navigation.push('MealsList')},
+                        onPress: () => { props.navigation.push('MealsList') },
                     },
                     {
                         title: 'Meal Categories',
                         imageSource: require('../icons/mealCategories.png'),
-                        onPress: () => {props.navigation.push('MealCategoriesList')},
+                        onPress: () => { props.navigation.push('MealCategoriesList') },
                     },
                     {
                         title: 'Orders History',
                         imageSource: require('../icons/history-book.png'),
-                        onPress: () => {props.navigation.push('OrdersHistory')},
+                        onPress: () => { props.navigation.push('OrdersHistory') },
                     },
+                    {
+                        title: 'More Setings',
+                        imageSource: require('../icons/more.png'),
+                        onPress: () => { props.navigation.push('OrderingSystemMoreSettings'); },
+                    }
                 ]
             }] : []),
             ...((isEmployeeOrManager === false) ? [{
@@ -82,7 +87,7 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                     ...(isEmployeeOrManager ? [{
                         title: 'Edit Profile Info',
                         imageSource: require('../icons/edit-user.png'),
-                        onPress: () => { 
+                        onPress: () => {
                             props.navigation.push('UserProfileSettings');
                         },
                     }] : []),
@@ -130,7 +135,7 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
         //         }}
         //     />
         // </View>
-        
+
 
         // return <ScrollView style={{flex: 1, backgroundColor: 'green'}}>
         //     {getNumbersList(0, 200).map((x, i) => {

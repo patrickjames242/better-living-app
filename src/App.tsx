@@ -10,6 +10,7 @@ import { tryConnectingWebsocketListener } from './api/realtimeUpdates';
 import RootNavigationView from './UI/RootNavigationView/RootNavigationView';
 import * as Notifications from 'expo-notifications';
 import AppSettings from './settings';
+import { CustomColors } from './helpers/colors';
 
 registerRootComponent(App);
 
@@ -35,6 +36,10 @@ Notifications.setNotificationHandler({
 		shouldSetBadge: false,
 	}),
 });
+if (Platform.OS === 'web'){
+
+	window.document.body.style.backgroundColor = CustomColors.mainBackgroundColor.stringValue;
+}
 
 
 export default function App() {
@@ -42,6 +47,7 @@ export default function App() {
 	const [appIsReady, setAppIsReady] = useState(false);
 
 	useEffect(() => {
+
 		loadFonts().then(() => {
 			setAppIsReady(true);
 			tryConnectingWebsocketListener();

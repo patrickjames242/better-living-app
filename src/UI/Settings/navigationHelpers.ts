@@ -32,6 +32,7 @@ export type SettingsNavStackParams = {
     OrderDetail: TodaysOrdersNavStackParams['OrderDetail'];
     OrdersHistory: undefined;
     AllowOrderingSwitch: undefined;
+    OrderingSystemMoreSettings: undefined;
 }
 
 export const SettingsNavStack = createStackNavigator<SettingsNavStackParams>();

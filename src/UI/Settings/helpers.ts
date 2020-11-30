@@ -3,13 +3,35 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useMemo } from "react";
+import { updateGlobalSettings } from "../../api/globalSettings/requests";
+import { displayErrorMessage } from "../../helpers/Alerts";
 import { useSelector } from "../../redux/store";
 import { VerifyPasswordPurpose } from "../LogInSignUpUI/helpers";
 import { useTabBarControllerNavigation } from "../TabBarController/helpers";
 import { GenericSettingsScreenSection } from "./GenericSettingsScreen/GenericSettingsScreen";
+import { SettingsItemViewProps } from "./GenericSettingsScreen/SettingsItemView";
 import { SettingsNavStackParams } from "./navigationHelpers";
 
+export const useAllowOrderingSwitchSettingsItem: () => SettingsItemViewProps = () => {
 
+    const isOrderingAllowed = useSelector(state => state.globalSettings.isOrderingSystemEnabled);
+
+    return {
+        title: 'Allow Ordering',
+        imageSource: require('./icons/light-switch.png'),
+        rightSwitchInfo: {
+            isOnValue: isOrderingAllowed,
+            onValueChange: (isOn: boolean) => {
+                return updateGlobalSettings({
+                    is_ordering_system_enabled: isOn,
+                }).catch(error => {
+                    displayErrorMessage(error.message);
+                });
+            },
+        }
+    }
+    
+}
 
 export function useUserProfileSettingsItems() {
 

@@ -23,10 +23,6 @@ import { CartEntriesMapValue } from '../../../redux/cart';
 
 const OrderConfirmationScreen = (() => {
 
-
-
-
-
     const OrderConfirmationScreen = (props: StackScreenProps<CartNavStackParamList, 'OrderingConfirmation'>) => {
 
         const initialValues: OrderConfirmationScreenValues = useMemo(() => ({
@@ -51,7 +47,7 @@ const OrderConfirmationScreen = (() => {
                     user_paid_online: values.howToPay === HowToPay.online,
                     order_items: getRequestOrderItemsFromCartEntries(props.route.params.cartEntries),
                     ...(values.pickUpOrDelivery === PickUpOrDelivery.delivery ?
-                        { user_wants_order_delivered: true, delivery_directions: values.deliveryDirections } :
+                        { user_wants_order_delivered: true, delivery_directions: values.deliveryDirections.trim() } :
                         { user_wants_order_delivered: false }
                     )
                 }).finally(() => {
