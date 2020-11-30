@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Platform, StatusBar } from 'react-native';
+import { Platform, StatusBar, LogBox } from 'react-native';
 import { registerRootComponent, AppLoading } from 'expo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loadFonts } from './helpers/fonts/fonts';
@@ -13,15 +13,20 @@ import AppSettings from './settings';
 
 registerRootComponent(App);
 
+// YellowBox.ignoreWarnings([
+// 	"Animated: `useNativeDriver`", 
+// 	"Non-serializable values were found in the navigation state.",
+// 	"[SECURITY] node-uuid: crypto not usable, falling back to insecure Math.random()"
+// ]);
+
 if (Platform.OS !== 'web'){
-	import('react-native').then(module => {
-		module.LogBox.ignoreLogs([
-			"Animated: `useNativeDriver`", 
-			"Non-serializable values were found in the navigation state.",
-			"[SECURITY] node-uuid: crypto not usable, falling back to insecure Math.random()"
-		]);
-	});
+	LogBox.ignoreLogs([
+		"Animated: `useNativeDriver`", 
+		"Non-serializable values were found in the navigation state.",
+		"[SECURITY] node-uuid: crypto not usable, falling back to insecure Math.random()"
+	]);
 }
+
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
