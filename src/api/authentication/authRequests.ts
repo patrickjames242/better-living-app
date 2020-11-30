@@ -6,7 +6,7 @@ import { assertValidObjFromApi } from "../helpers";
 import { User } from "./User";
 import store, { addSelectedStateListener, AppState } from "../../redux/store";
 import { logInOrSignUpAction } from "../../redux/authentication";
-import { Notifications } from "expo";
+import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { RealtimeUpdatesConnectionState } from "../../redux/realtimeUpdates";
@@ -75,7 +75,7 @@ export function testPasswordValidity(password: string) {
 
 
 async function sendCurrentDeviceIdToServerAsAnonymousUser() {
-    const token = await Notifications.getExpoPushTokenAsync()
+    const token = await (await Notifications.getExpoPushTokenAsync()).data;
     await fetchFromAPI({
         path: 'auth/add-anonymous-user-device-id/',
         method: HttpMethod.put,

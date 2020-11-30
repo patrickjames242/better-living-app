@@ -25,7 +25,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.patrickhanna.betterliving",
-      "buildNumber": "1.0.3",
+      "buildNumber": "1.0.4",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "Your photo library is needed to allow you upload photos into the app.",
         "NSCameraUsageDescription": "Your camera is needed to allow you to upload photos into the app."

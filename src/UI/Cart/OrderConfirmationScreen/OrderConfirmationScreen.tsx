@@ -16,7 +16,6 @@ import { CartNavStackParamList } from '../navigationHelpers';
 import { StackScreenProps } from '@react-navigation/stack';
 import { getRequestOrderItemsFromCartEntries, submitOrder } from '../../../api/orders/requests';
 import { displayErrorMessage, displaySuccessMessage } from '../../../helpers/Alerts';
-import AppSettings from '../../../settings';
 import { Formik, useField, useFormikContext } from '../../../helpers/formik';
 import { HowToPay, OrderConfirmationScreenValues, PickUpOrDelivery } from './helpers';
 import * as yup from 'yup';
@@ -31,8 +30,8 @@ const OrderConfirmationScreen = (() => {
     const OrderConfirmationScreen = (props: StackScreenProps<CartNavStackParamList, 'OrderingConfirmation'>) => {
 
         const initialValues: OrderConfirmationScreenValues = useMemo(() => ({
-            pickUpOrDelivery: '',
-            howToPay: '',
+            pickUpOrDelivery: null,
+            howToPay: null,
             deliveryDirections: '',
         }), []);
 
