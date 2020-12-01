@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
@@ -20,9 +20,13 @@ import { Formik, useField, useFormikContext } from '../../../helpers/formik';
 import { HowToPay, OrderConfirmationScreenValues, PickUpOrDelivery } from './helpers';
 import * as yup from 'yup';
 import { CartEntriesMapValue } from '../../../redux/cart';
+import { FormikProps } from 'formik';
+import AsyncStorage from '@react-native-community/async-storage';
+import OrderConfirmationLayoutConstants from './OrderConfirmationLayoutConstants';
 
 const OrderConfirmationScreen = (() => {
-
+    
+    
     const OrderConfirmationScreen = (props: StackScreenProps<CartNavStackParamList, 'OrderingConfirmation'>) => {
 
         const initialValues: OrderConfirmationScreenValues = useMemo(() => ({
@@ -31,7 +35,20 @@ const OrderConfirmationScreen = (() => {
             deliveryDirections: '',
         }), []);
 
+        const formikRef = useRef<FormikProps<OrderConfirmationScreenValues>>(null);
+
+        useEffect(() => {
+            AsyncStorage.getItem(OrderConfirmationLayoutConstants.cachedDeliveryDirectionsKey).then(prevDeliveryDirections => {
+                if (prevDeliveryDirections != null){
+                    const deliveryDirectionsKey: keyof OrderConfirmationScreenValues = "deliveryDirections";
+                    formikRef.current?.setFieldValue(deliveryDirectionsKey, prevDeliveryDirections)
+                }
+            });
+            
+        }, []);
+
         return <Formik<OrderConfirmationScreenValues>
+            innerRef={formikRef}
             validationSchema={yup.object({
                 pickUpOrDelivery: yup.string().oneOf([PickUpOrDelivery.delivery, PickUpOrDelivery.pickUp]).required(),
                 howToPay: yup.string().oneOf([HowToPay.online, HowToPay.inPerson]).required(),

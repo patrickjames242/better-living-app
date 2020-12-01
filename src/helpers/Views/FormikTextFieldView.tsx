@@ -12,9 +12,18 @@ function _FormikTextFieldView(Component: React.FC<TextFieldViewProps>) {
         return <Component
             {...props}
             value={value}
-            onChangeText={setValue as any}
+            onChangeText={text => {
+                setValue(text as any);
+                props.onChangeText?.(text);
+            }}
             errorMessage={(touched && error) ? error : undefined}
-            textInputProps={{ ...props.textInputProps, onBlur: () => setTouched(true) }}
+            textInputProps={{ 
+                ...props.textInputProps, 
+                onBlur: (...args) => {
+                    setTouched(true);
+                    props.textInputProps?.onBlur?.(...args);
+                },
+            }}
         />
     }
 }

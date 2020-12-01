@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import Spacer from '../../../helpers/Spacers/Spacer';
@@ -8,11 +8,14 @@ import OrderConfirmationSelectableOptionView from './OrderConfirmationSelectable
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { CustomColors } from '../../../helpers/colors';
 import { HowToPay, OrderConfirmationScreenValues, PickUpOrDelivery } from './helpers';
-import { useFormikContext } from '../../../helpers/formik';
+import { useField, useFormikContext } from '../../../helpers/formik';
 import LayoutConstants from '../../../LayoutConstants';
 import { FormikMultilineTextFieldView } from '../../../helpers/Views/FormikTextFieldView';
 import { useSelector } from '../../../redux/store';
 import currency from 'currency.js';
+import { MultilineTextFieldTextInput, MultilineTextFieldView } from '../../../helpers/Views/TextFieldView';
+import { Optional } from '../../../helpers/general';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export interface OrderConfirmationPickUpOrDeliveryViewProps {
 
@@ -60,7 +63,7 @@ const OrderConfirmationPickUpOrDeliveryView = (() => {
                     }}
                 />
                 {formikContext.values.pickUpOrDelivery === PickUpOrDelivery.delivery &&
-                    <DeliveryDirections/>}
+                    <DeliveryDirections />}
             </Spacer>
         </FloatingCellStyleSectionView>
     }
@@ -72,12 +75,12 @@ export default OrderConfirmationPickUpOrDeliveryView;
 
 
 
-interface DeliveryDirectionsProps{
-    
+interface DeliveryDirectionsProps {
+
 }
 
 const DeliveryDirections = (() => {
-    
+
     const styles = StyleSheet.create({
         root: {
             padding: LayoutConstants.floatingCellStyles.padding,
@@ -85,10 +88,23 @@ const DeliveryDirections = (() => {
             backgroundColor: 'white',
         },
     });
-    
+
     const DeliveryDirections = (props: DeliveryDirectionsProps) => {
+
+        const latestTimerId = useRef<Optional<number>>(null);
+
         return <View style={styles.root}>
-            <FormikMultilineTextFieldView<OrderConfirmationScreenValues> formikFieldName="deliveryDirections" topTitleText="Please provide directions for your delivery"/>
+            <FormikMultilineTextFieldView<OrderConfirmationScreenValues>
+                formikFieldName="deliveryDirections"
+                topTitleText="Please provide directions for your delivery"
+                onChangeText={text => {
+                    latestTimerId.current != null && clearTimeout(latestTimerId.current);
+                    latestTimerId.current = setTimeout(() => {
+                        AsyncStorage.setItem(OrderConfirmationLayoutConstants.cachedDeliveryDirectionsKey, text.trim());
+                        latestTimerId.current = null;
+                    }, 500);
+                }}
+            />
         </View>
     }
     return DeliveryDirections;

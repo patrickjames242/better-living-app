@@ -70,11 +70,11 @@ const SettingsListScreen = (props: StackScreenProps<SettingsNavStackParams, 'Set
                         imageSource: require('../icons/history-book.png'),
                         onPress: () => { props.navigation.push('OrdersHistory') },
                     },
-                    {
+                    ...(authentication.userObject.userType === UserType.manager ? [{
                         title: 'More Setings',
                         imageSource: require('../icons/more.png'),
                         onPress: () => { props.navigation.push('OrderingSystemMoreSettings'); },
-                    }
+                    }] : []),
                 ]
             }] : []),
             ...((isEmployeeOrManager === false) ? [{
