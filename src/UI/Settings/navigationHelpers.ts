@@ -33,6 +33,8 @@ export type SettingsNavStackParams = {
     OrdersHistory: undefined;
     AllowOrderingSwitch: undefined;
     OrderingSystemMoreSettings: undefined;
+    EditVatPercentageScreen: undefined;
+    EditDeliveryFee: undefined;
 }
 
 export const SettingsNavStack = createStackNavigator<SettingsNavStackParams>();

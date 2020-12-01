@@ -13,14 +13,14 @@ import { FormikTextFieldView } from '../../../../../helpers/Views/FormikTextFiel
 import MealEditOrCreationCategoriesSelector from './MealEditOrCreationCategoriesSelector';
 import { MealRequestObj, createNewMeal, updateMeal, deleteMeal } from '../../../../../api/orderingSystem/meals/requests';
 import { displayErrorMessage } from '../../../../../helpers/Alerts';
-
+import currency from 'currency.js';
 
 const MealEditOrCreationScreen = (() => {
 
     function submitForm(mealId: Optional<number>, values: MealEditOrCreationValues) {
         const requestObj: MealRequestObj = {
             title: values.title,
-            price: Number(values.priceString.trim()),
+            price: currency(values.priceString.trim()).toJSON(),
             product_categories: values.productCategoryIds.toArray().map(id => ({ id, order_num: 0 })),
         }
         return mealId == null ? createNewMeal(requestObj) : updateMeal(mealId, requestObj);
@@ -39,7 +39,7 @@ const MealEditOrCreationScreen = (() => {
             const productCategoriesReduxState = store.getState().orderingSystem.mealCategories;
             return {
                 title: meal?.title ?? '',
-                priceString: mapOptional(meal?.price, x => x.toFixed(2)) ?? '',
+                priceString: mapOptional(meal?.price, x => currency(x).format()) ?? '',
                 productCategoryIds: Set<number>().withMutations(set => {
                     const categories = meal?.productCategories;
                     if (categories == null) return;

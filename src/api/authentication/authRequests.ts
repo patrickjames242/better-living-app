@@ -75,7 +75,7 @@ export function testPasswordValidity(password: string) {
 
 
 async function sendCurrentDeviceIdToServerAsAnonymousUser() {
-    const token = getExpoNotificationDeviceTokenIfPossible();
+    const token = await getExpoNotificationDeviceTokenIfPossible();
     await fetchFromAPI({
         path: 'auth/add-anonymous-user-device-id/',
         method: HttpMethod.put,
@@ -89,7 +89,7 @@ async function sendCurrentDeviceIdToServerAsAnonymousUser() {
 export async function getExpoNotificationDeviceTokenIfPossible() {
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
         try {
-            return await (await Notifications.getExpoPushTokenAsync()).data;
+            return (await Notifications.getExpoPushTokenAsync()).data;
         } catch {
             return undefined;
         }

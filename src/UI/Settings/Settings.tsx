@@ -22,7 +22,9 @@ import MyOrdersListScreen from './MyOrdersListScreen/MyOrdersListScreen';
 import OrderDetailScreen from '../TodaysOrders/OrderDetailScreen/OrderDetailScreen';
 import OrdersHistoryScreen from './OrderingSystemSettings/OrdersHistoryScreen/OrdersHistoryScreen';
 import AllowOrderingSwitchScreen from './OrderingSystemSettings/AllowOrderingScreen';
-import OrderingSystemMoreSettingsScreen from './OrderingSystemSettings/OrderingSystemMoreSettingsScreen';
+import OrderingSystemMoreSettingsScreen from './OrderingSystemSettings/MoreSettingsScreen/OrderingSystemMoreSettingsScreen';
+import EditVatPercentageScreen from './OrderingSystemSettings/MoreSettingsScreen/EditVatPercentageScreen';
+import EditDeliveryFeeScreen from './OrderingSystemSettings/MoreSettingsScreen/EditDeliveryScreen';
 
 
 const Settings = () => {
@@ -53,6 +55,8 @@ const Settings = () => {
 
         <SettingsNavStack.Screen name="AllowOrderingSwitch" component={AllowOrderingSwitchScreen}/>
         <SettingsNavStack.Screen name="OrderingSystemMoreSettings" component={OrderingSystemMoreSettingsScreen}/>
+        <SettingsNavStack.Screen name="EditVatPercentageScreen" component={EditVatPercentageScreen}/>
+        <SettingsNavStack.Screen name="EditDeliveryFee" component={EditDeliveryFeeScreen}/>
     </SettingsNavStack.Navigator>
 };
 

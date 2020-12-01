@@ -5,7 +5,6 @@ import BouncyButton from '../../../helpers/Buttons/BouncyButton';
 import { CustomColors, Color } from '../../../helpers/colors';
 import CustomizedText from '../../../helpers/Views/CustomizedText';
 import { CustomFont } from '../../../helpers/fonts/fonts';
-import LayoutConstants from '../../../LayoutConstants';
 
 
 export interface SelectableRoundedTextButtonProps extends ViewProps {

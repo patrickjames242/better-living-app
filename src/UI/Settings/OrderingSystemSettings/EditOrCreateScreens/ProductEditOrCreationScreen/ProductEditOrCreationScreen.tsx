@@ -16,14 +16,14 @@ import OrderingSystemEditingFormScreen from '../OrderingSystemEditingFormScreen'
 import ProductEditOrCreationInfoTagsSelector from './ProductEditOrCreationInfoTagsSelector';
 import { displayErrorMessage } from '../../../../../helpers/Alerts';
 import { RNFileForUpload } from '../../../../../helpers/RNFileForUpload';
-
+import currency from 'currency.js';
 
 
 const ProductEditOrCreationScreen = (() => {
 
     function submitForm(values: ProductEditOrCreateValues, initialValues: ProductEditOrCreateValues, productId: Optional<number>){
         const individual_price = (() => {
-            const price = Number(values.priceString.trim());
+            const price = currency(values.priceString.trim()).toJSON();
             return isNaN(price) ? null : price;
         })();
 
@@ -84,7 +84,7 @@ const ProductEditOrCreationScreen = (() => {
             title: product?.title ?? '',
             infoTagIds: product?.infoTagIds ?? Set<number>(),
             imageSource: {uriToDisplayInForm: product?.imageUrl ?? undefined},
-            priceString: mapOptional(product?.individualPrice, x => x.toFixed(2)) ?? '',
+            priceString: currency(product?.individualPrice ?? 0).format(),
             shouldBeSoldIndividually: product?.shouldBeSoldIndividually ?? false,
             description: product?.description ?? '',
             // eslint-disable-next-line react-hooks/exhaustive-deps
