@@ -46,6 +46,7 @@ const ForgotPasswordCreatePasswordScreen = (props: StackScreenProps<LogInSignUpU
             topLeftButtonType={ExitOrBackButton.back}
             onContinueButtonPress={formik.submitForm}
             isContinueButtonLoading={formik.isSubmitting}
+            isContinueButtonEnabled={formik.isValid && formik.dirty}
         >
             <FormikTextFieldView<ForgotPasswordCreatePasswordValues> topTitleText="Password" formikFieldName="password" textInputProps={DefaultKeyboardConfigs.password}/>
         </LogInSignUpScreenTemplate>

@@ -51,6 +51,7 @@ const SettingsEmailEditingScreen = (props: StackScreenProps<SettingsNavStackPara
                 ...DefaultLongButtonsProps.saveChanges,
                 isLoading: formik.isSubmitting,
                 onPress: formik.submitForm,
+                isEnabled: formik.isValid && formik.dirty && formik.initialValues.email.trim() !== formik.values.email.trim(),
             }]}
         >
             <FormikTextFieldView<EmailEditingValues> topTitleText="Email" formikFieldName="email" textInputProps={DefaultKeyboardConfigs.email}/>

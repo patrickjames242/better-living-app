@@ -20,7 +20,7 @@ const MealEditOrCreationScreen = (() => {
     function submitForm(mealId: Optional<number>, values: MealEditOrCreationValues) {
         const requestObj: MealRequestObj = {
             title: values.title,
-            price: currency(values.priceString.trim()).toJSON(),
+            price: currency(values.priceString.trim()).value,
             product_categories: values.productCategoryIds.toArray().map(id => ({ id, order_num: 0 })),
         }
         return mealId == null ? createNewMeal(requestObj) : updateMeal(mealId, requestObj);

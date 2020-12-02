@@ -9,7 +9,7 @@
       "web"
     ],
     "entryPoint": "./src/App.tsx",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "default",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
@@ -26,11 +26,10 @@
     ],
     "ios": {
       "bundleIdentifier": "com.patrickhanna.betterliving",
-      "buildNumber": "1.0.7",
+      "buildNumber": "1.0.0",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "Your photo library is needed to allow you upload photos into the app.",
-        "NSCameraUsageDescription": "Your camera is needed to allow you to upload photos into the app.",
-        "ITSAppUsesNonExemptEncryption": true
+        "NSCameraUsageDescription": "Your camera is needed to allow you to upload photos into the app."
       },
       "supportsTablet": true
     },

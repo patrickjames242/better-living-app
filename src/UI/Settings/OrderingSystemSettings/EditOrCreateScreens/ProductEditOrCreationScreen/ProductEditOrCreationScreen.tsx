@@ -23,7 +23,7 @@ const ProductEditOrCreationScreen = (() => {
 
     function submitForm(values: ProductEditOrCreateValues, initialValues: ProductEditOrCreateValues, productId: Optional<number>){
         const individual_price = (() => {
-            const price = currency(values.priceString.trim()).toJSON();
+            const price = currency(values.priceString.trim()).value;
             return isNaN(price) ? null : price;
         })();
 

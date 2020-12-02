@@ -65,6 +65,7 @@ const LogInScreen = () => {
                     ]
                 });
             }}
+            isContinueButtonEnabled={formik.isValid && (formik.dirty || Object.getOwnPropertyNames(formik.initialErrors).length <= 0)}
             isContinueButtonLoading={formik.isSubmitting}
             topLeftButtonType={ExitOrBackButton.exit}
             onContinueButtonPress={formik.submitForm}

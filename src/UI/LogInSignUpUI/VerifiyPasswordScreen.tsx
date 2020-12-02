@@ -52,6 +52,7 @@ const VerifyPasswordScreen = () => {
             subtitle="In order to complete this action, you must first enter your current password."
             isContinueButtonLoading={formik.isSubmitting}
             onContinueButtonPress={formik.submitForm}
+            isContinueButtonEnabled={formik.isValid && formik.dirty}
             topLeftButtonType={ExitOrBackButton.exit}
         >
             <FormikTextFieldView<VerifyPasswordValues> topTitleText="Password" textInputProps={{

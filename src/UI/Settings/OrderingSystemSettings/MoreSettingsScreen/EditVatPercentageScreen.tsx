@@ -15,6 +15,11 @@ interface Values {
     vatPercentage: string;
 }
 
+function parsePercentageString(string: string){
+    const trimmedPercentString = string.trim();
+    return Number(trimmedPercentString.substring(0, trimmedPercentString.length - 1)) / 100
+}
+
 const EditVatPercentageScreen = (props: StackScreenProps<SettingsNavStackParams, 'EditVatPercentageScreen'>) => {
 
     const intialValues: Values = useMemo(() => {
@@ -29,8 +34,7 @@ const EditVatPercentageScreen = (props: StackScreenProps<SettingsNavStackParams,
             vatPercentage: yup.string().trim().required('Vat Percentage field is required').matches(/^\d+(\.\d+)?%$/, 'Vat Percentage must follow the format 15% or 15.5%'),
         })}
         onSubmit={(values, {setSubmitting}) => {
-            const trimmedPercentString = values.vatPercentage.trim();
-            const percentage = Number(trimmedPercentString.substring(0, trimmedPercentString.length - 1)) / 100;
+            const percentage = parsePercentageString(values.vatPercentage);
             updateGlobalSettings({vat_percentage: percentage}).finally(() => {
                 setSubmitting(false);
             }).then(() => {
@@ -46,7 +50,7 @@ const EditVatPercentageScreen = (props: StackScreenProps<SettingsNavStackParams,
                 ...DefaultLongButtonsProps.saveChanges,
                 onPress: formik.submitForm,
                 isLoading: formik.isSubmitting,
-                
+                isEnabled: formik.isValid && formik.dirty && parsePercentageString(formik.initialValues.vatPercentage) !== parsePercentageString(formik.values.vatPercentage),
             }]}
         >
             <FormikTextFieldView<Values> formikFieldName="vatPercentage" topTitleText="Vat Percentage" textInputProps={DefaultKeyboardConfigs.price} />

@@ -50,6 +50,7 @@ const SettingsPhoneNumberEditingScreen = (props: StackScreenProps<SettingsNavSta
                 ...DefaultLongButtonsProps.saveChanges,
                 isLoading: formik.isSubmitting,
                 onPress: formik.submitForm,
+                isEnabled: formik.isValid && formik.dirty && formik.values.phoneNumber.trim() !== formik.initialValues.phoneNumber.trim(),
             }]}
         >
             <FormikTextFieldView<PhoneNumberEditingValues> topTitleText="First Name" formikFieldName="phoneNumber" textInputProps={DefaultKeyboardConfigs.phoneNumber}/>

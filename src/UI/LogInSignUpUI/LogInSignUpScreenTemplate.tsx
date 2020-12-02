@@ -26,6 +26,7 @@ export interface LogInSignUpScreenTemplateProps extends React.PropsWithChildren<
     title: string;
     subtitle: string;
 
+    isContinueButtonEnabled?: boolean;
     isContinueButtonLoading?: boolean;
     onContinueButtonPress?: () => void;
 
@@ -144,7 +145,8 @@ const LogInSignUpScreenTemplate = (() => {
                         text: "Continue",
                         centerTitleText: true,
                         onPress: props.onContinueButtonPress,
-                        isLoading: props.isContinueButtonLoading
+                        isLoading: props.isContinueButtonLoading,
+                        isEnabled: props.isContinueButtonEnabled,
                     }}
                 />
                 </View>

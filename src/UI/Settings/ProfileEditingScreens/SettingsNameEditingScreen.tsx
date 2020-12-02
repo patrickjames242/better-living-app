@@ -54,6 +54,10 @@ const SettingsNameEditingScreen = (props: StackScreenProps<SettingsNavStackParam
                 ...DefaultLongButtonsProps.saveChanges,
                 isLoading: formik.isSubmitting,
                 onPress: formik.submitForm,
+                isEnabled: formik.isValid && formik.dirty && (
+                    formik.initialValues.firstName.trim() !== formik.values.firstName.trim() || 
+                    formik.initialValues.lastName.trim() !== formik.values.lastName.trim()
+                )
             }]}
         >
             <FormikTextFieldView<NameEditingValues> topTitleText="First Name" formikFieldName="firstName" textInputProps={DefaultKeyboardConfigs.name}/>
@@ -65,4 +69,5 @@ const SettingsNameEditingScreen = (props: StackScreenProps<SettingsNavStackParam
 }
 
 export default SettingsNameEditingScreen;
+
 

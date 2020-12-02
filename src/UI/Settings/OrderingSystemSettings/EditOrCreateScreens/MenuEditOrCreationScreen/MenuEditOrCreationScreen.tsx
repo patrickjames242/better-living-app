@@ -156,7 +156,6 @@ const MenuEditOrCreationScreen = (() => {
         }, []);
 
         return <Formik<MenuEditOrCreationValues>
-
             initialValues={initialValues}
             validationSchema={yup.object({
                 title: yup.string().trim().required(),
@@ -175,8 +174,8 @@ const MenuEditOrCreationScreen = (() => {
             }}
         >{formik => {
 
-            const shouldButtonsBeEnabled = formik.isSubmitting === false && isDeleteLoading === false;
-
+            const shouldButtonsBeEnabled = formik.isSubmitting === false && isDeleteLoading === false ;
+            
             return <OrderingSystemEditingFormScreen
                 navBarTitle={navBarTitle}
                 saveButtonProps={{

@@ -51,12 +51,12 @@ const SettingsChangePasswordScreen = (props: StackScreenProps<SettingsNavStackPa
                 ...DefaultLongButtonsProps.saveChanges,
                 isLoading: formik.isSubmitting,
                 onPress: formik.submitForm,
+                isEnabled: formik.isValid && formik.dirty && formik.initialValues.newPassword.trim() !== formik.values.newPassword.trim(),
             }]}
         >
             <FormikTextFieldView<ChangePasswordValues> topTitleText="New Password" formikFieldName="newPassword" textInputProps={DefaultKeyboardConfigs.password}/>
         </GenericEditingFormScreen>
     }}</Formik>
-
 
 }
 

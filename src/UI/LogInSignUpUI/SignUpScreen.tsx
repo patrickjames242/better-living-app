@@ -82,6 +82,7 @@ const SignUpScreen = () => {
                     ]
                 });
             }}
+            isContinueButtonEnabled={formik.dirty && formik.isValid}
             onContinueButtonPress={formik.submitForm}
             isContinueButtonLoading={formik.isSubmitting}
             topLeftButtonType={ExitOrBackButton.exit}

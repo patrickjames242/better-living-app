@@ -37,6 +37,7 @@ const ForgotPasswordVerificationCodeScreen = (props: StackScreenProps<LogInSignU
             title="Enter Verification Code"
             subtitle="A verification code has been sent to your email. Please enter this code below."
             topLeftButtonType={ExitOrBackButton.back}
+            isContinueButtonEnabled={formik.dirty && formik.isValid}
             isContinueButtonLoading={formik.isSubmitting}
             onContinueButtonPress={formik.submitForm}
         >

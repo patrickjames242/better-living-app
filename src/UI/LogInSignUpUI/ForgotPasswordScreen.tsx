@@ -41,6 +41,7 @@ const ForgotPasswordScreen = (props: StackScreenProps<LogInSignUpUIParams, 'Forg
             subtitle="Please enter your email address below and a verification code will be sent to it."
             topLeftButtonType={ExitOrBackButton.back}
             onContinueButtonPress={formik.submitForm}
+            isContinueButtonEnabled={formik.isValid && formik.dirty}
             isContinueButtonLoading={formik.isSubmitting}
         >
             <FormikTextFieldView<ForgotPasswordFormValues> topTitleText="Email" formikFieldName="email" textInputProps={DefaultKeyboardConfigs.email}/>

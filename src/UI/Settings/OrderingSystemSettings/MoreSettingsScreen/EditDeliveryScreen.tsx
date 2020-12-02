@@ -31,7 +31,7 @@ const EditDeliveryFeeScreen = (props: StackScreenProps<SettingsNavStackParams, '
             deliveryFee: YUP_EDITING_FORM_PRICE_STRING('Vat Percentage').required('Vat Percentage field is required'),
         })}
         onSubmit={(values, {setSubmitting}) => {
-            const deliveryFee = currency(values.deliveryFee.trim()).toJSON();
+            const deliveryFee = currency(values.deliveryFee.trim()).value;
             updateGlobalSettings({delivery_fee: deliveryFee}).finally(() => {
                 setSubmitting(false);
             }).then(() => {
@@ -47,6 +47,7 @@ const EditDeliveryFeeScreen = (props: StackScreenProps<SettingsNavStackParams, '
                 ...DefaultLongButtonsProps.saveChanges,
                 onPress: formik.submitForm,
                 isLoading: formik.isSubmitting,
+                isEnabled: formik.isValid && formik.dirty && currency(formik.initialValues.deliveryFee).value !== currency(formik.values.deliveryFee).value,
             }]}
         >
             <FormikTextFieldView<Values> formikFieldName="deliveryFee" topTitleText="Delivery Fee" textInputProps={DefaultKeyboardConfigs.price} />
@@ -56,3 +57,6 @@ const EditDeliveryFeeScreen = (props: StackScreenProps<SettingsNavStackParams, '
 }
 
 export default EditDeliveryFeeScreen;
+
+
+
