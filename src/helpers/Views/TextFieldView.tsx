@@ -99,10 +99,11 @@ export interface TextFieldTextInputProps extends TextInputProps {
 
 export const MultilineTextFieldTextInput = (props: TextFieldTextInputProps) => {
     return <TextFieldTextInput
-        {...props}
         returnKeyType={props.returnKeyType ?? Platform.select({ web: 'enter', default: 'default' }) as any}
         scrollEnabled={props.scrollEnabled ?? false}
         multiline={props.multiline ?? true}
+        textAlignVertical="top"
+        {...props}
         style={[{
             minHeight: 175,
         }, props.style]}

@@ -4,7 +4,7 @@ import { StyleSheet, View, Dimensions } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import MealCreatorConstants from './MealCreatorConstants';
 import MealCreatorListViewItem from './ChildComponents/MealCreatorListViewItem';
-import { Map, Set } from 'immutable';
+import { is, Map, Set } from 'immutable';
 import FloatingCellStyleList from '../../../helpers/Views/FloatingCellStyleList';
 import ValueBox from '../../../helpers/ValueBox';
 import { Optional, compactMap, caseInsensitiveStringSort, mapOptional } from '../../../helpers/general';
@@ -69,25 +69,16 @@ const MealCreatorScreen = (() => {
 
         const allReduxProducts = useSelector(state => state.orderingSystem.products);
 
-        const productsMap = useMemo(() => {
-            return Map<number, Product>().withMutations(map => {
-                mealCategories.forEach(mealCategory => {
-                    mealCategory.productIds.forEach(productId => {
-                        if (currentMenuProductIds.contains(productId) === false) { return; }
-                        const product = allReduxProducts.get(productId);
-                        product && map.set(product.id, product);
-                    });
-                });
-            });
-        }, [allReduxProducts, currentMenuProductIds, mealCategories]);
-
         const listViewSections: MealCreatorSection[] = useMemo(() => {
             return mealCategories.map(category => ({
                 categoryId: category.id,
                 title: getCategoryTitle(category),
-                data: compactMap(category.productIds.toArray(), id => productsMap.get(id)).sort(caseInsensitiveStringSort(p => p.title)),
+                data: compactMap(category.productIds.toArray(), id => {
+                    if (currentMenuProductIds.has(id) === false) { return null; }
+                    return allReduxProducts.get(id);
+                }).sort(caseInsensitiveStringSort(p => p.title)),
             })).toArray();
-        }, [mealCategories, productsMap]);
+        }, [allReduxProducts, currentMenuProductIds, mealCategories]);
 
         return {
             listViewSections,
@@ -114,7 +105,7 @@ const MealCreatorScreen = (() => {
         const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
         useLayoutEffect(() => {
-            if (meal == null){
+            if (meal == null) {
                 props.navigation.goBack();
             }
         }, [meal, props.navigation]);
@@ -131,21 +122,21 @@ const MealCreatorScreen = (() => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
 
-        const initialSelectedItemsForEachSection: Map<number, ValueBox<Optional<number>>> = useMemo(() => {
-            return Map<number, ValueBox<Optional<number>>>().withMutations(map => {
-                listViewSections.forEach(x => {
-                    const selectedProduct = initialMealEntryToEdit_CategoryIdToChosenProductIdMap.get(x.categoryId);
-                    const selectedProductToUse = mapOptional(selectedProduct, y => allReduxMealCategories.get(x.categoryId)?.productIds.has(y) ?? false ? y : null);
-                    map.set(x.categoryId, new ValueBox(selectedProductToUse));
-                });
-            });
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []);
-
         // key is the section id. value is the item id.
-        const selectedItemsForEachSectionRef = useRef(initialSelectedItemsForEachSection);
-        const selectedItemsForEachSection = selectedItemsForEachSectionRef;
-
+        const selectedItemsForEachSectionRef = useRef(
+            useMemo(() => {
+                return Map<number, ValueBox<Optional<number>>>().withMutations(map => {
+                    listViewSections.forEach(x => {
+                        const selectedProduct = initialMealEntryToEdit_CategoryIdToChosenProductIdMap.get(x.categoryId);
+                        const selectedProductToUse = mapOptional(selectedProduct, y => (allReduxMealCategories.get(x.categoryId)?.productIds.has(y) ?? false) ? y : null);
+                        map.set(x.categoryId, new ValueBox(selectedProductToUse));
+                    });
+                });
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+            }, [])
+        );
+        
+        // updates the products in the selectedItemsForEachSectionRef everytime the listViewSections changes
         useMemo(() => {
             const selectedItems = selectedItemsForEachSectionRef;
             selectedItems.current = selectedItems.current.withMutations(map => {
@@ -156,12 +147,13 @@ const MealCreatorScreen = (() => {
         }, [listViewSections]);
 
         const calculateShouldSubmitButtonBeEnabled = useCallback(() => {
-            const areSelectionsInvalid = selectedItemsForEachSection.current.some((value, key) => {
+            const areSelectionsInvalid = selectedItemsForEachSectionRef.current.some((value, key) => {
                 if (value.value == null) { return true; }
                 return (allReduxMealCategories.get(key)?.productIds.contains(value.value) ?? false) === false;
             });
-            return areSelectionsInvalid === false;
-        }, [allReduxMealCategories, selectedItemsForEachSection]);
+            const isChanged = is(initialMealEntryToEdit_CategoryIdToChosenProductIdMap, selectedItemsForEachSectionRef.current.map(v => v.value)) === false;
+            return areSelectionsInvalid === false && isChanged;
+        }, [allReduxMealCategories, initialMealEntryToEdit_CategoryIdToChosenProductIdMap]);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
         const initialShouldSubmitButtonBeEnabled = useMemo(() => calculateShouldSubmitButtonBeEnabled(), []);
@@ -175,18 +167,18 @@ const MealCreatorScreen = (() => {
             const listener = () => {
                 setShouldSubmitButtonsBeEnabled(calculateShouldSubmitButtonBeEnabled());
             }
-            selectedItemsForEachSection.current.forEach(x => {
+            selectedItemsForEachSectionRef.current.forEach(x => {
                 unlistens.push(x.observer.addListener(listener));
             })
             return () => unlistens.forEach(x => x());
-        }, [allReduxMealCategories, calculateShouldSubmitButtonBeEnabled, selectedItemsForEachSection])
+        }, [allReduxMealCategories, calculateShouldSubmitButtonBeEnabled, selectedItemsForEachSectionRef])
 
 
 
         function onSubmitButtonPressed() {
             const choices = (() => {
                 let x: MealEntryRequestChoice[] = [];
-                selectedItemsForEachSection.current.forEach((value, key) => {
+                selectedItemsForEachSectionRef.current.forEach((value, key) => {
                     if (!value.value) { return; }
                     x.push({
                         meal_product_category_id: key,
@@ -238,13 +230,13 @@ const MealCreatorScreen = (() => {
                     const _section = section as MealCreatorSection;
                     return <MealCreatorListViewItem
                         item={item}
-                        sectionSelectionValue={selectedItemsForEachSection.current.get(_section.categoryId)!}
+                        sectionSelectionValue={selectedItemsForEachSectionRef.current.get(_section.categoryId)!}
                     />
                 }}
                 initialNumToRender={initialNumToRender}
                 windowSize={10}
             />
-        }, [bottomButtonViewHeight, initialNumToRender, listViewSections, selectedItemsForEachSection]);
+        }, [bottomButtonViewHeight, initialNumToRender, listViewSections, selectedItemsForEachSectionRef]);
 
 
         return <View style={styles.root}>

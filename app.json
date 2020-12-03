@@ -33,6 +33,9 @@
       },
       "supportsTablet": true
     },
+    "androidStatusBar": {
+      "backgroundColor": "#FFFFFF"
+    },
     "android": {
       "versionCode": 1,
       "package": "com.patrickhanna.betterliving",

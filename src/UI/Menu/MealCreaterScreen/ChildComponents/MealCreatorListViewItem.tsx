@@ -81,7 +81,7 @@ const MealCreatorListViewItem = (() => {
         </View>
     }
 
-    return MealCreatorListViewItem;
+    return React.memo(MealCreatorListViewItem);
 
 })();
 

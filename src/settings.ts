@@ -1,6 +1,5 @@
+
 import { StatusBarStyle } from "react-native";
-
-
 
 
 const AppSettings = {
