@@ -1,11 +1,9 @@
 
-import React, { useLayoutEffect, useRef, useState} from 'react';
+import React, { useLayoutEffect, useRef} from 'react';
 import { StyleSheet, Animated, View } from "react-native";
 import { CustomColors } from "../../../../helpers/colors";
 import MealCreatorCheckBoxButton from './MealCreatorCheckBox';
 import ListViewProductItemView from '../../../../helpers/Views/DataSpecificViews/ListViewProductItemView';
-import { Optional } from '../../../../helpers/general';
-import ValueBox from '../../../../helpers/ValueBox';
 import Product from '../../../../api/orderingSystem/products/Product';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -16,7 +14,9 @@ import LayoutConstants from '../../../../LayoutConstants';
 
 export interface MealCreatorListViewItemProps {
     // the number is the id of the item,
-    sectionSelectionValue: ValueBox<Optional<number>>,
+    isSelected: boolean;
+    categoryId: number;
+    updateSelectedProductIdForCategory: (categoryId: number, productId: number) => void;
     item: Product,
 }
 
@@ -44,30 +44,18 @@ const MealCreatorListViewItem = (() => {
         function onButtonPress() {
             navigation.push('ProductDetail', {productId: props.item.id});
         }
-
-        const [shouldBeSelected, setShouldBeSelected] = useState(false);
     
         // 0 is translucent, 1 is green
-        const backgroundColor = useRef(new Animated.Value(shouldBeSelected ? 1 : 0));
+        const backgroundColor = useRef(new Animated.Value(props.isSelected ? 1 : 0));
 
-
-        //i'm observing the value because depending on props for selectionState is too slow, because all cells in the list would have to be rerendered.
-        useLayoutEffect(() => {
-            const listener = (newValue: Optional<number>) => {
-                const _shouldBeSelected = newValue === props.item.id;
-                setShouldBeSelected(_shouldBeSelected);
-            }
-            listener(props.sectionSelectionValue.value);
-            return props.sectionSelectionValue.observer.addListener(listener);
-        }, [props.item.id, props.sectionSelectionValue.observer, props.sectionSelectionValue.value]);
 
         useLayoutEffect(() => {
             Animated.timing(backgroundColor.current, {
-                toValue: shouldBeSelected ? 1 : 0,
+                toValue: props.isSelected ? 1 : 0,
                 duration: 150,
                 useNativeDriver: false,
             }).start();
-        }, [shouldBeSelected]);
+        }, [props.isSelected]);
 
         return <View style={styles.root}>
             <Animated.View style={[styles.backgroundSelectionView, {
@@ -77,7 +65,7 @@ const MealCreatorListViewItem = (() => {
                 }),
             }]} />
             <ListViewProductItemView style={styles.productInfoItemView} item={props.item} onPress={onButtonPress} />
-            <MealCreatorCheckBoxButton onPress={() => {props.sectionSelectionValue.value = props.item.id}} isSelected={shouldBeSelected} />
+            <MealCreatorCheckBoxButton onPress={() => {props.updateSelectedProductIdForCategory(props.categoryId, props.item.id)}} isSelected={props.isSelected} />
         </View>
     }
 

@@ -1,12 +1,11 @@
 
-import React, { useState, useMemo, useRef, useLayoutEffect, useCallback } from 'react';
+import React, { useState, useMemo, useRef, useLayoutEffect, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import MealCreatorConstants from './MealCreatorConstants';
 import MealCreatorListViewItem from './ChildComponents/MealCreatorListViewItem';
 import { is, Map, Set } from 'immutable';
 import FloatingCellStyleList from '../../../helpers/Views/FloatingCellStyleList';
-import ValueBox from '../../../helpers/ValueBox';
 import { Optional, compactMap, caseInsensitiveStringSort, mapOptional } from '../../../helpers/general';
 import LayoutConstants from '../../../LayoutConstants';
 import { useSelector } from '../../../redux/store';
@@ -83,6 +82,7 @@ const MealCreatorScreen = (() => {
         return {
             listViewSections,
             allReduxMealCategories,
+            allReduxProducts
         };
     }
 
@@ -100,7 +100,7 @@ const MealCreatorScreen = (() => {
         })();
 
         const meal = useSelector(state => state.orderingSystem.meals.get(mealId));
-        const { listViewSections, allReduxMealCategories } = useListViewSections(meal);
+        const { listViewSections, allReduxMealCategories, allReduxProducts } = useListViewSections(meal);
         const [bottomButtonViewHeight, setBottomButtonViewHeight] = useState(0);
         const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
@@ -110,79 +110,61 @@ const MealCreatorScreen = (() => {
             }
         }, [meal, props.navigation]);
 
-
-        const initialMealEntryToEdit_CategoryIdToChosenProductIdMap = useMemo(() => {
-            return Map<number, number>().withMutations(map => {
+        const initialChosenProductIds = useMemo(() => {
+            return Map<number, Optional<number>>().withMutations(map => {
                 if ('mealEntryToEdit' in props.route.params) {
                     props.route.params.mealEntryToEdit.choices.forEach(x => {
-                        map.set(x.mealProductCategoryId, x.chosenProductId);
+                        const chosenProductId = (allReduxMealCategories.get(x.mealProductCategoryId)?.productIds.has(x.chosenProductId) ?? false) ? x.chosenProductId : null;
+                        map.set(x.mealProductCategoryId, chosenProductId);
                     });
                 }
             });
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
 
-        // key is the section id. value is the item id.
-        const selectedItemsForEachSectionRef = useRef(
-            useMemo(() => {
-                return Map<number, ValueBox<Optional<number>>>().withMutations(map => {
-                    listViewSections.forEach(x => {
-                        const selectedProduct = initialMealEntryToEdit_CategoryIdToChosenProductIdMap.get(x.categoryId);
-                        const selectedProductToUse = mapOptional(selectedProduct, y => (allReduxMealCategories.get(x.categoryId)?.productIds.has(y) ?? false) ? y : null);
-                        map.set(x.categoryId, new ValueBox(selectedProductToUse));
+        const [chosenProductIds, setChosenProductIds] = useState(initialChosenProductIds);
+
+        // updates the products in the selectedItemsForEachSectionRef everytime the listViewSections changes
+        useEffect(() => {
+
+            setChosenProductIds(oldState => {
+                const newState = Map<number, Optional<number>>().withMutations(map => {
+                    listViewSections.forEach(section => {
+                        const chosenProductId = mapOptional(oldState.get(section.categoryId), x => {
+                            return (
+                                (allReduxMealCategories.get(section.categoryId)?.productIds.has(x) ?? false) && 
+                                allReduxProducts.has(x)
+                             ) ? x : null
+                        }) ?? null;
+                        map.set(section.categoryId, chosenProductId);
                     });
                 });
-                // eslint-disable-next-line react-hooks/exhaustive-deps
-            }, [])
-        );
+                return is(newState, oldState) ? oldState : newState;
+            });
+            
+        }, [allReduxMealCategories, allReduxProducts, listViewSections]);
+
+        const shouldSubmitButtonBeEnabled = useMemo(() => {
+            const areSelectionsValid = chosenProductIds.some((value, key) => {
+                if (value == null) { return true; }
+                return (
+                    (allReduxMealCategories.get(key)?.productIds.contains(value) ?? false) &&
+                    allReduxProducts.has(value)
+                ) === false;
+            }) === false;
+            const isChanged = is(initialChosenProductIds, chosenProductIds) === false;
+            return areSelectionsValid && isChanged;
+        }, [allReduxMealCategories, allReduxProducts, chosenProductIds, initialChosenProductIds]);
+
         
-        // updates the products in the selectedItemsForEachSectionRef everytime the listViewSections changes
-        useMemo(() => {
-            const selectedItems = selectedItemsForEachSectionRef;
-            selectedItems.current = selectedItems.current.withMutations(map => {
-                listViewSections.forEach(section => {
-                    map.set(section.categoryId, map.get(section.categoryId) ?? new ValueBox(null));
-                });
-            });
-        }, [listViewSections]);
-
-        const calculateShouldSubmitButtonBeEnabled = useCallback(() => {
-            const areSelectionsInvalid = selectedItemsForEachSectionRef.current.some((value, key) => {
-                if (value.value == null) { return true; }
-                return (allReduxMealCategories.get(key)?.productIds.contains(value.value) ?? false) === false;
-            });
-            const isChanged = is(initialMealEntryToEdit_CategoryIdToChosenProductIdMap, selectedItemsForEachSectionRef.current.map(v => v.value)) === false;
-            return areSelectionsInvalid === false && isChanged;
-        }, [allReduxMealCategories, initialMealEntryToEdit_CategoryIdToChosenProductIdMap]);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        const initialShouldSubmitButtonBeEnabled = useMemo(() => calculateShouldSubmitButtonBeEnabled(), []);
-
-        const [shouldSubmitButtonBeEnabled, setShouldSubmitButtonsBeEnabled] = useState(initialShouldSubmitButtonBeEnabled);
-
-
-
-        useLayoutEffect(() => {
-            const unlistens: (() => void)[] = [];
-            const listener = () => {
-                setShouldSubmitButtonsBeEnabled(calculateShouldSubmitButtonBeEnabled());
-            }
-            selectedItemsForEachSectionRef.current.forEach(x => {
-                unlistens.push(x.observer.addListener(listener));
-            })
-            return () => unlistens.forEach(x => x());
-        }, [allReduxMealCategories, calculateShouldSubmitButtonBeEnabled, selectedItemsForEachSectionRef])
-
-
-
         function onSubmitButtonPressed() {
             const choices = (() => {
                 let x: MealEntryRequestChoice[] = [];
-                selectedItemsForEachSectionRef.current.forEach((value, key) => {
-                    if (!value.value) { return; }
+                chosenProductIds.forEach((value, key) => {
+                    if (!value) { return; }
                     x.push({
                         meal_product_category_id: key,
-                        chosen_product_id: value.value,
+                        chosen_product_id: value,
                     })
                 });
                 return x;
@@ -218,6 +200,10 @@ const MealCreatorScreen = (() => {
 
         const bottomButtonHolderRef = useRef<BottomScreenButtonWithGradientRef>(null);
 
+        const updateSelectedProductIdForCategory = useCallback((categoryId: number, productId: number) => {
+            setChosenProductIds(old => old.set(categoryId, productId));
+        }, []);
+
         const sectionList = useMemo(() => {
             return <FloatingCellStyleList<Product, MealCreatorSection>
                 style={styles.sectionList}
@@ -230,13 +216,15 @@ const MealCreatorScreen = (() => {
                     const _section = section as MealCreatorSection;
                     return <MealCreatorListViewItem
                         item={item}
-                        sectionSelectionValue={selectedItemsForEachSectionRef.current.get(_section.categoryId)!}
+                        updateSelectedProductIdForCategory={updateSelectedProductIdForCategory}
+                        categoryId={_section.categoryId}
+                        isSelected={chosenProductIds.get(_section.categoryId) === item.id}
                     />
                 }}
                 initialNumToRender={initialNumToRender}
                 windowSize={10}
             />
-        }, [bottomButtonViewHeight, initialNumToRender, listViewSections, selectedItemsForEachSectionRef]);
+        }, [bottomButtonViewHeight, chosenProductIds, initialNumToRender, listViewSections, updateSelectedProductIdForCategory]);
 
 
         return <View style={styles.root}>
@@ -262,7 +250,6 @@ const MealCreatorScreen = (() => {
                                     } else {
                                         return {
                                             text: 'Add to Cart',
-                                            // iconSource: require('../../TabBarController/TabBar/icons/shopping-cart.png'),
                                             iconSource: require('../../TabBarController/icons/shopping-cart.png'),
                                         }
                                     }
@@ -278,9 +265,9 @@ const MealCreatorScreen = (() => {
         </View>
     }
 
-    return MealCreatorScreen;
+    return React.memo(MealCreatorScreen);
 
 })();
 
-export default React.memo(MealCreatorScreen);
+export default MealCreatorScreen;
 

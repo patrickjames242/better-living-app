@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import LogInSignUpScreenTemplate, { ExitOrBackButton } from './LogInSignUpScreenTemplate';
 import Spacer from '../../helpers/Spacers/Spacer';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -13,6 +13,7 @@ import ForgotPasswordButton from './ForgotPasswordButton';
 import { LogInSignUpUIParams } from './helpers';
 import { RootNavigationViewParams } from '../RootNavigationView/helpers';
 import { DefaultKeyboardConfigs } from '../../helpers/general';
+import { FormikConfig, FormikProps } from 'formik';
 
 
 interface LogInScreenValues{
@@ -28,17 +29,31 @@ const LogInScreen = () => {
     const route = useRoute<RouteProp<LogInSignUpUIParams, 'LogIn'>>()
 
     const initialValues: LogInScreenValues = useMemo(() => ({
-        email: route.params?.email ?? '',
-        password: route.params?.password ?? '',
+        email: '',
+        password: '',
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }), []);
 
+    const yupSchema = yup.object({
+        email: yup.string().trim().required('Email is a required field.').email('Email must be a valid email.'),
+        password: yup.string().trim().required('Password is a required field.'),
+    });
+
+    const formikRef = useRef<FormikProps<LogInScreenValues>>(null);
+
+    useLayoutEffect(() => {
+        if (route.params?.email || route.params?.password){
+            formikRef.current?.setValues({
+                email: route.params.email ?? formikRef.current.values.email, 
+                password: route.params.password ?? formikRef.current.values.password,
+            });
+        }
+    }, [route.params?.email, route.params?.password]);    
+
     return <Formik
+        innerRef={formikRef}
         initialValues={initialValues}
-        validationSchema={yup.object({
-            email: yup.string().trim().required('Email is a required field.').email('Email must be a valid email.'),
-            password: yup.string().trim().required('Password is a required field.'),
-        })}
+        validationSchema={yupSchema}
         onSubmit={(values, {setSubmitting}) => {
             logInUser({
                 email: values.email.trim(),
@@ -65,7 +80,7 @@ const LogInScreen = () => {
                     ]
                 });
             }}
-            isContinueButtonEnabled={formik.isValid && (formik.dirty || Object.getOwnPropertyNames(formik.initialErrors).length <= 0)}
+            isContinueButtonEnabled={formik.isValid && formik.dirty}
             isContinueButtonLoading={formik.isSubmitting}
             topLeftButtonType={ExitOrBackButton.exit}
             onContinueButtonPress={formik.submitForm}
