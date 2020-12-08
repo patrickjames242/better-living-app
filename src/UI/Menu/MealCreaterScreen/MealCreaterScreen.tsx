@@ -53,36 +53,44 @@ const MealCreatorScreen = (() => {
     function useListViewSections(meal?: Meal) {
 
         const allReduxMealCategories = useSelector(state => state.orderingSystem.mealCategories);
-        const getCategoryTitle = (category: MealCategory) => category.displayName ?? category.uniqueName;
-
-        const mealCategories = useMemo(() => {
-            return Set<MealCategory>().withMutations(set => {
-                meal?.productCategories.forEach(({ id: categoryId }) => {
-                    const category = allReduxMealCategories.get(categoryId);
-                    category && set.add(category);
-                });
-            }).toList().sort(caseInsensitiveStringSort(getCategoryTitle));
-        }, [allReduxMealCategories, meal]);
-
         const currentMenuProductIds = useCurrentMenuProductIds();
-
         const allReduxProducts = useSelector(state => state.orderingSystem.products);
 
+        const currentMealCategoriesMap = useMemo(() => {
+            return Map<number, {
+                title: string,
+                productIds: Set<number>,
+            }>().withMutations(map => {
+                meal?.productCategories.forEach(({ id: categoryId }) => {
+                    const category = allReduxMealCategories.get(categoryId);
+                    category && map.set(category.id, {
+                        title: category.displayName ?? category.uniqueName,
+                        productIds: category.productIds.filter(x =>
+                            currentMenuProductIds.has(x) && allReduxProducts.has(x)
+                        ),
+                    });
+                });
+            })
+        }, [allReduxMealCategories, allReduxProducts, currentMenuProductIds, meal?.productCategories]);
+
+
         const listViewSections: MealCreatorSection[] = useMemo(() => {
-            return mealCategories.map(category => ({
-                categoryId: category.id,
-                title: getCategoryTitle(category),
-                data: compactMap(category.productIds.toArray(), id => {
-                    if (currentMenuProductIds.has(id) === false) { return null; }
-                    return allReduxProducts.get(id);
-                }).sort(caseInsensitiveStringSort(p => p.title)),
-            })).toArray();
-        }, [allReduxProducts, currentMenuProductIds, mealCategories]);
+            let x: MealCreatorSection[] = [];
+            currentMealCategoriesMap.forEach((category, id) => {
+                x.push({
+                    categoryId: id,
+                    title: category.title,
+                    data: compactMap(category.productIds.toArray(), id => {
+                        return allReduxProducts.get(id);
+                    }).sort(caseInsensitiveStringSort(p => p.title)),
+                })
+            });
+            return x.sort(caseInsensitiveStringSort(x => x.title));
+        }, [currentMealCategoriesMap, allReduxProducts]);
 
         return {
             listViewSections,
-            allReduxMealCategories,
-            allReduxProducts
+            currentMealCategoriesMap,
         };
     }
 
@@ -100,7 +108,7 @@ const MealCreatorScreen = (() => {
         })();
 
         const meal = useSelector(state => state.orderingSystem.meals.get(mealId));
-        const { listViewSections, allReduxMealCategories, allReduxProducts } = useListViewSections(meal);
+        const { listViewSections, currentMealCategoriesMap } = useListViewSections(meal);
         const [bottomButtonViewHeight, setBottomButtonViewHeight] = useState(0);
         const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
@@ -112,10 +120,29 @@ const MealCreatorScreen = (() => {
 
         const initialChosenProductIds = useMemo(() => {
             return Map<number, Optional<number>>().withMutations(map => {
-                if ('mealEntryToEdit' in props.route.params) {
+                if (
+                    'mealIdToCreateEntryFor' in props.route.params
+                ) {
+                    currentMealCategoriesMap.forEach((category, categoryId) => {
+                        if (category.productIds.size === 1) {
+                            map.set(categoryId, category.productIds.first() as number);
+                        } else if (
+                            'defaultSelectedProductId' in props.route.params &&
+                            props.route.params.defaultSelectedProductId != null
+                        ) {
+                            map.set(categoryId, props.route.params.defaultSelectedProductId);
+                        } else {
+                            map.set(categoryId, null);
+                        }
+                    });
+                } else if ('mealEntryToEdit' in props.route.params) {
                     props.route.params.mealEntryToEdit.choices.forEach(x => {
-                        const chosenProductId = (allReduxMealCategories.get(x.mealProductCategoryId)?.productIds.has(x.chosenProductId) ?? false) ? x.chosenProductId : null;
-                        map.set(x.mealProductCategoryId, chosenProductId);
+                        if (currentMealCategoriesMap.get(x.mealProductCategoryId)?.productIds.has(x.chosenProductId) ?? false) {
+                            map.set(x.mealProductCategoryId, x.chosenProductId);
+                        }
+                    });
+                    currentMealCategoriesMap.forEach((_, categoryId) => {
+                        map.set(categoryId, map.get(categoryId) ?? null);
                     });
                 }
             });
@@ -126,37 +153,41 @@ const MealCreatorScreen = (() => {
 
         // updates the products in the selectedItemsForEachSectionRef everytime the listViewSections changes
         useEffect(() => {
-
             setChosenProductIds(oldState => {
                 const newState = Map<number, Optional<number>>().withMutations(map => {
-                    listViewSections.forEach(section => {
-                        const chosenProductId = mapOptional(oldState.get(section.categoryId), x => {
-                            return (
-                                (allReduxMealCategories.get(section.categoryId)?.productIds.has(x) ?? false) && 
-                                allReduxProducts.has(x)
-                             ) ? x : null
+                    currentMealCategoriesMap.forEach((category, categoryId) => {
+                        const chosenProductId = mapOptional(oldState.get(categoryId), x => {
+                            return category.productIds.has(x) ? x : null
                         }) ?? null;
-                        map.set(section.categoryId, chosenProductId);
+                        map.set(categoryId, chosenProductId);
                     });
                 });
                 return is(newState, oldState) ? oldState : newState;
             });
-            
-        }, [allReduxMealCategories, allReduxProducts, listViewSections]);
+        }, [currentMealCategoriesMap, listViewSections]);
 
         const shouldSubmitButtonBeEnabled = useMemo(() => {
-            const areSelectionsValid = chosenProductIds.some((value, key) => {
-                if (value == null) { return true; }
-                return (
-                    (allReduxMealCategories.get(key)?.productIds.contains(value) ?? false) &&
-                    allReduxProducts.has(value)
-                ) === false;
-            }) === false;
-            const isChanged = is(initialChosenProductIds, chosenProductIds) === false;
-            return areSelectionsValid && isChanged;
-        }, [allReduxMealCategories, allReduxProducts, chosenProductIds, initialChosenProductIds]);
 
-        
+            const areSelectionsValid = (
+                chosenProductIds.some((productId, categoryId) => {
+                    return productId == null || (
+                        (currentMealCategoriesMap.get(categoryId)?.productIds.has(productId) ?? false) === false
+                    );
+                }) === false
+            ) && (currentMealCategoriesMap.size === chosenProductIds.size);
+
+            const areThereChangesToBeSaved = (
+                (
+                    MealCreatorPropKeys.mealEntryToEdit in props.route.params &&
+                    is(initialChosenProductIds, chosenProductIds) === false
+                ) ||
+                MealCreatorPropKeys.mealIdToCreateEntryFor in props.route.params
+            );
+
+            return areSelectionsValid && areThereChangesToBeSaved;
+        }, [chosenProductIds, currentMealCategoriesMap, initialChosenProductIds, props.route.params]);
+
+
         function onSubmitButtonPressed() {
             const choices = (() => {
                 let x: MealEntryRequestChoice[] = [];

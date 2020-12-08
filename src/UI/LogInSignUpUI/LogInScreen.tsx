@@ -99,7 +99,7 @@ const LogInScreen = () => {
                         routes: [
                             {name: route, params}
                         ]
-                    })
+                    });
                 }}/>
             </Spacer>
         </LogInSignUpScreenTemplate>

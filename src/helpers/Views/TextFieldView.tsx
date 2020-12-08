@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { Ref, useState } from 'react';
 import { ViewProps, TextInputProps, StyleSheet, TextInput, Platform, StyleProp, ViewStyle } from 'react-native';
 import LayoutConstants from '../../LayoutConstants';
 import { CustomColors, Color } from '../colors';
@@ -19,17 +19,19 @@ export interface TextFieldViewProps {
     onChangeText?: (text: string) => void;
     placeholder?: string;
     style?: StyleProp<ViewStyle>;
+
+    textInputRef?: Ref<TextInput>;
 }
 
 export const MultilineTextFieldView = (props: TextFieldViewProps) => {
     return <TextFieldViewContainer style={props.style} topTitleText={props.topTitleText} errorMessage={props.errorMessage} {...props.textFieldContainer}>
-        <MultilineTextFieldTextInput value={props.value} onChangeText={props.onChangeText} placeholder={props.placeholder} {...props.textInputProps} />
+        <MultilineTextFieldTextInput ref={props.textInputRef} value={props.value} onChangeText={props.onChangeText} placeholder={props.placeholder} {...props.textInputProps} />
     </TextFieldViewContainer>
 }
 
 export const TextFieldView = (props: TextFieldViewProps) => {
     return <TextFieldViewContainer style={props.style} topTitleText={props.topTitleText} errorMessage={props.errorMessage} {...props.textFieldContainer}>
-        <TextFieldTextInput value={props.value} onChangeText={props.onChangeText} placeholder={props.placeholder} {...props.textInputProps} />
+        <TextFieldTextInput ref={props.textInputRef} value={props.value} onChangeText={props.onChangeText} placeholder={props.placeholder} {...props.textInputProps} />
     </TextFieldViewContainer>
 }
 
@@ -97,18 +99,24 @@ export interface TextFieldTextInputProps extends TextInputProps {
     inactiveBorderColor?: string; 
 }
 
-export const MultilineTextFieldTextInput = (props: TextFieldTextInputProps) => {
-    return <TextFieldTextInput
-        returnKeyType={props.returnKeyType ?? Platform.select({ web: 'enter', default: 'default' }) as any}
-        scrollEnabled={props.scrollEnabled ?? false}
-        multiline={props.multiline ?? true}
-        textAlignVertical="top"
-        {...props}
-        style={[{
-            minHeight: 175,
-        }, props.style]}
-    />
-};
+export const MultilineTextFieldTextInput = (() => {
+    const MultilineTextFieldTextInput: React.ForwardRefRenderFunction<TextInput, TextFieldTextInputProps> = (props, ref) => {
+        return <TextFieldTextInput
+            ref={ref}
+            returnKeyType={props.returnKeyType ?? Platform.select({ web: 'enter', default: 'default' }) as any}
+            scrollEnabled={props.scrollEnabled ?? false}
+            multiline={props.multiline ?? true}
+            textAlignVertical="top"
+            {...props}
+            style={[{
+                minHeight: 175,
+            }, props.style]}
+        />
+    };
+    return React.forwardRef(MultilineTextFieldTextInput);
+})();
+
+
 
 export const TextFieldTextInput = (() => {
 
@@ -123,23 +131,25 @@ export const TextFieldTextInput = (() => {
         },
     });
 
-    const TextFieldTextInput = ({inactiveBorderColor, ...props}: TextFieldTextInputProps) => {
+    const TextFieldTextInput: React.ForwardRefRenderFunction<TextInput, TextFieldTextInputProps> = (props, ref) => {
 
         const [isActive, setIsActive] = useState(false);
 
         return <TextInput
             {...props}
+            ref={ref}
             returnKeyType={props.returnKeyType ?? "done"}
             selectionColor={props.selectionColor ?? CustomColors.themeGreen.stringValue}
             placeholderTextColor={props.placeholderTextColor ?? Color.gray(0.7).stringValue}
             placeholder={props.placeholder ?? "Type here..."}
             style={[styles.textInput, {
-                borderColor: isActive ? LayoutConstants.forms.textFieldSelectionOutline.color.selected : (inactiveBorderColor ?? LayoutConstants.forms.textFieldSelectionOutline.color.unselected),
+                borderColor: isActive ? LayoutConstants.forms.textFieldSelectionOutline.color.selected : (props.inactiveBorderColor ?? LayoutConstants.forms.textFieldSelectionOutline.color.unselected),
             }, props.style]}
             onFocus={e => { setIsActive(true); props.onFocus?.(e) }}
             onBlur={e => { setIsActive(false); props.onBlur?.(e) }}
         />
     }
-    return TextFieldTextInput;
+
+    return React.forwardRef(TextFieldTextInput);
 })();
 

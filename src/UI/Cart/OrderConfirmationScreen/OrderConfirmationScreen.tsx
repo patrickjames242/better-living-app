@@ -1,5 +1,5 @@
 
-import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';

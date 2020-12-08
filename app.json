@@ -9,7 +9,7 @@
       "web"
     ],
     "entryPoint": "./src/App.tsx",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "default",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
@@ -37,7 +37,7 @@
       "backgroundColor": "#FFFFFF"
     },
     "android": {
-      "versionCode": 1,
+      "versionCode": 2,
       "package": "com.patrickhanna.betterliving",
       "useNextNotificationsApi": true,
       "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]

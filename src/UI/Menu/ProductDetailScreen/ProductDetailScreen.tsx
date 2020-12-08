@@ -98,7 +98,10 @@ const ProductDetailScreen = (() => {
                     displayErrorMessage(error.message);
                 });
             } else {
-                props.navigation.push('MealCreator', { mealIdToCreateEntryFor: mealId });
+                props.navigation.push('MealCreator', { 
+                    mealIdToCreateEntryFor: mealId,
+                    defaultSelectedProductId: product?.id
+                });
             }
             
         }, [isUserLoggedIn, product, props.navigation, tabBarControllerContext]);
