@@ -4,7 +4,7 @@ import { TextFieldViewProps, MultilineTextFieldView, TextFieldView } from "./Tex
 import { useField } from "../formik";
 import { FormikValues } from "formik";
 
-type FormikTextFieldViewProps<Key> = TextFieldViewProps & { formikFieldName: Key };
+export type FormikTextFieldViewProps<Key> = TextFieldViewProps & { formikFieldName: Key };
 
 function _FormikTextFieldView(Component: React.FC<TextFieldViewProps>) {
     return function _FormikTextFieldView<Values extends FormikValues>(props: FormikTextFieldViewProps<keyof Values & string>) {

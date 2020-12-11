@@ -26,15 +26,31 @@ export type OrderItemRequestObj = {
 }
 
 const user_wants_order_delivered: 'user_wants_order_delivered' = 'user_wants_order_delivered';
+const user_paid_online: 'user_paid_online' = 'user_paid_online';
 
 export type OrderRequestObj = {
     user_notes: Optional<string>;
-    user_paid_online: boolean;
     order_items: OrderItemRequestObj[];
 } & (
-    {[user_wants_order_delivered]: false} |
-    {[user_wants_order_delivered]: true, delivery_directions: string}
+    (
+        {
+            [user_paid_online]: true;
+            credit_card_number: string;
+            card_expiration_date: string;
+            card_cvv: string;
+            card_first_name: string;
+            card_last_name: string;
+        } & (
+            {[user_wants_order_delivered]: false} |
+            {[user_wants_order_delivered]: true, delivery_directions: string}
+        )
+    ) | {
+        [user_paid_online]: false;
+        [user_wants_order_delivered]: false;
+    }
 )
+
+
 
 export function getRequestOrderItemsFromCartEntries(cartEntries: CartEntriesMapValue[]): OrderItemRequestObj[]{
     return cartEntries.map(x => {

@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import FloatingCellStyleSectionView from '../../../helpers/Views/FloatingCellStyleSectionView';
 import Spacer from '../../../helpers/Spacers/Spacer';
@@ -7,13 +7,12 @@ import OrderConfirmationLayoutConstants from './OrderConfirmationLayoutConstants
 import OrderConfirmationSelectableOptionView from './OrderConfirmationSelectableOptionView';
 import { CustomFont } from '../../../helpers/fonts/fonts';
 import { CustomColors } from '../../../helpers/colors';
-import { HowToPay, OrderConfirmationScreenValues, PickUpOrDelivery } from './helpers';
-import { useField, useFormikContext } from '../../../helpers/formik';
+import { HowToPay, OrderConfirmationScreenContext, OrderConfirmationScreenValues, PickUpOrDelivery } from './helpers';
+import { useFormikContext } from '../../../helpers/formik';
 import LayoutConstants from '../../../LayoutConstants';
 import { FormikMultilineTextFieldView } from '../../../helpers/Views/FormikTextFieldView';
 import { useSelector } from '../../../redux/store';
 import currency from 'currency.js';
-import { MultilineTextFieldTextInput, MultilineTextFieldView } from '../../../helpers/Views/TextFieldView';
 import { Optional } from '../../../helpers/general';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -39,8 +38,8 @@ const OrderConfirmationPickUpOrDeliveryView = (() => {
     const OrderConfirmationPickUpOrDeliveryView = (props: OrderConfirmationPickUpOrDeliveryViewProps) => {
 
         const formikContext = useFormikContext<OrderConfirmationScreenValues>();
-
         const deliveryFee = useSelector(state => state.globalSettings.deliveryFee);
+        const orderConfirmationScreenContext = useContext(OrderConfirmationScreenContext);
 
         return <FloatingCellStyleSectionView sectionTitle="Pick Up or Delivery" style={styles.root}>
             <Spacer space={OrderConfirmationLayoutConstants.selectableOptionViewSpacing}>
@@ -55,11 +54,15 @@ const OrderConfirmationPickUpOrDeliveryView = (() => {
                     title={["Deliver to your door", ...(deliveryFee > 0 ? [`(adds ${currency(deliveryFee).format()})`] : [])].join(' ')}
                     isSelected={formikContext.values.pickUpOrDelivery === PickUpOrDelivery.delivery}
                     onCheckMarkPressed={() => {
-                        formikContext.setValues(prevValues => ({
-                            ...prevValues,
-                            howToPay: HowToPay.online,
-                            pickUpOrDelivery: PickUpOrDelivery.delivery,
-                        }));
+                        if (orderConfirmationScreenContext.isOnlinePaymentAllowed){
+                            formikContext.setValues(prevValues => ({
+                                ...prevValues,
+                                howToPay: HowToPay.online,
+                                pickUpOrDelivery: PickUpOrDelivery.delivery,
+                            }));
+                        } else {
+                            formikContext.setFieldValue('pickUpOrDelivery', PickUpOrDelivery.delivery);
+                        }
                     }}
                 />
                 {formikContext.values.pickUpOrDelivery === PickUpOrDelivery.delivery &&
@@ -69,7 +72,6 @@ const OrderConfirmationPickUpOrDeliveryView = (() => {
     }
     return OrderConfirmationPickUpOrDeliveryView;
 })();
-
 
 export default OrderConfirmationPickUpOrDeliveryView;
 

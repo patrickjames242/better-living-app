@@ -5,10 +5,13 @@ import { StyleSheet, Animated, TextInput, Platform } from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
 import SpacerView from '../../../helpers/Spacers/SpacerView';
 import Spacer from '../../../helpers/Spacers/Spacer';
-import { TextFieldView, TextFieldViewProps } from '../../../helpers/Views/TextFieldView';
+import { TextFieldView } from '../../../helpers/Views/TextFieldView';
 import Parser, { CustomParsers } from '../../../helpers/Parser';
 import { Optional } from '../../../helpers/general';
 import { batch } from 'react-redux';
+import { OrderConfirmationScreenValues } from './helpers';
+import { FormikTextFieldView, FormikTextFieldViewProps } from '../../../helpers/Views/FormikTextFieldView';
+import { useField } from '../../../helpers/formik';
 
 
 
@@ -45,7 +48,7 @@ function formatExpirationDate(string: string): string{
     const digitParser = CustomParsers.digit.ignoreNulls();
 
     const monthParser = digitParser.many(2).map(x => x.join(''));
-    const yearParser = digitParser.many(4).map(x => x.join(''));
+    const yearParser = digitParser.many(2).map(x => x.join(''));
 
     const fullDateParser = monthParser.then(yearParser, true);
     const result = fullDateParser.parse(string);
@@ -62,7 +65,7 @@ function formatCVVCode(string: string){
 
 
 export interface OrderConfirmationCardDetailsViewProps {
-    isEnabled: boolean,
+    isEnabled?: boolean,
 }
 
 const OrderConfirmationCardDetailsView = (() => {
@@ -90,8 +93,12 @@ const OrderConfirmationCardDetailsView = (() => {
         // });
         const [expirationDate, setExpirationDate] = useState('');
         const [CVV, setCVV] = useState('');
+        const [firstName, setFirstName] = useState('');
+        const [lastName, setLastName] = useState('');
 
-        const currentDesiredOpacityValue = props.isEnabled ? 1 : 0.5;
+        const isEnabled = props.isEnabled ?? true;
+
+        const currentDesiredOpacityValue = isEnabled ? 1 : 0.5;
 
         const opacity = useRef(new Animated.Value(currentDesiredOpacityValue)).current;
 
@@ -106,11 +113,12 @@ const OrderConfirmationCardDetailsView = (() => {
         
 
 
-        return <Animated.View pointerEvents={props.isEnabled ? undefined : "none"} style={[styles.root, {
+        return <Animated.View pointerEvents={isEnabled ? undefined : "none"} style={[styles.root, {
             opacity: opacity,
         }]}>
             <Spacer space={10}>
                 <NumberTextFieldView
+                    formikFieldName="creditCardNumber"
                     topTitleText="Credit Card Number"
                     value={creditCardNumber}
                     textFormatter={formatCreditCardNumber}
@@ -121,20 +129,40 @@ const OrderConfirmationCardDetailsView = (() => {
                 />
                 <SpacerView space={10} style={styles.bottomRow}>
                     <NumberTextFieldView
+                        formikFieldName="cardExpirationDate"
                         style={[styles.bottomRowItem]}
                         topTitleText="Expiration"
                         value={expirationDate}
-                        onChangeText={value => setExpirationDate(value)}
-                        placeholder={formatExpirationDate("07/2030")}
+                        onChangeText={setExpirationDate}
+                        placeholder={formatExpirationDate("07/24")}
                         textFormatter={formatExpirationDate}
                     />
                     <NumberTextFieldView
+                        formikFieldName="cardCVV"
                         style={[styles.bottomRowItem]}
                         topTitleText="CVV"
                         value={CVV}
-                        onChangeText={value => setCVV(value)}
+                        onChangeText={setCVV}
                         placeholder={formatCVVCode("672")}
                         textFormatter={formatCVVCode}
+                    />
+                </SpacerView>
+                <SpacerView space={10} style={styles.bottomRow}>
+                    <FormikTextFieldView<OrderConfirmationScreenValues>
+                        formikFieldName="cardFirstName"
+                        style={[styles.bottomRowItem]}
+                        topTitleText="First Name"
+                        value={firstName}
+                        onChangeText={setFirstName}
+                        placeholder="John"
+                    />
+                    <FormikTextFieldView<OrderConfirmationScreenValues>
+                        formikFieldName="cardLastName"
+                        style={[styles.bottomRowItem]}
+                        topTitleText="Last Name"
+                        value={lastName}
+                        onChangeText={setLastName}
+                        placeholder="Doe"
                     />
                 </SpacerView>
             </Spacer>
@@ -151,17 +179,19 @@ export default OrderConfirmationCardDetailsView;
 
 
 
-interface NumberTextFieldViewProps extends TextFieldViewProps{
+interface NumberTextFieldViewProps<Key extends keyof OrderConfirmationScreenValues> extends FormikTextFieldViewProps<Key>{
     textFormatter: (text: string) => string;
 }
 
 
-function NumberTextFieldView(props: NumberTextFieldViewProps){
+function NumberTextFieldView<Key extends keyof OrderConfirmationScreenValues>(props: NumberTextFieldViewProps<Key>){
 
     const [textFieldCursorPosition, setTextFieldCursorPosition] = useState<Optional<{position: number}>>(null);
 
     const cardTextFieldRef = useRef<TextInput>(null);
     const currentTextValue = useRef('');
+
+    const [, { value, error, touched }, { setValue, setTouched }] = useField<OrderConfirmationScreenValues, Key>(props.formikFieldName);
 
     useEffect(() => {
         if (
@@ -173,8 +203,9 @@ function NumberTextFieldView(props: NumberTextFieldViewProps){
     }, [textFieldCursorPosition]);
 
 
-    return <TextFieldView 
+    return <TextFieldView
         {...props}
+        value={value as string}
         textInputRef={cardTextFieldRef}
         onChangeText={value => {
             const newValue = props.textFormatter(value);
@@ -193,13 +224,19 @@ function NumberTextFieldView(props: NumberTextFieldViewProps){
                     })();
                     setTextFieldCursorPosition({position: newPosition});
                 }
+                setValue(newValue as any);
                 props.onChangeText?.(newValue);
                 currentTextValue.current = newValue;
             });
         }}
+        errorMessage={(touched && error) ? error : undefined}
         textInputProps={{
             keyboardType: 'number-pad',
             ...props.textInputProps,
+            onBlur: (...args) => {
+                setTouched(true);
+                props.textInputProps?.onBlur?.(...args);
+            }
         }}
     />
 }
