@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useRef } from 'react';
 import { StyleSheet, View, LayoutRectangle } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 import { computeNumberOfListColumns } from '../../../helpers/general';
@@ -20,6 +20,7 @@ import { UserType } from '../../../api/authentication/validation';
 import { useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
 import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
 import { RealtimeUpdatesConnectionState } from '../../../redux/realtimeUpdates';
+import { AppContext } from '../../helpers';
 
 
 const TipsListScreen = (() => {
@@ -51,6 +52,15 @@ const TipsListScreen = (() => {
     }
 
     const TipsListScreen = (props: StackScreenProps<TipsNavStackParamList, 'TipsList'>) => {
+
+        const appContext = useContext(AppContext);
+
+        useEffect(() => {
+            const initialAppScreen = appContext.initialAppScreen;
+            if (initialAppScreen && ('healthTipId' in initialAppScreen) && initialAppScreen.healthTipId){
+                props.navigation.push('TipDetail', {healthTipId: initialAppScreen.healthTipId})
+            }
+        }, []);
 
         function onPlusButtonPressed() {
             props.navigation.push('CreateOrEditTip', { tipIdToEdit: null });

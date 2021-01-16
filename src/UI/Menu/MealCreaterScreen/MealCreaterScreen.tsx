@@ -9,7 +9,6 @@ import FloatingCellStyleList from '../../../helpers/Views/FloatingCellStyleList'
 import { Optional, compactMap, caseInsensitiveStringSort, mapOptional } from '../../../helpers/general';
 import LayoutConstants from '../../../LayoutConstants';
 import { useSelector } from '../../../redux/store';
-import MealCategory from '../../../api/orderingSystem/mealCategories/MealCategory';
 import Product from '../../../api/orderingSystem/products/Product';
 import ResourceNotFoundView from '../../../helpers/Views/ResourceNotFoundView';
 import { StackScreenProps } from '@react-navigation/stack';

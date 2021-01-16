@@ -15,7 +15,7 @@ export interface HealthTipRequestObj{
     [HealthTipJsonKeys.yt_video_ids]?: string[];
     audioFilesToInsert?: List<RNFileForUpload>,
     audioFilesToDelete?: List<number>,
-}
+}                
 
 
 async function getBodyForRequestObject(obj: Partial<HealthTipRequestObj>, includeNotificationDeviceId?: boolean): Promise<FormData>{
@@ -47,6 +47,15 @@ async function getBodyForRequestObject(obj: Partial<HealthTipRequestObj>, includ
         formData.append(HealthTipFormDataKeys.insertAudioFile, formDataValue as any, formDataValue.name);
     }
     return formData;
+}
+
+export async function getHealthTip(healthTipId: number){
+    return fetchFromAPI<HealthTipJsonResponseObj>({
+        method: HttpMethod.get,
+        path: basePath + healthTipId + '/',
+    }).then(response => {
+        return new HealthTip(response);
+    });
 }
 
 export async function createNewHealthTip(healthTip: HealthTipRequestObj){

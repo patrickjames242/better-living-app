@@ -1,6 +1,6 @@
 
 
-import React, { useCallback, useRef, useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useMemo, useState, useEffect, useContext } from 'react';
 import { CustomColors } from '../../helpers/colors';
 import { View, StyleSheet } from 'react-native';
 import SideTabBar from './TabBar/SideTabBar';
@@ -21,6 +21,7 @@ import Tips from '../Tips/Tips';
 import Inquiries from '../Inquiries/Inquiries';
 import Settings from '../Settings/Settings';
 import { UserType } from '../../api/authentication/validation';
+import { AppContext, InitialAppScreenType } from '../helpers';
 
 
 
@@ -54,14 +55,26 @@ const TabBarController = (() => {
 
 	const Tab = createCustomTabBarNavigator<TabNavigatorProps>();
 
-	function getCurrentInitialRouteName() {
-		const currentUser = store.getState().authentication?.userObject ?? null;
-		return getDefaultTabBarSelectionForUserObject(currentUser);
+	function useCurrentInitialRouteName() {
+		const appState = useContext(AppContext);
+		return useMemo(() => {
+			switch (appState.initialAppScreen?.type){
+				case InitialAppScreenType.todaysMenu:
+					return TabBarSelection.menu;
+				case InitialAppScreenType.healthTips:
+					return TabBarSelection.tips;
+				default: {
+					const currentUser = store.getState().authentication?.userObject ?? null;
+					return getDefaultTabBarSelectionForUserObject(currentUser);
+				}		
+			}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, []);
 	}
 
 	function _CustomTabBarContentView() {
 
-		const initialRouteName = useMemo(getCurrentInitialRouteName, []);
+		const initialRouteName = useCurrentInitialRouteName();
 
 		return <Tab.Navigator initialRouteName={initialRouteName} >
 			<Tab.Screen name={TabBarSelection.todaysOrders} component={TodaysOrders} />
@@ -86,7 +99,7 @@ const TabBarController = (() => {
 		const dispatch = useDispatch();
 		const currentTabBarState = useSelector(state => state.tabBarController);
 
-		const [currentTabBarSelection, setCurrentTabBarSelection] = useState(getCurrentInitialRouteName());
+		const [currentTabBarSelection, setCurrentTabBarSelection] = useState(useCurrentInitialRouteName());
 
 		// updates currentTabBarSelection state value when navigation state of the navigation object changes
 		useEffect(() => {

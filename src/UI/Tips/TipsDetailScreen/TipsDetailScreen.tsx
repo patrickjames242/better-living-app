@@ -1,6 +1,6 @@
 
 
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import NavigationControllerNavigationBar from '../../../helpers/Views/NavigationControllerNavigationBar';
 import LayoutConstants from '../../../LayoutConstants';
@@ -16,6 +16,11 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { TipsNavStackParamList } from '../navigationHelpers';
 import { useUpdateEffect } from '../../../helpers/reactHooks';
 import { UserType } from '../../../api/authentication/validation';
+import HealthTip from '../../../api/healthTips/HealthTip';
+import { Optional } from '../../../helpers/general';
+import ListLoadingHolderView from '../../../helpers/Views/ListLoadingView';
+import { getHealthTip } from '../../../api/healthTips/requests';
+import CustomActivityIndicator from '../../../helpers/Views/ActivityIndicator';
 
 
 const TipsDetailScreen = (() => {
@@ -31,30 +36,49 @@ const TipsDetailScreen = (() => {
         },
         scrollViewContentContainer: {
             ...LayoutConstants.maxWidthListContentContainerStyles(),
+        },
+        loadingIndicatorHolder: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
         }
     });
 
     const TipsDetailScreen = (props: StackScreenProps<TipsNavStackParamList, 'TipDetail'>) => {
 
-        const healthTip = useSelector(state => state.healthTips.get(props.route.params.healthTipId));
+        const reduxHealthTip = useSelector(state => state.healthTips.get(props.route.params.healthTipId));
+        const [healthTipFromNetwork, setHealthTipFromNetwork] = useState<Optional<HealthTip>>(null);
+        const [isLoadingHealthTipFromNetwork, setIsLoadingHealthTipFromNetwork] = useState(false);
+
+        useLayoutEffect(() => {
+            if (reduxHealthTip == null){
+                setIsLoadingHealthTipFromNetwork(true);
+                getHealthTip(props.route.params.healthTipId)
+                    .then(setHealthTipFromNetwork)
+                    .finally(() => setIsLoadingHealthTipFromNetwork(false));
+
+            }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
+
+        const healthTip = (() => {
+            if (reduxHealthTip) return reduxHealthTip;
+            else return healthTipFromNetwork
+        })();
 
         const healthTipArticleText = healthTip?.articleText?.trim() ?? '';
         const userIsManager = useSelector(state => {
             return state.authentication?.userObject.userType === UserType.manager;
         });
 
-        useUpdateEffect(() => {
-            if (healthTip == null) {
-                props.navigation.goBack();
-            }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [healthTip]);
-
-
         return <View style={styles.root}>
             <NavigationControllerNavigationBar title={healthTip?.title ?? ''} />
             {(() => {
-                if (healthTip == null) {
+                if (isLoadingHealthTipFromNetwork){
+                    return <View style={styles.loadingIndicatorHolder}>
+                        <CustomActivityIndicator size="large"/>
+                    </View>
+                } else if (healthTip == null) {
                     return <ResourceNotFoundView />
                 } else {
                     return <ScrollView

@@ -69,10 +69,3 @@ export async function fetchFromAPI<JsonResult = any>(props: {
 
 }
 
-
-
-
-
-
-
-

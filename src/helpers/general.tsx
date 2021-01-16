@@ -145,6 +145,9 @@ export function compactMap<InputType, OutputType>(items: Array<InputType>, trans
     return newItems;
 }
 
+export function isNumber(string: string): boolean{
+    return isNaN(Number(string)) === false; 
+}
 
 export function isDigit(string: string): boolean {
     const regex = /^\d$/;
