@@ -110,9 +110,6 @@ const OrderConfirmationCardDetailsView = (() => {
             }).start();
         }, [currentDesiredOpacityValue, opacity]);
 
-        
-
-
         return <Animated.View pointerEvents={isEnabled ? undefined : "none"} style={[styles.root, {
             opacity: opacity,
         }]}>

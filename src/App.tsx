@@ -22,9 +22,9 @@ registerRootComponent(App);
 // 	"[SECURITY] node-uuid: crypto not usable, falling back to insecure Math.random()"
 // ]);
 
-if (Platform.OS !== 'web'){
+if (Platform.OS !== 'web') {
 	LogBox.ignoreLogs([
-		"Animated: `useNativeDriver`", 
+		"Animated: `useNativeDriver`",
 		"Non-serializable values were found in the navigation state.",
 		"[SECURITY] node-uuid: crypto not usable, falling back to insecure Math.random()"
 	]);
@@ -38,7 +38,7 @@ Notifications.setNotificationHandler({
 		shouldSetBadge: false,
 	}),
 });
-if (Platform.OS === 'web'){
+if (Platform.OS === 'web') {
 	window.document.body.style.backgroundColor = CustomColors.mainBackgroundColor.stringValue;
 }
 
@@ -52,23 +52,23 @@ export default function App() {
 			if (Platform.OS !== 'web') return null;
 
 			const params = new URLSearchParams(location.search);
-			
+
 			const initialHealthTipId = params.get('initialHealthTipId');
-			if (initialHealthTipId && isNumber(initialHealthTipId)){
-				const x: {type: InitialAppScreenType.healthTips, healthTipId: number} = {
+			if (initialHealthTipId && isNumber(initialHealthTipId)) {
+				const x: { type: InitialAppScreenType.healthTips, healthTipId: number } = {
 					type: InitialAppScreenType.healthTips,
 					healthTipId: Number(initialHealthTipId),
 				}
 				return x;
 			}
 
-			switch (params.get('initialTabSelection')){
-				case 'todaysMenu':{
-					const x: {type: InitialAppScreenType.todaysMenu} = {type: InitialAppScreenType.todaysMenu};
+			switch (params.get('initialTabSelection')) {
+				case 'todaysMenu': {
+					const x: { type: InitialAppScreenType.todaysMenu } = { type: InitialAppScreenType.todaysMenu };
 					return x;
 				}
-				case 'healthTips':{
-					const x: {type: InitialAppScreenType.healthTips} = {type: InitialAppScreenType.healthTips};
+				case 'healthTips': {
+					const x: { type: InitialAppScreenType.healthTips } = { type: InitialAppScreenType.healthTips };
 					return x;
 				}
 				default: return null;
@@ -80,7 +80,7 @@ export default function App() {
 		loadFonts().then(() => {
 			setAppIsReady(true);
 			tryConnectingWebsocketListener();
-			if (Platform.OS === 'ios' || Platform.OS === 'android'){
+			if (Platform.OS === 'ios' || Platform.OS === 'android') {
 				Notifications.requestPermissionsAsync();
 			}
 		});
@@ -91,15 +91,30 @@ export default function App() {
 	} else {
 		return <AppContext.Provider value={appContextValue}>
 			<ReduxProvider store={store}>
-			<SafeAreaProvider>
-				<StatusBar barStyle={AppSettings.defaultStatusBarStyle} />
-				<RootNavigationView />
-			</SafeAreaProvider>
-		</ReduxProvider>
+				<SafeAreaProvider>
+					<StatusBar barStyle={AppSettings.defaultStatusBarStyle} />
+					<RootNavigationView />
+				</SafeAreaProvider>
+			</ReduxProvider>
 		</AppContext.Provider>
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const something: 'none' | 32 = 33;
 
 
 

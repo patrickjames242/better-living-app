@@ -1,5 +1,4 @@
 
-
 import React, { useMemo, useRef } from 'react';
 import { StyleSheet, Image, Animated } from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';

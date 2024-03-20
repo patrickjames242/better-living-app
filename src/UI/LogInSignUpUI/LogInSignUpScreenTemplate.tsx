@@ -89,66 +89,66 @@ const LogInSignUpScreenTemplate = (() => {
 
         return <SafeAreaView style={styles.root}>
             <CustomKeyboardAvoidingView style={styles.innerRootView}>
-                <View style={{flex: 1}}>
-                <View style={styles.header}>
-                    <IconButton
-                        iconSource={(() => {
-                            switch (props.topLeftButtonType) {
-                                case ExitOrBackButton.back: return AssetImages.backArrowIcon;
-                                case ExitOrBackButton.exit: return AssetImages.xIcon.green;
-                            }
-                        })()}
-                        iconSize={17}
-                        onPress={() => {
-                            switch (props.topLeftButtonType) {
-                                case ExitOrBackButton.back:
-                                    navigation.goBack();
-                                    break;
-                                case ExitOrBackButton.exit:
-                                    navigation.navigate('MainInterface');
-                                    break;
+                <View style={{ flex: 1 }}>
+                    <View style={styles.header}>
+                        <IconButton
+                            iconSource={(() => {
+                                switch (props.topLeftButtonType) {
+                                    case ExitOrBackButton.back: return AssetImages.backArrowIcon;
+                                    case ExitOrBackButton.exit: return AssetImages.xIcon.green;
+                                }
+                            })()}
+                            iconSize={17}
+                            onPress={() => {
+                                switch (props.topLeftButtonType) {
+                                    case ExitOrBackButton.back:
+                                        navigation.goBack();
+                                        break;
+                                    case ExitOrBackButton.exit:
+                                        navigation.navigate('MainInterface');
+                                        break;
+                                }
+                            }}
+                        />
+                        {props.topRightButtonText &&
+                            <TouchableOpacity onPress={props.onTopRightButtonPressed}>
+                                <CustomizedText style={styles.headerRightText}>{
+                                    props.topRightButtonText
+                                }</CustomizedText>
+                            </TouchableOpacity>}
+                    </View>
+                    <ScrollView
+                        scrollEventThrottle={50}
+                        onScroll={x => bottomScreenButtonRef.current?.gradientHolder?.notifyThatScrollViewScrolled(x)}
+                        style={styles.scrollView}
+                        contentContainerStyle={[styles.scrollViewContentView, {
+                            paddingBottom: screenPadding + bottomButtonHolderHeight,
+                        }]}
+                    >
+                        <Spacer space={15}>
+                            <CustomizedText style={styles.titleText}>{props.title}</CustomizedText>
+                            <CustomizedText style={styles.subtitleText}>{props.subtitle}</CustomizedText>
+                        </Spacer>
+                        <Space space={30} />
+                        {props.children}
+                    </ScrollView>
+                    <BottomScreenButtonWithGradient
+                        ref={bottomScreenButtonRef}
+                        gradientHolderProps={{
+                            gradientColor: Color.gray(1),
+                            onLayout: event => {
+                                setBottomButtonHolderHeight(event.nativeEvent.layout.height);
                             }
                         }}
+                        buttonProps={{
+                            iconSource: AssetImages.continueIcon,
+                            text: "Continue",
+                            centerTitleText: true,
+                            onPress: props.onContinueButtonPress,
+                            isLoading: props.isContinueButtonLoading,
+                            isEnabled: props.isContinueButtonEnabled,
+                        }}
                     />
-                    {props.topRightButtonText &&
-                        <TouchableOpacity onPress={props.onTopRightButtonPressed}>
-                            <CustomizedText style={styles.headerRightText}>{
-                                props.topRightButtonText
-                            }</CustomizedText>
-                        </TouchableOpacity>}
-                </View>
-                <ScrollView
-                    scrollEventThrottle={50}
-                    onScroll={x => bottomScreenButtonRef.current?.gradientHolder?.notifyThatScrollViewScrolled(x)}
-                    style={styles.scrollView}
-                    contentContainerStyle={[styles.scrollViewContentView, {
-                        paddingBottom: screenPadding + bottomButtonHolderHeight,
-                    }]}
-                >
-                    <Spacer space={15}>
-                        <CustomizedText style={styles.titleText}>{props.title}</CustomizedText>
-                        <CustomizedText style={styles.subtitleText}>{props.subtitle}</CustomizedText>
-                    </Spacer>
-                    <Space space={30} />
-                    {props.children}
-                </ScrollView>
-                <BottomScreenButtonWithGradient
-                    ref={bottomScreenButtonRef}
-                    gradientHolderProps={{
-                        gradientColor: Color.gray(1),
-                        onLayout: event => {
-                            setBottomButtonHolderHeight(event.nativeEvent.layout.height);
-                        }
-                    }}
-                    buttonProps={{
-                        iconSource: AssetImages.continueIcon,
-                        text: "Continue",
-                        centerTitleText: true,
-                        onPress: props.onContinueButtonPress,
-                        isLoading: props.isContinueButtonLoading,
-                        isEnabled: props.isContinueButtonEnabled,
-                    }}
-                />
                 </View>
             </CustomKeyboardAvoidingView>
         </SafeAreaView>

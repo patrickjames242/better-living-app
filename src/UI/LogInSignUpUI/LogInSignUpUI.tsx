@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
 import LogInScreen from './LogInScreen';
@@ -29,6 +30,7 @@ const LogInSignUpUI = (props: StackScreenProps<RootNavigationViewParams, 'LogInS
         <Nav.Screen name="ForgotPasswordCreateNewPassword" component={ForgotPasswordCreatePasswordScreen} initialParams={getInitialParams('ForgotPasswordCreateNewPassword')}/>
         <Nav.Screen name="VerifyPassword" component={VerifyPasswordScreen} initialParams={getInitialParams('VerifyPassword')}/>
     </Nav.Navigator>
+    
 }
 
 export default LogInSignUpUI;

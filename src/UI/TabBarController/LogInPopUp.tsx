@@ -68,7 +68,6 @@ const LogInPopUp = (() => {
         },
     });
 
-
     
 
     const LogInPopUp: React.ForwardRefRenderFunction<LogInPopUpRef, LogInPopUpProps> = (props, ref) => {

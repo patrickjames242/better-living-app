@@ -20,7 +20,6 @@ interface EmailEditingValues {
 const SettingsEmailEditingScreen = (props: StackScreenProps<SettingsNavStackParams, 'EmailEditing'>) => {
 
     const userObject = useSelector(state => state.authentication?.userObject);
-    
     const initialValues: EmailEditingValues = useMemo(() => ({
         email: userObject?.email ?? '',
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,7 +56,6 @@ const SettingsEmailEditingScreen = (props: StackScreenProps<SettingsNavStackPara
             <FormikTextFieldView<EmailEditingValues> topTitleText="Email" formikFieldName="email" textInputProps={DefaultKeyboardConfigs.email}/>
         </GenericEditingFormScreen>
     }}</Formik>
-
 
 }
 

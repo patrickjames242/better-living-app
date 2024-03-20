@@ -35,6 +35,7 @@ export function nestReduxActionStrings<_ActionStringsObject extends ActionString
 				(_object as any)[key] = prefixAllValues(oldValue, addPrefixToValue(prefix, key));
 			}
 		}
+		
 		return _object;
 	}
 

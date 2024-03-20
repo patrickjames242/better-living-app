@@ -1,10 +1,10 @@
 
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect } from 'react';
-import {StyleSheet, View} from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import LargeHeadingNavigationBar from '../../../helpers/NavigationBar/LargeHeadingNavigationBar';
 import NoItemsToShowView from '../../../helpers/Views/NoItemsToShowView';
-import { shouldPopTabBarControllerChildToTop, useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
+import { useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../TabBarController/helpers';
 import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
 import { InquiriesNavStackParams } from '../navigationHelpers';
 

@@ -15,20 +15,7 @@ export interface NavigationControllerNavigationBarProps {
 const NavigationControllerNavigationBar = (() => {
 
     const styles = StyleSheet.create({
-        // backArrowButton: {
-        //     padding: 4,
-        //     paddingLeft: 6,
-        //     paddingRight: 6,
-        // },
-        // backArrowImage: (() => {
-        //     const size = 18;
-        //     const styles: ImageStyle = {
-        //         width: size,
-        //         height: size,
-        //         tintColor: CustomColors.themeGreen.stringValue,
-        //     };
-        //     return styles;
-        // })()
+   
         iconButton: {
             marginLeft: 6,
             marginRight: 6,
