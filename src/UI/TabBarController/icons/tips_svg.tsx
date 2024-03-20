@@ -1,7 +1,7 @@
-import React from "react";
-import { Color } from "../../../helpers/colors";
+import React from 'react';
+import { Color } from '../../../helpers/colors';
 
-function TipsIconSVG(props: {color: Color, style?: React.CSSProperties}) {
+function TipsIconSVG(props: { color: Color; style?: React.CSSProperties }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

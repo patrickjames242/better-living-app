@@ -1,4 +1,3 @@
-
 import React, { useMemo, useRef } from 'react';
 import { StyleSheet, Image, Animated } from 'react-native';
 import LayoutConstants from '../../../LayoutConstants';
@@ -15,7 +14,13 @@ import ValueBox from '../../../helpers/ValueBox';
 import { useNotificationListener } from '../../../helpers/Notification';
 import AssetImages from '../../../images/AssetImages';
 import { useSelector } from '../../../redux/store';
-import { changeMealEntryQuantity, changeProductEntryQuantity, IncrememntOrDecrement, removeMealFromCart, removeProductFromCart } from '../../../api/cart/requests';
+import {
+  changeMealEntryQuantity,
+  changeProductEntryQuantity,
+  IncrememntOrDecrement,
+  removeMealFromCart,
+  removeProductFromCart,
+} from '../../../api/cart/requests';
 import ProductImageThumbnailView from '../../../helpers/Views/DataSpecificViews/ProductImageThumbnailView';
 import { CartProductEntry } from '../../../api/cart/CartProductEntry';
 import { CartMealEntry } from '../../../api/cart/CartMealEntry';
@@ -29,262 +34,297 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CartNavStackParamList } from '../navigationHelpers';
 
-
 export interface CartItemListItemViewProps {
-    entry: CartEntriesMapValue,
-    // the string refers to the id of the item
-    currentlyOpenDrawerID: ValueBox<Optional<string>>
+  entry: CartEntriesMapValue;
+  // the string refers to the id of the item
+  currentlyOpenDrawerID: ValueBox<Optional<string>>;
 }
 
-
-
 const CartItemListItemView = (() => {
+  // const imageBorderRadius = 10;
 
-    // const imageBorderRadius = 10;
+  const styles = StyleSheet.create({
+    root: {},
+    contentView: {
+      padding: LayoutConstants.floatingCellStyles.padding,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    center: {
+      alignItems: 'flex-start',
+      flex: 1,
+    },
+    title: {
+      fontFamily: CustomFont.medium,
+      fontSize: 16,
+    },
+    rightSide: {
+      alignItems: 'flex-end',
+    },
+    quantityTimesPriceText: {
+      fontFamily: CustomFont.medium,
+      color: CustomColors.offBlackSubtitle.stringValue,
+      fontSize: 14,
+    },
+    totalPriceText: {
+      fontFamily: CustomFont.medium,
+      fontSize: 18,
+      color: Color.gray(0.4).stringValue,
+    },
+  });
 
-    const styles = StyleSheet.create({
-        root: {
-
-        },
-        contentView: {
-            padding: LayoutConstants.floatingCellStyles.padding,
-            flexDirection: 'row',
-            alignItems: 'center',
-        },
-        center: {
-            alignItems: 'flex-start',
-            flex: 1,
-        },
-        title: {
-            fontFamily: CustomFont.medium,
-            fontSize: 16,
-        },
-        rightSide: {
-            alignItems: 'flex-end',
-        },
-        quantityTimesPriceText: {
-            fontFamily: CustomFont.medium,
-            color: CustomColors.offBlackSubtitle.stringValue,
-            fontSize: 14,
-        },
-        totalPriceText: {
-            fontFamily: CustomFont.medium,
-            fontSize: 18,
-            color: Color.gray(0.4).stringValue,
-        },
+  const CartItemListItemView = (props: CartItemListItemViewProps) => {
+    const productOrMeal = useSelector(state => {
+      if (props.entry.entry instanceof CartProductEntry) {
+        return state.orderingSystem.products.get(props.entry.entry.productId);
+      } else if (props.entry.entry instanceof CartMealEntry) {
+        return state.orderingSystem.meals.get(props.entry.entry.mealId);
+      }
     });
 
-    const CartItemListItemView = (props: CartItemListItemViewProps) => {
+    const allProdutsReduxState = useSelector(
+      state => state.orderingSystem.products,
+    );
 
-        const productOrMeal = useSelector(state => {
-            if (props.entry.entry instanceof CartProductEntry) {
-                return state.orderingSystem.products.get(props.entry.entry.productId);
-            } else if (props.entry.entry instanceof CartMealEntry) {
-                return state.orderingSystem.meals.get(props.entry.entry.mealId);
-            }
+    const allMealEntryImageUrls = useMemo(() => {
+      if (props.entry.entry instanceof CartMealEntry) {
+        return compactMap(
+          props.entry.entry.choices.toArray(),
+          x => allProdutsReduxState.get(x.chosenProductId)?.imageUrl,
+        );
+      } else {
+        return [];
+      }
+    }, [allProdutsReduxState, props.entry]);
+
+    const quantity = useMemo(() => {
+      if (props.entry.pendingQuantityChangesInfo) {
+        return (
+          props.entry.pendingQuantityChangesInfo.originalQuantity +
+          props.entry.pendingQuantityChangesInfo.pendingChange
+        );
+      } else {
+        return props.entry.entry.quantity ?? 0;
+      }
+    }, [props.entry.entry.quantity, props.entry.pendingQuantityChangesInfo]);
+
+    const individualPrice = useMemo(() => {
+      if (productOrMeal instanceof Product) {
+        return productOrMeal.shouldBeSoldIndividually
+          ? productOrMeal.individualPrice ?? 0
+          : 0;
+      } else if (productOrMeal instanceof Meal) {
+        return productOrMeal.price;
+      } else {
+        return 0;
+      }
+    }, [productOrMeal]);
+
+    const latestIncrementDecrementPromise =
+      useRef<Optional<Promise<CartEntry>>>(null);
+
+    function incrementOrDecrement(incrementOrDecrement: IncrememntOrDecrement) {
+      switch (incrementOrDecrement) {
+        case IncrememntOrDecrement.increment:
+          if (quantity >= 50) return;
+          break;
+        case IncrememntOrDecrement.decrement:
+          if (quantity <= 1) return;
+          break;
+      }
+      const promise: Promise<CartEntry> = (() => {
+        if (props.entry.entry instanceof CartProductEntry) {
+          return changeProductEntryQuantity(
+            props.entry.entry.id,
+            incrementOrDecrement,
+          );
+        } else {
+          return changeMealEntryQuantity(
+            props.entry.entry.id,
+            incrementOrDecrement,
+          );
+        }
+      })();
+      if (promise !== latestIncrementDecrementPromise.current) {
+        promise.catch(error => {
+          displayErrorMessage(error.message);
         });
-
-        const allProdutsReduxState = useSelector(state => state.orderingSystem.products);
-
-        const allMealEntryImageUrls = useMemo(() => {
-            if (props.entry.entry instanceof CartMealEntry){
-                return compactMap(props.entry.entry.choices.toArray(), x => allProdutsReduxState.get(x.chosenProductId)?.imageUrl);
-            } else {
-                return [];
-            }
-        }, [allProdutsReduxState, props.entry]);
-
-        const quantity = useMemo(() => {
-            if (props.entry.pendingQuantityChangesInfo) {
-                return props.entry.pendingQuantityChangesInfo.originalQuantity + props.entry.pendingQuantityChangesInfo.pendingChange;
-            } else {
-                return props.entry.entry.quantity ?? 0;
-            }
-        }, [props.entry.entry.quantity, props.entry.pendingQuantityChangesInfo]);
-
-        const individualPrice = useMemo(() => {
-            if (productOrMeal instanceof Product) {
-                return productOrMeal.shouldBeSoldIndividually ? (productOrMeal.individualPrice ?? 0) : 0;
-            } else if (productOrMeal instanceof Meal) {
-                return productOrMeal.price
-            } else { return 0; }
-        }, [productOrMeal]);
-
-        const latestIncrementDecrementPromise = useRef<Optional<Promise<CartEntry>>>(null);
-
-        function incrementOrDecrement(incrementOrDecrement: IncrememntOrDecrement) {
-            switch (incrementOrDecrement) {
-                case IncrememntOrDecrement.increment:
-                    if (quantity >= 50) return; break;
-                case IncrememntOrDecrement.decrement:
-                    if (quantity <= 1) return; break;
-            }
-            const promise: Promise<CartEntry> = (() => {
-                if (props.entry.entry instanceof CartProductEntry) {
-                    return changeProductEntryQuantity(props.entry.entry.id, incrementOrDecrement);
-                } else {
-                    return changeMealEntryQuantity(props.entry.entry.id, incrementOrDecrement)
-                }
-            })();
-            if (promise !== latestIncrementDecrementPromise.current){
-                promise.catch(error => {
-                    displayErrorMessage(error.message);
-                });
-                latestIncrementDecrementPromise.current = promise;
-            }
-        }
-
-        const swipeableRef = useRef<Swipeable>(null);
-
-        const swipeableIsOpen = useRef(false);
-
-        useNotificationListener(props.currentlyOpenDrawerID.observer, newValue => {
-            if (newValue !== props.entry.entry.id && swipeableIsOpen.current) {
-                swipeableRef.current?.close();
-            }
-        }, [props.entry.entry.id]);
-
-        const navigation = useNavigation<StackNavigationProp<CartNavStackParamList, 'ProductDetail'>>();
-
-        function presentMenuItemDetailView() {
-            if (swipeableIsOpen.current){return;}
-            if (productOrMeal instanceof Product){
-                navigation.push('ProductDetail', {productId: productOrMeal.id});
-            } else if (props.entry.entry instanceof CartMealEntry){
-                navigation.push('MealCreator', {mealEntryToEdit: props.entry.entry});
-            }
-        }
-
-
-
-        if (productOrMeal == null) {
-            return <></>
-        }
-
-        return <HighlightButton style={styles.root} onPress={presentMenuItemDetailView}>
-            <Swipeable
-                ref={swipeableRef}
-                useNativeAnimations
-                overshootRight={false}
-                overshootFriction={3}
-                onSwipeableWillOpen={() => {
-                    swipeableIsOpen.current = true;
-                    props.currentlyOpenDrawerID.value = props.entry.entry.id;
-                }}
-                onSwipeableWillClose={() => {
-                }}
-                onSwipeableClose={() => {
-                    swipeableIsOpen.current = false;
-                    if (props.currentlyOpenDrawerID.value !== props.entry.entry.id) { return; }
-                    props.currentlyOpenDrawerID.value = null;
-                }}
-                renderRightActions={(_, dragValue) => {
-                    return <SwipableButtonActions dragAnimatedValue={dragValue} onDeleteButtonPressed={() => {
-                        (() => {
-                            if (props.entry.entry instanceof CartProductEntry){
-                                return removeProductFromCart(props.entry.entry.id);
-                            } else {
-                                return removeMealFromCart(props.entry.entry.id);
-                            }
-                        })().catch(error => {
-                            displayErrorMessage(error.message);
-                        });
-                    }}/>
-                }}
-            >
-                <SpacerView space={15} style={styles.contentView}>
-                    {(() => {
-                        if (productOrMeal instanceof Product){
-                            return <ProductImageThumbnailView imageUrl={productOrMeal.imageUrl} />;
-                        } else {
-                            return <MealEntryThumbnailView imageUrls={allMealEntryImageUrls}/>
-                        }
-                    })()}
-                    <SpacerView style={styles.center} space={9}>
-                        <CustomizedText style={styles.title}>{productOrMeal.title}</CustomizedText>
-                        <QuantityPickerView
-                            increment={() => incrementOrDecrement(IncrememntOrDecrement.increment)}
-                            decrement={() => incrementOrDecrement(IncrememntOrDecrement.decrement)}
-                            value={quantity}
-                        />
-                    </SpacerView>
-                    <SpacerView style={styles.rightSide} space={7}>
-                        {quantity > 1 &&
-                            <CustomizedText style={styles.quantityTimesPriceText}>{
-                                quantity + " × " + currency(individualPrice).format()
-                            }</CustomizedText>
-                        }
-                        <CustomizedText style={styles.totalPriceText}>{
-                            currency(individualPrice * quantity).format()
-                        }</CustomizedText>
-                    </SpacerView>
-                </SpacerView>
-            </Swipeable>
-        </HighlightButton>
+        latestIncrementDecrementPromise.current = promise;
+      }
     }
-    return React.memo(CartItemListItemView);
+
+    const swipeableRef = useRef<Swipeable>(null);
+
+    const swipeableIsOpen = useRef(false);
+
+    useNotificationListener(
+      props.currentlyOpenDrawerID.observer,
+      newValue => {
+        if (newValue !== props.entry.entry.id && swipeableIsOpen.current) {
+          swipeableRef.current?.close();
+        }
+      },
+      [props.entry.entry.id],
+    );
+
+    const navigation =
+      useNavigation<
+        StackNavigationProp<CartNavStackParamList, 'ProductDetail'>
+      >();
+
+    function presentMenuItemDetailView() {
+      if (swipeableIsOpen.current) {
+        return;
+      }
+      if (productOrMeal instanceof Product) {
+        navigation.push('ProductDetail', { productId: productOrMeal.id });
+      } else if (props.entry.entry instanceof CartMealEntry) {
+        navigation.push('MealCreator', { mealEntryToEdit: props.entry.entry });
+      }
+    }
+
+    if (productOrMeal == null) {
+      return <></>;
+    }
+
+    return (
+      <HighlightButton style={styles.root} onPress={presentMenuItemDetailView}>
+        <Swipeable
+          ref={swipeableRef}
+          useNativeAnimations
+          overshootRight={false}
+          overshootFriction={3}
+          onSwipeableWillOpen={() => {
+            swipeableIsOpen.current = true;
+            props.currentlyOpenDrawerID.value = props.entry.entry.id;
+          }}
+          onSwipeableWillClose={() => {}}
+          onSwipeableClose={() => {
+            swipeableIsOpen.current = false;
+            if (props.currentlyOpenDrawerID.value !== props.entry.entry.id) {
+              return;
+            }
+            props.currentlyOpenDrawerID.value = null;
+          }}
+          renderRightActions={(_, dragValue) => {
+            return (
+              <SwipableButtonActions
+                dragAnimatedValue={dragValue}
+                onDeleteButtonPressed={() => {
+                  (() => {
+                    if (props.entry.entry instanceof CartProductEntry) {
+                      return removeProductFromCart(props.entry.entry.id);
+                    } else {
+                      return removeMealFromCart(props.entry.entry.id);
+                    }
+                  })().catch(error => {
+                    displayErrorMessage(error.message);
+                  });
+                }}
+              />
+            );
+          }}
+        >
+          <SpacerView space={15} style={styles.contentView}>
+            {(() => {
+              if (productOrMeal instanceof Product) {
+                return (
+                  <ProductImageThumbnailView
+                    imageUrl={productOrMeal.imageUrl}
+                  />
+                );
+              } else {
+                return (
+                  <MealEntryThumbnailView imageUrls={allMealEntryImageUrls} />
+                );
+              }
+            })()}
+            <SpacerView style={styles.center} space={9}>
+              <CustomizedText style={styles.title}>
+                {productOrMeal.title}
+              </CustomizedText>
+              <QuantityPickerView
+                increment={() =>
+                  incrementOrDecrement(IncrememntOrDecrement.increment)
+                }
+                decrement={() =>
+                  incrementOrDecrement(IncrememntOrDecrement.decrement)
+                }
+                value={quantity}
+              />
+            </SpacerView>
+            <SpacerView style={styles.rightSide} space={7}>
+              {quantity > 1 && (
+                <CustomizedText style={styles.quantityTimesPriceText}>
+                  {quantity + ' × ' + currency(individualPrice).format()}
+                </CustomizedText>
+              )}
+              <CustomizedText style={styles.totalPriceText}>
+                {currency(individualPrice * quantity).format()}
+              </CustomizedText>
+            </SpacerView>
+          </SpacerView>
+        </Swipeable>
+      </HighlightButton>
+    );
+  };
+  return React.memo(CartItemListItemView);
 })();
 
 export default CartItemListItemView;
 
-
-
-
-
-
-
-
-
-
 interface SwipableButtonActionsProps {
-    dragAnimatedValue: Animated.AnimatedInterpolation,
-    onDeleteButtonPressed?: () => void;
+  dragAnimatedValue: Animated.AnimatedInterpolation;
+  onDeleteButtonPressed?: () => void;
 }
 
 const SwipableButtonActions = (() => {
+  const imageWidth = 22.5;
+  const imagePadding = 12.5;
+  const buttonWidth = imageWidth + imagePadding * 2;
+  const buttonRightInset = 30;
+  const buttonLeftInset =
+    buttonRightInset - LayoutConstants.floatingCellStyles.padding;
+  const totalContainerWidth = buttonLeftInset + buttonWidth + buttonRightInset;
 
-    const imageWidth = 22.5;
-    const imagePadding = 12.5;
-    const buttonWidth = imageWidth + (imagePadding * 2);
-    const buttonRightInset = 30;
-    const buttonLeftInset = buttonRightInset - LayoutConstants.floatingCellStyles.padding;
-    const totalContainerWidth = buttonLeftInset + buttonWidth + buttonRightInset;
+  const styles = StyleSheet.create({
+    root: {
+      paddingLeft: buttonLeftInset,
+      paddingRight: buttonRightInset,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    trashCanButtonContent: {
+      padding: imagePadding,
+      backgroundColor: CustomColors.redColor.stringValue,
+      borderRadius: 10,
+    },
+    trashButtonImage: {
+      width: imageWidth,
+      height: imageWidth,
+    },
+  });
 
-    const styles = StyleSheet.create({
-        root: {
-            paddingLeft: buttonLeftInset,
-            paddingRight: buttonRightInset,
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-        trashCanButtonContent: {
-            padding: imagePadding,
-            backgroundColor: CustomColors.redColor.stringValue,
-            borderRadius: 10
-        },
-        trashButtonImage: {
-            width: imageWidth,
-            height: imageWidth,
-        }
+  const SwipableButtonActions = (props: SwipableButtonActionsProps) => {
+    const translateX = props.dragAnimatedValue.interpolate({
+      inputRange: [-totalContainerWidth, 0],
+      outputRange: [0, totalContainerWidth],
     });
 
-    const SwipableButtonActions = (props: SwipableButtonActionsProps) => {
-
-        const translateX = props.dragAnimatedValue.interpolate({
-            inputRange: [-totalContainerWidth, 0],
-            outputRange: [0, totalContainerWidth]
-        });
-
-        return <Animated.View style={[styles.root, { transform: [{ translateX }] }]}>
-            <BouncyButton onPress={props.onDeleteButtonPressed} contentViewProps={{ style: styles.trashCanButtonContent }}>
-                <Image resizeMode="contain" style={styles.trashButtonImage} source={AssetImages.deleteIcon} />
-            </BouncyButton>
-        </Animated.View>
-    }
-    return SwipableButtonActions;
+    return (
+      <Animated.View style={[styles.root, { transform: [{ translateX }] }]}>
+        <BouncyButton
+          onPress={props.onDeleteButtonPressed}
+          contentViewProps={{ style: styles.trashCanButtonContent }}
+        >
+          <Image
+            resizeMode="contain"
+            style={styles.trashButtonImage}
+            source={AssetImages.deleteIcon}
+          />
+        </BouncyButton>
+      </Animated.View>
+    );
+  };
+  return SwipableButtonActions;
 })();
-
-
-
-
-

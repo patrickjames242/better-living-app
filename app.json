@@ -1,13 +1,8 @@
-
 {
   "expo": {
     "name": "Better Living",
     "slug": "better-living",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "entryPoint": "./src/App.tsx",
     "version": "1.0.4",
     "orientation": "default",
@@ -21,9 +16,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.patrickhanna.betterliving",
       "buildNumber": "1.0.0",

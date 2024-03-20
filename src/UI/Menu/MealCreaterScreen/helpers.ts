@@ -1,15 +1,11 @@
+import { List } from 'immutable';
 
-import { List } from "immutable";
-
-
-export interface MealConfigCategoryChoice{
-    categoryId: number;
-    chosenProductId: number;
+export interface MealConfigCategoryChoice {
+  categoryId: number;
+  chosenProductId: number;
 }
 
-export interface MealConfig{
-    mealId: number;
-    choices?: List<MealConfigCategoryChoice>;
+export interface MealConfig {
+  mealId: number;
+  choices?: List<MealConfigCategoryChoice>;
 }
-
-

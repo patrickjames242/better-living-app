@@ -1,9 +1,7 @@
-import { Set } from "immutable";
+import { Set } from 'immutable';
 
-
-export interface MealCategoryEditOrCreateValues{
-    displayName: string;
-    uniqueName: string;
-    productIds: Set<number>;
+export interface MealCategoryEditOrCreateValues {
+  displayName: string;
+  uniqueName: string;
+  productIds: Set<number>;
 }
-

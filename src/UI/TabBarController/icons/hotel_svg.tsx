@@ -1,7 +1,7 @@
-import React from "react";
-import { Color } from "../../../helpers/colors";
+import React from 'react';
+import { Color } from '../../../helpers/colors';
 
-function BellIconSVG(props: {color: Color, style?: React.CSSProperties}) {
+function BellIconSVG(props: { color: Color; style?: React.CSSProperties }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

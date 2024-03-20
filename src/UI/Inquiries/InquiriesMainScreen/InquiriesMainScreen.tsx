@@ -1,4 +1,3 @@
-
 import { StackScreenProps } from '@react-navigation/stack';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -8,34 +7,38 @@ import { useTabBarControllerChildRootScreenPopToTopFunctionality } from '../../T
 import { TabBarSelection } from '../../TabBarController/tabBarSelectionsHelpers';
 import { InquiriesNavStackParams } from '../navigationHelpers';
 
-
 const InquiriesMainScreen = (() => {
-    
-    const styles = StyleSheet.create({
-        root: {
-            flex: 1,
-        },
-    });
-    
-    const InquiriesMainScreen = (props: StackScreenProps<InquiriesNavStackParams, 'InquiriesMain'>) => {
+  const styles = StyleSheet.create({
+    root: {
+      flex: 1,
+    },
+  });
 
-        useTabBarControllerChildRootScreenPopToTopFunctionality(TabBarSelection.inquiries, props);
+  const InquiriesMainScreen = (
+    props: StackScreenProps<InquiriesNavStackParams, 'InquiriesMain'>,
+  ) => {
+    useTabBarControllerChildRootScreenPopToTopFunctionality(
+      TabBarSelection.inquiries,
+      props,
+    );
 
-        return <View style={styles.root}>
-            <LargeHeadingNavigationBar title="Ask a Question"/>
-            <NoItemsToShowView 
-                title="Ask a Question"
-                subtitle="Is there something you'd like to know? Ask us a question!"
-                buttonTitle="Ask a Question"
-                imageSource={require('./confused.png')}
-                imageStyle={{transform: [{translateX: 15}]}}
-                buttonOnPress={() => {
-                    props.navigation.push('InquiryForm');
-                }}
-            />
-        </View>
-    }
-    return InquiriesMainScreen;
+    return (
+      <View style={styles.root}>
+        <LargeHeadingNavigationBar title="Ask a Question" />
+        <NoItemsToShowView
+          title="Ask a Question"
+          subtitle="Is there something you'd like to know? Ask us a question!"
+          buttonTitle="Ask a Question"
+          imageSource={require('./confused.png')}
+          imageStyle={{ transform: [{ translateX: 15 }] }}
+          buttonOnPress={() => {
+            props.navigation.push('InquiryForm');
+          }}
+        />
+      </View>
+    );
+  };
+  return InquiriesMainScreen;
 })();
 
 export default InquiriesMainScreen;

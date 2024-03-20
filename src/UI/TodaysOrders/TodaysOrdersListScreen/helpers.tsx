@@ -1,16 +1,17 @@
-
-import { LayoutRectangle } from "react-native";
-import { computeNumberOfListColumns } from "../../../helpers/general";
-import LayoutConstants from "../../../LayoutConstants";
-
+import { LayoutRectangle } from 'react-native';
+import { computeNumberOfListColumns } from '../../../helpers/general';
+import LayoutConstants from '../../../LayoutConstants';
 
 export const OrdersUIConstants = {
+  itemSpacing: 15,
+  sideInsets: LayoutConstants.pageSideInsets,
 
-    itemSpacing: 15,
-    sideInsets: LayoutConstants.pageSideInsets,
-
-    calculateNumberOfColumns: (layout: LayoutRectangle): number => {
-        return computeNumberOfListColumns({ listWidth: layout.width, maxItemWidth: 350, sideInsets: OrdersUIConstants.sideInsets, horizontalItemSpacing: OrdersUIConstants.itemSpacing });
-    },
+  calculateNumberOfColumns: (layout: LayoutRectangle): number => {
+    return computeNumberOfListColumns({
+      listWidth: layout.width,
+      maxItemWidth: 350,
+      sideInsets: OrdersUIConstants.sideInsets,
+      horizontalItemSpacing: OrdersUIConstants.itemSpacing,
+    });
+  },
 };
-

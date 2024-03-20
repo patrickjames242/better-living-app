@@ -1,13 +1,15 @@
-import { Set } from "immutable";
-import { RNFileForUpload } from "../../../../../helpers/RNFileForUpload";
+import { Set } from 'immutable';
+import { RNFileForUpload } from '../../../../../helpers/RNFileForUpload';
 
-export interface ProductEditOrCreateValues{
-    title: string;
-    infoTagIds: Set<number>;
-    // if fileToUpload is null, the image will be removed on the server. if fileToUpload is undefined, the current image will be left as is.
-    imageSource: {uriToDisplayInForm?: string, fileToUpload?: RNFileForUpload | null | undefined},
-    priceString: string;
-    shouldBeSoldIndividually: boolean;
-    description: string;
+export interface ProductEditOrCreateValues {
+  title: string;
+  infoTagIds: Set<number>;
+  // if fileToUpload is null, the image will be removed on the server. if fileToUpload is undefined, the current image will be left as is.
+  imageSource: {
+    uriToDisplayInForm?: string;
+    fileToUpload?: RNFileForUpload | null | undefined;
+  };
+  priceString: string;
+  shouldBeSoldIndividually: boolean;
+  description: string;
 }
-

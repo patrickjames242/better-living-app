@@ -12,51 +12,80 @@ import { SettingsNavStackParams } from '../../navigationHelpers';
 import { displayErrorMessage } from '../../../../helpers/Alerts';
 
 interface Values {
-    vatPercentage: string;
+  vatPercentage: string;
 }
 
-function parsePercentageString(string: string){
-    const trimmedPercentString = string.trim();
-    return Number(trimmedPercentString.substring(0, trimmedPercentString.length - 1)) / 100
+function parsePercentageString(string: string) {
+  const trimmedPercentString = string.trim();
+  return (
+    Number(trimmedPercentString.substring(0, trimmedPercentString.length - 1)) /
+    100
+  );
 }
 
-const EditVatPercentageScreen = (props: StackScreenProps<SettingsNavStackParams, 'EditVatPercentageScreen'>) => {
+const EditVatPercentageScreen = (
+  props: StackScreenProps<SettingsNavStackParams, 'EditVatPercentageScreen'>,
+) => {
+  const intialValues: Values = useMemo(() => {
+    return {
+      vatPercentage: store.getState().globalSettings.vatPercentage * 100 + '%',
+    };
+  }, []);
 
-    const intialValues: Values = useMemo(() => {
-        return {
-            vatPercentage: (store.getState().globalSettings.vatPercentage * 100) + '%'
-        };
-    }, []);
-
-    return <Formik
-        initialValues={intialValues}
-        validationSchema={yup.object({
-            vatPercentage: yup.string().trim().required('Vat Percentage field is required').matches(/^\d+(\.\d+)?%$/, 'Vat Percentage must follow the format 15% or 15.5%'),
-        })}
-        onSubmit={(values, {setSubmitting}) => {
-            const percentage = parsePercentageString(values.vatPercentage);
-            updateGlobalSettings({vat_percentage: percentage}).finally(() => {
-                setSubmitting(false);
-            }).then(() => {
-                props.navigation.goBack();
-            }).catch(errorMessage => {
-                displayErrorMessage(errorMessage);
-            });
-        }}
-    >{formik => {
-        return <GenericEditingFormScreen
+  return (
+    <Formik
+      initialValues={intialValues}
+      validationSchema={yup.object({
+        vatPercentage: yup
+          .string()
+          .trim()
+          .required('Vat Percentage field is required')
+          .matches(
+            /^\d+(\.\d+)?%$/,
+            'Vat Percentage must follow the format 15% or 15.5%',
+          ),
+      })}
+      onSubmit={(values, { setSubmitting }) => {
+        const percentage = parsePercentageString(values.vatPercentage);
+        updateGlobalSettings({ vat_percentage: percentage })
+          .finally(() => {
+            setSubmitting(false);
+          })
+          .then(() => {
+            props.navigation.goBack();
+          })
+          .catch(errorMessage => {
+            displayErrorMessage(errorMessage);
+          });
+      }}
+    >
+      {formik => {
+        return (
+          <GenericEditingFormScreen
             navBarTitle="Vat Percentage"
-            longButtons={[{
+            longButtons={[
+              {
                 ...DefaultLongButtonsProps.saveChanges,
                 onPress: formik.submitForm,
                 isLoading: formik.isSubmitting,
-                isEnabled: formik.isValid && formik.dirty && parsePercentageString(formik.initialValues.vatPercentage) !== parsePercentageString(formik.values.vatPercentage),
-            }]}
-        >
-            <FormikTextFieldView<Values> formikFieldName="vatPercentage" topTitleText="Vat Percentage" textInputProps={DefaultKeyboardConfigs.price} />
-        </GenericEditingFormScreen>
-    }}</Formik>
-
-}
+                isEnabled:
+                  formik.isValid &&
+                  formik.dirty &&
+                  parsePercentageString(formik.initialValues.vatPercentage) !==
+                    parsePercentageString(formik.values.vatPercentage),
+              },
+            ]}
+          >
+            <FormikTextFieldView<Values>
+              formikFieldName="vatPercentage"
+              topTitleText="Vat Percentage"
+              textInputProps={DefaultKeyboardConfigs.price}
+            />
+          </GenericEditingFormScreen>
+        );
+      }}
+    </Formik>
+  );
+};
 
 export default EditVatPercentageScreen;

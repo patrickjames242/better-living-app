@@ -11,53 +11,78 @@ import { SettingsNavStackParams } from '../navigationHelpers';
 import { displayErrorMessage } from '../../../helpers/Alerts';
 import { DefaultKeyboardConfigs } from '../../../helpers/general';
 
-
-
 interface EmailEditingValues {
-    email: string;
+  email: string;
 }
 
-const SettingsEmailEditingScreen = (props: StackScreenProps<SettingsNavStackParams, 'EmailEditing'>) => {
+const SettingsEmailEditingScreen = (
+  props: StackScreenProps<SettingsNavStackParams, 'EmailEditing'>,
+) => {
+  const userObject = useSelector(state => state.authentication?.userObject);
+  const initialValues: EmailEditingValues = useMemo(
+    () => ({
+      email: userObject?.email ?? '',
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }),
+    [],
+  );
 
-    const userObject = useSelector(state => state.authentication?.userObject);
-    const initialValues: EmailEditingValues = useMemo(() => ({
-        email: userObject?.email ?? '',
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }), []);
-
-    return <Formik
-        initialValues={initialValues}
-        validationSchema={yup.object({
-            email: yup.string().trim().required('Email is a required field.').email('Email must be a valid email.'),
-        })}
-        onSubmit={(values, {setSubmitting}) => {
-            if (userObject == null){return;}
-            changeEmail({
-                password: props.route.params.password, 
-                new_email: values.email.trim(),
-            }).finally(() => {
-                setSubmitting(false);
-            }).then(() => {
-                props.navigation.goBack();
-            }).catch(error => {
-                displayErrorMessage(error.message);
-            });
-        }}
-    >{formik => {
-        return <GenericEditingFormScreen
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={yup.object({
+        email: yup
+          .string()
+          .trim()
+          .required('Email is a required field.')
+          .email('Email must be a valid email.'),
+      })}
+      onSubmit={(values, { setSubmitting }) => {
+        if (userObject == null) {
+          return;
+        }
+        changeEmail({
+          password: props.route.params.password,
+          new_email: values.email.trim(),
+        })
+          .finally(() => {
+            setSubmitting(false);
+          })
+          .then(() => {
+            props.navigation.goBack();
+          })
+          .catch(error => {
+            displayErrorMessage(error.message);
+          });
+      }}
+    >
+      {formik => {
+        return (
+          <GenericEditingFormScreen
             navBarTitle="Edit Email"
-            longButtons={[{
+            longButtons={[
+              {
                 ...DefaultLongButtonsProps.saveChanges,
                 isLoading: formik.isSubmitting,
                 onPress: formik.submitForm,
-                isEnabled: formik.isValid && formik.dirty && formik.initialValues.email.trim() !== formik.values.email.trim(),
-            }]}
-        >
-            <FormikTextFieldView<EmailEditingValues> topTitleText="Email" formikFieldName="email" textInputProps={DefaultKeyboardConfigs.email}/>
-        </GenericEditingFormScreen>
-    }}</Formik>
-
-}
+                isEnabled:
+                  formik.isValid &&
+                  formik.dirty &&
+                  formik.initialValues.email.trim() !==
+                    formik.values.email.trim(),
+              },
+            ]}
+          >
+            <FormikTextFieldView<EmailEditingValues>
+              topTitleText="Email"
+              formikFieldName="email"
+              textInputProps={DefaultKeyboardConfigs.email}
+            />
+          </GenericEditingFormScreen>
+        );
+      }}
+    </Formik>
+  );
+};
 
 export default SettingsEmailEditingScreen;
-

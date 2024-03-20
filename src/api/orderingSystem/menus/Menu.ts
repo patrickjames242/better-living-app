@@ -1,53 +1,53 @@
+import { Optional } from '../../../helpers/general';
+import { Set, List } from 'immutable';
+import { MenuJsonResponseObj, menuResponseObjValidator } from './validation';
+import getErrorObjFromApiObjValidateFunction from '../../helpers';
 
-import { Optional } from "../../../helpers/general";
-import { Set, List } from "immutable";
-import { MenuJsonResponseObj, menuResponseObjValidator } from "./validation";
-import getErrorObjFromApiObjValidateFunction from "../../helpers";
-
-export enum DayOfTheWeek{
-    sunday = 0,
-    monday,
-    tuesday,
-    wednesday,
-    thursday,
-    friday,
-    saturday,
+export enum DayOfTheWeek {
+  sunday = 0,
+  monday,
+  tuesday,
+  wednesday,
+  thursday,
+  friday,
+  saturday,
 }
 
-export interface MenuCategory{
-    readonly title: string;
-    readonly productIds: Set<number>;
+export interface MenuCategory {
+  readonly title: string;
+  readonly productIds: Set<number>;
 }
 
-export default class Menu{
-    
-    readonly id: number;
-    readonly title: string;
-    readonly isActive: boolean;
-    readonly daysOfTheWeek: Set<DayOfTheWeek>;
-    readonly startTime: Optional<string>;
-    readonly endTime: Optional<string>;
-    readonly categories: List<MenuCategory>;
+export default class Menu {
+  readonly id: number;
+  readonly title: string;
+  readonly isActive: boolean;
+  readonly daysOfTheWeek: Set<DayOfTheWeek>;
+  readonly startTime: Optional<string>;
+  readonly endTime: Optional<string>;
+  readonly categories: List<MenuCategory>;
 
-    constructor(menuJsonResponseObj: MenuJsonResponseObj){
-        if (menuResponseObjValidator(menuJsonResponseObj) === false){
-            throw getErrorObjFromApiObjValidateFunction(menuResponseObjValidator, 'Menu');
-        }
-
-        const json = menuJsonResponseObj;
-
-        this.id = json.id;
-        this.title = json.title;
-        this.isActive = json.is_active;
-        this.daysOfTheWeek = Set(menuJsonResponseObj.days_of_the_week);
-        this.startTime = json.start_time;
-        this.endTime = json.end_time;
-        this.categories = List(json.categories.map<MenuCategory>(x => ({
-            title: x.title,
-            productIds: Set(x.product_ids),
-        })));
-        
+  constructor(menuJsonResponseObj: MenuJsonResponseObj) {
+    if (menuResponseObjValidator(menuJsonResponseObj) === false) {
+      throw getErrorObjFromApiObjValidateFunction(
+        menuResponseObjValidator,
+        'Menu',
+      );
     }
+
+    const json = menuJsonResponseObj;
+
+    this.id = json.id;
+    this.title = json.title;
+    this.isActive = json.is_active;
+    this.daysOfTheWeek = Set(menuJsonResponseObj.days_of_the_week);
+    this.startTime = json.start_time;
+    this.endTime = json.end_time;
+    this.categories = List(
+      json.categories.map<MenuCategory>(x => ({
+        title: x.title,
+        productIds: Set(x.product_ids),
+      })),
+    );
+  }
 }
-
-

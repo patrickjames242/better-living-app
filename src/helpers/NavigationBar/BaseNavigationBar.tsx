@@ -1,44 +1,44 @@
-
 import React from 'react';
 import { StyleSheet, View, ViewProps } from 'react-native';
 import { useSafeArea } from 'react-native-safe-area-context';
 import LayoutConstants from '../../LayoutConstants';
 
-
-export interface BaseNavigationBarProps extends ViewProps { }
+export interface BaseNavigationBarProps extends ViewProps {}
 
 const BaseNavigationBar = (() => {
+  const styles = StyleSheet.create({
+    root: {
+      backgroundColor: 'white',
+      borderBottomLeftRadius: LayoutConstants.navBar.cornerRadius,
+      borderBottomRightRadius: LayoutConstants.navBar.cornerRadius,
+      ...LayoutConstants.navBar.shadowConfig,
+      zIndex: 10,
+    },
+    contentView: {
+      padding: 13,
+    },
+  });
 
-    const styles = StyleSheet.create({
-        root: {
-            backgroundColor: 'white',
-            borderBottomLeftRadius: LayoutConstants.navBar.cornerRadius,
-            borderBottomRightRadius: LayoutConstants.navBar.cornerRadius,
-            ...LayoutConstants.navBar.shadowConfig,
-            zIndex: 10,
-        },
-        contentView: {
-            padding: 13,
-        }
-    });
+  const BaseNavigationBar: React.FC<BaseNavigationBarProps> = props => {
+    const safeAreaInsets = useSafeArea();
 
-    const BaseNavigationBar: React.FC<BaseNavigationBarProps> = props => {
+    return (
+      <View
+        {...props}
+        style={[
+          styles.root,
+          {
+            paddingTop: safeAreaInsets.top,
+          },
+          props.style,
+        ]}
+      >
+        <View style={styles.contentView}>{props.children}</View>
+      </View>
+    );
+  };
 
-        const safeAreaInsets = useSafeArea();
-
-        return <View {...props} style={[styles.root, {
-            paddingTop: safeAreaInsets.top
-        }, props.style]}>
-            <View style={styles.contentView}>{props.children}</View>
-        </View>;
-    };
-
-    return BaseNavigationBar;
-
+  return BaseNavigationBar;
 })();
-
-
-
-
 
 export default BaseNavigationBar;

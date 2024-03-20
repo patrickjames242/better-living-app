@@ -11,54 +11,77 @@ import { SettingsNavStackParams } from '../navigationHelpers';
 import { displayErrorMessage } from '../../../helpers/Alerts';
 import { DefaultKeyboardConfigs } from '../../../helpers/general';
 
-
-
 interface PhoneNumberEditingValues {
-    phoneNumber: string;
+  phoneNumber: string;
 }
 
-const SettingsPhoneNumberEditingScreen = (props: StackScreenProps<SettingsNavStackParams, 'PhoneNumberEditing'>) => {
+const SettingsPhoneNumberEditingScreen = (
+  props: StackScreenProps<SettingsNavStackParams, 'PhoneNumberEditing'>,
+) => {
+  const userObject = useSelector(state => state.authentication?.userObject);
 
-    const userObject = useSelector(state => state.authentication?.userObject);
-    
-    const initialValues: PhoneNumberEditingValues = useMemo(() => ({
-        phoneNumber: userObject?.phoneNumber ?? '',
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }), []);
+  const initialValues: PhoneNumberEditingValues = useMemo(
+    () => ({
+      phoneNumber: userObject?.phoneNumber ?? '',
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }),
+    [],
+  );
 
-    return <Formik
-        initialValues={initialValues}
-        validationSchema={yup.object({
-            phoneNumber: yup.string().trim().required('Phone number is a required field.'),
-        })}
-        onSubmit={(values, {setSubmitting}) => {
-            if (userObject == null){return;}
-            updateUserInfo(userObject.id, {
-                phone_number: values.phoneNumber.trim(),
-            }).finally(() => {
-                setSubmitting(false);
-            }).then(() => {
-                props.navigation.goBack();
-            }).catch(error => {
-                displayErrorMessage(error.message);
-            });
-        }}
-    >{formik => {
-        return <GenericEditingFormScreen
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={yup.object({
+        phoneNumber: yup
+          .string()
+          .trim()
+          .required('Phone number is a required field.'),
+      })}
+      onSubmit={(values, { setSubmitting }) => {
+        if (userObject == null) {
+          return;
+        }
+        updateUserInfo(userObject.id, {
+          phone_number: values.phoneNumber.trim(),
+        })
+          .finally(() => {
+            setSubmitting(false);
+          })
+          .then(() => {
+            props.navigation.goBack();
+          })
+          .catch(error => {
+            displayErrorMessage(error.message);
+          });
+      }}
+    >
+      {formik => {
+        return (
+          <GenericEditingFormScreen
             navBarTitle="Edit Phone Number"
-            longButtons={[{
+            longButtons={[
+              {
                 ...DefaultLongButtonsProps.saveChanges,
                 isLoading: formik.isSubmitting,
                 onPress: formik.submitForm,
-                isEnabled: formik.isValid && formik.dirty && formik.values.phoneNumber.trim() !== formik.initialValues.phoneNumber.trim(),
-            }]}
-        >
-            <FormikTextFieldView<PhoneNumberEditingValues> topTitleText="First Name" formikFieldName="phoneNumber" textInputProps={DefaultKeyboardConfigs.phoneNumber}/>
-        </GenericEditingFormScreen>
-    }}</Formik>
-
-
-}
+                isEnabled:
+                  formik.isValid &&
+                  formik.dirty &&
+                  formik.values.phoneNumber.trim() !==
+                    formik.initialValues.phoneNumber.trim(),
+              },
+            ]}
+          >
+            <FormikTextFieldView<PhoneNumberEditingValues>
+              topTitleText="First Name"
+              formikFieldName="phoneNumber"
+              textInputProps={DefaultKeyboardConfigs.phoneNumber}
+            />
+          </GenericEditingFormScreen>
+        );
+      }}
+    </Formik>
+  );
+};
 
 export default SettingsPhoneNumberEditingScreen;
-

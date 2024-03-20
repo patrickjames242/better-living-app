@@ -1,61 +1,74 @@
-
 import React, { useState, useRef } from 'react';
 import { ViewProps, Animated, Easing } from 'react-native';
 import CustomDelayedTouchable from './CustomDelayedTouchable';
 import { useUpdateEffect, useIsUnmounted } from '../reactHooks';
 
-
 export interface BouncyButtonProps extends ViewProps {
-    onPress?: () => void;
-    isPressAnimationEnabled?: boolean;
-    bounceScaleValue?: number;
-    contentViewProps?: ViewProps,
+  onPress?: () => void;
+  isPressAnimationEnabled?: boolean;
+  bounceScaleValue?: number;
+  contentViewProps?: ViewProps;
 }
 
-const BouncyButton: React.FC<BouncyButtonProps> = (props) => {
+const BouncyButton: React.FC<BouncyButtonProps> = props => {
+  const [isPressed, setIsPressed] = useState(false);
 
-    const [isPressed, setIsPressed] = useState(false);
+  const transformAnimation = useRef(new Animated.Value(1)).current;
 
-    const transformAnimation = useRef(new Animated.Value(1)).current;
-
-    useUpdateEffect(() => {
-
-        if (isUnmounted.current || (props.isPressAnimationEnabled ?? true) === false) { return; }
-
-        Animated.timing(transformAnimation, {
-            toValue: isPressed ? (props.bounceScaleValue ?? 0.7) : 1,
-            duration: 250,
-            easing: Easing.elastic(1),
-            useNativeDriver: true,
-        }).start();
-
-        //eslint-disable-next-line
-    }, [isPressed]);
-
-    const isUnmounted = useIsUnmounted();
-
-    function touchDown() {
-        if (isUnmounted.current) { return; }
-        setIsPressed(true);
+  useUpdateEffect(() => {
+    if (
+      isUnmounted.current ||
+      (props.isPressAnimationEnabled ?? true) === false
+    ) {
+      return;
     }
 
-    function touchUp() {
-        if (isUnmounted.current) { return; }
-        setIsPressed(false);
-    }
+    Animated.timing(transformAnimation, {
+      toValue: isPressed ? props.bounceScaleValue ?? 0.7 : 1,
+      duration: 250,
+      easing: Easing.elastic(1),
+      useNativeDriver: true,
+    }).start();
 
-    return <CustomDelayedTouchable
-        onPressIn={touchDown}
-        onPressOut={touchUp}
-        onPress={props.onPress}
-        contentViewProps={props}
+    //eslint-disable-next-line
+  }, [isPressed]);
+
+  const isUnmounted = useIsUnmounted();
+
+  function touchDown() {
+    if (isUnmounted.current) {
+      return;
+    }
+    setIsPressed(true);
+  }
+
+  function touchUp() {
+    if (isUnmounted.current) {
+      return;
+    }
+    setIsPressed(false);
+  }
+
+  return (
+    <CustomDelayedTouchable
+      onPressIn={touchDown}
+      onPressOut={touchUp}
+      onPress={props.onPress}
+      contentViewProps={props}
     >
-        <Animated.View {...props.contentViewProps} style={[props.contentViewProps?.style, {
-            transform: [{ scale: transformAnimation }]
-        }]}>{props.children}</Animated.View>
-
+      <Animated.View
+        {...props.contentViewProps}
+        style={[
+          props.contentViewProps?.style,
+          {
+            transform: [{ scale: transformAnimation }],
+          },
+        ]}
+      >
+        {props.children}
+      </Animated.View>
     </CustomDelayedTouchable>
-}
+  );
+};
 
 export default BouncyButton;
-

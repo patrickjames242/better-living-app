@@ -11,58 +11,87 @@ import currency from 'currency.js';
 import { useCalculatedPriceInfoForOrder } from '../../../api/orders/helpers';
 
 interface OrderSubtotalsViewProps {
-    order: Order
+  order: Order;
 }
 
 const OrderSubtotalsView = (() => {
+  const styles = StyleSheet.create({
+    root: {},
+    segmentView: {
+      flexDirection: 'row',
+    },
+    segmentViewTitle: {
+      // fontFamily: CustomFont.medium,
+      fontSize: OrderDetailScreenConstants.regularFontSize,
+    },
+    segmentViewTitleIsTotal: {
+      fontFamily: CustomFont.bold,
+    },
+    segmentViewValue: {
+      fontSize: OrderDetailScreenConstants.regularFontSize,
+      flex: 1,
+      textAlign: 'right',
+    },
+    segmentViewValueIsTotal: {
+      fontFamily: CustomFont.bold,
+    },
+  });
 
-    const styles = StyleSheet.create({
-        root: {
+  const SegmentView = (props: {
+    title: string;
+    value: string;
+    isTotal?: boolean;
+  }) => {
+    return (
+      <View style={styles.segmentView}>
+        <CustomizedText
+          style={[
+            styles.segmentViewTitle,
+            props.isTotal ? styles.segmentViewTitleIsTotal : undefined,
+          ]}
+        >
+          {props.title}
+        </CustomizedText>
+        <Space space={5} />
+        <CustomizedText
+          style={[
+            styles.segmentViewValue,
+            props.isTotal ? styles.segmentViewValueIsTotal : undefined,
+          ]}
+        >
+          {props.value}
+        </CustomizedText>
+      </View>
+    );
+  };
 
-        },
-        segmentView: {
-            flexDirection: 'row',
-        },
-        segmentViewTitle: {
-            // fontFamily: CustomFont.medium,
-            fontSize: OrderDetailScreenConstants.regularFontSize,
-        },
-        segmentViewTitleIsTotal: {
-            fontFamily: CustomFont.bold,
-        },
-        segmentViewValue: {
-            fontSize: OrderDetailScreenConstants.regularFontSize,
-            flex: 1,
-            textAlign: 'right',
-        },
-        segmentViewValueIsTotal: {
-            fontFamily: CustomFont.bold,
-        },
-    });
+  const OrderSubtotalsView = (props: OrderSubtotalsViewProps) => {
+    const priceInfo = useCalculatedPriceInfoForOrder(props.order);
 
-    const SegmentView = (props: { title: string, value: string, isTotal?: boolean }) => {
-        return <View style={styles.segmentView}>
-            <CustomizedText style={[styles.segmentViewTitle, props.isTotal ? styles.segmentViewTitleIsTotal : undefined]}>{props.title}</CustomizedText>
-            <Space space={5} />
-            <CustomizedText style={[styles.segmentViewValue, props.isTotal ? styles.segmentViewValueIsTotal : undefined]}>{props.value}</CustomizedText>
-        </View>
-    }
-
-    const OrderSubtotalsView = (props: OrderSubtotalsViewProps) => {
-
-        const priceInfo = useCalculatedPriceInfoForOrder(props.order);
-
-        return <OrderDetailTitleContainer>
-            <Spacer space={10}>
-                {priceInfo.deliveryFee && priceInfo.deliveryFee > 0 &&
-                    <SegmentView title="Delivery Fee" value={currency(priceInfo.deliveryFee).format()} />}
-                <SegmentView title="Subtotal" value={currency(priceInfo.subtotal).format()} />
-                <SegmentView title="VAT" value={currency(priceInfo.vat).format()} />
-                <SegmentView title="Total" value={currency(priceInfo.total).format()} isTotal />
-            </Spacer>
-        </OrderDetailTitleContainer>
-    }
-    return OrderSubtotalsView;
+    return (
+      <OrderDetailTitleContainer>
+        <Spacer space={10}>
+          {priceInfo.deliveryFee && priceInfo.deliveryFee > 0 && (
+            <SegmentView
+              title="Delivery Fee"
+              value={currency(priceInfo.deliveryFee).format()}
+            />
+          )}
+          <SegmentView
+            title="Subtotal"
+            value={currency(priceInfo.subtotal).format()}
+          />
+          <SegmentView title="VAT" value={currency(priceInfo.vat).format()} />
+          <SegmentView
+            title="Total"
+            value={currency(priceInfo.total).format()}
+            isTotal
+          />
+        </Spacer>
+      </OrderDetailTitleContainer>
+    );
+  };
+  return OrderSubtotalsView;
 })();
 
 export default OrderSubtotalsView;
